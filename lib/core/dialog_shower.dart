@@ -34,6 +34,7 @@ class DialogShower {
 
   double containerBorderRadius = 0.0;
   Decoration? containerDecoration;
+  Clip containerClipBehavior = Clip.antiAlias;
 
   // events
   bool Function(DialogShower shower, Offset point)? wholeOnTapCallback;
@@ -481,15 +482,17 @@ class DialogShower {
       );
     }
 
+    // the container as mini as possible for calculate the point if tapped inside
     return Container(
       key: _containerKey,
       width: width,
       height: height,
-      clipBehavior: Clip.antiAlias,
-      // cause add Clip.antiAlias, the radius will not cover by child
+      // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
+      clipBehavior: containerClipBehavior,
       decoration: containerDecoration ??
           BoxDecoration(
             borderRadius: BorderRadius.circular(containerBorderRadius),
+            // color: Colors.yellow,
             color: containerBackgroundColor,
             boxShadow: containerBoxShadow ??
                 [
