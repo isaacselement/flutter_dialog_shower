@@ -417,14 +417,14 @@ class DialogShower {
           pageBuilder: pageBuilder,
           transitionsBuilder: transition,
           settings: settings,
-          transitionDuration: duration,
-          reverseTransitionDuration: reverseDuration,
-          opaque: opaque,
-          barrierDismissible: barrierDismissible,
+          transitionDuration: duration ?? const Duration(milliseconds: 300),
+          reverseTransitionDuration: reverseDuration ?? const Duration(milliseconds: 300),
+          opaque: opaque ?? true,
+          barrierDismissible: barrierDismissible ?? false,
           barrierColor: barrierColor,
           barrierLabel: barrierLabel,
-          maintainState: maintainState,
-          fullscreenDialog: fullscreenDialog,
+          maintainState: maintainState ?? true,
+          fullscreenDialog: fullscreenDialog ?? false,
         );
     return getNavigator()!.push<T>(routeBuilder);
   }
