@@ -408,7 +408,7 @@ class DialogShower {
     barrierColor,
     barrierLabel,
     maintainState = true,
-    bool fullscreenDialog = false,
+    fullscreenDialog = false,
   }) {
     transition = transition ?? _transition;
     pageBuilder = pageBuilder ?? (ctx, animOne, animTwo) => widget;
