@@ -549,6 +549,7 @@ class _BuilderExState extends State<BuilderEx> {
 
   @override
   void dispose() {
+    super.dispose();
     try {
       widget.dismissCallBack?.call();
     } catch (e) {
@@ -558,7 +559,6 @@ class _BuilderExState extends State<BuilderEx> {
         return true;
       }());
     }
-    super.dispose();
     assert(() {
       __log_print__('[BuilderEx] >>>>>>>>>>>>>> dispose');
       return true;
