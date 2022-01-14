@@ -539,7 +539,8 @@ class _BuilderExState extends State<BuilderEx> {
       widget.showCallBack?.call();
     } catch (e) {
       assert(() {
-        __log_print__(e.toString());
+        __log_print__('showCallBack exception: ${e.toString()}');
+        e is Error ? __log_print__(e.stackTrace?.toString()??'No stackTrace') : null;
         return true;
       }());
     }
@@ -552,7 +553,8 @@ class _BuilderExState extends State<BuilderEx> {
       widget.dismissCallBack?.call();
     } catch (e) {
       assert(() {
-        __log_print__(e.toString());
+        __log_print__('dismissCallBack exception: ${e.toString()}');
+        e is Error ? __log_print__(e.stackTrace?.toString()??'No stackTrace') : null;
         return true;
       }());
     }
