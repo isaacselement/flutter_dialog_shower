@@ -280,27 +280,30 @@ class DialogShower {
             }());
 
             if (_tapUpDetails != null) {
-              RenderBox renderBox = _containerKey.currentContext?.findRenderObject() as RenderBox;
-              double w = renderBox.size.width;
-              double h = renderBox.size.height;
-              Offset p = renderBox.localToGlobal(Offset.zero);
-              double x = p.dx;
-              double y = p.dy;
+              RenderBox containerBox = _containerKey.currentContext?.findRenderObject() as RenderBox;
+              double w = containerBox.size.width;
+              double h = containerBox.size.height;
+              Offset p = containerBox.localToGlobal(Offset.zero);
+              double x1 = p.dx;
+              double y1 = p.dy;
+              double x2 = x1 + w;
+              double y2 = y1 + h;
 
-              Offset point = _tapUpDetails!.globalPosition;
-              double dx = point.dx;
-              double dy = point.dy;
-              bool isTapInsideX = x < dx && dx < (x + w);
-              bool isTapInsideY = y < dy && dy < (y + h);
+              Offset tapPoint = _tapUpDetails!.globalPosition;
+              double tapX = tapPoint.dx;
+              double tapY = tapPoint.dy;
+              bool isTapInsideX = x1 < tapX && tapX < x2;
+              bool isTapInsideY = y1 < tapY && tapY < y2;
               bool isTapInside = isTapInsideX && isTapInsideY;
 
               assert(() {
-                __log_print__('HitTest: $p, ${renderBox.size}, $point, X$isTapInsideX && Y$isTapInsideY = $isTapInside,'
-                    ' barrierDismissible: $barrierDismissible, isShowing: $isShowing');
+                __log_print__(
+                    'HitTest: Container [$x1, $y1], [$x2, $y2]. Tap [$tapX, $tapY]. isTapInside X$isTapInsideX && Y$isTapInsideY = $isTapInside, '
+                    'barrierDismissible: $barrierDismissible, isShowing: $isShowing');
                 return true;
               }());
 
-              bool v = wholeOnTapCallback?.call(this, point) ?? false;
+              bool v = wholeOnTapCallback?.call(this, tapPoint) ?? false;
               if (v) {
                 return;
               }
@@ -312,9 +315,9 @@ class DialogShower {
               }
 
               if (isTapInside) {
-                bool v = dialogOnTapCallback?.call(this, point) ?? false;
+                bool v = dialogOnTapCallback?.call(this, tapPoint) ?? false;
               } else {
-                bool v = barrierOnTapCallback?.call(this, point) ?? false;
+                bool v = barrierOnTapCallback?.call(this, tapPoint) ?? false;
                 if (v) {
                   return;
                 }
@@ -540,7 +543,7 @@ class _BuilderExState extends State<BuilderEx> {
     } catch (e) {
       assert(() {
         __log_print__('showCallBack exception: ${e.toString()}');
-        e is Error ? __log_print__(e.stackTrace?.toString()??'No stackTrace') : null;
+        e is Error ? __log_print__(e.stackTrace?.toString() ?? 'No stackTrace') : null;
         return true;
       }());
     }
@@ -554,7 +557,7 @@ class _BuilderExState extends State<BuilderEx> {
     } catch (e) {
       assert(() {
         __log_print__('dismissCallBack exception: ${e.toString()}');
-        e is Error ? __log_print__(e.stackTrace?.toString()??'No stackTrace') : null;
+        e is Error ? __log_print__(e.stackTrace?.toString() ?? 'No stackTrace') : null;
         return true;
       }());
     }
