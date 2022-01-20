@@ -275,7 +275,7 @@ class DialogShower {
           onTap: () {
             bool isKeyboardShowed = DialogShower.isKeyboardShowing();
             assert(() {
-              __log_print__('Click found, keyboard is ${isKeyboardShowed ? '' : 'not'} showing');
+              __log_print__('onTap found, checking tap up details, keyboard is ${isKeyboardShowed ? '' : 'not'} showing');
               return true;
             }());
 
@@ -310,8 +310,7 @@ class DialogShower {
 
               if (isKeyboardShowed) {
                 // https://github.com/flutter/flutter/issues/48464
-                FocusManager.instance.primaryFocus?.unfocus();
-                // FocusScope.of(context).requestFocus(FocusNode());
+                FocusManager.instance.primaryFocus?.unfocus(); // FocusScope.of(context).requestFocus(FocusNode());
               }
 
               if (isTapInside) {
