@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -103,18 +104,34 @@ class DialogShower {
   bool isWrappedByNavigator = false;
   GlobalKey<NavigatorState>? _navigatorKey;
 
+  /// Important!!! Navigator operation requested with a context that does include a Navigator.
   static void init(BuildContext context) {
     if (gContext == context) {
       return;
     }
     gContext = context;
 
-    /// Try to get app instance back here ....
-    NavigatorState? rootState = context.findRootAncestorStateOfType<NavigatorState>();
-    BuildContext? rootContext = rootState?.context;
-    Widget? rootWidget = rootContext?.widget;
-    Navigator? navigator = rootWidget != null ? rootWidget as Navigator : null;
-    RenderObject? rootRenderObject = rootContext?.findRenderObject();
+    Navigator? navigator;
+    if (context is Element && context.widget is Navigator) {
+      navigator = context.widget as Navigator;
+      assert(() {
+        __log_print__('current context already with a navigator >>> $navigator');
+        return true;
+      }());
+    }
+
+    // Try to get app instance back here ....
+    NavigatorState? naviState = context.findRootAncestorStateOfType<NavigatorState>();
+    BuildContext? naviContext = naviState?.context;
+    Widget? naviWidget = naviContext?.widget;
+    navigator ??= naviWidget != null && naviWidget is Navigator ? naviWidget : null;
+    RenderObject? naviRenderObject = naviContext?.findRenderObject();
+    assert(() {
+      __log_print__('naviState >>> $naviState, naviContext >>> $naviContext, naviWidget >>> $naviWidget, navigator >>> $navigator,'
+          ' naviRenderObject >>> $naviRenderObject');
+      return true;
+    }());
+
     if (navigator?.observers.contains(DialogShower.getObserver()) ?? false) {
       assert(() {
         __log_print__('already register observer in navigator!!!!');
@@ -122,12 +139,6 @@ class DialogShower {
       }());
       NavigatorObserverEx.init();
     }
-    assert(() {
-      __log_print__('rootContext >>> $rootContext, rootState >>> $rootState,'
-          ' widget >>> $rootWidget, navigator >>> $navigator,'
-          ' rootRenderObject >>> $rootRenderObject');
-      return true;
-    }());
   }
 
   static NavigatorObserverEx getObserver() {
