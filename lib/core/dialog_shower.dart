@@ -123,7 +123,14 @@ class DialogShower {
     NavigatorState? naviState = context.findRootAncestorStateOfType<NavigatorState>();
     BuildContext? naviContext = naviState?.context;
     Widget? naviWidget = naviContext?.widget;
-    navigator ??= naviWidget != null && naviWidget is Navigator ? naviWidget : null;
+    Navigator? anotherNavigator = naviWidget != null && naviWidget is Navigator ? naviWidget : null;
+    if (navigator != anotherNavigator) {
+      assert(() {
+        __log_print__('found another navigator from ancestor >>> $anotherNavigator');
+        return true;
+      }());
+      navigator = anotherNavigator;
+    }
     RenderObject? naviRenderObject = naviContext?.findRenderObject();
     assert(() {
       __log_print__('naviState >>> $naviState, naviContext >>> $naviContext, naviWidget >>> $naviWidget, navigator >>> $navigator,'
@@ -147,6 +154,7 @@ class DialogShower {
 
   DialogShower() {
     transitionBuilder = _transition;
+    containerDecoration = _containerDecoration();
   }
 
   DialogShower build([BuildContext? ctx]) {
@@ -499,22 +507,25 @@ class DialogShower {
       key: _containerKey,
       width: width,
       height: height,
+      decoration: containerDecoration,
       // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
-      clipBehavior: containerClipBehavior,
-      decoration: containerDecoration ??
-          BoxDecoration(
-            borderRadius: BorderRadius.circular(containerBorderRadius),
-            // color: Colors.yellow,
-            color: containerBackgroundColor,
-            boxShadow: containerBoxShadow ??
-                [
-                  BoxShadow(
-                    color: containerShadowColor,
-                    blurRadius: containerShadowBlurRadius,
-                  ),
-                ],
-          ),
+      clipBehavior: containerDecoration == null ? Clip.none : containerClipBehavior, // source will assert(decoration != null || clipBehavior == Clip.none),
       child: widget, //child,
+    );
+  }
+
+  Decoration _containerDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(containerBorderRadius),
+      // color: Colors.yellow,
+      color: containerBackgroundColor,
+      boxShadow: containerBoxShadow ??
+          [
+            BoxShadow(
+              color: containerShadowColor,
+              blurRadius: containerShadowBlurRadius,
+            ),
+          ],
     );
   }
 
@@ -547,6 +558,10 @@ class BuilderEx extends StatefulWidget {
 class _BuilderExState extends State<BuilderEx> {
   @override
   Widget build(BuildContext context) {
+    assert(() {
+      __log_print__('[BuilderEx] >>>>>>>>>>>>>> build');
+      return true;
+    }());
     try {
       widget.showCallBack?.call();
     } catch (e) {
