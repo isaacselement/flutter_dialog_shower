@@ -34,6 +34,7 @@ class DialogShower {
 
   double containerBorderRadius = 0.0;
   Decoration? containerDecoration;
+  bool isContainerDecorationNull = false;
   Clip containerClipBehavior = Clip.antiAlias;
 
   // events
@@ -153,8 +154,7 @@ class DialogShower {
   }
 
   DialogShower() {
-    transitionBuilder = _transition;
-    containerDecoration = _containerDecoration();
+    transitionBuilder = _defTransition;
   }
 
   DialogShower build([BuildContext? ctx]) {
@@ -340,7 +340,7 @@ class DialogShower {
                 }
                 if (barrierDismissible) {
                   // wait for keyboard dismiss done the dismiss dialog
-                  if (isKeyboardShowed && !(_isAlignCenterHorizontal() && transitionBuilder == _transition)) {
+                  if (isKeyboardShowed && !(_isAlignCenterHorizontal() && transitionBuilder == _defTransition)) {
                     Future.delayed(const Duration(milliseconds: 250), () {
                       dismiss();
                     });
@@ -430,7 +430,7 @@ class DialogShower {
     maintainState = true,
     fullscreenDialog = false,
   }) {
-    transition = transition ?? _transition;
+    transition = transition ?? _defTransition;
     pageBuilder = pageBuilder ?? (ctx, animOne, animTwo) => widget;
     routeBuilder = routeBuilder ??
         PageRouteBuilder<T>(
@@ -465,26 +465,6 @@ class DialogShower {
   */
 
   /// Private methods
-  bool _isAlignCenterHorizontal() {
-    return textDirection == null;
-  }
-
-  Widget _transition(BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
-    return _transitionRaw(ctx, animOne, animTwo, child, textDirection);
-  }
-
-  Widget _transitionRaw(BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child, TextDirection? direction) {
-    // Bottom to Up, Right to Left, Left to Right
-    Offset offset =
-        direction == null ? const Offset(0.0, 1.0) : (direction == TextDirection.rtl ? const Offset(1.0, 0.0) : const Offset(-1.0, 0.0));
-    return SlideTransition(
-      position: Tween<Offset>(
-        begin: offset,
-        end: const Offset(0.0, 0.0),
-      ).animate(animOne),
-      child: child,
-    );
-  }
 
   Widget _getContainer(Widget? child, double? width, double? height) {
     Widget? widget = child;
@@ -507,17 +487,18 @@ class DialogShower {
       key: _containerKey,
       width: width,
       height: height,
-      decoration: containerDecoration,
       // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
-      clipBehavior: containerDecoration == null ? Clip.none : containerClipBehavior, // source will assert(decoration != null || clipBehavior == Clip.none),
+      // source will assert(decoration != null || clipBehavior == Clip.none),
+      clipBehavior: containerClipBehavior,
+      // const BoxDecoration() may be very useful for empty decoration
+      decoration: isContainerDecorationNull ? null : containerDecoration ?? _defContainerDecoration(),
       child: widget, //child,
     );
   }
 
-  Decoration _containerDecoration() {
+  Decoration _defContainerDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(containerBorderRadius),
-      // color: Colors.yellow,
       color: containerBackgroundColor,
       boxShadow: containerBoxShadow ??
           [
@@ -526,6 +507,28 @@ class DialogShower {
               blurRadius: containerShadowBlurRadius,
             ),
           ],
+    );
+  }
+
+  bool _isAlignCenterHorizontal() {
+    return textDirection == null;
+  }
+
+  Widget _defTransition(BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
+    return _defTransitionRaw(ctx, animOne, animTwo, child, textDirection);
+  }
+
+  Widget _defTransitionRaw(
+      BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child, TextDirection? direction) {
+    // Bottom to Up, Right to Left, Left to Right
+    Offset offset =
+        direction == null ? const Offset(0.0, 1.0) : (direction == TextDirection.rtl ? const Offset(1.0, 0.0) : const Offset(-1.0, 0.0));
+    return SlideTransition(
+      position: Tween<Offset>(
+        begin: offset,
+        end: const Offset(0.0, 0.0),
+      ).animate(animOne),
+      child: child,
     );
   }
 
