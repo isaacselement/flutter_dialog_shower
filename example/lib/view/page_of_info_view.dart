@@ -12,7 +12,7 @@ class PageOfInfoView extends StatelessWidget {
             children: [
               const Text('Fixed: '),
               CupertinoButton(
-                child: const Text('Show center default with width & height specified'),
+                child: const Text('Show center width & height'),
                 onPressed: () {
                   DialogWrapper.show(
                     _getEditBox(width: 500, height: 600),
@@ -24,7 +24,7 @@ class PageOfInfoView extends StatelessWidget {
               ),
               const SizedBox(width: 20),
               CupertinoButton(
-                child: const Text('Show with x/y'),
+                child: const Text('Show x/y'),
                 onPressed: () {
                   DialogWrapper.show(
                     _getEditBox(),
@@ -34,13 +34,35 @@ class PageOfInfoView extends StatelessWidget {
                   );
                 },
               ),
+
+              const SizedBox(width: 20),
+              CupertinoButton(
+                child: const Text('Show left'),
+                onPressed: () {
+                  DialogWrapper.showLeft(
+                    _getEditBox(),
+                    // isFixed: true,
+                  );
+                },
+              ),
+
+              const SizedBox(width: 20),
+              CupertinoButton(
+                child: const Text('Show right'),
+                onPressed: () {
+                  DialogWrapper.showRight(
+                    _getEditBox(),
+                    // isFixed: true,
+                  );
+                },
+              ),
             ],
           ),
           Row(
             children: [
               const Text('NotFixed: '),
               CupertinoButton(
-                child: const Text('Show center default'),
+                child: const Text('Show center'),
                 onPressed: () {
                   DialogWrapper.show(
                     _getEditBox(),
@@ -49,7 +71,7 @@ class PageOfInfoView extends StatelessWidget {
               ),
               const SizedBox(width: 20),
               CupertinoButton(
-                child: const Text('Show with x/y'),
+                child: const Text('Show x/y'),
                 onPressed: () {
                   DialogWrapper.show(
                     _getEditBox(),

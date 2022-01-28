@@ -4,42 +4,29 @@ import 'dart:ui' as ui;
 import 'dialog_shower.dart';
 
 class DialogWrapper {
-  static double? defaultWidth = null;
-  static double? defaultHeight = null;
-
   // same as just show ...
-  static DialogShower showCenter({required Widget child, required double width, required double height}) {
-    ui.SingletonFlutterWindow _window = WidgetsBinding.instance?.window ?? ui.window;
-    MediaQueryData query = MediaQueryData.fromWindow(_window);
-    double qWidth = query.size.width;
-    double qHeight = query.size.height;
-    double x = qWidth / 2 - width / 2;
-    double y = qHeight / 2 - height / 2;
-    return showDefault(child, x: x, y: y, width: width, height: height);
+  static DialogShower showCenter(Widget child, {required double width, required double height, String? key}) {
+    MediaQueryData query = MediaQueryData.fromWindow(WidgetsBinding.instance?.window ?? ui.window);
+    return show(child, x: (query.size.width - width) / 2, y: (query.size.height - height) / 2, width: width, height: height, key: key);
   }
 
   static DialogShower showRight(Widget child, {double? width, double? height, String? key}) {
-    return showDefault(child, width: width, height: height, direction: TextDirection.rtl);
+    return show(child, width: width, height: height, direction: TextDirection.rtl, key: key)
+      ..margin = const EdgeInsets.only(top: -1, right: 16);
   }
 
   static DialogShower showLeft(Widget child, {double? width, double? height, String? key}) {
-    return showDefault(child, width: width, height: height, direction: TextDirection.ltr);
-  }
-
-  static DialogShower showDefault(Widget child,
-      {double? x, double? y, double? width, double? height, TextDirection? direction, String? key}) {
-    width = width ?? defaultWidth;
-    height = height ?? defaultHeight;
-    return showWith(DialogShower(), child, x: x, y: y, width: width, height: height);
+    return show(child, width: width, height: height, direction: TextDirection.ltr, key: key)
+      ..margin = const EdgeInsets.only(top: -1, left: 16);
   }
 
   static DialogShower show(Widget child,
       {bool isFixed = false, double? x, double? y, double? width, double? height, TextDirection? direction, String? key}) {
-    return showWith(DialogShower(), child, isFixed: isFixed, x: x, y: y, width: width, height: height);
+    return showWith(DialogShower(), child, isFixed: isFixed, x: x, y: y, width: width, height: height, direction: direction, key: key);
   }
 
   static DialogShower showWith(DialogShower shower, Widget child,
-      {bool isFixed = false, double? x, double? y, double? width, double? height, String? key}) {
+      {bool isFixed = false, double? x, double? y, double? width, double? height, TextDirection? direction, String? key}) {
     shower
       ..build()
       ..barrierDismissible = true
@@ -49,14 +36,18 @@ class DialogWrapper {
     if (isFixed) {
       shower
         ..alignment = null
-        ..margin = const EdgeInsets.only(left: -1, top: -1)
-      ;
+        ..margin = const EdgeInsets.only(left: -1, top: -1);
     }
     if (x != null && y != null) {
       shower
         ..alignment = isFixed ? null : Alignment.topLeft
-        ..margin = EdgeInsets.only(left: x, top: y)
-      ;
+        ..margin = EdgeInsets.only(left: x, top: y);
+    }
+
+    if (direction != null) {
+      shower
+        ..alignment = null
+        ..textDirection = x != null && y != null ? TextDirection.ltr : direction;
     }
 
     shower.show(child, width: width, height: height);
