@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class DialogShower {
   static BuildContext? gContext;
   static NavigatorObserverEx? gObserver;
+  static const Decoration _notInitializedDecoration = BoxDecoration();
 
   // navigate
   BuildContext? context;
@@ -19,23 +21,24 @@ class DialogShower {
   // scaffold
   Color? scaffoldBackgroundColor = Colors.transparent;
 
-  // Important!!! Either-Or situation !!!
+  // Important!!!
   TextDirection? textDirection;
-  AlignmentGeometry? alignment = Alignment.topCenter;
+  AlignmentGeometry? alignment = Alignment.center;
 
   // container
   EdgeInsets? margin;
-  Color containerBackgroundColor = Colors.white;
-  List<BoxShadow>? containerBoxShadow;
-  Color containerShadowColor = Colors.transparent;
-  double containerShadowBlurRadius = 0.0;
   double? width;
   double? height;
+  double? _renderedWidth;
+  double? _renderedHeight;
 
-  double containerBorderRadius = 0.0;
-  Decoration? containerDecoration;
-  bool isContainerDecorationNull = false;
   Clip containerClipBehavior = Clip.antiAlias;
+  Decoration? containerDecoration = _notInitializedDecoration;
+  double containerBorderRadius = 0.0;
+  Color containerBackgroundColor = Colors.white;
+  List<BoxShadow>? containerBoxShadow;
+  double containerShadowBlurRadius = 0.0;
+  Color containerShadowColor = Colors.transparent;
 
   // events
   bool Function(DialogShower shower, Offset point)? wholeOnTapCallback;
@@ -97,7 +100,7 @@ class DialogShower {
   // private .....
   TapUpDetails? _tapUpDetails;
 
-  // GlobalKey _builderKey = GlobalKey();
+  final GlobalKey _builderKey = GlobalKey();
   final GlobalKey _containerKey = GlobalKey();
 
   // extension for navigate inner dialog
@@ -144,7 +147,7 @@ class DialogShower {
         __log_print__('already register observer in navigator!!!!');
         return true;
       }());
-      NavigatorObserverEx.init();
+      NavigatorObserverEx.ensureInit();
     }
   }
 
@@ -178,56 +181,13 @@ class DialogShower {
   }
 
   DialogShower _show(Widget _child, {double? width, double? height}) {
-    double? _width = width ?? this.width;
-    double? _height = height ?? this.height;
-
-    ui.SingletonFlutterWindow _window = WidgetsBinding.instance?.window ?? ui.window;
-    double mWidth = _window.physicalSize.width;
-    double mHeight = _window.physicalSize.height;
-
-    MediaQueryData query = MediaQueryData.fromWindow(_window);
-    Size querySize = query.size;
-    MediaQueryData queryData = MediaQuery.of(context!);
-    double kWidth = queryData.size.width;
-    double kHeight = queryData.size.height;
-
-    assert(() {
-      __log_print__('self: _width: $_width, _height: $_height; Media.Window width: ${querySize.width}, height: ${querySize.height}');
-      __log_print__('ui.window: mWidth: $mWidth, mHeight: $mHeight; MediaQueryData kWidth: $kWidth, kHeight: $kHeight');
-      return true;
-    }());
-
-    // We use a Padding outside for handle vertically center instead of Container Alignment.Center, cause when keyboard comes out once child get focus,
-    // will make the child stick to the top of the container.
-
-    EdgeInsets _margin = EdgeInsets.zero;
-
-    // padding as margin
-    // when the Scaffold's body is Padding instead of Container (or Container without height & alignment) , you should calculate the top padding
-    // if you do not use a calculated value as padding top (when use the alignment or set height for align center chile), it child will stick to screen top when keyboard show up !!!
-    double defMarginTop =
-        _height != null ? (kHeight - _height) / 2 : 0; // [Center Vertically] if height is given but margin not given or top is negative
-    if (margin != null) {
-      EdgeInsets m = margin!;
-      if (m.top < 0) {
-        _margin = EdgeInsets.fromLTRB(m.left, defMarginTop, m.right, m.bottom);
-      } else {
-        _margin = m;
-      }
-    } else {
-      _margin = EdgeInsets.only(top: defMarginTop);
-    }
-
-    assert(() {
-      __log_print__('_margin: ${_margin}');
-      return true;
-    }());
-
-    _showInternal(_child, _margin, _width, _height);
+    this.width = width ?? this.width;
+    this.height = height ?? this.height;
+    _showInternal(_child);
     return this;
   }
 
-  Future<void> _showInternal(Widget _child, EdgeInsets _margin, double? _width, double? _height) async {
+  Future<void> _showInternal(Widget _child) async {
     _isShowing = true;
 
     assert(() {
@@ -247,7 +207,7 @@ class DialogShower {
         name: routeName,
       ),
       pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
-        return _getInternalWidget(_child, _margin, _width, _height);
+        return _getInternalWidget(_child);
       },
     );
 
@@ -258,10 +218,10 @@ class DialogShower {
     return future;
   }
 
-  Widget _getInternalWidget(Widget _child, EdgeInsets _margin, double? _width, double? _height) {
+  Widget _getInternalWidget(Widget _child) {
     return BuilderEx(
       // return Builder(
-      // key: _builderKey,
+      key: _builderKey,
       showCallBack: () {
         showCallBack?.call(this);
         for (int i = 0; i < (showCallbacks?.length ?? 0); i++) {
@@ -339,47 +299,89 @@ class DialogShower {
                   return;
                 }
                 if (barrierDismissible) {
-                  // wait for keyboard dismiss done the dismiss dialog
-                  if (isKeyboardShowed && !(_isAlignCenterHorizontal() && transitionBuilder == _defTransition)) {
-                    Future.delayed(const Duration(milliseconds: 250), () {
-                      dismiss();
-                    });
-                  } else {
-                    dismiss();
-                  }
+                  dismiss();
                 }
               }
             }
           },
+
           child: Scaffold(
-            backgroundColor: scaffoldBackgroundColor,
             appBar: null,
-            body:
-                // Container(
-                // color: Colors.red,
-                // alignment: Alignment.center,  // when set alignment, content center & width height just like android's match_parent
-                // padding: _margin,          // use Container padding instead of Padding with padding attr as child, it child(Row now) will stick to screen top!!!
-                // child:
-                Padding(
-              padding: _margin,
-              child: _isAlignCenterHorizontal()
-                  ? Container(
-                      // color: Colors.red,
-                      alignment: alignment,
-                      child: _getContainer(_child, _width, _height),
-                    )
-                  : Row(
-                      textDirection: textDirection,
-                      children: [
-                        _getContainer(_child, _width, _height),
-                      ],
-                    ),
-            ),
+            backgroundColor: scaffoldBackgroundColor,
+            body: _getScaffoldBody(_child),
           ),
           // ),
         );
       },
     );
+  }
+
+  Widget _getScaffoldBody(Widget _child) {
+    // ---------------------------- calculate _margin, _width, _height ----------------------------
+    double? _width = width ?? _renderedWidth;
+    double? _height = height ?? _renderedHeight;
+
+    ui.SingletonFlutterWindow _window = WidgetsBinding.instance?.window ?? ui.window;
+    double mWidth = _window.physicalSize.width;
+    double mHeight = _window.physicalSize.height;
+
+    MediaQueryData query = MediaQueryData.fromWindow(_window);
+    Size querySize = query.size;
+    MediaQueryData queryData = MediaQuery.of(context!);
+    double kWidth = queryData.size.width;
+    double kHeight = queryData.size.height;
+
+    assert(() {
+      __log_print__('self: _width: $_width, _height: $_height; Media.Window width: ${querySize.width}, height: ${querySize.height}');
+      __log_print__('ui.window: mWidth: $mWidth, mHeight: $mHeight; MediaQueryData kWidth: $kWidth, kHeight: $kHeight');
+      return true;
+    }());
+
+    // We use a Padding outside for handle vertically center instead of Container Alignment.Center, cause when keyboard comes out once child get focus,
+    // will make the child stick to the top of the container.
+
+    EdgeInsets? _margin;
+
+    // when the Scaffold's body is Padding instead of Container (or Container without height & alignment) , you should calculate the top padding
+    // if you do not use a calculated value as padding top (when use the alignment or set height for align center child), it child will stick to screen top when keyboard show up !!!
+
+    if (margin != null) {
+      EdgeInsets m = margin!;
+      if (m.top < 0 || m.left < 0) {
+        if (_width == null || _height == null) {
+          _tryToGetContainerSize();
+        }
+
+        // [Center Vertically] if height is given when margin not given or top is negative
+        double centerTop = _height != null ? (kHeight - _height) / 2 : 0;
+        // [Center Horizontal] if width is given when margin not given or top is negative
+        double centerLeft = _width != null ? (kWidth - _width) / 2 : 0;
+        _margin = EdgeInsets.fromLTRB(m.left < 0 ? centerLeft : m.left, m.top < 0 ? centerTop : m.top, m.right, m.bottom);
+      } else {
+        _margin = m;
+      }
+    }
+
+    assert(() {
+      __log_print__('_margin: $_margin');
+      return true;
+    }());
+    // ---------------------------- calculate _margin, _width, _height ----------------------------
+
+    // alignment == null -> isFixedPosition
+    if (alignment == null) {
+      Widget smallestWidget = textDirection == null
+          ? _getContainer(_child, _width, _height)
+          : Row(textDirection: textDirection, children: [_getContainer(_child, _width, _height)]);
+      return _margin != null ? Padding(padding: _margin, child: smallestWidget) : smallestWidget;
+    } else {
+      return Container(
+        // color: Colors.red,
+        padding: _margin,
+        alignment: alignment,
+        child: _getContainer(_child, _width, _height),
+      );
+    }
   }
 
   Future<void> dismiss() async {
@@ -453,16 +455,15 @@ class DialogShower {
     getNavigator()?.pop<T>(result);
   }
 
-  /*
   /// self defined setState
+
   void setState(VoidCallback fn) {
-    assert((){
-      __log_print__('rebuilding...');
+    assert(() {
+      __log_print__('[BuilderEx] setState was called, rebuilding...');
       return true;
     }());
     _builderKey.currentState?.setState(fn);
   }
-  */
 
   /// Private methods
 
@@ -483,17 +484,24 @@ class DialogShower {
     }
 
     // the container as mini as possible for calculate the point if tapped inside
-    return Container(
-      key: _containerKey,
-      width: width,
-      height: height,
-      // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
-      // source will assert(decoration != null || clipBehavior == Clip.none),
-      clipBehavior: containerClipBehavior,
-      // const BoxDecoration() may be very useful for empty decoration
-      decoration: isContainerDecorationNull ? null : containerDecoration ?? _defContainerDecoration(),
-      child: widget, //child,
-    );
+    return
+      // GetSizeWidget(
+      //   onSizeChanged: (size) {
+      //     __log_print__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
+      //     _tryToGetContainerSizeRaw();
+      //   },
+      //   child:
+        Container(
+          key: _containerKey,
+          width: width,
+          height: height,
+          // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
+          // source will assert(decoration != null || clipBehavior == Clip.none),
+          clipBehavior: containerClipBehavior,
+          decoration: containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration,
+          child: widget, //child,
+        // ),
+      );
   }
 
   Decoration _defContainerDecoration() {
@@ -508,10 +516,6 @@ class DialogShower {
             ),
           ],
     );
-  }
-
-  bool _isAlignCenterHorizontal() {
-    return textDirection == null;
   }
 
   Widget _defTransition(BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
@@ -532,6 +536,44 @@ class DialogShower {
     );
   }
 
+  // Try to get container size if width or height not given by caller
+
+  int _tryTickIndex = 0;
+
+  final List<int> _tryTickTimes = [10, 10, 10, 20, 20, 30, 50, 50, 100];
+
+  void _tryToGetContainerSize({int? index}) {
+    if (index == null || index == 0) {
+      _tryTickIndex = 0;
+    }
+    int? millis = _tryTickIndex < _tryTickTimes.length ? _tryTickTimes[_tryTickIndex] : null;
+    if (millis == null) {
+      return;
+    }
+    Future.delayed(Duration(milliseconds: millis), () {
+      Size? size = _tryToGetContainerSizeRaw();
+      if (size == null) {
+        __log_print__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTickIndex retry again');
+        _tryToGetContainerSize(index: _tryTickIndex++);
+      } else {
+        __log_print__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTickIndex size: $size');
+      }
+    });
+  }
+
+  Size? _tryToGetContainerSizeRaw() {
+    RenderObject? renderObject = _containerKey.currentContext?.findRenderObject();
+    RenderBox? containerBox = renderObject as RenderBox?;
+    if (containerBox == null) {
+      return null;
+    }
+    Size size = containerBox.size;
+    _renderedWidth = size.width;
+    _renderedHeight = size.height;
+    setState(() {});
+    return size;
+  }
+
   /// Other Utils Methods
   // Note: you should DialogShower.init(context) first ~~~
   static bool isKeyboardShowing() {
@@ -540,7 +582,13 @@ class DialogShower {
   }
 }
 
-/// For setSate & callback
+/**
+ *
+ * Classes Below
+ *
+ **/
+
+/// For setSate & show or dismiss callback
 class BuilderEx extends StatefulWidget {
   final WidgetBuilder builder;
 
@@ -600,8 +648,8 @@ class _BuilderExState extends State<BuilderEx> {
 class NavigatorObserverEx extends NavigatorObserver {
   static Map<String, DialogShower>? statesChangingShowers;
 
-  static init() {
-    statesChangingShowers = statesChangingShowers ?? {};
+  static ensureInit() {
+    statesChangingShowers ??= {};
   }
 
   NavigatorObserverEx() : super();
@@ -609,6 +657,9 @@ class NavigatorObserverEx extends NavigatorObserver {
   @override
   void didPush(Route route, Route? previousRoute) {
     super.didPush(route, previousRoute);
+
+    ensureInit();
+
     assert(() {
       __log_print__('didPush: ${route.settings.name}');
       return true;
@@ -621,6 +672,7 @@ class NavigatorObserverEx extends NavigatorObserver {
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
+
     assert(() {
       __log_print__('didPop: ${route.settings.name}');
       return true;
@@ -646,6 +698,36 @@ class NavigatorObserverEx extends NavigatorObserver {
       __log_print__('didReplace: ${oldRoute?.settings.name} -> ${newRoute?.settings.name}');
       return true;
     }());
+  }
+}
+
+/// For get size immediately
+class GetSizeWidget extends SingleChildRenderObjectWidget {
+  final void Function(Size size)? onSizeChanged;
+
+  const GetSizeWidget({Key? key, required Widget child, required this.onSizeChanged}) : super(key: key, child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return GetSizeRenderObject()..onSizeChanged = onSizeChanged;
+  }
+}
+
+class GetSizeRenderObject extends RenderProxyBox {
+  Size? _size;
+  void Function(Size size)? onSizeChanged;
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    Size? size = child?.size;
+    __log_print__('[GetSizeRenderObject] performLayout >>>>>>>>> new size $size');
+    if (size != null && size != _size) {
+      _size = size;
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+        onSizeChanged?.call(size);
+      });
+    }
   }
 }
 

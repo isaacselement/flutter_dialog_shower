@@ -1,6 +1,9 @@
+import 'package:example/controller/controller_manager.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_dialog_shower/components/rotate_widget.dart';
+import 'package:flutter_dialog_shower/core/dialog_shower.dart';
+
+import 'view/handler/pages_handler.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -8,59 +11,62 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomePage(title: 'Flutter Demo Home Page'),
+    PagesHandler.init();
+
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+
+    DialogShower.init(context);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: Row(
+        children: [
+          Container(
+            width: 70,
+            decoration: const BoxDecoration(border: Border(right: BorderSide(width: 1, color: Colors.black))),
+            child: Column(
+              children: [
+                CupertinoButton(child: const Icon(Icons.home, size: 38), onPressed: () {}),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Column(
+                      children: PagesHandler.getTabs(),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+          ),
+          Expanded(
+            child: Navigator(
+              onGenerateRoute: (RouteSettings settings) {
+                return PageRouteBuilder(pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
+                  return PageView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: PagesHandler.getPageController(),
+                    children: PagesHandler.getPages(),
+                  );
+                });
+              },
             ),
-            RotateWidget(
-              child: const Text(':)'),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+          )
+        ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
