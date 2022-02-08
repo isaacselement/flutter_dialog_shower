@@ -3,6 +3,7 @@ import 'package:example/util/logger.dart';
 import 'package:example/view/page_of_info_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PagesHandler {
   static void init() {

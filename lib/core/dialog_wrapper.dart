@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 import 'dialog_shower.dart';
 
 class DialogWrapper {
-  // same as just show ...
+  // same ui effect as function [show] ...
   static DialogShower showCenter(Widget child, {required double width, required double height, String? key}) {
     MediaQueryData query = MediaQueryData.fromWindow(WidgetsBinding.instance?.window ?? ui.window);
     return show(child, x: (query.size.width - width) / 2, y: (query.size.height - height) / 2, width: width, height: height, key: key);

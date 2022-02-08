@@ -387,14 +387,13 @@ class DialogShower {
   Future<void> dismiss() async {
     if (_isShowing) {
       _isShowing = false;
+      assert(() {
+        __log_print__('>>>>>>>>>>>>>> popping: $routeName');
+        return true;
+      }());
       Future.microtask(() {
-        assert(() {
-          __log_print__('>>>>>>>>>>>>>> popping: $routeName');
-          return true;
-        }());
         Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
       });
-
       /// ISSUE: Failed assertion: line 4595 pos 12: '!_debugLocked': is not true.
       // Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
 

@@ -1,3 +1,4 @@
+import 'package:example/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
 class PageOfInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Logger.d("[PageOfInfoView] ----------->>>>>>>>>>>> build/rebuild!!!");
     return Container(
       padding: const EdgeInsets.only(top: 38),
       child: Column(
@@ -108,6 +110,7 @@ class PageOfInfoView extends StatelessWidget {
     return Container(
       width: width,
       height: height,
+      decoration: BoxDecoration(border: Border.all(color: Colors.red, width: 2)),
       child: SingleChildScrollView(
         child: Column(
           children: [
