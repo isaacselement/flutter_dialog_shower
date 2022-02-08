@@ -43,7 +43,7 @@ class DialogWrapper {
       {bool isFixed = false, double? x, double? y, double? width, double? height, TextDirection? direction, String? key}) {
     shower
       ..build()
-      ..barrierDismissible = true
+      ..barrierDismissible = null  // null indicate that: dimiss keyboard first while keyboard is showing, else dismiss dialog immediately
       ..containerShadowColor = Colors.grey
       ..containerBorderRadius = 10.0
       ..containerShadowBlurRadius = 20.0

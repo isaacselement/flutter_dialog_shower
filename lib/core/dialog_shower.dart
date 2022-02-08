@@ -13,7 +13,7 @@ class DialogShower {
   BuildContext? context;
   bool isUseRootNavigator = true;
   Color barrierColor = Colors.transparent;
-  bool barrierDismissible = true;
+  bool? barrierDismissible = false;
   String barrierLabel = "";
   Duration transitionDuration = const Duration(milliseconds: 250);
   RouteTransitionsBuilder? transitionBuilder;
@@ -109,6 +109,9 @@ class DialogShower {
   bool isWrappedByNavigator = false;
   GlobalKey<NavigatorState>? _navigatorKey;
 
+  // holder object for various uses if you need ...
+  Object? obj;
+
   /// Important!!! Navigator operation requested with a context that does include a Navigator.
   static void init(BuildContext context) {
     if (gContext == context) {
@@ -201,7 +204,7 @@ class DialogShower {
       context: context!,
       useRootNavigator: isUseRootNavigator,
       barrierColor: barrierColor,
-      barrierDismissible: barrierDismissible,
+      barrierDismissible: barrierDismissible ?? false,
       barrierLabel: barrierLabel,
       transitionDuration: transitionDuration,
       transitionBuilder: transitionBuilder,
@@ -300,7 +303,13 @@ class DialogShower {
                 if (v) {
                   return;
                 }
-                if (barrierDismissible) {
+                if (barrierDismissible == null) {
+                  if (isKeyboardShowed) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  } else {
+                    dismiss();
+                  }
+                } else if (barrierDismissible!) {
                   dismiss();
                 }
               }
@@ -394,6 +403,7 @@ class DialogShower {
       Future.microtask(() {
         Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
       });
+
       /// ISSUE: Failed assertion: line 4595 pos 12: '!_debugLocked': is not true.
       // Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
 
@@ -576,8 +586,7 @@ class DialogShower {
   /// Other Utils Methods
   // Note: you should DialogShower.init(context) first ~~~
   static bool isKeyboardShowing() {
-    double viewInsetsBottom = MediaQuery.of(DialogShower.gContext!).viewInsets.bottom;
-    return viewInsetsBottom > 0;
+    return MediaQuery.of(DialogShower.gContext!).viewInsets.bottom > 0;
   }
 }
 
