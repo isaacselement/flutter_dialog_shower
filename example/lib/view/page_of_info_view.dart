@@ -30,7 +30,7 @@ class PageOfInfoView extends StatelessWidget {
             Alignment novelA = Alignment(ancientA.x, -1.0);
             EdgeInsets? ancientE = (shower.obj as List)[1];
             EdgeInsets novelE =
-                EdgeInsets.only(left: ancientE?.left ?? 0, right: ancientE?.right ?? 0, bottom: ancientE?.bottom ?? 0, top: 70);
+                EdgeInsets.only(left: ancientE?.left ?? 0, right: ancientE?.right ?? 0, bottom: ancientE?.bottom ?? 0, top: 30);
             shower.setState(() {
               shower.alignment = event == 1 ? novelA : ancientA;
               shower.margin = event == 1 ? novelE : ancientE;
@@ -93,7 +93,7 @@ class PageOfInfoView extends StatelessWidget {
                   DialogWrapper.show(
                     _getEditBox(),
                     isFixed: true,
-                    x: 50,
+                    x: 200,
                     y: 50,
                   );
                 },
@@ -135,7 +135,7 @@ class PageOfInfoView extends StatelessWidget {
                 onPressed: () {
                   DialogWrapper.show(
                     _getEditBox(),
-                    x: 50,
+                    x: 200,
                     y: 50,
                   );
                 },
@@ -177,8 +177,8 @@ class PageOfInfoView extends StatelessWidget {
                 onPressed: () {
                   DialogWrapper.show(
                     _getEditBox(),
-                    x: 50,
-                    y: 50,
+                    x: 200,
+                    y: 200,
                   ).obj = 1;
                 },
               ),
