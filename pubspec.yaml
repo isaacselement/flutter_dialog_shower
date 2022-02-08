@@ -87,3 +87,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  plugin:
+    platforms:
+      android:
+        package: com.xpel.shower.flutter_dialog_shower
+        pluginClass: ShowerKeyboardVisibilityPlugin
+      ios:
+        pluginClass: ShowerKeyboardVisibilityPlugin

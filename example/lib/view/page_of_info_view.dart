@@ -13,7 +13,7 @@ class PageOfInfoView extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text('Fixed: '),
+              const Text('Positioned: '),
               CupertinoButton(
                 child: const Text('Show center'),
                 onPressed: () {
@@ -61,7 +61,7 @@ class PageOfInfoView extends StatelessWidget {
           ),
           Row(
             children: [
-              const Text('NotFixed: '),
+              const Text('UnPositioned: '),
               CupertinoButton(
                 child: const Text('Show center'),
                 onPressed: () {

@@ -15,6 +15,12 @@ class PagesHandler {
     addTabPage(true, 'Tab1', const Icon(Icons.info, size: 32), PageOfInfoView());
     addTabPage(false, 'Tab2', const Icon(Icons.search, size: 32), Container(color: Colors.white, alignment: Alignment.center));
     addTabPage(false, 'Tab3', const Icon(Icons.security, size: 32), Container(color: Colors.white, alignment: Alignment.center));
+
+    EventChannel eventChannel = const EventChannel('shower_keyboard_visibility');
+    Stream<dynamic> _onChange = eventChannel.receiveBroadcastStream();
+    _onChange.listen((event) {
+      Logger.d('PagesHandler 【keyboard visibility】---> $event');
+    });
   }
 
   static PageController? getPageController() {
