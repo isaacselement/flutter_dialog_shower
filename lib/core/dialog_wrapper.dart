@@ -10,14 +10,28 @@ class DialogWrapper {
     return show(child, x: (query.size.width - width) / 2, y: (query.size.height - height) / 2, width: width, height: height, key: key);
   }
 
-  static DialogShower showRight(Widget child, {double? width, double? height, String? key}) {
-    return show(child, width: width, height: height, direction: TextDirection.rtl, key: key)
-      ..margin = const EdgeInsets.only(top: -1, right: 16);
+  static DialogShower showRight(Widget child, {bool isFixed = false, double? width, double? height, String? key}) {
+    DialogShower shower = show(child, width: width, height: height, direction: TextDirection.rtl, key: key);
+    if (isFixed) {
+      shower.alignment = Alignment.topRight;
+      shower.margin = const EdgeInsets.only(top: -1, right: 16);
+    } else {
+      shower.alignment = Alignment.centerRight;
+      shower.margin = const EdgeInsets.only(right: 16);
+    }
+    return shower;
   }
 
-  static DialogShower showLeft(Widget child, {double? width, double? height, String? key}) {
-    return show(child, width: width, height: height, direction: TextDirection.ltr, key: key)
-      ..margin = const EdgeInsets.only(top: -1, left: 16);
+  static DialogShower showLeft(Widget child, {bool isFixed = false, double? width, double? height, String? key}) {
+    DialogShower shower = show(child, width: width, height: height, direction: TextDirection.ltr, key: key);
+    if (isFixed) {
+      shower.alignment = Alignment.topLeft;
+      shower.margin = const EdgeInsets.only(top: -1, left: 16);
+    } else {
+      shower.alignment = Alignment.centerLeft;
+      shower.margin = const EdgeInsets.only(left: 16);
+    }
+    return shower;
   }
 
   static DialogShower show(Widget child,
@@ -32,7 +46,9 @@ class DialogWrapper {
       ..barrierDismissible = true
       ..containerShadowColor = Colors.grey
       ..containerBorderRadius = 10.0
-      ..containerShadowBlurRadius = 20.0;
+      ..containerShadowBlurRadius = 20.0
+      ..textDirection = direction;
+
     if (isFixed) {
       shower
         ..alignment = null
@@ -42,12 +58,6 @@ class DialogWrapper {
       shower
         ..alignment = isFixed ? null : Alignment.topLeft
         ..margin = EdgeInsets.only(left: x, top: y);
-    }
-
-    if (direction != null) {
-      shower
-        ..alignment = null
-        ..textDirection = x != null && y != null ? TextDirection.ltr : direction;
     }
 
     shower.show(child, width: width, height: height);

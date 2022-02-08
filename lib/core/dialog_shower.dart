@@ -21,8 +21,10 @@ class DialogShower {
   // scaffold
   Color? scaffoldBackgroundColor = Colors.transparent;
 
-  // Important!!!
+  // Animation direction! left to right, right to left, and null for bottom to top.
   TextDirection? textDirection;
+
+  // Important!!! alignment center default!!!
   AlignmentGeometry? alignment = Alignment.center;
 
   // container
@@ -363,23 +365,21 @@ class DialogShower {
     }
 
     assert(() {
-      __log_print__('_margin: $_margin');
+      __log_print__('_margin: $_margin, alignment: $alignment, textDirection: $textDirection');
       return true;
     }());
     // ---------------------------- calculate _margin, _width, _height ----------------------------
 
-    // alignment == null -> isFixedPosition
+    // alignment == null
+    Widget smallestContainer = _getContainer(_child, _width, _height);
     if (alignment == null) {
-      Widget smallestWidget = textDirection == null
-          ? _getContainer(_child, _width, _height)
-          : Row(textDirection: textDirection, children: [_getContainer(_child, _width, _height)]);
-      return _margin != null ? Padding(padding: _margin, child: smallestWidget) : smallestWidget;
+      return _margin != null ? Padding(padding: _margin, child: smallestContainer) : smallestContainer;
     } else {
       return Container(
         // color: Colors.red,
         padding: _margin,
         alignment: alignment,
-        child: _getContainer(_child, _width, _height),
+        child: smallestContainer,
       );
     }
   }
@@ -485,23 +485,23 @@ class DialogShower {
 
     // the container as mini as possible for calculate the point if tapped inside
     return
-      // GetSizeWidget(
-      //   onSizeChanged: (size) {
-      //     __log_print__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
-      //     _tryToGetContainerSizeRaw();
-      //   },
-      //   child:
+        // GetSizeWidget(
+        //   onSizeChanged: (size) {
+        //     __log_print__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
+        //     _tryToGetContainerSizeRaw();
+        //   },
+        //   child:
         Container(
-          key: _containerKey,
-          width: width,
-          height: height,
-          // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
-          // source will assert(decoration != null || clipBehavior == Clip.none),
-          clipBehavior: containerClipBehavior,
-          decoration: containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration,
-          child: widget, //child,
-        // ),
-      );
+      key: _containerKey,
+      width: width,
+      height: height,
+      // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
+      // source will assert(decoration != null || clipBehavior == Clip.none),
+      clipBehavior: containerClipBehavior,
+      decoration: containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration,
+      child: widget, //child,
+      // ),
+    );
   }
 
   Decoration _defContainerDecoration() {
@@ -709,11 +709,11 @@ class GetSizeWidget extends SingleChildRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return GetSizeRenderObject()..onSizeChanged = onSizeChanged;
+    return _GetSizeRenderObject()..onSizeChanged = onSizeChanged;
   }
 }
 
-class GetSizeRenderObject extends RenderProxyBox {
+class _GetSizeRenderObject extends RenderProxyBox {
   Size? _size;
   void Function(Size size)? onSizeChanged;
 

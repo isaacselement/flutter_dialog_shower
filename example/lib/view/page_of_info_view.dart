@@ -6,19 +6,40 @@ class PageOfInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.only(top: 38),
       child: Column(
         children: [
           Row(
             children: [
               const Text('Fixed: '),
               CupertinoButton(
-                child: const Text('Show center width & height'),
+                child: const Text('Show center'),
                 onPressed: () {
                   DialogWrapper.show(
                     _getEditBox(width: 500, height: 600),
                     isFixed: true,
                     // width: 500,
                     // height: 600,
+                  );
+                },
+              ),
+              const SizedBox(width: 20),
+              CupertinoButton(
+                child: const Text('Show left'),
+                onPressed: () {
+                  DialogWrapper.showLeft(
+                    _getEditBox(),
+                    isFixed: true,
+                  );
+                },
+              ),
+              const SizedBox(width: 20),
+              CupertinoButton(
+                child: const Text('Show right'),
+                onPressed: () {
+                  DialogWrapper.showRight(
+                    _getEditBox(),
+                    isFixed: true,
                   );
                 },
               ),
@@ -34,28 +55,6 @@ class PageOfInfoView extends StatelessWidget {
                   );
                 },
               ),
-
-              const SizedBox(width: 20),
-              CupertinoButton(
-                child: const Text('Show left'),
-                onPressed: () {
-                  DialogWrapper.showLeft(
-                    _getEditBox(),
-                    // isFixed: true,
-                  );
-                },
-              ),
-
-              const SizedBox(width: 20),
-              CupertinoButton(
-                child: const Text('Show right'),
-                onPressed: () {
-                  DialogWrapper.showRight(
-                    _getEditBox(),
-                    // isFixed: true,
-                  );
-                },
-              ),
             ],
           ),
           Row(
@@ -65,6 +64,24 @@ class PageOfInfoView extends StatelessWidget {
                 child: const Text('Show center'),
                 onPressed: () {
                   DialogWrapper.show(
+                    _getEditBox(),
+                  );
+                },
+              ),
+              const SizedBox(width: 20),
+              CupertinoButton(
+                child: const Text('Show left'),
+                onPressed: () {
+                  DialogWrapper.showLeft(
+                    _getEditBox(),
+                  );
+                },
+              ),
+              const SizedBox(width: 20),
+              CupertinoButton(
+                child: const Text('Show right'),
+                onPressed: () {
+                  DialogWrapper.showRight(
                     _getEditBox(),
                   );
                 },
