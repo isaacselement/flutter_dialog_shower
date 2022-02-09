@@ -106,7 +106,8 @@ class DialogShower {
   // private .....
   TapUpDetails? _tapUpDetails;
 
-  final GlobalKey _builderKey = GlobalKey();
+  final GlobalKey _builderExKey = GlobalKey();
+  // final GlobalKey _scaffoldKey = GlobalKey();
   final GlobalKey _containerKey = GlobalKey();
 
   // extension for navigate inner dialog
@@ -229,7 +230,7 @@ class DialogShower {
 
   Widget _getInternalWidget(Widget _child) {
     return BuilderEx(
-      key: _builderKey,
+      key: _builderExKey,
       showCallBack: () {
         showCallBack?.call(this);
         for (int i = 0; i < (showCallbacks?.length ?? 0); i++) {
@@ -332,6 +333,7 @@ class DialogShower {
           },
           child: Scaffold(
             appBar: null,
+            // key: _scaffoldKey,
             backgroundColor: scaffoldBackgroundColor,
             body: _getScaffoldBody(_child),
           ),
@@ -485,7 +487,8 @@ class DialogShower {
       __log_print__('[BuilderEx] setState was called, rebuilding...');
       return true;
     }());
-    _builderKey.currentState?.setState(fn);
+    _builderExKey.currentState?.setState(fn);
+    // _scaffoldKey.currentState?.setState(fn);
   }
 
   /// Private methods
