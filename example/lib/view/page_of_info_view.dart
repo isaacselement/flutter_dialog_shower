@@ -1,11 +1,13 @@
 import 'dart:async';
 
-import 'package:example/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
+import 'package:flutter_dialog_shower/listener/keyboard_event_listener.dart';
+
+import '../util/logger.dart';
 
 class PageOfInfoView extends StatelessWidget {
   static bool isInited = false;
@@ -16,37 +18,52 @@ class PageOfInfoView extends StatelessWidget {
       return;
     }
     isInited = !isInited;
-    EventChannel eventChannel = const EventChannel('shower_keyboard_visibility');
-    Stream<dynamic> stream = eventChannel.receiveBroadcastStream();
-    StreamSubscription streamSubscription = stream.listen((event) {
-      Logger.d('PageOfInfoView 【keyboard visibility】---> $event');
-      if (event is int) {
-        DialogShower? topDialog = DialogWrapper.getTopDialog();
-        if (topDialog != null) {
-          DialogShower shower = topDialog;
-          if (shower.obj is int || shower.obj is List) {
-            shower.obj = shower.obj is int ? [shower.alignment, shower.margin] : shower.obj;
-            Alignment ancientA = (shower.obj as List)[0];
-            Alignment novelA = Alignment(ancientA.x, -1.0);
-            EdgeInsets? ancientE = (shower.obj as List)[1];
-            EdgeInsets novelE =
-                EdgeInsets.only(left: ancientE?.left ?? 0, right: ancientE?.right ?? 0, bottom: ancientE?.bottom ?? 0, top: 30);
-            shower.setState(() {
-              shower.alignment = event == 1 ? novelA : ancientA;
-              shower.margin = event == 1 ? novelE : ancientE;
-            });
-          }
+
+    // set up appearence for keyboard showed up in one place
+    StreamSubscription streamSubscription = KeyboardEventListener.instance.listen((isKeyboardShow) {
+      Logger.d('PageOfInfoView 【keyboard visibility】---> isKeyboardShow: $isKeyboardShow');
+      DialogShower? topDialog = DialogWrapper.getTopDialog();
+      if (topDialog != null) {
+        DialogShower shower = topDialog;
+        if ((shower.obj is int || shower.obj is List) && (shower.keyboardEventCallBack == null)) {
+          Logger.d('PageOfInfoView 【keyboard visibility】---> come in ...');
+          PageOfInfoView.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
         }
       }
     });
+    // streamSubscription.cancel();   // need to cancel by yourself
+  }
 
-    // streamSubscription.cancel();
+  static void rebuildShowerPositionTopOnKeyboardEvent(DialogShower shower, bool isKeyboardShow, {double? top}) {
+    Logger.d("[PageOfInfoView] >>>>>>>>>>>> rebuildShowerPositionTopOnKeyboardEvent $isKeyboardShow !!!");
+    shower.obj = shower.obj is List ? shower.obj : [shower.alignment, shower.margin];
+    Alignment? aliOld = (shower.obj as List)[0];
+    Alignment aliNew = Alignment(aliOld?.x ?? 0.0, -1.0); // Alignment topCenter = Alignment(0.0, -1.0);
+    EdgeInsets? insOld = (shower.obj as List)[1];
+    EdgeInsets insNew = EdgeInsets.only(left: insOld?.left ?? 0, right: insOld?.right ?? 0, bottom: insOld?.bottom ?? 0, top: top ?? 30);
+    shower.setState(() {
+      shower.alignment = isKeyboardShow ? aliNew : aliOld;
+      shower.margin = isKeyboardShow ? insNew : insOld;
+    });
+  }
+
+  static void rebuildShowerPositionBottomOnKeyboardEvent(DialogShower shower, bool isKeyboardShow, {double? bottom, double? top}) {
+    Logger.d("[PageOfInfoView] >>>>>>>>>>>> rebuildShowerPositionBottomOnKeyboardEvent $isKeyboardShow !!!");
+    shower.obj = shower.obj is List ? shower.obj : [shower.alignment, shower.margin];
+    Alignment? aliOld = (shower.obj as List)[0];
+    Alignment aliNew = Alignment(aliOld?.x ?? 0.0, 1.0); // Alignment bottomCenter = Alignment(0.0, 1.0);
+    EdgeInsets? insOld = (shower.obj as List)[1];
+    EdgeInsets insNew = EdgeInsets.only(left: insOld?.left ?? 0, right: insOld?.right ?? 0, bottom: bottom ?? 10, top: top ?? 30);
+    shower.setState(() {
+      shower.alignment = isKeyboardShow ? aliNew : aliOld;
+      shower.margin = isKeyboardShow ? insNew : insOld;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfInfoView] ----------->>>>>>>>>>>> build/rebuild!!!");
-    ensureInited();
+    PageOfInfoView.ensureInited();
 
     return Container(
       padding: const EdgeInsets.only(top: 38),
@@ -94,7 +111,7 @@ class PageOfInfoView extends StatelessWidget {
                     _getEditBox(),
                     isFixed: true,
                     x: 200,
-                    y: 50,
+                    y: 200,
                   );
                 },
               ),
@@ -136,7 +153,7 @@ class PageOfInfoView extends StatelessWidget {
                   DialogWrapper.show(
                     _getEditBox(),
                     x: 200,
-                    y: 50,
+                    y: 200,
                   );
                 },
               ),
@@ -173,13 +190,28 @@ class PageOfInfoView extends StatelessWidget {
               ),
               const SizedBox(width: 20),
               CupertinoButton(
-                child: const Text('Show x/y'),
+                child: const Text('Show x/y Top'),
                 onPressed: () {
                   DialogWrapper.show(
                     _getEditBox(),
                     x: 200,
                     y: 200,
-                  ).obj = 1;
+                  ).keyboardEventCallBack = (shower, isKeyboardShow) {
+                    PageOfInfoView.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
+                  };
+                },
+              ),
+              const SizedBox(width: 20),
+              CupertinoButton(
+                child: const Text('Show x/y Bottom'),
+                onPressed: () {
+                  DialogWrapper.show(
+                    _getEditBox(height: 300),
+                    x: 200,
+                    y: 200,
+                  ).keyboardEventCallBack = (shower, isKeyboardShow) {
+                    PageOfInfoView.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
+                  };
                 },
               ),
             ],

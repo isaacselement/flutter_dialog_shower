@@ -13,8 +13,8 @@ Flutter keyboard visibility
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Jason Rai' => 'suchavision@gmail.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Runner/**/*.m'
-  s.public_header_files = 'Runner/**/*.h'
+  s.source_files = 'Classes/**/*'
+  s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   s.platform = :ios, '8.0'
 

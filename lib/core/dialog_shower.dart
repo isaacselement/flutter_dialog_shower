@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_dialog_shower/listener/keyboard_event_listener.dart';
 
 class DialogShower {
   static BuildContext? gContext;
@@ -68,6 +69,9 @@ class DialogShower {
   void removeDismissCallBack(ShowerVisibilityCallBack callBack) {
     (dismissCallbacks = dismissCallbacks ?? []).remove(callBack);
   }
+
+  KeyboardVisibilityCallBack? keyboardEventCallBack = null;
+  StreamSubscription? _keyboardStreamSubscription = null;
 
   // modified/assigned internal .....
   String routeName = '';
@@ -225,12 +229,19 @@ class DialogShower {
 
   Widget _getInternalWidget(Widget _child) {
     return BuilderEx(
-      // return Builder(
       key: _builderKey,
       showCallBack: () {
         showCallBack?.call(this);
         for (int i = 0; i < (showCallbacks?.length ?? 0); i++) {
           showCallbacks?.elementAt(i).call(this);
+        }
+
+        // keyboard visibility
+        if (keyboardEventCallBack != null) {
+          _keyboardStreamSubscription?.cancel();
+          _keyboardStreamSubscription = KeyboardEventListener.instance.listen((isKeyboardShow) {
+            keyboardEventCallBack?.call(this, isKeyboardShow);
+          });
         }
       },
       dismissCallBack: () {
@@ -238,6 +249,10 @@ class DialogShower {
         for (int i = 0; i < (dismissCallbacks?.length ?? 0); i++) {
           dismissCallbacks?.elementAt(i).call(this);
         }
+
+        // keyboard visibility
+        _keyboardStreamSubscription?.cancel();
+        _keyboardStreamSubscription = null;
       },
       builder: (BuildContext context) {
         return GestureDetector(
@@ -315,13 +330,11 @@ class DialogShower {
               }
             }
           },
-
           child: Scaffold(
             appBar: null,
             backgroundColor: scaffoldBackgroundColor,
             body: _getScaffoldBody(_child),
           ),
-          // ),
         );
       },
     );
@@ -400,11 +413,12 @@ class DialogShower {
         __log_print__('>>>>>>>>>>>>>> popping: $routeName');
         return true;
       }());
+
       Future.microtask(() {
         Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
       });
-
       /// ISSUE: Failed assertion: line 4595 pos 12: '!_debugLocked': is not true.
+      // will call NavigatorObserver didPop method immediately following, so u should put set isPopped into Future.microtask
       // Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
 
       if (NavigatorObserverEx.statesChangingShowers?[routeName] != null) {
@@ -616,11 +630,8 @@ class BuilderEx extends StatefulWidget {
 
 class _BuilderExState extends State<BuilderEx> {
   @override
-  Widget build(BuildContext context) {
-    assert(() {
-      __log_print__('[BuilderEx] >>>>>>>>>>>>>> build');
-      return true;
-    }());
+  void initState() {
+    super.initState();
     try {
       widget.showCallBack?.call();
     } catch (e) {
@@ -630,6 +641,18 @@ class _BuilderExState extends State<BuilderEx> {
         return true;
       }());
     }
+    assert(() {
+      __log_print__('[BuilderEx] >>>>>>>>>>>>>> initState');
+      return true;
+    }());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    assert(() {
+      __log_print__('[BuilderEx] >>>>>>>>>>>>>> build');
+      return true;
+    }());
     return widget.builder(context);
   }
 
@@ -747,3 +770,4 @@ __log_print__(String log) {
 }
 
 typedef ShowerVisibilityCallBack = void Function(DialogShower shower);
+typedef KeyboardVisibilityCallBack = void Function(DialogShower shower, bool isKeyboardShow);

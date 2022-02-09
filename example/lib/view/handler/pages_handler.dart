@@ -1,8 +1,9 @@
-import 'package:example/controller/controller_manager.dart';
-import 'package:example/util/logger.dart';
-import 'package:example/view/page_of_info_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../controller/controller_manager.dart';
+import '../../util/logger.dart';
+import '../page_of_info_view.dart';
 
 class PagesHandler {
   static void init() {
