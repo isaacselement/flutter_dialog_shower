@@ -22,6 +22,22 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+// ----- delete this line for building android example
+
+//task clean(type: Delete) {
+//    delete rootProject.buildDir
+//}
+
+// ----- add lines below for building android example
+// ----- add AndroidManifest.xml to src/main folder with applicationId/package value
+// ----- make sure that the minSdkVersion was compatible with the example build.gradle
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        minSdkVersion 16
+    }
 }
