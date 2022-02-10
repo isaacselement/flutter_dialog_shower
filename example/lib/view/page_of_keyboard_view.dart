@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/listener/keyboard_event_listener.dart';
 
 import '../util/logger.dart';
 
-class PageOfInfoView extends StatelessWidget {
+class PageOfKeyboardView extends StatelessWidget {
   static bool isInited = false;
 
   static void ensureInited() {
@@ -27,7 +26,7 @@ class PageOfInfoView extends StatelessWidget {
         DialogShower shower = topDialog;
         if ((shower.obj is int || shower.obj is List) && (shower.keyboardEventCallBack == null)) {
           Logger.d('PageOfInfoView 【keyboard visibility】---> come in ...');
-          PageOfInfoView.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
+          PageOfKeyboardView.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
         }
       }
     });
@@ -63,7 +62,7 @@ class PageOfInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfInfoView] ----------->>>>>>>>>>>> build/rebuild!!!");
-    PageOfInfoView.ensureInited();
+    PageOfKeyboardView.ensureInited();
 
     return Container(
       padding: const EdgeInsets.only(top: 38),
@@ -197,7 +196,7 @@ class PageOfInfoView extends StatelessWidget {
                     x: 200,
                     y: 200,
                   ).keyboardEventCallBack = (shower, isKeyboardShow) {
-                    PageOfInfoView.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
+                    PageOfKeyboardView.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
                   };
                 },
               ),
@@ -210,7 +209,7 @@ class PageOfInfoView extends StatelessWidget {
                     x: 200,
                     y: 200,
                   ).keyboardEventCallBack = (shower, isKeyboardShow) {
-                    PageOfInfoView.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
+                    PageOfKeyboardView.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
                   };
                 },
               ),

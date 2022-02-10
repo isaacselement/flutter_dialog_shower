@@ -1,9 +1,15 @@
-import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+
+import 'package:flutter/material.dart';
 
 import 'dialog_shower.dart';
 
 class DialogWrapper {
+  // Note, direction example:
+  // Offset(1.0, 0.0) -> From Right, Offset(-1.0, 0.0) -> From Left
+  // Offset(0.0, 1.0) -> From Bottom, Offset(0.0, -1.0) -> From Top
+  // Offset(-1.0, -1.0) LeftTop to Destination ...
+
   // same ui effect as function [show] ...
   static DialogShower showCenter(Widget child, {required double width, required double height, String? key}) {
     MediaQueryData query = MediaQueryData.fromWindow(WidgetsBinding.instance?.window ?? ui.window);
@@ -11,7 +17,7 @@ class DialogWrapper {
   }
 
   static DialogShower showRight(Widget child, {bool isFixed = false, double? width, double? height, String? key}) {
-    DialogShower shower = show(child, width: width, height: height, direction: TextDirection.rtl, key: key);
+    DialogShower shower = show(child, width: width, height: height, direction: const Offset(1.0, 0.0), key: key);
     if (isFixed) {
       shower.alignment = Alignment.topRight;
       shower.margin = const EdgeInsets.only(top: -1, right: 16);
@@ -23,7 +29,7 @@ class DialogWrapper {
   }
 
   static DialogShower showLeft(Widget child, {bool isFixed = false, double? width, double? height, String? key}) {
-    DialogShower shower = show(child, width: width, height: height, direction: TextDirection.ltr, key: key);
+    DialogShower shower = show(child, width: width, height: height, direction: const Offset(-1.0, 0.0), key: key);
     if (isFixed) {
       shower.alignment = Alignment.topLeft;
       shower.margin = const EdgeInsets.only(top: -1, left: 16);
@@ -35,19 +41,22 @@ class DialogWrapper {
   }
 
   static DialogShower show(Widget child,
-      {bool isFixed = false, double? x, double? y, double? width, double? height, TextDirection? direction, String? key}) {
+      {bool isFixed = false, double? x, double? y, double? width, double? height, Offset? direction, String? key}) {
     return showWith(DialogShower(), child, isFixed: isFixed, x: x, y: y, width: width, height: height, direction: direction, key: key);
   }
 
   static DialogShower showWith(DialogShower shower, Widget child,
-      {bool isFixed = false, double? x, double? y, double? width, double? height, TextDirection? direction, String? key}) {
+      {bool isFixed = false, double? x, double? y, double? width, double? height, Offset? direction, String? key}) {
     shower
       ..build()
-      ..barrierDismissible = null  // null indicate that: dimiss keyboard first while keyboard is showing, else dismiss dialog immediately
+      ..barrierDismissible = null // null indicate that: dimiss keyboard first while keyboard is showing, else dismiss dialog immediately
       ..containerShadowColor = Colors.grey
       ..containerBorderRadius = 10.0
-      ..containerShadowBlurRadius = 20.0
-      ..textDirection = direction;
+      ..containerShadowBlurRadius = 20.0;
+
+    if (direction != null) {
+      shower.animationBeginOffset = direction;
+    }
 
     if (isFixed) {
       shower

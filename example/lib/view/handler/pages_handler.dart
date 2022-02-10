@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../controller/controller_manager.dart';
 import '../../util/logger.dart';
-import '../page_of_info_view.dart';
+import '../page_of_keyboard_view.dart';
 
 class PagesHandler {
   static void init() {
@@ -12,7 +12,7 @@ class PagesHandler {
     if (tabsPages.isNotEmpty) {
       return;
     }
-    addTabPage(true, 'Tab1', const Icon(Icons.info, size: 32), PageOfInfoView());
+    addTabPage(true, 'Tab1', const Icon(Icons.keyboard, size: 32), PageOfKeyboardView());
     addTabPage(false, 'Tab2', const Icon(Icons.search, size: 32), Container(color: Colors.white, alignment: Alignment.center));
     addTabPage(false, 'Tab3', const Icon(Icons.security, size: 32), Container(color: Colors.white, alignment: Alignment.center));
   }

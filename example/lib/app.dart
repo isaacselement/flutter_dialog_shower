@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 
+import 'util/logger.dart';
 import 'view/handler/pages_handler.dart';
 
 class App extends StatelessWidget {
@@ -29,6 +30,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    Logger.d("[HomePage] ----------->>>>>>>>>>>> build/rebuild!!!");
 
     DialogShower.init(context);
 

@@ -22,8 +22,8 @@ class DialogShower {
   // scaffold
   Color? scaffoldBackgroundColor = Colors.transparent;
 
-  // Animation direction! left to right, right to left, and null for bottom to top.
-  TextDirection? textDirection;
+  // Animation direction  // default from Bottom
+  Offset? animationBeginOffset = const Offset(0.0, 1.0);
 
   // Important!!! alignment center default!!!
   AlignmentGeometry? alignment = Alignment.center;
@@ -106,8 +106,8 @@ class DialogShower {
   // private .....
   TapUpDetails? _tapUpDetails;
 
-  final GlobalKey _builderExKey = GlobalKey();
-  // final GlobalKey _scaffoldKey = GlobalKey();
+  // final GlobalKey _builderExKey = GlobalKey();
+  final GlobalKey _statefulKey = GlobalKey();
   final GlobalKey _containerKey = GlobalKey();
 
   // extension for navigate inner dialog
@@ -230,7 +230,7 @@ class DialogShower {
 
   Widget _getInternalWidget(Widget _child) {
     return BuilderEx(
-      key: _builderExKey,
+      // key: _builderExKey,
       showCallBack: () {
         showCallBack?.call(this);
         for (int i = 0; i < (showCallbacks?.length ?? 0); i++) {
@@ -274,7 +274,7 @@ class DialogShower {
           onTap: () {
             bool isKeyboardShowed = DialogShower.isKeyboardShowing();
             assert(() {
-              __log_print__('onTap found, checking tap up details, keyboard is ${isKeyboardShowed ? '' : 'not'} showing');
+              __log_print__('Checking onTap details, keyboard is ${isKeyboardShowed ? '' : 'not'} showing');
               return true;
             }());
 
@@ -333,9 +333,13 @@ class DialogShower {
           },
           child: Scaffold(
             appBar: null,
-            // key: _scaffoldKey,
             backgroundColor: scaffoldBackgroundColor,
-            body: _getScaffoldBody(_child),
+            body: StatefulBuilder(
+              key: _statefulKey,
+              builder: (context, setState) {
+                return _getScaffoldBody(_child);
+              },
+            ),
           ),
         );
       },
@@ -389,7 +393,7 @@ class DialogShower {
     }
 
     assert(() {
-      __log_print__('_margin: $_margin, alignment: $alignment, textDirection: $textDirection');
+      __log_print__('_margin: $_margin, alignment: $alignment, animationBeginOffset: $animationBeginOffset');
       return true;
     }());
     // ---------------------------- calculate _margin, _width, _height ----------------------------
@@ -419,6 +423,7 @@ class DialogShower {
       Future.microtask(() {
         Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
       });
+
       /// ISSUE: Failed assertion: line 4595 pos 12: '!_debugLocked': is not true.
       // will call NavigatorObserver didPop method immediately following, so u should put set isPopped into Future.microtask
       // Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
@@ -484,11 +489,11 @@ class DialogShower {
 
   void setState(VoidCallback fn) {
     assert(() {
-      __log_print__('[BuilderEx] setState was called, rebuilding...');
+      __log_print__('[DialogShower] setState was called, rebuilding...');
       return true;
     }());
-    _builderExKey.currentState?.setState(fn);
-    // _scaffoldKey.currentState?.setState(fn);
+    // _builderExKey.currentState?.setState(fn);
+    _statefulKey.currentState?.setState(fn);
   }
 
   /// Private methods
@@ -545,17 +550,13 @@ class DialogShower {
   }
 
   Widget _defTransition(BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
-    return _defTransitionRaw(ctx, animOne, animTwo, child, textDirection);
+    return _defTransitionRaw(ctx, animOne, animTwo, child, animationBeginOffset);
   }
 
-  Widget _defTransitionRaw(
-      BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child, TextDirection? direction) {
-    // Bottom to Up, Right to Left, Left to Right
-    Offset offset =
-        direction == null ? const Offset(0.0, 1.0) : (direction == TextDirection.rtl ? const Offset(1.0, 0.0) : const Offset(-1.0, 0.0));
+  Widget _defTransitionRaw(BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child, Offset? beginOffset) {
     return SlideTransition(
       position: Tween<Offset>(
-        begin: offset,
+        begin: beginOffset,
         end: const Offset(0.0, 0.0),
       ).animate(animOne),
       child: child,
