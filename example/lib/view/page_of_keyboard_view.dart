@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialog_shower/components/keyboard_widget.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/listener/keyboard_event_listener.dart';
@@ -19,7 +20,7 @@ class PageOfKeyboardView extends StatelessWidget {
     isInited = !isInited;
 
     // set up appearence for keyboard showed up in one place
-    StreamSubscription streamSubscription = KeyboardEventListener.instance.listen((isKeyboardShow) {
+    StreamSubscription streamSubscription = KeyboardEventListener.listen((isKeyboardShow) {
       Logger.d('PageOfInfoView 【keyboard visibility】---> isKeyboardShow: $isKeyboardShow');
       DialogShower? topDialog = DialogWrapper.getTopDialog();
       if (topDialog != null) {
@@ -39,7 +40,12 @@ class PageOfKeyboardView extends StatelessWidget {
     Alignment? aliOld = (shower.obj as List)[0];
     Alignment aliNew = Alignment(aliOld?.x ?? 0.0, -1.0); // Alignment topCenter = Alignment(0.0, -1.0);
     EdgeInsets? insOld = (shower.obj as List)[1];
-    EdgeInsets insNew = EdgeInsets.only(left: insOld?.left ?? 0, right: insOld?.right ?? 0, bottom: insOld?.bottom ?? 0, top: top ?? 30);
+    EdgeInsets insNew = EdgeInsets.only(
+      left: insOld?.left ?? 0,
+      right: insOld?.right ?? 0,
+      bottom: insOld?.bottom ?? 0,
+      top: top ?? MediaQuery.of(DialogShower.gContext!).padding.top,
+    );
     shower.setState(() {
       shower.alignment = isKeyboardShow ? aliNew : aliOld;
       shower.margin = isKeyboardShow ? insNew : insOld;
@@ -52,7 +58,12 @@ class PageOfKeyboardView extends StatelessWidget {
     Alignment? aliOld = (shower.obj as List)[0];
     Alignment aliNew = Alignment(aliOld?.x ?? 0.0, 1.0); // Alignment bottomCenter = Alignment(0.0, 1.0);
     EdgeInsets? insOld = (shower.obj as List)[1];
-    EdgeInsets insNew = EdgeInsets.only(left: insOld?.left ?? 0, right: insOld?.right ?? 0, bottom: bottom ?? 10, top: top ?? 30);
+    EdgeInsets insNew = EdgeInsets.only(
+      left: insOld?.left ?? 0,
+      right: insOld?.right ?? 0,
+      bottom: bottom ?? 20,
+      top: top ?? MediaQuery.of(DialogShower.gContext!).padding.top,
+    );
     shower.setState(() {
       shower.alignment = isKeyboardShow ? aliNew : aliOld;
       shower.margin = isKeyboardShow ? insNew : insOld;
@@ -211,6 +222,85 @@ class PageOfKeyboardView extends StatelessWidget {
                   ).keyboardEventCallBack = (shower, isKeyboardShow) {
                     PageOfKeyboardView.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
                   };
+                },
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              const Text('Keyboard Widgets: '),
+              CupertinoButton(
+                child: const Text('Show Invisible'),
+                onPressed: () {
+                  DialogWrapper.show(
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _getEditBox(width: 500, height: 300),
+                          KeyboardInvisibleWidget(
+                            child: Container(
+                              color: Colors.yellow,
+                              height: 100,
+                              alignment: Alignment.center,
+                              child: const Text('I will be invisible'),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    width: 500,
+                  );
+                },
+              ),
+              const SizedBox(width: 20),
+              CupertinoButton(
+                child: const Text('Show Visible'),
+                onPressed: () {
+                  DialogWrapper.show(
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _getEditBox(width: 500, height: 300),
+                          KeyboardInvisibleWidget(
+                            child: Container(
+                              color: Colors.yellow,
+                              height: 100,
+                              alignment: Alignment.center,
+                              child: const Text('I will be invisible'),
+                            ),
+                            isReverse: true,
+                          )
+                        ],
+                      ),
+                    ),
+                    width: 500,
+                  );
+                },
+              ),
+              const SizedBox(width: 20),
+              CupertinoButton(
+                child: const Text('Keyboard Rebuilder Widget'),
+                onPressed: () {
+                  DialogWrapper.show(
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _getEditBox(width: 500, height: 100),
+                          KeyboardRebuildWidget(
+                            builder: (BuildContext context, bool isKeyboardVisible) {
+                              return Container(
+                                color: Colors.yellow,
+                                height: 100,
+                                alignment: Alignment.center,
+                                child: Text(isKeyboardVisible ? '>>>>>Keyboard is Visible<<<<<' : '***Keyboard is Invisible***'),
+                              );
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    width: 500,
+                  );
                 },
               ),
             ],

@@ -240,7 +240,7 @@ class DialogShower {
         // keyboard visibility
         if (keyboardEventCallBack != null) {
           _keyboardStreamSubscription?.cancel();
-          _keyboardStreamSubscription = KeyboardEventListener.instance.listen((isKeyboardShow) {
+          _keyboardStreamSubscription = KeyboardEventListener.listen((isKeyboardShow) {
             keyboardEventCallBack?.call(this, isKeyboardShow);
           });
         }
@@ -351,19 +351,21 @@ class DialogShower {
     double? _width = width ?? _renderedWidth;
     double? _height = height ?? _renderedHeight;
 
-    ui.SingletonFlutterWindow _window = WidgetsBinding.instance?.window ?? ui.window;
-    double mWidth = _window.physicalSize.width;
-    double mHeight = _window.physicalSize.height;
-
-    MediaQueryData query = MediaQueryData.fromWindow(_window);
-    Size querySize = query.size;
-    MediaQueryData queryData = MediaQuery.of(context!);
-    double kWidth = queryData.size.width;
-    double kHeight = queryData.size.height;
+    MediaQueryData _queryData = MediaQuery.of(context!);
+    double kWidth = _queryData.size.width;
+    double kHeight = _queryData.size.height;
 
     assert(() {
-      __log_print__('self: _width: $_width, _height: $_height; Media.Window width: ${querySize.width}, height: ${querySize.height}');
-      __log_print__('ui.window: mWidth: $mWidth, mHeight: $mHeight; MediaQueryData kWidth: $kWidth, kHeight: $kHeight');
+      ui.SingletonFlutterWindow _window = WidgetsBinding.instance?.window ?? ui.window;
+      double mWidth = _window.physicalSize.width;
+      double mHeight = _window.physicalSize.height;
+
+      MediaQueryData query = MediaQueryData.fromWindow(_window);
+      double mTop = _window.padding.top;
+      double kTop = _queryData.padding.top;
+      __log_print__('self: _width: $_width, _height: $_height');
+      __log_print__('Window: mWidth: $mWidth, mHeight: $mHeight, mTop: $mTop; MediaQuery kWidth: $kWidth, kHeight: $kHeight, kTop: $kTop');
+      __log_print__('Media.Window width: ${query.size.width}, height: ${query.size.height}, padding: ${query.padding}');
       return true;
     }());
 
