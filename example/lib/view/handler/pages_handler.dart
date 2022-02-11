@@ -1,24 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialog_shower/broker/broker.dart';
 
-import '../../controller/controller_manager.dart';
 import '../../util/logger.dart';
-import '../page_of_keyboard_view.dart';
+import '../page_of_keyboard.dart';
+import '../page_of_widigets.dart';
 
 class PagesHandler {
   static void init() {
-    CtrlM.setIfAbsent<PageController>(PageController());
+    Broker.setIfAbsent<PageController>(PageController());
 
     if (tabsPages.isNotEmpty) {
       return;
     }
-    addTabPage(true, 'Tab1', const Icon(Icons.keyboard, size: 32), PageOfKeyboardView());
-    addTabPage(false, 'Tab2', const Icon(Icons.search, size: 32), Container(color: Colors.white, alignment: Alignment.center));
+    addTabPage(true, 'Tab1', const Icon(Icons.keyboard, size: 32), PageOfKeyboard());
+    addTabPage(false, 'Tab2', const Icon(Icons.search, size: 32), PageOfWidgets());
     addTabPage(false, 'Tab3', const Icon(Icons.security, size: 32), Container(color: Colors.white, alignment: Alignment.center));
   }
 
   static PageController? getPageController() {
-    return CtrlM.get<PageController>();
+    return Broker.get<PageController>();
   }
 
   /// tabs & pages
@@ -45,7 +46,7 @@ class PagesHandler {
     inst.tabBuilder = () => CupertinoButton(
         child: tab,
         onPressed: () {
-          CtrlM.get<PageController>()?.jumpToPage(inst.ordinal);
+          Broker.get<PageController>()?.jumpToPage(inst.ordinal);
         });
   }
 

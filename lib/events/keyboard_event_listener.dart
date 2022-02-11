@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class KeyboardEventListener {
@@ -47,13 +48,19 @@ class KeyboardEventListener {
     return subscription;
   }
 
-  static void cancel({StreamSubscription<bool>? subscription, String? key}) {
+  static void remove({StreamSubscription<bool>? subscription, String? key}) {
     if (subscription != null) {
       subscription.cancel();
-      managedSubscriptions?.removeWhere((key, value) => value == subscription);
+      managedSubscriptions?.removeWhere((key, value) {
+        bool isBingo = value == subscription;
+        if (isBingo) {
+          value.cancel();
+        }
+        return isBingo;
+      });
     }
     if (key != null) {
-      managedSubscriptions?.remove(key);
+      managedSubscriptions?.remove(key)?.cancel();
     }
   }
 }

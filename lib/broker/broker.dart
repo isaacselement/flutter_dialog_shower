@@ -1,5 +1,5 @@
 // ControllerManager
-class CtrlM {
+class Broker {
   static final Map<String, Object> _instances = {};
 
   static void setIfAbsent<T>(T controller, {String? key}) {
@@ -22,5 +22,9 @@ class CtrlM {
 
   static bool contains<T>({String? key}) {
     return _instances.containsKey(key ?? T.toString());
+  }
+
+  static dynamic remove(String? key) {
+    return _instances.remove(key);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/components/rotate_widget.dart';
+import 'package:flutter_dialog_shower/views/rotate_widget.dart';
 import 'dialog_wrapper.dart';
 
 import 'dialog_shower.dart';

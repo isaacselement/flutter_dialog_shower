@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_dialog_shower/listener/keyboard_event_listener.dart';
+import 'package:flutter_dialog_shower/events/keyboard_event_listener.dart';
 
 class DialogShower {
   static BuildContext? gContext;
