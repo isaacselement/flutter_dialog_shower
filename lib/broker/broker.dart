@@ -16,7 +16,7 @@ class Broker {
   static T? get<T>({String? key}) {
     Type t = T;
     String k = key ?? t.toString();
-    return _instances[k] as T;
+    return _instances[k] as T?;
   }
 
   static bool contains<T>({String? key}) {

@@ -6,16 +6,21 @@ import '../../util/logger.dart';
 import '../page_of_keyboard.dart';
 import '../page_of_widigets.dart';
 
-class PagesHandler {
+class PagesManager {
   static void init() {
-    Broker.setIfAbsent<PageController>(PageController());
-
-    if (tabsPages.isNotEmpty) {
-      return;
+    if (getPageController() == null) {
+      Broker.setIfAbsent<PageController>(PageController());
+      PageController pageController = getPageController()!;
+      pageController.addListener(() {
+        Logger.d('PagesManager jump to page:  ${pageController.page}');
+      });
     }
-    addTabPage(true, 'Tab1', const Icon(Icons.keyboard, size: 32), PageOfKeyboard());
-    addTabPage(false, 'Tab2', const Icon(Icons.search, size: 32), PageOfWidgets());
-    addTabPage(false, 'Tab3', const Icon(Icons.security, size: 32), Container(color: Colors.white, alignment: Alignment.center));
+
+    if (tabsPages.isEmpty) {
+      addTabPage(true, 'Tab1', const Icon(Icons.keyboard, size: 32), PageOfKeyboard());
+      addTabPage(false, 'Tab2', const Icon(Icons.event, size: 32), PageOfWidgets());
+      addTabPage(false, 'Tab3', const Icon(Icons.security, size: 32), Container(color: Colors.white, alignment: Alignment.center));
+    }
   }
 
   static PageController? getPageController() {
@@ -33,11 +38,11 @@ class PagesHandler {
       pageBuilder: () {
         return isKeepAlive
             ? KeepAlivePageWidget(builder: (ctx, setState) {
-                Logger.d('PagesHandler >>>>>>>>>>>>> KeepAlivePageWidget rebuild: $name');
+                Logger.d('PagesManager >>>>>>>>>>>>> KeepAlivePageWidget rebuild: $name');
                 return page;
               })
             : StatefulBuilder(builder: (ctx, setState) {
-                Logger.d('PagesHandler >>>>>>>>>>>>> StatefulBuilder rebuild: $name');
+                Logger.d('PagesManager >>>>>>>>>>>>> StatefulBuilder rebuild: $name');
                 return page;
               });
       },
