@@ -42,6 +42,10 @@ class PageOfKeyboard extends StatelessWidget {
     Logger.d("[PageOfInfoView] ----------->>>>>>>>>>>> build/rebuild!!!");
     PageOfKeyboard.ensureInited();
 
+    return Container(padding: const EdgeInsets.all(8), child: buildButtons());
+  }
+
+  Widget buildButtons() {
     List<String> titles = ['Positioned: ', 'Un Positioned: ', 'Custome Positioned: ', 'Keyboard Widgets: '];
     TextStyle titleStyle = const TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
     double maxTitleWidth = getMaxTextWidth(titles, titleStyle);
@@ -228,7 +232,7 @@ class PageOfKeyboard extends StatelessWidget {
                             color: Colors.yellow,
                             height: 100,
                             alignment: Alignment.center,
-                            child: Text(!isKeyboardVisible ? '>>>>>Text will changed on rebuild<<<<<' : '***Text is changed :)***'),
+                            child: Text(!isKeyboardVisible ? '>>>>>Text will rebuild on keyboard showed<<<<<' : '***Text is changed :)***'),
                           );
                         },
                       )

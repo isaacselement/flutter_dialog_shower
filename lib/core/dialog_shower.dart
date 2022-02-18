@@ -128,7 +128,7 @@ class DialogShower {
     if (context is Element && context.widget is Navigator) {
       navigator = context.widget as Navigator;
       assert(() {
-        __log_print__('current context already with a navigator >>> $navigator');
+        __shower_log__('current context already with a navigator >>> $navigator');
         return true;
       }());
     }
@@ -140,21 +140,21 @@ class DialogShower {
     Navigator? anotherNavigator = naviWidget != null && naviWidget is Navigator ? naviWidget : null;
     if (navigator != anotherNavigator) {
       assert(() {
-        __log_print__('found another navigator from ancestor >>> $anotherNavigator');
+        __shower_log__('found another navigator from ancestor >>> $anotherNavigator');
         return true;
       }());
       navigator = anotherNavigator;
     }
     RenderObject? naviRenderObject = naviContext?.findRenderObject();
     assert(() {
-      __log_print__('naviState >>> $naviState, naviContext >>> $naviContext, naviWidget >>> $naviWidget, navigator >>> $navigator,'
+      __shower_log__('naviState >>> $naviState, naviContext >>> $naviContext, naviWidget >>> $naviWidget, navigator >>> $navigator,'
           ' naviRenderObject >>> $naviRenderObject');
       return true;
     }());
 
     if (navigator?.observers.contains(DialogShower.getObserver()) ?? false) {
       assert(() {
-        __log_print__('already register observer in navigator!!!!');
+        __shower_log__('already register observer in navigator!!!!');
         return true;
       }());
       NavigatorObserverEx.ensureInit();
@@ -201,7 +201,7 @@ class DialogShower {
     _isShowing = true;
 
     assert(() {
-      __log_print__('>>>>>>>>>>>>>> showing: $routeName');
+      __shower_log__('>>>>>>>>>>>>>> showing: $routeName');
       return true;
     }());
 
@@ -222,7 +222,7 @@ class DialogShower {
     );
 
     assert(() {
-      __log_print__('>>>>>>>>>>>>>> showed: $routeName');
+      __shower_log__('>>>>>>>>>>>>>> showed: $routeName');
       return true;
     }());
     return future;
@@ -259,14 +259,14 @@ class DialogShower {
         return GestureDetector(
           onTapDown: (TapDownDetails details) {
             assert(() {
-              __log_print__('TapDownDetails: ${details.globalPosition}, ${details.localPosition}, ${details.kind}');
+              __shower_log__('TapDownDetails: ${details.globalPosition}, ${details.localPosition}, ${details.kind}');
               return true;
             }());
             _tapUpDetails = null;
           },
           onTapUp: (TapUpDetails details) {
             assert(() {
-              __log_print__('TapUpDetails: ${details.globalPosition}, ${details.localPosition}, ${details.kind}');
+              __shower_log__('TapUpDetails: ${details.globalPosition}, ${details.localPosition}, ${details.kind}');
               return true;
             }());
             _tapUpDetails = details;
@@ -274,7 +274,7 @@ class DialogShower {
           onTap: () {
             bool isKeyboardShowed = DialogShower.isKeyboardShowing();
             assert(() {
-              __log_print__('Checking onTap details, keyboard is ${isKeyboardShowed ? '' : 'not'} showing');
+              __shower_log__('Checking onTap details, keyboard is ${isKeyboardShowed ? '' : 'not'} showing');
               return true;
             }());
 
@@ -296,7 +296,7 @@ class DialogShower {
               bool isTapInside = isTapInsideX && isTapInsideY;
 
               assert(() {
-                __log_print__(
+                __shower_log__(
                     'HitTest: Container [$x1, $y1], [$x2, $y2]. Tap [$tapX, $tapY]. isTapInside X$isTapInsideX && Y$isTapInsideY = $isTapInside, '
                     'barrierDismissible: $barrierDismissible, isShowing: $isShowing');
                 return true;
@@ -363,9 +363,10 @@ class DialogShower {
       MediaQueryData query = MediaQueryData.fromWindow(_window);
       double mTop = _window.padding.top;
       double kTop = _queryData.padding.top;
-      __log_print__('self: _width: $_width, _height: $_height');
-      __log_print__('Window: mWidth: $mWidth, mHeight: $mHeight, mTop: $mTop; MediaQuery kWidth: $kWidth, kHeight: $kHeight, kTop: $kTop');
-      __log_print__('Media.Window width: ${query.size.width}, height: ${query.size.height}, padding: ${query.padding}');
+      __shower_log__('self: _width: $_width, _height: $_height');
+      __shower_log__(
+          'Window: mWidth: $mWidth, mHeight: $mHeight, mTop: $mTop; MediaQuery kWidth: $kWidth, kHeight: $kHeight, kTop: $kTop');
+      __shower_log__('Media.Window width: ${query.size.width}, height: ${query.size.height}, padding: ${query.padding}');
       return true;
     }());
 
@@ -395,7 +396,7 @@ class DialogShower {
     }
 
     assert(() {
-      __log_print__('_margin: $_margin, alignment: $alignment, animationBeginOffset: $animationBeginOffset');
+      __shower_log__('_margin: $_margin, alignment: $alignment, animationBeginOffset: $animationBeginOffset');
       return true;
     }());
     // ---------------------------- calculate _margin, _width, _height ----------------------------
@@ -418,7 +419,7 @@ class DialogShower {
     if (_isShowing) {
       _isShowing = false;
       assert(() {
-        __log_print__('>>>>>>>>>>>>>> popping: $routeName');
+        __shower_log__('>>>>>>>>>>>>>> popping: $routeName');
         return true;
       }());
 
@@ -434,7 +435,7 @@ class DialogShower {
         _poppedCompleter = Completer<bool>();
         await _poppedCompleter?.future;
         assert(() {
-          __log_print__('>>>>>>>>>>>>>> popped: $routeName');
+          __shower_log__('>>>>>>>>>>>>>> popped: $routeName');
           return true;
         }());
         NavigatorObserverEx.statesChangingShowers?.remove(routeName);
@@ -491,7 +492,7 @@ class DialogShower {
 
   void setState(VoidCallback fn) {
     assert(() {
-      __log_print__('[DialogShower] setState was called, rebuilding...');
+      __shower_log__('[DialogShower] setState was called, rebuilding...');
       return true;
     }());
     // _builderExKey.currentState?.setState(fn);
@@ -582,10 +583,10 @@ class DialogShower {
     Future.delayed(Duration(milliseconds: millis), () {
       Size? size = _tryToGetContainerSizeRaw();
       if (size == null) {
-        __log_print__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTickIndex retry again');
+        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTickIndex retry again');
         _tryToGetContainerSize(index: _tryTickIndex++);
       } else {
-        __log_print__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTickIndex size: $size');
+        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTickIndex size: $size');
       }
     });
   }
@@ -642,13 +643,13 @@ class _BuilderExState extends State<BuilderEx> {
       widget.showCallBack?.call();
     } catch (e) {
       assert(() {
-        __log_print__('showCallBack exception: ${e.toString()}');
-        e is Error ? __log_print__(e.stackTrace?.toString() ?? 'No stackTrace') : null;
+        __shower_log__('showCallBack exception: ${e.toString()}');
+        e is Error ? __shower_log__(e.stackTrace?.toString() ?? 'No stackTrace') : null;
         return true;
       }());
     }
     assert(() {
-      __log_print__('[BuilderEx] >>>>>>>>>>>>>> initState');
+      __shower_log__('[BuilderEx] >>>>>>>>>>>>>> initState');
       return true;
     }());
   }
@@ -656,7 +657,7 @@ class _BuilderExState extends State<BuilderEx> {
   @override
   Widget build(BuildContext context) {
     assert(() {
-      __log_print__('[BuilderEx] >>>>>>>>>>>>>> build');
+      __shower_log__('[BuilderEx] >>>>>>>>>>>>>> build');
       return true;
     }());
     return widget.builder(context);
@@ -668,14 +669,14 @@ class _BuilderExState extends State<BuilderEx> {
       widget.dismissCallBack?.call();
     } catch (e) {
       assert(() {
-        __log_print__('dismissCallBack exception: ${e.toString()}');
-        e is Error ? __log_print__(e.stackTrace?.toString() ?? 'No stackTrace') : null;
+        __shower_log__('dismissCallBack exception: ${e.toString()}');
+        e is Error ? __shower_log__(e.stackTrace?.toString() ?? 'No stackTrace') : null;
         return true;
       }());
     }
     super.dispose();
     assert(() {
-      __log_print__('[BuilderEx] >>>>>>>>>>>>>> dispose');
+      __shower_log__('[BuilderEx] >>>>>>>>>>>>>> dispose');
       return true;
     }());
   }
@@ -698,7 +699,7 @@ class NavigatorObserverEx extends NavigatorObserver {
     ensureInit();
 
     assert(() {
-      __log_print__('didPush: ${route.settings.name}');
+      __shower_log__('didPush: ${route.settings.name}');
       return true;
     }());
     if (route.settings.name != null) {
@@ -711,7 +712,7 @@ class NavigatorObserverEx extends NavigatorObserver {
     super.didPop(route, previousRoute);
 
     assert(() {
-      __log_print__('didPop: ${route.settings.name}');
+      __shower_log__('didPop: ${route.settings.name}');
       return true;
     }());
     if (route.settings.name != null) {
@@ -723,7 +724,7 @@ class NavigatorObserverEx extends NavigatorObserver {
   void didRemove(Route route, Route? previousRoute) {
     super.didRemove(route, previousRoute);
     assert(() {
-      __log_print__('didRemove: ${route.settings.name}');
+      __shower_log__('didRemove: ${route.settings.name}');
       return true;
     }());
   }
@@ -732,7 +733,7 @@ class NavigatorObserverEx extends NavigatorObserver {
   void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     assert(() {
-      __log_print__('didReplace: ${oldRoute?.settings.name} -> ${newRoute?.settings.name}');
+      __shower_log__('didReplace: ${oldRoute?.settings.name} -> ${newRoute?.settings.name}');
       return true;
     }());
   }
@@ -758,7 +759,7 @@ class _GetSizeRenderObject extends RenderProxyBox {
   void performLayout() {
     super.performLayout();
     Size? size = child?.size;
-    __log_print__('[GetSizeRenderObject] performLayout >>>>>>>>> new size $size');
+    __shower_log__('[GetSizeRenderObject] performLayout >>>>>>>>> new size $size');
     if (size != null && size != _size) {
       _size = size;
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -768,9 +769,13 @@ class _GetSizeRenderObject extends RenderProxyBox {
   }
 }
 
-__log_print__(String log) {
+bool __shower_log_enable__ = true;
+
+__shower_log__(String log) {
   assert(() {
-    print('[DialogShower] $log');
+    if (__shower_log_enable__) {
+      print('[DialogShower] $log');
+    }
     return true;
   }());
 }
