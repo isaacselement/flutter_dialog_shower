@@ -769,11 +769,11 @@ class _GetSizeRenderObject extends RenderProxyBox {
   }
 }
 
-bool __shower_log_enable__ = true;
+bool shower_log_enable = true;
 
 __shower_log__(String log) {
   assert(() {
-    if (__shower_log_enable__) {
+    if (shower_log_enable) {
       print('[DialogShower] $log');
     }
     return true;
