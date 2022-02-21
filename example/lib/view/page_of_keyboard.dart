@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:example/util/position_util.dart';
+import 'package:example/view/widgets/button_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
@@ -42,7 +43,18 @@ class PageOfKeyboard extends StatelessWidget {
     Logger.d("[PageOfInfoView] ----------->>>>>>>>>>>> build/rebuild!!!");
     PageOfKeyboard.ensureInited();
 
-    return Container(padding: const EdgeInsets.all(8), child: buildButtons());
+    return Container(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            getTitle('You can tap the edit box to see the behaviour when keyboard showed'),
+            const SizedBox(height: 8),
+            buildButtons(),
+
+            const SizedBox(height: 128),
+            getTitle('Navigator inner shower'),
+          ],
+        ));
   }
 
   Widget buildButtons() {
@@ -89,26 +101,20 @@ class PageOfKeyboard extends StatelessWidget {
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[1], style: titleStyle)),
             getButton('Show center', onPressed: () {
-              DialogWrapper.show(
-                getEditBox(),
-              );
+              DialogWrapper.show(getEditBox());
             }),
             getButton('Show left', onPressed: () {
-              DialogWrapper.showLeft(
-                getEditBox(),
-              );
+              DialogWrapper.showLeft(getEditBox());
             }),
             getButton('Show right', onPressed: () {
-              DialogWrapper.showRight(
-                getEditBox(),
-              );
+              DialogWrapper.showRight(getEditBox());
             }),
             getButton('Show x/y', onPressed: () {
-              DialogWrapper.show(
-                getEditBox(),
-                x: 200,
-                y: 200,
-              );
+              DialogWrapper.show(getEditBox(), x: 200, y: 200).keyboardEventCallBack = (shower, isKeyboardShow) {
+                shower.setState(() {
+                  shower.margin = isKeyboardShow ? const EdgeInsets.only(left: 200) : const EdgeInsets.only(left: 200, top: 200);
+                });
+              };
             }),
           ],
         ),
@@ -132,7 +138,7 @@ class PageOfKeyboard extends StatelessWidget {
                 PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
               };
             }),
-            getButton('x/y stick Top', onPressed: () {
+            getButton('x/y Stick Top', onPressed: () {
               DialogWrapper.show(
                 getEditBox(),
                 x: 200,
@@ -141,7 +147,7 @@ class PageOfKeyboard extends StatelessWidget {
                 PositionUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
               };
             }),
-            getButton('x/y stick Bottom', width: 160, onPressed: () {
+            getButton('x/y Stick Bottom', onPressed: () {
               DialogWrapper.show(
                 getEditBox(width: 500, height: 300),
                 x: 200,
@@ -150,7 +156,7 @@ class PageOfKeyboard extends StatelessWidget {
                 PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
               };
             }),
-            getButton('x/y stick Bottom', width: 160, onPressed: () {
+            getButton('x/y Stick Bottom', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
@@ -220,7 +226,7 @@ class PageOfKeyboard extends StatelessWidget {
                 width: 500,
               );
             }),
-            getButton('Rebuilder Widget', width: 160, onPressed: () {
+            getButton('Rebuilder Widget', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
@@ -232,7 +238,8 @@ class PageOfKeyboard extends StatelessWidget {
                             color: Colors.yellow,
                             height: 100,
                             alignment: Alignment.center,
-                            child: Text(!isKeyboardVisible ? '>>>>>Text will rebuild on keyboard showed<<<<<' : '***Text is changed :)***'),
+                            child:
+                                Text(!isKeyboardVisible ? '>>>>>Text will rebuild on keyboard showed<<<<<' : '***Text is changed :)***'),
                           );
                         },
                       )
@@ -250,21 +257,36 @@ class PageOfKeyboard extends StatelessWidget {
 
   /// Static Methods
 
-  static Widget getButton(String buttonText, {void Function()? onPressed, double? width}) {
+  static Widget getTitle(String titleText) {
     return Container(
-      width: width ?? 130,
-      alignment: Alignment.centerLeft,
-      child: CupertinoButton(
-        padding: const EdgeInsets.only(top: 8, bottom: 8, left: 2, right: 8),
-        child: Text(
-          buttonText,
-          textAlign: TextAlign.left,
+      height: 32,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          stops: [0.0, 0.25, 0.25, 0.5, 0.5, 0.75, 0.75, 1],
+          colors: [
+            Color(0xFFFFFFFF),
+            Color(0xFF8181A5),
+            Color(0xFF8181A5),
+            Color(0xFF8181A5),
+            Color(0xFF8181A5),
+            Color(0xFF8181A5),
+            Color(0xFF8181A5),
+            Color(0xFFFFFFFF),
+          ],
         ),
-        onPressed: () {
-          onPressed?.call();
-        },
+      ),
+      child: Text(
+        titleText,
+        style: const TextStyle(fontSize: 14, color: Colors.white, overflow: TextOverflow.ellipsis),
       ),
     );
+  }
+
+  static Widget getButton(String buttonText, {void Function()? onPressed}) {
+    return XpButton(text: buttonText, onPressed: onPressed);
   }
 
   static Widget getEditBox({double width = 500, double height = 600}) {

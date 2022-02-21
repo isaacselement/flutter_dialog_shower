@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 
@@ -36,36 +35,62 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        // padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Row(
           children: [
-            Container(
-              // padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              width: 70,
-              decoration: const BoxDecoration(border: Border(right: BorderSide(width: 1, color: Colors.black))),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: PagesManager.getTabs(),
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                  width: 70,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: PagesManager.getTabs(),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  width: 1,
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, 0.25, 0.25, 0.5, 0.5, 0.75, 0.75, 1],
+                    colors: [
+                      Color(0xFFFFFFFF),
+                      Color(0xFF8181A5),
+                      Color(0xFF8181A5),
+                      Color(0xFF8181A5),
+                      Color(0xFF8181A5),
+                      Color(0xFF8181A5),
+                      Color(0xFF8181A5),
+                      Color(0xFFFFFFFF),
+                    ],
+                  )),
+                )
+              ],
             ),
             Expanded(
-              child: Navigator(
-                onGenerateRoute: (RouteSettings settings) {
-                  return PageRouteBuilder(pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
-                    return PageView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: PagesManager.getPageController(),
-                      children: PagesManager.getPages(),
-                    );
-                  });
-                },
+              child: Container(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                child: Navigator(
+                  onGenerateRoute: (RouteSettings settings) {
+                    return PageRouteBuilder(
+                        pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
+                      return PageView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: PagesManager.getPageController(),
+                        children: PagesManager.getPages(),
+                      );
+                    });
+                  },
+                ),
               ),
             )
           ],
