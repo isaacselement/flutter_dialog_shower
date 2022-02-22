@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/broker.dart';
 
 import '../../util/logger.dart';
+import '../page_of_homeless.dart';
 import '../page_of_keyboard.dart';
 import '../page_of_widigets.dart';
 
@@ -19,7 +20,7 @@ class PagesManager {
     if (tabsPages.isEmpty) {
       addTabPage(true, 'Tab1', const Icon(Icons.keyboard, size: 32), PageOfKeyboard());
       addTabPage(false, 'Tab2', const Icon(Icons.event, size: 32), PageOfWidgets());
-      addTabPage(false, 'Tab3', const Icon(Icons.security, size: 32), Container(color: Colors.white, alignment: Alignment.center));
+      addTabPage(false, 'Tab3', const Icon(Icons.security, size: 32), PageOfHomeless());
     }
   }
 

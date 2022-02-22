@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_dialog_shower/events/keyboard_event_listener.dart';
+import 'package:flutter_dialog_shower/event/keyboard_event_listener.dart'; // delete this line if u dont need keyboard interaction.
 
 class DialogShower {
   static BuildContext? gContext;
@@ -501,8 +501,9 @@ class DialogShower {
 
   /// Private methods
 
-  Widget _getContainer(Widget? child, double? width, double? height) {
-    Widget? widget = child;
+  Widget _getContainer(Widget child, double? width, double? height) {
+    Widget ccccc = child;
+    Widget widget = ccccc;
     if (isWrappedByNavigator) {
       _navigatorKey = GlobalKey<NavigatorState>();
       widget = Navigator(
@@ -510,7 +511,7 @@ class DialogShower {
         onGenerateRoute: (RouteSettings settings) {
           return PageRouteBuilder(
             pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
-              return child ?? const SizedBox();
+              return ccccc;
             },
           );
         },
@@ -521,7 +522,7 @@ class DialogShower {
     return
         // GetSizeWidget(
         //   onSizeChanged: (size) {
-        //     __log_print__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
+        //     __shower_log__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
         //     _tryToGetContainerSizeRaw();
         //   },
         //   child:
@@ -533,7 +534,7 @@ class DialogShower {
       // source will assert(decoration != null || clipBehavior == Clip.none),
       clipBehavior: containerClipBehavior,
       decoration: containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration,
-      child: widget, //child,
+      child: widget,
       // ),
     );
   }
@@ -593,14 +594,12 @@ class DialogShower {
 
   Size? _tryToGetContainerSizeRaw() {
     RenderObject? renderObject = _containerKey.currentContext?.findRenderObject();
-    RenderBox? containerBox = renderObject as RenderBox?;
-    if (containerBox == null) {
-      return null;
+    Size? size = (renderObject as RenderBox?)?.size;
+    _renderedWidth = size?.width;
+    _renderedHeight = size?.height;
+    if (_renderedWidth != null && _renderedHeight != null) {
+      setState(() {});
     }
-    Size size = containerBox.size;
-    _renderedWidth = size.width;
-    _renderedHeight = size.height;
-    setState(() {});
     return size;
   }
 

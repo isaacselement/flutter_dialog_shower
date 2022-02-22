@@ -175,4 +175,70 @@ class DialogWrapper {
     }
     _list().add(dialog);
   }
+
+  /// For Navigator push and pop
+
+  static DialogShower? getTopNavigatorDialog() {
+    DialogShower? result;
+    DialogWrapper.iterateDialogs((dialog) {
+      return dialog.isWrappedByNavigator ? (result = dialog).isWrappedByNavigator : false;
+    });
+    return result;
+  }
+
+  static DialogShower pushRoot(Widget widget, {double? width, double? height, String? key}) {
+    DialogShower shower = DialogWrapper.show(widget, width: width, height: height, key: key);
+    shower.isWrappedByNavigator = true;
+    return shower;
+  }
+
+  // should use 'pushRoot' first or that there is a shower with 'isWrappedByNavigator = true' on showing
+  static Future<T?> push<T extends Object?>(
+      Widget widget, {
+        PageRouteBuilder<T>? routeBuilder,
+        RoutePageBuilder? pageBuilder,
+        RouteTransitionsBuilder? transition,
+
+        // copy from PageRouteBuilder constructor
+        RouteSettings? settings,
+        double? duration,
+        double? reverseDuration,
+        bool? opaque,
+        double? barrierDismissible,
+        Color? barrierColor,
+        String? barrierLabel,
+        bool? maintainState,
+        bool? fullscreenDialog,
+      }) {
+    DialogShower? topNavigatorDialog = getTopNavigatorDialog();
+    return topNavigatorDialog!.push(
+      widget,
+      duration: duration ?? const Duration(milliseconds: 200),
+      reverseDuration: reverseDuration ?? const Duration(milliseconds: 200),
+      transition: transition ??
+              (BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1.0, 0.0),
+                end: const Offset(0.0, 0.0),
+              ).animate(animOne),
+              child: child,
+            );
+          },
+      routeBuilder: routeBuilder,
+      pageBuilder: pageBuilder,
+      settings: settings,
+      opaque: opaque,
+      barrierDismissible: barrierDismissible,
+      barrierColor: barrierColor,
+      barrierLabel: barrierLabel,
+      maintainState: maintainState,
+      fullscreenDialog: fullscreenDialog,
+    );
+  }
+
+  static void pop<T>({T? result}) {
+    getTopNavigatorDialog()?.pop(result: result);
+  }
+
 }

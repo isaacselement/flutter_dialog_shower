@@ -1,7 +1,7 @@
 import 'package:example/util/logger.dart';
 import 'package:example/view/page_of_keyboard.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_dialog_shower/events/event_truck.dart';
+import 'package:flutter_dialog_shower/event/event_truck.dart';
 
 class PageOfWidgets extends StatelessWidget {
   @override

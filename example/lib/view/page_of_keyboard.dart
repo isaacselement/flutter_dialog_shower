@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:example/util/position_util.dart';
 import 'package:example/view/widgets/button_widgets.dart';
+import 'package:example/view/widgets/selectable_list_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
-import 'package:flutter_dialog_shower/events/keyboard_event_listener.dart';
-import 'package:flutter_dialog_shower/views/keyboard_widget.dart';
+import 'package:flutter_dialog_shower/event/keyboard_event_listener.dart';
+import 'package:flutter_dialog_shower/view/keyboard_widget.dart';
 
 import '../util/logger.dart';
 
@@ -42,22 +45,26 @@ class PageOfKeyboard extends StatelessWidget {
   Widget build(BuildContext context) {
     Logger.d("[PageOfInfoView] ----------->>>>>>>>>>>> build/rebuild!!!");
     PageOfKeyboard.ensureInited();
+    return SingleChildScrollView(child: buildContainer());
+  }
 
+  Widget buildContainer() {
     return Container(
         padding: const EdgeInsets.all(8),
         child: Column(
           children: [
             getTitle('You can tap the edit box to see the behaviour when keyboard showed'),
             const SizedBox(height: 8),
-            buildButtons(),
-
+            buildButtonsAboutKeyboard(),
             const SizedBox(height: 128),
             getTitle('Navigator inner shower'),
+            const SizedBox(height: 8),
+            buildButtonsAboutNavigator(),
           ],
         ));
   }
 
-  Widget buildButtons() {
+  Widget buildButtonsAboutKeyboard() {
     List<String> titles = ['Positioned: ', 'Un Positioned: ', 'Custome Positioned: ', 'Keyboard Widgets: '];
     TextStyle titleStyle = const TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
     double maxTitleWidth = getMaxTextWidth(titles, titleStyle);
@@ -68,24 +75,13 @@ class PageOfKeyboard extends StatelessWidget {
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[0], style: titleStyle)),
             getButton('Show center', onPressed: () {
-              DialogWrapper.show(
-                getEditBox(width: 500, height: 600),
-                isFixed: true,
-                // width: 500,
-                // height: 600,
-              );
+              DialogWrapper.show(getEditBox(width: 500, height: 600), isFixed: true);
             }),
             getButton('Show left', onPressed: () {
-              DialogWrapper.showLeft(
-                getEditBox(),
-                isFixed: true,
-              );
+              DialogWrapper.showLeft(getEditBox(), isFixed: true);
             }),
             getButton('Show right', onPressed: () {
-              DialogWrapper.showRight(
-                getEditBox(),
-                isFixed: true,
-              );
+              DialogWrapper.showRight(getEditBox(), isFixed: true);
             }),
             getButton('Show x/y', onPressed: () {
               DialogWrapper.show(
@@ -122,19 +118,13 @@ class PageOfKeyboard extends StatelessWidget {
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[2], style: titleStyle)),
             getButton('Show center', onPressed: () {
-              DialogWrapper.show(
-                getEditBox(),
-              ).obj = flagStickToTopGlobalSetting;
+              DialogWrapper.show(getEditBox()).obj = flagStickToTopGlobalSetting;
             }),
             getButton('Show left', onPressed: () {
-              DialogWrapper.showLeft(
-                getEditBox(),
-              ).obj = flagStickToTopGlobalSetting;
+              DialogWrapper.showLeft(getEditBox()).obj = flagStickToTopGlobalSetting;
             }),
             getButton('Show right', onPressed: () {
-              DialogWrapper.showRight(
-                getEditBox(),
-              ).keyboardEventCallBack = (shower, isKeyboardShow) {
+              DialogWrapper.showRight(getEditBox()).keyboardEventCallBack = (shower, isKeyboardShow) {
                 PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
               };
             }),
@@ -255,7 +245,78 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
+  Widget buildButtonsAboutNavigator() {
+    // List<Object> values = [];
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            getButton('Show with navigator', onPressed: () {
+              DialogShower shower = DialogWrapper.show(
+                Column(
+                  children: [
+                    CupertinoButton(
+                      child: const Text('Dismiss shower'),
+                      onPressed: () {
+                        DialogWrapper.dismissTopDialog();
+                      },
+                    ),
+                    CupertinoButton(
+                      child: const Text('click me'),
+                      onPressed: () {
+                        rootBundle.loadString('assets/json/NO.json').then((string) {
+                          List<dynamic> value = json.decode(string);
+
+                          DialogWrapper.push(getSelectableListWidget(value), settings: const RouteSettings(name: '__country_route__'));
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                width: 500,
+                height: 500,
+              );
+              shower.isWrappedByNavigator = true;
+            }),
+          ],
+        )
+      ],
+    );
+  }
+
   /// Static Methods
+
+  void showCitiesOnClick(SelectableListWidgetState state, int index, Object value, List<Object>? selectedValues) {
+    if (value is! Map) {
+      return;
+    }
+    if (value['children'] == null || value['children']!.isEmpty) {
+      DialogWrapper.getTopNavigatorDialog()!.getNavigator()!.popUntil((route) => route.settings.name == '__country_route__');
+      DialogWrapper.pop();
+      return;
+    }
+    DialogWrapper.push(getSelectableListWidget(value));
+  }
+
+  SelectableListWidget getSelectableListWidget(Object value) {
+    return SelectableListWidget(
+      title: 'Select The City',
+      values: ((value is Map ? value['children'] : value) as List<dynamic>).cast(),
+      functionOfName: (e) => e is Map ? e['areaName'] : '',
+      isSearchEnable: true,
+      leftButtonEvent: (state) {
+        DialogWrapper.pop();
+      },
+      itemSuffixBuilder: (state, index, value) {
+        if (value is Map && value['children'] != null && value['children']!.isNotEmpty) {
+          return const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey);
+        }
+        return null;
+      },
+      onSelectedEvent: showCitiesOnClick,
+    );
+  }
 
   static Widget getTitle(String titleText) {
     return Container(
