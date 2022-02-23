@@ -56,7 +56,11 @@ class PageOfKeyboard extends StatelessWidget {
             getHeaderTitle('You can tap the edit box to see the behaviour when keyboard showed'),
             const SizedBox(height: 8),
             buildButtonsAboutKeyboard(),
-            const SizedBox(height: 128),
+            const SizedBox(height: 64),
+            getHeaderTitle('Button in shower'),
+            const SizedBox(height: 8),
+            buildButtonsAboutBubble(),
+            const SizedBox(height: 64),
             getHeaderTitle('Navigator inner shower'),
             const SizedBox(height: 8),
             buildButtonsAboutNavigator(),
@@ -74,16 +78,16 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[0], style: titleStyle)),
-            XpButton('Show center', onPressed: () {
+            StrapButton('Show center', onPressed: () {
               DialogWrapper.show(getEditBox(width: 500, height: 600), isFixed: true);
             }),
-            XpButton('Show left', onPressed: () {
+            StrapButton('Show left', onPressed: () {
               DialogWrapper.showLeft(getEditBox(), isFixed: true);
             }),
-            XpButton('Show right', onPressed: () {
+            StrapButton('Show right', onPressed: () {
               DialogWrapper.showRight(getEditBox(), isFixed: true);
             }),
-            XpButton('Show x/y', onPressed: () {
+            StrapButton('Show x/y', onPressed: () {
               DialogWrapper.show(
                 getEditBox(),
                 isFixed: true,
@@ -96,16 +100,16 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[1], style: titleStyle)),
-            XpButton('Show center', onPressed: () {
+            StrapButton('Show center', onPressed: () {
               DialogWrapper.show(getEditBox());
             }),
-            XpButton('Show left', onPressed: () {
+            StrapButton('Show left', onPressed: () {
               DialogWrapper.showLeft(getEditBox());
             }),
-            XpButton('Show right', onPressed: () {
+            StrapButton('Show right', onPressed: () {
               DialogWrapper.showRight(getEditBox());
             }),
-            XpButton('Show x/y', onPressed: () {
+            StrapButton('Show x/y', onPressed: () {
               DialogWrapper.show(getEditBox(), x: 200, y: 200).keyboardEventCallBack = (shower, isKeyboardShow) {
                 shower.setState(() {
                   shower.margin = isKeyboardShow ? const EdgeInsets.only(left: 200) : const EdgeInsets.only(left: 200, top: 200);
@@ -120,18 +124,18 @@ class PageOfKeyboard extends StatelessWidget {
             Expanded(
               child: Wrap(
                 children: [
-                  XpButton.smallest('Show center', onPressed: () {
+                  StrapButton.smallest('Show center', onPressed: () {
                     DialogWrapper.show(getEditBox()).obj = flagStickToTopGlobalSetting;
                   }),
-                  XpButton.smallest('Show left', onPressed: () {
+                  StrapButton.smallest('Show left', onPressed: () {
                     DialogWrapper.showLeft(getEditBox()).obj = flagStickToTopGlobalSetting;
                   }),
-                  XpButton.smallest('Show right', onPressed: () {
+                  StrapButton.smallest('Show right', onPressed: () {
                     DialogWrapper.showRight(getEditBox()).keyboardEventCallBack = (shower, isKeyboardShow) {
                       PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
                     };
                   }),
-                  XpButton.smallest('x/y Stick Top', onPressed: () {
+                  StrapButton.smallest('x/y Stick Top', onPressed: () {
                     DialogWrapper.show(
                       getEditBox(),
                       x: 200,
@@ -140,7 +144,7 @@ class PageOfKeyboard extends StatelessWidget {
                       PositionUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
                     };
                   }),
-                  XpButton.smallest('x/y Stick Bottom', onPressed: () {
+                  StrapButton.smallest('x/y Stick Bottom', onPressed: () {
                     DialogWrapper.show(
                       getEditBox(width: 500, height: 300),
                       x: 200,
@@ -149,7 +153,7 @@ class PageOfKeyboard extends StatelessWidget {
                       PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
                     };
                   }),
-                  XpButton.smallest('x/y Stick Bottom', onPressed: () {
+                  StrapButton.smallest('x/y Stick Bottom', onPressed: () {
                     DialogWrapper.show(
                       SingleChildScrollView(
                         child: Column(
@@ -181,7 +185,7 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[3], style: titleStyle)),
-            XpButton('Show Invisible', onPressed: () {
+            StrapButton('Show Invisible', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
@@ -201,7 +205,7 @@ class PageOfKeyboard extends StatelessWidget {
                 width: 500,
               );
             }),
-            XpButton('Show Visible', onPressed: () {
+            StrapButton('Show Visible', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
@@ -222,7 +226,7 @@ class PageOfKeyboard extends StatelessWidget {
                 width: 500,
               );
             }),
-            XpButton('Rebuilder Widget', onPressed: () {
+            StrapButton('Rebuilder Widget', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
@@ -251,15 +255,28 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
+  Widget buildButtonsAboutBubble() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            StrapButton('Show bubble', onPressed: () {}),
+            StrapButton('Show bubble on Dialog', onPressed: () {}),
+          ],
+        )
+      ],
+    );
+  }
+
   Widget buildButtonsAboutNavigator() {
     return Column(
       children: [
         Row(
           children: [
-            XpButton('Show with navigator with W&H', onPressed: () {
+            StrapButton('Show with navigator with W&H', onPressed: () {
               DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
             }),
-            XpButton('Show with navigator without W&H (Auto size)', onPressed: () {
+            StrapButton('Show with navigator without W&H (Auto size)', onPressed: () {
               DialogWrapper.pushRoot(getNavigatorChildWidget());
             }),
           ],
@@ -353,7 +370,10 @@ class PageOfKeyboard extends StatelessWidget {
       ),
       child: Text(
         titleText,
-        style: const TextStyle(fontSize: 14, color: Colors.white, overflow: TextOverflow.ellipsis),
+        style: const TextStyle(fontSize: 16, color: Colors.white, overflow: TextOverflow.ellipsis, shadows: <Shadow>[
+          Shadow(offset: Offset(3.0, 3.0), blurRadius: 2.0, color: Color.fromARGB(255, 0, 0, 0)),
+          Shadow(offset: Offset(5.0, 5.0), blurRadius: 8.0, color: Color.fromARGB(125, 177, 239, 83)),
+        ]),
       ),
     );
   }

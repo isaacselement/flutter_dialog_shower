@@ -145,23 +145,23 @@ class SelectableListWidgetState extends State<SelectableListWidget> {
             child: widget.leftButtonTitle == null && widget.leftButtonWidget == null
                 ? const Offstage(offstage: true)
                 : Container(
-              // color: Colors.red,
-              width: widget.leftButtonWidth,
-              height: widget.leftButtonHeight,
-              alignment: Alignment.centerLeft,
-              child: CupertinoButton(
-                padding: widget.leftButtonPadding,
-                alignment: widget.leftButtonAlignment,
-                child: widget.leftButtonTitle != null
-                    ? Text(widget.leftButtonTitle!, style: widget.leftButtonStyle)
-                    : widget.leftButtonWidget != null
-                    ? widget.leftButtonWidget!
-                    : const SizedBox(),
-                onPressed: () {
-                  widget.leftButtonEvent?.call(this);
-                },
-              ),
-            ),
+                    // color: Colors.red,
+                    width: widget.leftButtonWidth,
+                    height: widget.leftButtonHeight,
+                    alignment: Alignment.centerLeft,
+                    child: CupertinoButton(
+                      padding: widget.leftButtonPadding,
+                      alignment: widget.leftButtonAlignment,
+                      child: widget.leftButtonTitle != null
+                          ? Text(widget.leftButtonTitle!, style: widget.leftButtonStyle)
+                          : widget.leftButtonWidget != null
+                              ? widget.leftButtonWidget!
+                              : const SizedBox(),
+                      onPressed: () {
+                        widget.leftButtonEvent?.call(this);
+                      },
+                    ),
+                  ),
           ),
           Positioned(
             top: 0,
@@ -170,22 +170,22 @@ class SelectableListWidgetState extends State<SelectableListWidget> {
             child: widget.rightButtonTitle == null && widget.rightButtonWidget == null
                 ? const Offstage(offstage: true)
                 : Container(
-              // color: Colors.yellow,
-              width: widget.rightButtonWidth,
-              alignment: Alignment.centerRight,
-              child: CupertinoButton(
-                padding: widget.rightButtonPadding,
-                alignment: widget.rightButtonAlignment,
-                child: widget.rightButtonTitle != null
-                    ? Text(widget.rightButtonTitle!, style: widget.rightButtonStyle)
-                    : widget.rightButtonWidget != null
-                    ? widget.rightButtonWidget!
-                    : const SizedBox(),
-                onPressed: () {
-                  widget.rightButtonEvent?.call(this);
-                },
-              ),
-            ),
+                    // color: Colors.yellow,
+                    width: widget.rightButtonWidth,
+                    alignment: Alignment.centerRight,
+                    child: CupertinoButton(
+                      padding: widget.rightButtonPadding,
+                      alignment: widget.rightButtonAlignment,
+                      child: widget.rightButtonTitle != null
+                          ? Text(widget.rightButtonTitle!, style: widget.rightButtonStyle)
+                          : widget.rightButtonWidget != null
+                              ? widget.rightButtonWidget!
+                              : const SizedBox(),
+                      onPressed: () {
+                        widget.rightButtonEvent?.call(this);
+                      },
+                    ),
+                  ),
           ),
         ],
       ),
@@ -195,36 +195,36 @@ class SelectableListWidgetState extends State<SelectableListWidget> {
   Widget _buildSearchWidget() {
     return widget.isSearchEnable
         ? Container(
-      height: 56,
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
-      child: CupertinoTextField(
-        controller: _searchTextEditController,
-        placeholder: 'Enter',
-        padding: const EdgeInsets.only(left: 0),
-        prefix: const SizedBox(
-          width: 38,
-          child: Icon(Icons.search, color: Colors.grey, size: 25),
-        ),
-        onChanged: (text) {
-          setState(() {
-            if (text.isEmpty) {
-              widget.searchValues!.clear();
-              widget.searchValues!.addAll(widget.values);
-            } else {
-              List<Object> _tmp = [];
-              for (int i = 0; i < widget.values.length; i++) {
-                Object value = widget.values[i];
-                String title = widget.functionOfName?.call(value) ?? value.toString();
-                if (title.contains(text)) {
-                  _tmp.add(value);
-                }
-              }
-              widget.searchValues = _tmp;
-            }
-          });
-        },
-      ),
-    )
+            height: 56,
+            padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
+            child: CupertinoTextField(
+              controller: _searchTextEditController,
+              placeholder: 'Enter',
+              padding: const EdgeInsets.only(left: 0),
+              prefix: const SizedBox(
+                width: 38,
+                child: Icon(Icons.search, color: Colors.grey, size: 25),
+              ),
+              onChanged: (text) {
+                setState(() {
+                  if (text.isEmpty) {
+                    widget.searchValues!.clear();
+                    widget.searchValues!.addAll(widget.values);
+                  } else {
+                    List<Object> _tmp = [];
+                    for (int i = 0; i < widget.values.length; i++) {
+                      Object value = widget.values[i];
+                      String title = widget.functionOfName?.call(value) ?? value.toString();
+                      if (title.contains(text)) {
+                        _tmp.add(value);
+                      }
+                    }
+                    widget.searchValues = _tmp;
+                  }
+                });
+              },
+            ),
+          )
         : const Offstage(offstage: true);
   }
 
@@ -253,16 +253,16 @@ class SelectableListWidgetState extends State<SelectableListWidget> {
       decoration: BoxDecoration(
         gradient: widget.selectedValues?.contains(value) ?? false
             ? const LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          stops: [0.0, 0.1, 0.9, 1.0],
-          colors: [
-            Color(0x0A4E7DF7),
-            Color(0x1A4E7DF7),
-            Color(0x1A4E7DF7),
-            Color(0x0A4E7DF7),
-          ],
-        )
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                stops: [0.0, 0.1, 0.9, 1.0],
+                colors: [
+                  Color(0x0A4E7DF7),
+                  Color(0x1A4E7DF7),
+                  Color(0x1A4E7DF7),
+                  Color(0x0A4E7DF7),
+                ],
+              )
             : null,
       ),
       child: InkWell(
@@ -283,31 +283,32 @@ class SelectableListWidgetState extends State<SelectableListWidget> {
         },
         child: widget.itemBuilder?.call(this, realIndex, value) ??
             Container(
-                height: 56,
-                alignment: Alignment.centerLeft,
-                decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(width: 1, color: Color(0xFFECECF2))),
-                ),
-                child: Row(
-                  children: [
-                    widget.itemPrefixBuilder?.call(this, realIndex, value) ?? const Offstage(offstage: true),
-                    Expanded(
-                      child: Text(
-                        title,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: (widget.disableValues?.contains(value)) ?? false ? const Color(0xFFBFBFD2) : const Color(0xFF1C1D21),
-                          fontSize: 16.0,
-                        ),
+              height: 56,
+              alignment: Alignment.centerLeft,
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(width: 1, color: Color(0xFFECECF2))),
+              ),
+              child: Row(
+                children: [
+                  widget.itemPrefixBuilder?.call(this, realIndex, value) ?? const Offstage(offstage: true),
+                  Expanded(
+                    child: Text(
+                      title,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: (widget.disableValues?.contains(value)) ?? false ? const Color(0xFFBFBFD2) : const Color(0xFF1C1D21),
+                        fontSize: 16.0,
                       ),
                     ),
-                    widget.itemSuffixBuilder?.call(this, realIndex, value) ??
-                        Offstage(
-                          offstage: !(widget.selectedValues?.contains(value) ?? false),
-                          child: const Icon(Icons.check_circle, size: 25, color: Color(0xFF5E81F4)),
-                        )
-                  ],
-                )),
+                  ),
+                  widget.itemSuffixBuilder?.call(this, realIndex, value) ??
+                      Offstage(
+                        offstage: !(widget.selectedValues?.contains(value) ?? false),
+                        child: const Icon(Icons.check_circle, size: 25, color: Color(0xFF5E81F4)),
+                      )
+                ],
+              ),
+            ),
       ),
     );
   }

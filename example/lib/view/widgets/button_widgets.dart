@@ -1,7 +1,7 @@
 import 'package:example/view/manager/themes_manager.dart';
 import 'package:flutter/material.dart';
 
-class XpButton extends StatefulWidget {
+class StrapButton extends StatefulWidget {
   String text;
   void Function()? onPressed;
 
@@ -11,7 +11,7 @@ class XpButton extends StatefulWidget {
   EdgeInsets? padding;
   bool isAsSmallAsPossible = false;
 
-  XpButton(
+  StrapButton(
     this.text, {
     Key? key,
     this.onPressed,
@@ -22,7 +22,7 @@ class XpButton extends StatefulWidget {
     this.isAsSmallAsPossible = false,
   }) : super(key: key);
 
-  XpButton.smallest(
+  StrapButton.smallest(
     this.text, {
     Key? key,
     this.onPressed,
@@ -34,10 +34,10 @@ class XpButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _XpButtonState();
+  State<StatefulWidget> createState() => _StrapButtonState();
 }
 
-class _XpButtonState extends State<XpButton> {
+class _StrapButtonState extends State<StrapButton> {
   bool _isTapingDown = false;
 
   get isTapingDown => _isTapingDown;

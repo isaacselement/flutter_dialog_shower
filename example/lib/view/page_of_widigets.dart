@@ -21,7 +21,7 @@ class PageOfWidgets extends StatelessWidget {
         children: [
           Row(
             children: [
-              XpButton('EventTruck', onPressed: () {
+              StrapButton('EventTruck', onPressed: () {
                 print('>>>>>>>>>>>>>>>>>> fire');
                 EventTruck.fire('object value');
               }),
