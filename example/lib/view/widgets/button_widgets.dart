@@ -59,11 +59,9 @@ class _XpButtonState extends State<XpButton> {
         },
         onTapDown: (details) {
           isTapingDown = true;
-          print('>>>>>>> on tap down');
         },
         onTapCancel: () {
           isTapingDown = false;
-          print('>>>>>>> on tap cancle');
         },
       ),
     );

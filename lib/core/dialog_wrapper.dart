@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dialog_shower.dart';
 
 class DialogWrapper {
+  /// Shower basic useage wrapper
   // Note, direction example:
   // Offset(1.0, 0.0) -> From Right, Offset(-1.0, 0.0) -> From Left
   // Offset(0.0, 1.0) -> From Bottom, Offset(0.0, -1.0) -> From Top
@@ -77,7 +78,71 @@ class DialogWrapper {
     return shower;
   }
 
-  // appearing dialogs management
+  /// Navigator push and pop
+  static DialogShower? getTopNavigatorDialog() {
+    DialogShower? result;
+    DialogWrapper.iterateDialogs((dialog) {
+      return dialog.isWrappedByNavigator ? (result = dialog).isWrappedByNavigator : false;
+    });
+    return result;
+  }
+
+  static DialogShower pushRoot(Widget widget,
+      {bool isFixed = false, double? x, double? y, double? width, double? height, Offset? direction, String? key}) {
+    return DialogWrapper.show(widget, isFixed: isFixed, x: x, y: y, width: width, height: height, direction: direction, key: key)
+      ..isWrappedByNavigator = true;
+  }
+
+  // should use 'pushRoot' first or that there is a shower with 'isWrappedByNavigator = true' on showing
+  static Future<T?> push<T extends Object?>(
+    Widget widget, {
+    PageRouteBuilder<T>? routeBuilder,
+    RoutePageBuilder? pageBuilder,
+    RouteTransitionsBuilder? transition,
+
+    // copy from PageRouteBuilder constructor
+    RouteSettings? settings,
+    double? duration,
+    double? reverseDuration,
+    bool? opaque,
+    double? barrierDismissible,
+    Color? barrierColor,
+    String? barrierLabel,
+    bool? maintainState,
+    bool? fullscreenDialog,
+  }) {
+    DialogShower? topNavigatorDialog = getTopNavigatorDialog();
+    return topNavigatorDialog!.push(
+      widget,
+      duration: duration ?? const Duration(milliseconds: 200),
+      reverseDuration: reverseDuration ?? const Duration(milliseconds: 200),
+      transition: transition ??
+          (BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1.0, 0.0),
+                end: const Offset(0.0, 0.0),
+              ).animate(animOne),
+              child: child,
+            );
+          },
+      routeBuilder: routeBuilder,
+      pageBuilder: pageBuilder,
+      settings: settings,
+      opaque: opaque,
+      barrierDismissible: barrierDismissible,
+      barrierColor: barrierColor,
+      barrierLabel: barrierLabel,
+      maintainState: maintainState,
+      fullscreenDialog: fullscreenDialog,
+    );
+  }
+
+  static void pop<T>({T? result}) {
+    getTopNavigatorDialog()?.pop(result: result);
+  }
+
+  /// Appearing dialogs management
   static List<DialogShower>? appearingDialogs;
 
   static Map<String, DialogShower>? appearingDialogsMappings;
@@ -86,7 +151,7 @@ class DialogWrapper {
     return (appearingDialogs = appearingDialogs ?? []);
   }
 
-  /// TODO ... insert a prefix into key for ordinal, then pop until ...
+  // TODO ... insert a prefix into key for ordinal, then pop until ...
   static Map<String, DialogShower> _map() {
     return (appearingDialogsMappings = appearingDialogsMappings ?? {});
   }
@@ -112,7 +177,7 @@ class DialogWrapper {
       await _dismiss(dialog);
     }
 
-    /// TODO ... not in top to bottom ordinal now ...
+    // TODO ... not in top to bottom ordinal now ...
     Map<String, DialogShower> map = {}..addAll(_map());
     _map().clear();
     map.forEach((key, dialog) async {
@@ -175,70 +240,4 @@ class DialogWrapper {
     }
     _list().add(dialog);
   }
-
-  /// For Navigator push and pop
-
-  static DialogShower? getTopNavigatorDialog() {
-    DialogShower? result;
-    DialogWrapper.iterateDialogs((dialog) {
-      return dialog.isWrappedByNavigator ? (result = dialog).isWrappedByNavigator : false;
-    });
-    return result;
-  }
-
-  static DialogShower pushRoot(Widget widget, {double? width, double? height, String? key}) {
-    DialogShower shower = DialogWrapper.show(widget, width: width, height: height, key: key);
-    shower.isWrappedByNavigator = true;
-    return shower;
-  }
-
-  // should use 'pushRoot' first or that there is a shower with 'isWrappedByNavigator = true' on showing
-  static Future<T?> push<T extends Object?>(
-      Widget widget, {
-        PageRouteBuilder<T>? routeBuilder,
-        RoutePageBuilder? pageBuilder,
-        RouteTransitionsBuilder? transition,
-
-        // copy from PageRouteBuilder constructor
-        RouteSettings? settings,
-        double? duration,
-        double? reverseDuration,
-        bool? opaque,
-        double? barrierDismissible,
-        Color? barrierColor,
-        String? barrierLabel,
-        bool? maintainState,
-        bool? fullscreenDialog,
-      }) {
-    DialogShower? topNavigatorDialog = getTopNavigatorDialog();
-    return topNavigatorDialog!.push(
-      widget,
-      duration: duration ?? const Duration(milliseconds: 200),
-      reverseDuration: reverseDuration ?? const Duration(milliseconds: 200),
-      transition: transition ??
-              (BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(1.0, 0.0),
-                end: const Offset(0.0, 0.0),
-              ).animate(animOne),
-              child: child,
-            );
-          },
-      routeBuilder: routeBuilder,
-      pageBuilder: pageBuilder,
-      settings: settings,
-      opaque: opaque,
-      barrierDismissible: barrierDismissible,
-      barrierColor: barrierColor,
-      barrierLabel: barrierLabel,
-      maintainState: maintainState,
-      fullscreenDialog: fullscreenDialog,
-    );
-  }
-
-  static void pop<T>({T? result}) {
-    getTopNavigatorDialog()?.pop(result: result);
-  }
-
 }

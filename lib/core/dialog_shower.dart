@@ -112,6 +112,7 @@ class DialogShower {
 
   // extension for navigate inner dialog
   bool isWrappedByNavigator = false;
+  bool isAutoSizeForNavigator = true;
   GlobalKey<NavigatorState>? _navigatorKey;
 
   // holder object for various uses if you need ...
@@ -382,7 +383,8 @@ class DialogShower {
       EdgeInsets m = margin!;
       if (m.top < 0 || m.left < 0) {
         if (_width == null || _height == null) {
-          _tryToGetContainerSize();
+          // _tryToGetContainerSize(); // replace with _tryToGetSizeOrNot now
+          _tryToGetSizeOrNot = true;
         }
 
         // [Center Vertically] if height is given when margin not given or top is negative
@@ -501,10 +503,27 @@ class DialogShower {
 
   /// Private methods
 
+  bool _tryToGetSizeOrNot = false;
+
   Widget _getContainer(Widget child, double? width, double? height) {
     Widget ccccc = child;
     Widget widget = ccccc;
-    if (isWrappedByNavigator) {
+    if (isWrappedByNavigator && isAutoSizeForNavigator && width == null && height == null) {
+      __shower_log__('[GetSizeWidget] try to get size, casue navigator will lead to max stretch of container child ...');
+      _tryToGetSizeOrNot = true;
+    }
+
+    if (_tryToGetSizeOrNot && width == null && height == null) {
+      __shower_log__('[GetSizeWidget] try for getting size now ...');
+      widget = GetSizeWidget(
+        onSizeChanged: (size) {
+          __shower_log__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
+          _setRenderedSizeWithSetState(size);
+        },
+        child: ccccc,
+      );
+    } else if (isWrappedByNavigator) {
+      __shower_log__('show with navigator');
       _navigatorKey = GlobalKey<NavigatorState>();
       widget = Navigator(
         key: _navigatorKey,
@@ -519,14 +538,7 @@ class DialogShower {
     }
 
     // the container as mini as possible for calculate the point if tapped inside
-    return
-        // GetSizeWidget(
-        //   onSizeChanged: (size) {
-        //     __shower_log__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
-        //     _tryToGetContainerSizeRaw();
-        //   },
-        //   child:
-        Container(
+    return Container(
       key: _containerKey,
       width: width,
       height: height,
@@ -535,7 +547,6 @@ class DialogShower {
       clipBehavior: containerClipBehavior,
       decoration: containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration,
       child: widget,
-      // ),
     );
   }
 
@@ -567,40 +578,37 @@ class DialogShower {
     );
   }
 
-  // Try to get container size if width or height not given by caller
-
-  int _tryTickIndex = 0;
-
-  final List<int> _tryTickTimes = [10, 10, 10, 20, 20, 30, 50, 50, 100];
+  // Try to get container size if width or height when not given by caller
+  int _tryTrickyIndex = 0;
 
   void _tryToGetContainerSize({int? index}) {
     if (index == null || index == 0) {
-      _tryTickIndex = 0;
+      _tryTrickyIndex = 0;
     }
-    int? millis = _tryTickIndex < _tryTickTimes.length ? _tryTickTimes[_tryTickIndex] : null;
+    final List<int> _tryTrickyTimes = [10, 10, 10, 20, 20, 30, 50, 50, 100];
+    int? millis = _tryTrickyIndex < _tryTrickyTimes.length ? _tryTrickyTimes[_tryTrickyIndex] : null;
     if (millis == null) {
       return;
     }
     Future.delayed(Duration(milliseconds: millis), () {
-      Size? size = _tryToGetContainerSizeRaw();
+      RenderObject? renderObject = _containerKey.currentContext?.findRenderObject();
+      Size? size = (renderObject as RenderBox?)?.size;
       if (size == null) {
-        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTickIndex retry again');
-        _tryToGetContainerSize(index: _tryTickIndex++);
+        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTrickyIndex retry again');
+        _tryToGetContainerSize(index: _tryTrickyIndex++);
       } else {
-        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTickIndex size: $size');
+        _setRenderedSizeWithSetState(size);
+        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTrickyIndex size: $size');
       }
     });
   }
 
-  Size? _tryToGetContainerSizeRaw() {
-    RenderObject? renderObject = _containerKey.currentContext?.findRenderObject();
-    Size? size = (renderObject as RenderBox?)?.size;
+  void _setRenderedSizeWithSetState(Size? size) {
     _renderedWidth = size?.width;
     _renderedHeight = size?.height;
     if (_renderedWidth != null && _renderedHeight != null) {
       setState(() {});
     }
-    return size;
   }
 
   /// Other Utils Methods

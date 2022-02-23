@@ -53,11 +53,11 @@ class PageOfKeyboard extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Column(
           children: [
-            getTitle('You can tap the edit box to see the behaviour when keyboard showed'),
+            getHeaderTitle('You can tap the edit box to see the behaviour when keyboard showed'),
             const SizedBox(height: 8),
             buildButtonsAboutKeyboard(),
             const SizedBox(height: 128),
-            getTitle('Navigator inner shower'),
+            getHeaderTitle('Navigator inner shower'),
             const SizedBox(height: 8),
             buildButtonsAboutNavigator(),
           ],
@@ -246,38 +246,15 @@ class PageOfKeyboard extends StatelessWidget {
   }
 
   Widget buildButtonsAboutNavigator() {
-    // List<Object> values = [];
-
     return Column(
       children: [
         Row(
           children: [
-            getButton('Show with navigator', onPressed: () {
-              DialogShower shower = DialogWrapper.show(
-                Column(
-                  children: [
-                    CupertinoButton(
-                      child: const Text('Dismiss shower'),
-                      onPressed: () {
-                        DialogWrapper.dismissTopDialog();
-                      },
-                    ),
-                    CupertinoButton(
-                      child: const Text('click me'),
-                      onPressed: () {
-                        rootBundle.loadString('assets/json/NO.json').then((string) {
-                          List<dynamic> value = json.decode(string);
-
-                          DialogWrapper.push(getSelectableListWidget(value), settings: const RouteSettings(name: '__country_route__'));
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                width: 500,
-                height: 500,
-              );
-              shower.isWrappedByNavigator = true;
+            getButton('Show with navigator with W&H', onPressed: () {
+              DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
+            }),
+            getButton('Show with navigator without W&H (Auto size)', onPressed: () {
+              DialogWrapper.pushRoot(getNavigatorChildWidget());
             }),
           ],
         )
@@ -287,12 +264,41 @@ class PageOfKeyboard extends StatelessWidget {
 
   /// Static Methods
 
+  Column getNavigatorChildWidget() {
+    return Column(
+      mainAxisSize: MainAxisSize.min, // as small as possible
+      children: [
+        CupertinoButton(
+          child: const Text('Dismiss'),
+          onPressed: () {
+            DialogWrapper.dismissTopDialog();
+          },
+        ),
+        CupertinoButton(
+          child: const Text('Click me'),
+          onPressed: () {
+            rootBundle.loadString('assets/json/NO.json').then((string) {
+              List<dynamic> value = json.decode(string);
+              DialogWrapper.push(getSelectableListWidget(value), settings: const RouteSettings(name: '__root_route__'));
+            });
+          },
+        ),
+        Container(
+          width: 400,
+          height: 500,
+          color: Colors.yellow,
+          child: const Center(child: Text('I\'m the place holder for more space :P')),
+        ),
+      ],
+    );
+  }
+
   void showCitiesOnClick(SelectableListWidgetState state, int index, Object value, List<Object>? selectedValues) {
     if (value is! Map) {
       return;
     }
     if (value['children'] == null || value['children']!.isEmpty) {
-      DialogWrapper.getTopNavigatorDialog()!.getNavigator()!.popUntil((route) => route.settings.name == '__country_route__');
+      DialogWrapper.getTopNavigatorDialog()!.getNavigator()!.popUntil((route) => route.settings.name == '__root_route__');
       DialogWrapper.pop();
       return;
     }
@@ -318,7 +324,7 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
-  static Widget getTitle(String titleText) {
+  static Widget getHeaderTitle(String titleText) {
     return Container(
       height: 32,
       alignment: Alignment.center,
