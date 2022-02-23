@@ -260,8 +260,20 @@ class PageOfKeyboard extends StatelessWidget {
       children: [
         Row(
           children: [
-            StrapButton('Show bubble', onPressed: () {}),
-            StrapButton('Show bubble on Dialog', onPressed: () {}),
+            StrapButton('Show bubble', onPressed: () {
+              DialogShower shower =  DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
+              print('....... is null: ${shower.future == null}');
+              shower.future?.then((value) {
+                print('future then ...>>>>>>>>');
+              });
+            }),
+            StrapButton('Show bubble on Dialog', onPressed: () {
+              DialogShower shower = DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
+              print('....... is null ma: ${shower.future == null}');
+              shower.future?.then((value) {
+                print('future then 66666 ...>>>>>>>>');
+              });
+            }),
           ],
         )
       ],
@@ -273,7 +285,7 @@ class PageOfKeyboard extends StatelessWidget {
       children: [
         Row(
           children: [
-            StrapButton('Show with navigator with W&H', onPressed: () {
+            StrapButton('Show with navigator with Width & Height', onPressed: () {
               DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
             }),
             StrapButton('Show with navigator without W&H (Auto size)', onPressed: () {

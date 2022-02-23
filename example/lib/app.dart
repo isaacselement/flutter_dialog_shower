@@ -12,9 +12,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     PagesManager.init();
 
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      navigatorObservers: [DialogShower.getObserver()],
+      home: const HomePage(),
     );
   }
 }

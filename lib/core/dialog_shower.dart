@@ -70,8 +70,8 @@ class DialogShower {
     (dismissCallbacks = dismissCallbacks ?? []).remove(callBack);
   }
 
-  KeyboardVisibilityCallBack? keyboardEventCallBack = null;
-  StreamSubscription? _keyboardStreamSubscription = null;
+  KeyboardVisibilityCallBack? keyboardEventCallBack;
+  StreamSubscription? _keyboardStreamSubscription;
 
   // modified/assigned internal .....
   String routeName = '';
@@ -80,28 +80,39 @@ class DialogShower {
   bool get isShowing => _isShowing;
 
   Completer<bool>? _pushedCompleter;
+
+  Completer<bool>? get pushedCompleter =>
+      _pushedCompleter ??= NavigatorObserverEx.statesChangingShowers?[routeName] != null ? Completer<bool>() : null;
   Completer<bool>? _poppedCompleter;
+
+  Completer<bool>? get poppedCompleter =>
+      _poppedCompleter ??= NavigatorObserverEx.statesChangingShowers?[routeName] != null ? Completer<bool>() : null;
   bool _isPushed = false;
   bool _isPopped = false;
 
   bool get isPushed => _isPushed;
 
-  set isPushed(v) => (_isPushed = v) ? _pushedCompleter?.complete(v) : null;
+  set isPushed(v) => (_isPushed = v) ? pushedCompleter?.complete(v) : null;
+
+  Future<void>? get futurePushed {
+    return pushedCompleter?.future;
+  }
 
   bool get isPopped => _isPopped;
 
-  set isPopped(v) => (_isPopped = v) ? _poppedCompleter?.complete(v) : null;
+  set isPopped(v) => (_isPopped = v) ? poppedCompleter?.complete(v) : null;
 
-  Future<void>? _future = null;
-
-  Future<void> get future async {
-    if (_future == null) {
-      if (NavigatorObserverEx.statesChangingShowers?[routeName] != null) {
-        await _pushedCompleter?.future;
-      }
-    }
-    return _future;
+  Future<void>? get futurePoped {
+    return poppedCompleter?.future;
   }
+
+  Future<void>? _future;
+
+  Future<void>? get future => _future ?? futurePoped;
+
+  /// TODO ... Attendsion observer call is sync call ...
+  bool isSyncShow = false;
+  bool isSyncDismiss = false;
 
   // private .....
   TapUpDetails? _tapUpDetails;
@@ -183,9 +194,6 @@ class DialogShower {
     routeName = routeName.isNotEmpty ? routeName : 'SHOWER-${DateTime.now().microsecondsSinceEpoch}'; // const Uuid().v1();
 
     NavigatorObserverEx.statesChangingShowers?[routeName] = this;
-    if (NavigatorObserverEx.statesChangingShowers?[routeName] != null) {
-      _pushedCompleter = Completer<bool>();
-    }
 
     Future.microtask(() => _show(_child, width: width, height: height));
     return this;
@@ -434,8 +442,7 @@ class DialogShower {
       // Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
 
       if (NavigatorObserverEx.statesChangingShowers?[routeName] != null) {
-        _poppedCompleter = Completer<bool>();
-        await _poppedCompleter?.future;
+        await futurePoped;
         assert(() {
           __shower_log__('>>>>>>>>>>>>>> popped: $routeName');
           return true;
