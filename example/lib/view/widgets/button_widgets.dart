@@ -9,15 +9,28 @@ class XpButton extends StatefulWidget {
   double? height;
   EdgeInsets? margin;
   EdgeInsets? padding;
+  bool isAsSmallAsPossible = false;
 
-  XpButton({
+  XpButton(
+    this.text, {
     Key? key,
-    required this.text,
     this.onPressed,
     this.width,
     this.height,
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
+    this.isAsSmallAsPossible = false,
+  }) : super(key: key);
+
+  XpButton.smallest(
+    this.text, {
+    Key? key,
+    this.onPressed,
+    this.width,
+    this.height,
+    this.margin = const EdgeInsets.all(10),
+    this.padding = const EdgeInsets.all(10),
+    this.isAsSmallAsPossible = true,
   }) : super(key: key);
 
   @override
@@ -37,8 +50,10 @@ class _XpButtonState extends State<XpButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    Widget view = Container(
       padding: widget.margin,
+      width: widget.width,
+      height: widget.height,
       child: InkWell(
         child: Container(
           alignment: Alignment.center,
@@ -65,5 +80,7 @@ class _XpButtonState extends State<XpButton> {
         },
       ),
     );
+    // as small as possible
+    return widget.isAsSmallAsPossible ? Row(mainAxisSize: MainAxisSize.min, children: [view]) : view;
   }
 }

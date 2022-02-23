@@ -3,6 +3,8 @@ import 'package:example/view/page_of_keyboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dialog_shower/event/event_truck.dart';
 
+import 'widgets/button_widgets.dart';
+
 class PageOfWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class PageOfWidgets extends StatelessWidget {
         children: [
           Row(
             children: [
-              PageOfKeyboard.getButton('EventTruck', onPressed: () {
+              XpButton('EventTruck', onPressed: () {
                 print('>>>>>>>>>>>>>>>>>> fire');
                 EventTruck.fire('object value');
               }),
