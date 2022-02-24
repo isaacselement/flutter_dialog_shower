@@ -87,7 +87,9 @@ class DialogWrapper {
   static DialogShower? getTopNavigatorDialog() {
     DialogShower? result;
     DialogWrapper.iterateDialogs((dialog) {
-      return dialog.isWrappedByNavigator ? (result = dialog).isWrappedByNavigator : false;
+      bool isBingo = dialog.isWrappedByNavigator;
+      result = isBingo ? dialog : null;
+      return result != null;
     });
     return result;
   }

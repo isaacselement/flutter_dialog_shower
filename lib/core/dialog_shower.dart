@@ -307,7 +307,7 @@ class DialogShower {
 
               if (isKeyboardShowed) {
                 // https://github.com/flutter/flutter/issues/48464
-                FocusManager.instance.primaryFocus?.unfocus(); // FocusScope.of(context).requestFocus(FocusNode());
+                FocusManager.instance.primaryFocus?.unfocus();
               }
 
               if (isTapInside) {
@@ -426,8 +426,8 @@ class DialogShower {
 
     if (_isTryToGetSmallestSize && width == null && height == null) {
       __shower_log__('[GetSizeWidget] try for getting size now ...');
-      widget = GetSizeOffsetWidget(
-        onSizeChanged: (size) {
+      widget = GetSizeWidget(
+        onLayoutChanged: (box, size) {
           __shower_log__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
           _setRenderedSizeWithSetState(size);
         },
@@ -732,48 +732,33 @@ class NavigatorObserverEx extends NavigatorObserver {
 }
 
 /// For get size immediately
-class GetSizeOffsetWidget extends SingleChildRenderObjectWidget {
-  final void Function(Size size)? onSizeChanged;
-  final void Function(Offset position)? onOffsetChanged;
+class GetSizeWidget extends SingleChildRenderObjectWidget {
+  final void Function(RenderProxyBox box, Size? size) onLayoutChanged;
 
-  const GetSizeOffsetWidget({Key? key, required Widget child, this.onSizeChanged, this.onOffsetChanged}) : super(key: key, child: child);
+  const GetSizeWidget({Key? key, required Widget child, required this.onLayoutChanged}) : super(key: key, child: child);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return _GetSizeRenderObject()
-      ..onSizeChanged = onSizeChanged
-      ..onOffsetChanged = onOffsetChanged;
+    return _GetSizeRenderObject()..onLayoutChanged = onLayoutChanged;
   }
 }
 
 class _GetSizeRenderObject extends RenderProxyBox {
   Size? _size;
-  Offset? _offset;
-  void Function(Size size)? onSizeChanged;
-  void Function(Offset position)? onOffsetChanged;
+  void Function(RenderProxyBox box, Size? size)? onLayoutChanged;
 
   @override
   void performLayout() {
     super.performLayout();
 
-    if (onSizeChanged != null) {
+    if (onLayoutChanged != null) {
       Size? size = child?.size;
-      __shower_log__('[GetSizeRenderObject] performLayout >>>>>>>>> size: $size');
-      if (size != null && size != _size) {
+      __shower_log__('[GetSizeWidget] performLayout >>>>>>>>> size: $size');
+      bool isSizeChanged = size != null && size != _size;
+      if (isSizeChanged) {
         _size = size;
         WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-          onSizeChanged?.call(size);
-        });
-      }
-    }
-
-    if (onOffsetChanged != null) {
-      Offset? offset = child?.localToGlobal(Offset.zero);
-      __shower_log__('[GetSizeRenderObject] performLayout >>>>>>>>> offset: $offset');
-      if (offset != null && offset != _offset) {
-        _offset = offset;
-        WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-          onOffsetChanged?.call(offset);
+          onLayoutChanged?.call(this, size);
         });
       }
     }
