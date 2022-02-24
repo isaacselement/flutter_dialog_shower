@@ -36,8 +36,7 @@ class SelectableListWidget extends StatefulWidget {
   }) : super(key: key) {
     // search values
     if (isSearchEnable) {
-      searchValues = [];
-      searchValues!.addAll(values);
+      (searchValues = []).addAll(values);
     }
   }
 
@@ -53,7 +52,7 @@ class SelectableListWidget extends StatefulWidget {
   double? leftButtonHeight;
   EdgeInsets leftButtonPadding;
   Alignment leftButtonAlignment;
-  void Function(SelectableListWidgetState state)? leftButtonEvent;
+  void Function(SelectableListState state)? leftButtonEvent;
 
   // right button
   Widget? rightButtonWidget;
@@ -63,7 +62,7 @@ class SelectableListWidget extends StatefulWidget {
   double? rightButtonHeight;
   EdgeInsets rightButtonPadding;
   Alignment rightButtonAlignment;
-  void Function(SelectableListWidgetState state)? rightButtonEvent;
+  void Function(SelectableListState state)? rightButtonEvent;
 
   // items data & events
   List<Object> values;
@@ -75,18 +74,18 @@ class SelectableListWidget extends StatefulWidget {
   bool isSearchEnable;
   List<Object>? searchValues;
 
-  Widget? Function(SelectableListWidgetState state, int index, Object value)? itemBuilder;
-  Widget? Function(SelectableListWidgetState state, int index, Object value)? itemPrefixBuilder;
-  Widget? Function(SelectableListWidgetState state, int index, Object value)? itemSuffixBuilder;
+  Widget? Function(SelectableListState state, int index, Object value)? itemBuilder;
+  Widget? Function(SelectableListState state, int index, Object value)? itemPrefixBuilder;
+  Widget? Function(SelectableListState state, int index, Object value)? itemSuffixBuilder;
 
-  String? Function(Object? object)? functionOfName;
-  void Function(SelectableListWidgetState state, int index, Object value, List<Object>? selectedValues)? onSelectedEvent;
+  String? Function(SelectableListState state, int index, Object value)? functionOfName;
+  void Function(SelectableListState state, int index, Object value, List<Object>? selectedValues)? onSelectedEvent;
 
   @override
-  State<StatefulWidget> createState() => SelectableListWidgetState();
+  State<StatefulWidget> createState() => SelectableListState();
 }
 
-class SelectableListWidgetState extends State<SelectableListWidget> {
+class SelectableListState extends State<SelectableListWidget> {
   TextEditingController? _searchTextEditController;
 
   @override
@@ -214,7 +213,7 @@ class SelectableListWidgetState extends State<SelectableListWidget> {
                     List<Object> _tmp = [];
                     for (int i = 0; i < widget.values.length; i++) {
                       Object value = widget.values[i];
-                      String title = widget.functionOfName?.call(value) ?? value.toString();
+                      String title = widget.functionOfName?.call(this, i, value) ?? value.toString();
                       if (title.contains(text)) {
                         _tmp.add(value);
                       }
@@ -247,7 +246,7 @@ class SelectableListWidgetState extends State<SelectableListWidget> {
   }
 
   Widget _buildListViewItem(int index, int realIndex, Object value) {
-    String title = widget.functionOfName?.call(value) ?? value.toString();
+    String title = widget.functionOfName?.call(this, realIndex, value) ?? value.toString();
     return Container(
       padding: const EdgeInsets.only(left: 24, right: 24),
       decoration: BoxDecoration(

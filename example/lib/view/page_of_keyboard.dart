@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:example/util/position_util.dart';
 import 'package:example/view/widgets/button_widgets.dart';
-import 'package:example/view/widgets/selectable_list_widget.dart';
+import 'package:flutter_dialog_shower/view/selectable_list_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -261,21 +261,7 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             StrapButton('Show bubble', onPressed: () {
-              // print('f--------------- 1 --------------');
-              // futureTest1().then((value){
-              //   print('futureTest1 then ...>>>>>>>>');
-              // });
-              // print('f--------------- 2 --------------');
-              // futureTest1WithFuture().then((value) {
-              //   print('futureTest1WithFuture then ...>>>>>>>>');
-              // });
-              // print('f--------------- 3 --------------');
-              //
-              // testCompleter1.future.then((value){
-              //   print('testCompleter1 then ...>>>>>>>>');
-              // });
-              // return;
-              DialogShower shower = DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
+              DialogShower shower = DialogWrapper.pushRoot(getNavigatorRootWidget(), width: 600, height: 700);
               shower.future.then((value) {
                 print('future then 1 ...>>>>>>>>');
               });
@@ -287,9 +273,7 @@ class PageOfKeyboard extends StatelessWidget {
               });
             }),
             StrapButton('Show bubble on Dialog', onPressed: () {
-              // testCompleter1.complete();
-              // return;
-              DialogShower shower = DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
+              DialogShower shower = DialogWrapper.pushRoot(getNavigatorRootWidget(), width: 600, height: 700);
               shower.futurePushed.then((value) {
                 print('futurePushed then 0 ...>>>>>>>>');
               });
@@ -311,32 +295,11 @@ class PageOfKeyboard extends StatelessWidget {
                 });
               });
             }),
-            // StrapButton('Show bubble on Dialog', onPressed: () {
-            //   testCompleter2.complete();
-            // }),
           ],
         )
       ],
     );
   }
-
-  //---------------------------------------
-  // Completer<void> testCompleter2 = Completer();
-  //
-  // Completer<void> testCompleter1 = Completer();
-  //
-  // Future<void> futureTest1WithFuture() async {
-  //   print('>>>>>>>>>>> futureTest1WithFuture start');
-  //   return testCompleter1.future;
-  // }
-  //
-  // Future<void> futureTest1() async {
-  //   print('>>>>>>>>>>> futureTest1 start');
-  //   await testCompleter1.future;
-  //   print('>>>>>>>>>>> futureTest1 end');
-  //   return testCompleter2.future;
-  // }
-  //---------------------------------------
 
   Widget buildButtonsAboutNavigator() {
     return Column(
@@ -344,10 +307,10 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             StrapButton('Show with navigator with Width & Height', onPressed: () {
-              DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
+              DialogWrapper.pushRoot(getNavigatorRootWidget(), width: 600, height: 700);
             }),
             StrapButton('Show with navigator without W&H (Auto size)', onPressed: () {
-              DialogWrapper.pushRoot(getNavigatorChildWidget());
+              DialogWrapper.pushRoot(getNavigatorRootWidget());
             }),
           ],
         )
@@ -357,7 +320,7 @@ class PageOfKeyboard extends StatelessWidget {
 
   /// Static Methods
 
-  Column getNavigatorChildWidget() {
+  Column getNavigatorRootWidget() {
     return Column(
       mainAxisSize: MainAxisSize.min, // as small as possible
       children: [
@@ -386,7 +349,7 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
-  void showCitiesOnClick(SelectableListWidgetState state, int index, Object value, List<Object>? selectedValues) {
+  void showCitiesOnClick(SelectableListState state, int index, Object value, List<Object>? selectedValues) {
     if (value is! Map) {
       return;
     }
@@ -402,7 +365,7 @@ class PageOfKeyboard extends StatelessWidget {
     return SelectableListWidget(
       title: 'Select The City',
       values: ((value is Map ? value['children'] : value) as List<dynamic>).cast(),
-      functionOfName: (e) => e is Map ? e['areaName'] : '',
+      functionOfName: (s, i, e) => e is Map ? e['areaName'] : '',
       isSearchEnable: true,
       leftButtonEvent: (state) {
         DialogWrapper.pop();
