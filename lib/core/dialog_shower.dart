@@ -10,6 +10,9 @@ class DialogShower {
   static NavigatorObserverEx? gObserver;
   static const Decoration _notInitializedDecoration = BoxDecoration();
 
+  bool isSyncShow = false; // should assign value before show method
+  bool isSyncDismiss = false;
+
   // navigate
   BuildContext? context;
   bool isUseRootNavigator = true;
@@ -54,21 +57,13 @@ class DialogShower {
   List<ShowerVisibilityCallBack>? showCallbacks = null;
   List<ShowerVisibilityCallBack>? dismissCallbacks = null;
 
-  void addShowCallBack(ShowerVisibilityCallBack callBack) {
-    (showCallbacks = showCallbacks ?? []).add(callBack);
-  }
+  void addShowCallBack(ShowerVisibilityCallBack callBack) => (showCallbacks = showCallbacks ?? []).add(callBack);
 
-  void removeShowCallBack(ShowerVisibilityCallBack callBack) {
-    (showCallbacks = showCallbacks ?? []).remove(callBack);
-  }
+  void removeShowCallBack(ShowerVisibilityCallBack callBack) => (showCallbacks = showCallbacks ?? []).remove(callBack);
 
-  void addDismissCallBack(ShowerVisibilityCallBack callBack) {
-    (dismissCallbacks = dismissCallbacks ?? []).add(callBack);
-  }
+  void addDismissCallBack(ShowerVisibilityCallBack callBack) => (dismissCallbacks = dismissCallbacks ?? []).add(callBack);
 
-  void removeDismissCallBack(ShowerVisibilityCallBack callBack) {
-    (dismissCallbacks = dismissCallbacks ?? []).remove(callBack);
-  }
+  void removeDismissCallBack(ShowerVisibilityCallBack callBack) => (dismissCallbacks = dismissCallbacks ?? []).remove(callBack);
 
   KeyboardVisibilityCallBack? keyboardEventCallBack;
   StreamSubscription? _keyboardStreamSubscription;
@@ -79,40 +74,33 @@ class DialogShower {
 
   bool get isShowing => _isShowing;
 
-  Completer<bool>? _pushedCompleter;
-
-  Completer<bool>? get pushedCompleter =>
-      _pushedCompleter ??= NavigatorObserverEx.statesChangingShowers?[routeName] != null ? Completer<bool>() : null;
-  Completer<bool>? _poppedCompleter;
-
-  Completer<bool>? get poppedCompleter =>
-      _poppedCompleter ??= NavigatorObserverEx.statesChangingShowers?[routeName] != null ? Completer<bool>() : null;
+  final Completer<bool> _pushedCompleter = Completer<bool>();
+  final Completer<bool> _poppedCompleter = Completer<bool>();
   bool _isPushed = false;
   bool _isPopped = false;
 
   bool get isPushed => _isPushed;
 
-  set isPushed(v) => (_isPushed = v) ? pushedCompleter?.complete(v) : null;
-
-  Future<void>? get futurePushed {
-    return pushedCompleter?.future;
-  }
-
   bool get isPopped => _isPopped;
 
-  set isPopped(v) => (_isPopped = v) ? poppedCompleter?.complete(v) : null;
+  set isPushed(v) => (_isPushed = v) ? Future.microtask(() => _pushedCompleter.complete(v)) : null;
 
-  Future<void>? get futurePoped {
-    return poppedCompleter?.future;
-  }
+  set isPopped(v) => (_isPopped = v) ? Future.microtask(() => _poppedCompleter.complete(v)) : null;
+
+  Future<void> get futurePushed => _pushedCompleter.future;
+
+  Future<void> get futurePoped => _poppedCompleter.future;
 
   Future<void>? _future;
 
-  Future<void>? get future => _future ?? futurePoped;
+  Future<void> get future async {
+    if (_future == null) {
+      await futurePushed;
+    }
+    return _future;
+  }
 
-  /// TODO ... Attendsion observer call is sync call ...
-  bool isSyncShow = false;
-  bool isSyncDismiss = false;
+  Future<R>? then<R>(FutureOr<R> Function(void value) onValue, {Function? onError}) => future.then(onValue, onError: onError);
 
   // private .....
   TapUpDetails? _tapUpDetails;
@@ -192,10 +180,8 @@ class DialogShower {
 
   DialogShower show(Widget _child, {double? width, double? height}) {
     routeName = routeName.isNotEmpty ? routeName : 'SHOWER-${DateTime.now().microsecondsSinceEpoch}'; // const Uuid().v1();
-
     NavigatorObserverEx.statesChangingShowers?[routeName] = this;
-
-    Future.microtask(() => _show(_child, width: width, height: height));
+    isSyncShow ? _show(_child, width: width, height: height) : Future.microtask(() => _show(_child, width: width, height: height));
     return this;
   }
 
@@ -229,6 +215,9 @@ class DialogShower {
         return _getInternalWidget(_child);
       },
     );
+    if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
+      isPushed = true;
+    }
 
     assert(() {
       __shower_log__('>>>>>>>>>>>>>> showed: $routeName');
@@ -392,7 +381,7 @@ class DialogShower {
       if (m.top < 0 || m.left < 0) {
         if (_width == null || _height == null) {
           // _tryToGetContainerSize(); // replace with _tryToGetSizeOrNot now
-          _tryToGetSizeOrNot = true;
+          _isTryToGetSmallestSize = true;
         }
 
         // [Center Vertically] if height is given when margin not given or top is negative
@@ -425,6 +414,53 @@ class DialogShower {
     }
   }
 
+  bool _isTryToGetSmallestSize = false;
+
+  Widget _getContainer(Widget child, double? width, double? height) {
+    Widget ccccc = child;
+    Widget widget = ccccc;
+    if (isWrappedByNavigator && isAutoSizeForNavigator && width == null && height == null) {
+      __shower_log__('[GetSizeWidget] try to get size, casue navigator will lead to max stretch of container child ...');
+      _isTryToGetSmallestSize = true;
+    }
+
+    if (_isTryToGetSmallestSize && width == null && height == null) {
+      __shower_log__('[GetSizeWidget] try for getting size now ...');
+      widget = GetSizeOffsetWidget(
+        onSizeChanged: (size) {
+          __shower_log__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
+          _setRenderedSizeWithSetState(size);
+        },
+        child: ccccc,
+      );
+    } else if (isWrappedByNavigator) {
+      __shower_log__('show with navigator');
+      _navigatorKey = GlobalKey<NavigatorState>();
+      widget = Navigator(
+        key: _navigatorKey,
+        onGenerateRoute: (RouteSettings settings) {
+          return PageRouteBuilder(
+            pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
+              return ccccc;
+            },
+          );
+        },
+      );
+    }
+
+    // the container as mini as possible for calculate the point if tapped inside
+    return Container(
+      key: _containerKey,
+      width: width,
+      height: height,
+      // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
+      // source will assert(decoration != null || clipBehavior == Clip.none),
+      clipBehavior: containerClipBehavior,
+      decoration: containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration,
+      child: widget,
+    );
+  }
+
   Future<void> dismiss() async {
     if (_isShowing) {
       _isShowing = false;
@@ -432,25 +468,26 @@ class DialogShower {
         __shower_log__('>>>>>>>>>>>>>> popping: $routeName');
         return true;
       }());
-
-      Future.microtask(() {
-        Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
-      });
-
-      /// ISSUE: Failed assertion: line 4595 pos 12: '!_debugLocked': is not true.
-      // will call NavigatorObserver didPop method immediately following, so u should put set isPopped into Future.microtask
-      // Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
-
-      if (NavigatorObserverEx.statesChangingShowers?[routeName] != null) {
-        await futurePoped;
-        assert(() {
-          __shower_log__('>>>>>>>>>>>>>> popped: $routeName');
-          return true;
-        }());
-        NavigatorObserverEx.statesChangingShowers?.remove(routeName);
+      isSyncDismiss ? _dissmiss() : Future.microtask(() => _dissmiss());
+      assert(() {
+        __shower_log__('>>>>>>>>>>>>>> popped: $routeName');
+        return true;
+      }());
+      if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
+        isPopped = true;
       }
+      await futurePoped;
+      assert(() {
+        __shower_log__('>>>>>>>>>>>>>> popped done: $routeName');
+        return true;
+      }());
+      NavigatorObserverEx.statesChangingShowers?.remove(routeName);
     }
   }
+
+  // pop will caused NavigatorObserver.didPop method call immediately in the same eventloop
+  // so u should put set isPopped into Future.microtask, the same as isPushed, in the same eventloop as push
+  void _dissmiss() => Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
 
   /// For navigator
   NavigatorState? getNavigator() {
@@ -510,53 +547,6 @@ class DialogShower {
 
   /// Private methods
 
-  bool _tryToGetSizeOrNot = false;
-
-  Widget _getContainer(Widget child, double? width, double? height) {
-    Widget ccccc = child;
-    Widget widget = ccccc;
-    if (isWrappedByNavigator && isAutoSizeForNavigator && width == null && height == null) {
-      __shower_log__('[GetSizeWidget] try to get size, casue navigator will lead to max stretch of container child ...');
-      _tryToGetSizeOrNot = true;
-    }
-
-    if (_tryToGetSizeOrNot && width == null && height == null) {
-      __shower_log__('[GetSizeWidget] try for getting size now ...');
-      widget = GetSizeWidget(
-        onSizeChanged: (size) {
-          __shower_log__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
-          _setRenderedSizeWithSetState(size);
-        },
-        child: ccccc,
-      );
-    } else if (isWrappedByNavigator) {
-      __shower_log__('show with navigator');
-      _navigatorKey = GlobalKey<NavigatorState>();
-      widget = Navigator(
-        key: _navigatorKey,
-        onGenerateRoute: (RouteSettings settings) {
-          return PageRouteBuilder(
-            pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
-              return ccccc;
-            },
-          );
-        },
-      );
-    }
-
-    // the container as mini as possible for calculate the point if tapped inside
-    return Container(
-      key: _containerKey,
-      width: width,
-      height: height,
-      // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
-      // source will assert(decoration != null || clipBehavior == Clip.none),
-      clipBehavior: containerClipBehavior,
-      decoration: containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration,
-      child: widget,
-    );
-  }
-
   Decoration _defContainerDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(containerBorderRadius),
@@ -586,28 +576,15 @@ class DialogShower {
   }
 
   // Try to get container size if width or height when not given by caller
-  int _tryTrickyIndex = 0;
-
-  void _tryToGetContainerSize({int? index}) {
-    if (index == null || index == 0) {
-      _tryTrickyIndex = 0;
+  void _tryToGetContainerSize({int index = 0}) {
+    final List<int> tryTrickyTimes = [10, 10, 10, 20, 20, 30, 50, 50, 100];
+    if (index < tryTrickyTimes.length) {
+      Future.delayed(Duration(milliseconds: tryTrickyTimes[index]), () {
+        Size? size = (_containerKey.currentContext?.findRenderObject() as RenderBox?)?.size;
+        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $index size: $size');
+        size == null ? _tryToGetContainerSize(index: index++) : _setRenderedSizeWithSetState(size);
+      });
     }
-    final List<int> _tryTrickyTimes = [10, 10, 10, 20, 20, 30, 50, 50, 100];
-    int? millis = _tryTrickyIndex < _tryTrickyTimes.length ? _tryTrickyTimes[_tryTrickyIndex] : null;
-    if (millis == null) {
-      return;
-    }
-    Future.delayed(Duration(milliseconds: millis), () {
-      RenderObject? renderObject = _containerKey.currentContext?.findRenderObject();
-      Size? size = (renderObject as RenderBox?)?.size;
-      if (size == null) {
-        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTrickyIndex retry again');
-        _tryToGetContainerSize(index: _tryTrickyIndex++);
-      } else {
-        _setRenderedSizeWithSetState(size);
-        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $_tryTrickyIndex size: $size');
-      }
-    });
   }
 
   void _setRenderedSizeWithSetState(Size? size) {
@@ -700,6 +677,7 @@ class _BuilderExState extends State<BuilderEx> {
 class NavigatorObserverEx extends NavigatorObserver {
   static Map<String, DialogShower>? statesChangingShowers;
 
+  // init this map only when the App observers contains this instance / didPush indicate that contains is true
   static ensureInit() {
     statesChangingShowers ??= {};
   }
@@ -754,31 +732,50 @@ class NavigatorObserverEx extends NavigatorObserver {
 }
 
 /// For get size immediately
-class GetSizeWidget extends SingleChildRenderObjectWidget {
+class GetSizeOffsetWidget extends SingleChildRenderObjectWidget {
   final void Function(Size size)? onSizeChanged;
+  final void Function(Offset position)? onOffsetChanged;
 
-  const GetSizeWidget({Key? key, required Widget child, required this.onSizeChanged}) : super(key: key, child: child);
+  const GetSizeOffsetWidget({Key? key, required Widget child, this.onSizeChanged, this.onOffsetChanged}) : super(key: key, child: child);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return _GetSizeRenderObject()..onSizeChanged = onSizeChanged;
+    return _GetSizeRenderObject()
+      ..onSizeChanged = onSizeChanged
+      ..onOffsetChanged = onOffsetChanged;
   }
 }
 
 class _GetSizeRenderObject extends RenderProxyBox {
   Size? _size;
+  Offset? _offset;
   void Function(Size size)? onSizeChanged;
+  void Function(Offset position)? onOffsetChanged;
 
   @override
   void performLayout() {
     super.performLayout();
-    Size? size = child?.size;
-    __shower_log__('[GetSizeRenderObject] performLayout >>>>>>>>> new size $size');
-    if (size != null && size != _size) {
-      _size = size;
-      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-        onSizeChanged?.call(size);
-      });
+
+    if (onSizeChanged != null) {
+      Size? size = child?.size;
+      __shower_log__('[GetSizeRenderObject] performLayout >>>>>>>>> size: $size');
+      if (size != null && size != _size) {
+        _size = size;
+        WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+          onSizeChanged?.call(size);
+        });
+      }
+    }
+
+    if (onOffsetChanged != null) {
+      Offset? offset = child?.localToGlobal(Offset.zero);
+      __shower_log__('[GetSizeRenderObject] performLayout >>>>>>>>> offset: $offset');
+      if (offset != null && offset != _offset) {
+        _offset = offset;
+        WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+          onOffsetChanged?.call(offset);
+        });
+      }
     }
   }
 }

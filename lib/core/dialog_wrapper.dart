@@ -52,8 +52,8 @@ class DialogWrapper {
       ..build()
       ..barrierDismissible = null // null indicate that: dimiss keyboard first while keyboard is showing, else dismiss dialog immediately
       ..containerShadowColor = Colors.grey
-      ..containerBorderRadius = 10.0
-      ..containerShadowBlurRadius = 20.0;
+      ..containerShadowBlurRadius = 20.0
+      ..containerBorderRadius = 10.0;
 
     if (direction != null) {
       shower.animationBeginOffset = direction;
@@ -70,6 +70,8 @@ class DialogWrapper {
         ..margin = EdgeInsets.only(left: x, top: y);
     }
 
+    centralOfShower?.call(shower);
+
     shower.show(child, width: width, height: height);
     _addDialog(shower, key: key);
     shower.addDismissCallBack((d) {
@@ -77,6 +79,9 @@ class DialogWrapper {
     });
     return shower;
   }
+
+  // control center for shower that showed by this wrapper
+  static Function(DialogShower shower)? centralOfShower;
 
   /// Navigator push and pop
   static DialogShower? getTopNavigatorDialog() {

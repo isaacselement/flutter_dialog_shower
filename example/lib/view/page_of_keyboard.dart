@@ -57,7 +57,7 @@ class PageOfKeyboard extends StatelessWidget {
             const SizedBox(height: 8),
             buildButtonsAboutKeyboard(),
             const SizedBox(height: 64),
-            getHeaderTitle('Button in shower'),
+            getHeaderTitle('Bubble in shower. Shower in shower'),
             const SizedBox(height: 8),
             buildButtonsAboutBubble(),
             const SizedBox(height: 64),
@@ -261,24 +261,82 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             StrapButton('Show bubble', onPressed: () {
-              DialogShower shower =  DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
-              print('....... is null: ${shower.future == null}');
-              shower.future?.then((value) {
-                print('future then ...>>>>>>>>');
+              // print('f--------------- 1 --------------');
+              // futureTest1().then((value){
+              //   print('futureTest1 then ...>>>>>>>>');
+              // });
+              // print('f--------------- 2 --------------');
+              // futureTest1WithFuture().then((value) {
+              //   print('futureTest1WithFuture then ...>>>>>>>>');
+              // });
+              // print('f--------------- 3 --------------');
+              //
+              // testCompleter1.future.then((value){
+              //   print('testCompleter1 then ...>>>>>>>>');
+              // });
+              // return;
+              DialogShower shower = DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
+              shower.future.then((value) {
+                print('future then 1 ...>>>>>>>>');
+              });
+              shower.then((value) {
+                print('future then 2 ...>>>>>>>>');
+              });
+              shower.futurePushed.then((value) {
+                print('futurePushed then 0 ...>>>>>>>>');
               });
             }),
             StrapButton('Show bubble on Dialog', onPressed: () {
+              // testCompleter1.complete();
+              // return;
               DialogShower shower = DialogWrapper.pushRoot(getNavigatorChildWidget(), width: 600, height: 700);
-              print('....... is null ma: ${shower.future == null}');
-              shower.future?.then((value) {
-                print('future then 66666 ...>>>>>>>>');
+              shower.futurePushed.then((value) {
+                print('futurePushed then 0 ...>>>>>>>>');
+              });
+              shower.future.then((value) {
+                print('future then 3 ...>>>>>>>>');
+              });
+              shower.then((value) {
+                print('future then 4 ...>>>>>>>>');
+              });
+              shower.futurePoped.then((value) {
+                print('future then 5 >>>>>>>>>>>>');
+              });
+              shower.futurePoped.then((value) {
+                print('future then 6 >>>>>>>>>>>>');
+              });
+              Future.delayed(Duration(seconds: 3), (){
+                shower.dismiss().then((value) {
+                  print('dismiss then 7 >>>>>>>>>>>>');
+                });
               });
             }),
+            // StrapButton('Show bubble on Dialog', onPressed: () {
+            //   testCompleter2.complete();
+            // }),
           ],
         )
       ],
     );
   }
+
+  //---------------------------------------
+  // Completer<void> testCompleter2 = Completer();
+  //
+  // Completer<void> testCompleter1 = Completer();
+  //
+  // Future<void> futureTest1WithFuture() async {
+  //   print('>>>>>>>>>>> futureTest1WithFuture start');
+  //   return testCompleter1.future;
+  // }
+  //
+  // Future<void> futureTest1() async {
+  //   print('>>>>>>>>>>> futureTest1 start');
+  //   await testCompleter1.future;
+  //   print('>>>>>>>>>>> futureTest1 end');
+  //   return testCompleter2.future;
+  // }
+  //---------------------------------------
 
   Widget buildButtonsAboutNavigator() {
     return Column(
