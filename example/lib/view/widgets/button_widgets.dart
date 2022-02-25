@@ -1,43 +1,54 @@
-import 'package:example/view/manager/themes_manager.dart';
 import 'package:flutter/material.dart';
 
-class StrapButton extends StatefulWidget {
+class XpTextButton extends StatefulWidget {
   String text;
-  void Function()? onPressed;
 
   double? width;
   double? height;
+
   EdgeInsets? margin;
   EdgeInsets? padding;
+  Alignment? alignment;
+
+  void Function()? onPressed;
   bool isAsSmallAsPossible = false;
 
-  StrapButton(
+  TextStyle? Function(String text, bool isTapingDown)? textStyleBuilder;
+  BoxDecoration? Function(String text, bool isTapingDown)? decorationBuilder;
+
+  XpTextButton(
     this.text, {
     Key? key,
-    this.onPressed,
     this.width,
     this.height,
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
+    this.alignment = Alignment.center,
+    this.onPressed,
     this.isAsSmallAsPossible = false,
+    this.textStyleBuilder,
+    this.decorationBuilder,
   }) : super(key: key);
 
-  StrapButton.smallest(
+  XpTextButton.smallest(
     this.text, {
     Key? key,
-    this.onPressed,
     this.width,
     this.height,
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
+    this.alignment = Alignment.center,
+    this.onPressed,
     this.isAsSmallAsPossible = true,
+    this.textStyleBuilder,
+    this.decorationBuilder,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _StrapButtonState();
+  State<StatefulWidget> createState() => _XpTextButtonState();
 }
 
-class _StrapButtonState extends State<StrapButton> {
+class _XpTextButtonState extends State<XpTextButton> {
   bool _isTapingDown = false;
 
   get isTapingDown => _isTapingDown;
@@ -56,17 +67,11 @@ class _StrapButtonState extends State<StrapButton> {
       height: widget.height,
       child: InkWell(
         child: Container(
-          alignment: Alignment.center,
           padding: widget.padding,
-          decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(4)),
-              color: isTapingDown
-                  ? ThemesManager.getXpButtonColor(widget.text).withAlpha(200)
-                  : ThemesManager.getXpButtonColor(widget.text)),
-          child: Text(
-            widget.text,
-            style: TextStyle(color: isTapingDown ? Colors.white.withAlpha(200) : Colors.white),
-          ),
+          alignment: widget.alignment,
+          decoration: widget.decorationBuilder?.call(widget.text, isTapingDown) ?? _defBoxDecoration(widget.text, isTapingDown),
+          child: Text(widget.text,
+              style: widget.textStyleBuilder?.call(widget.text, isTapingDown) ?? _defTextStyle(widget.text, isTapingDown)),
         ),
         onTap: () {
           isTapingDown = false;
@@ -82,5 +87,161 @@ class _StrapButtonState extends State<StrapButton> {
     );
     // as small as possible
     return widget.isAsSmallAsPossible ? Row(mainAxisSize: MainAxisSize.min, children: [view]) : view;
+  }
+
+  BoxDecoration _defBoxDecoration(String text, bool isTapingDown) {
+    return BoxDecoration(
+      borderRadius: const BorderRadius.all(Radius.circular(5)),
+      color: isTapingDown ? const Color(0xFF00BDAC).withAlpha(200) : const Color(0xFF00BDAC),
+    );
+  }
+
+  TextStyle _defTextStyle(String text, bool isTapingDown) {
+    return TextStyle(color: isTapingDown ? Colors.white.withAlpha(200) : Colors.white);
+  }
+}
+
+class IconTextButtonVer extends StatefulWidget {
+  Widget icon;
+  Widget? iconSelected;
+  String text;
+  String? textSelected;
+  double? gap;
+  bool isSelected;
+
+  void Function()? onPressed;
+
+  IconTextButtonVer({
+    Key? key,
+    required this.icon,
+    this.iconSelected,
+    required this.text,
+    this.textSelected,
+    this.gap = 2.0,
+    this.isSelected = false,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _IconTextButtonVerState();
+}
+
+class _IconTextButtonVerState extends State<IconTextButtonVer> {
+  bool _isTapingDown = false;
+
+  get isTapingDown => _isTapingDown;
+
+  set isTapingDown(v) {
+    setState(() {
+      _isTapingDown = v;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget icon = widget.isSelected ? widget.iconSelected ?? widget.icon : widget.icon;
+    String text = widget.isSelected ? widget.textSelected ?? widget.text : widget.text;
+    return InkWell(
+      child: Column(
+        children: [
+          icon,
+          SizedBox(height: widget.gap),
+          Text(
+            text,
+            style: _defTextStyle(text, isTapingDown),
+          )
+        ],
+      ),
+      onTap: () {
+        isTapingDown = false;
+        setState(() {
+          widget.isSelected = !widget.isSelected;
+        });
+        widget.onPressed?.call();
+      },
+      onTapDown: (details) {
+        isTapingDown = true;
+      },
+      onTapCancel: () {
+        isTapingDown = false;
+      },
+    );
+  }
+
+  TextStyle _defTextStyle(String text, bool isTapingDown) {
+    return TextStyle(color: isTapingDown ? Colors.white.withAlpha(200) : Colors.white);
+  }
+}
+
+
+class IconTextButtonHor extends StatefulWidget {
+  Widget icon;
+  Widget? iconSelected;
+  String text;
+  String? textSelected;
+  double? gap;
+  bool isSelected;
+
+  void Function()? onPressed;
+
+  IconTextButtonHor({
+    Key? key,
+    required this.icon,
+    this.iconSelected,
+    required this.text,
+    this.textSelected,
+    this.gap = 2.0,
+    this.isSelected = false,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _IconTextButtonVerState();
+}
+
+class _IconTextButtonHorState extends State<IconTextButtonVer> {
+  bool _isTapingDown = false;
+
+  get isTapingDown => _isTapingDown;
+
+  set isTapingDown(v) {
+    setState(() {
+      _isTapingDown = v;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget icon = widget.isSelected ? widget.iconSelected ?? widget.icon : widget.icon;
+    String text = widget.isSelected ? widget.textSelected ?? widget.text : widget.text;
+    return InkWell(
+      child: Row(
+        children: [
+          icon,
+          SizedBox(width: widget.gap),
+          Text(
+            text,
+            style: _defTextStyle(text, isTapingDown),
+          )
+        ],
+      ),
+      onTap: () {
+        isTapingDown = false;
+        setState(() {
+          widget.isSelected = !widget.isSelected;
+        });
+        widget.onPressed?.call();
+      },
+      onTapDown: (details) {
+        isTapingDown = true;
+      },
+      onTapCancel: () {
+        isTapingDown = false;
+      },
+    );
+  }
+
+  TextStyle _defTextStyle(String text, bool isTapingDown) {
+    return TextStyle(color: isTapingDown ? Colors.white.withAlpha(200) : Colors.white);
   }
 }

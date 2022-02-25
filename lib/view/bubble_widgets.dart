@@ -3,7 +3,6 @@ import 'dart:math' as Math;
 import 'package:flutter/material.dart';
 
 class BubbleWidget extends StatelessWidget {
-  static const double defaultShadowRadius = 12;
 
   Widget? child;
 
@@ -21,11 +20,11 @@ class BubbleWidget extends StatelessWidget {
     required this.width,
     required this.height,
     this.child,
-    this.bubbleShadowColor = const Color(0xFFD6D6D6),
-    this.bubbleRadius = defaultShadowRadius,
-    this.bubbleShadowRadius = defaultShadowRadius,
-    this.bubbleTriangleHeight = defaultShadowRadius,
-    this.bubbleTriangleWidth  = defaultShadowRadius,
+    this.bubbleRadius = 12.0,
+    this.bubbleShadowColor = Colors.grey,
+    this.bubbleShadowRadius = 32.0,
+    this.bubbleTriangleHeight = 8.0,
+    this.bubbleTriangleWidth  = 12.0,
     this.bubbleTriangleOffset,
     this.triangleDirection = TriangleArrowDirection.left,
   }) ;
@@ -76,6 +75,7 @@ class BubbleWidget extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           // color: Colors.red,
+          // border: Border.all(color: Colors.greenAccent),
           borderRadius: BorderRadius.all(Radius.circular(bubbleRadius)),
         ),
         child: child ?? const Offstage(offstage: true),

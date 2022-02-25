@@ -1,3 +1,4 @@
+import 'package:example/view/widgets/button_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/broker.dart';
@@ -18,9 +19,27 @@ class PagesManager {
     }
 
     if (tabsPages.isEmpty) {
-      addTabPage(true, 'Tab1', const Icon(Icons.keyboard, size: 32), PageOfKeyboard());
-      addTabPage(false, 'Tab2', const Icon(Icons.event, size: 32), PageOfWidgets());
-      addTabPage(false, 'Tab3', const Icon(Icons.security, size: 32), PageOfHomeless());
+      addTabPage(
+        true,
+        'Keyboard',
+        const Icon(Icons.keyboard, size: 32, color: Colors.black26),
+        const Icon(Icons.keyboard, size: 32, color: Colors.orange),
+        PageOfKeyboard(),
+      );
+      addTabPage(
+        false,
+        'Widgets',
+        const Icon(Icons.widgets, size: 32, color: Colors.black26),
+        const Icon(Icons.widgets, size: 32, color: Colors.orange),
+        PageOfWidgets(),
+      );
+      addTabPage(
+        false,
+        'Basic',
+        const Icon(Icons.sports_football, size: 32, color: Colors.black26),
+        const Icon(Icons.sports_football, size: 32, color: Colors.orange),
+        PageOfHomeless(),
+      );
     }
   }
 
@@ -32,28 +51,43 @@ class PagesManager {
 
   static Map<String, TabPageInstance> tabsPages = {};
 
-  static void addTabPage(bool isKeepAlive, String name, Widget tab, Widget page) {
+  static int currentPageIndex = 0;
+
+  static void addTabPage(bool isKeepAlive, String name, Widget tabIcon, Widget tabIconSelected, Widget page) {
     TabPageInstance inst;
-    inst = TabPageInstance(
-      name: name,
-      pageBuilder: () {
-        return isKeepAlive
-            ? KeepAlivePageWidget(builder: (ctx, setState) {
-                Logger.d('PagesManager >>>>>>>>>>>>> KeepAlivePageWidget rebuild: $name');
-                return page;
-              })
-            : StatefulBuilder(builder: (ctx, setState) {
-                Logger.d('PagesManager >>>>>>>>>>>>> StatefulBuilder rebuild: $name');
-                return page;
-              });
-      },
-    );
+    inst = TabPageInstance(name: name);
     add(inst);
-    inst.tabBuilder = () => CupertinoButton(
-        child: tab,
-        onPressed: () {
-          Broker.get<PageController>()?.jumpToPage(inst.ordinal);
-        });
+    inst.pageBuilder = () {
+      return isKeepAlive
+          ? KeepAlivePageWidget(builder: (ctx, setState) {
+              Logger.d('PagesManager >>>>>>>>>>>>> KeepAlivePageWidget rebuild: $name');
+              return page;
+            })
+          : StatefulBuilder(builder: (ctx, setState) {
+              Logger.d('PagesManager >>>>>>>>>>>>> StatefulBuilder rebuild: $name');
+              return page;
+            });
+    };
+    inst.tabBuilder = () {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return CupertinoButton(
+              padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
+              child: Column(
+                children: [
+                  currentPageIndex == inst.ordinal ? tabIconSelected : tabIcon,
+                  const SizedBox(height: 2.0),
+                  Text(name, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+                ],
+              ),
+              onPressed: () {
+                currentPageIndex = inst.ordinal;
+                Broker.get<PageController>()?.jumpToPage(inst.ordinal);
+                setState(() {});
+              });
+        },
+      );
+    };
   }
 
   static void add(TabPageInstance inst) {
@@ -112,13 +146,12 @@ class PagesManager {
 }
 
 class TabPageInstance {
-  late int ordinal;
   String name;
-
+  late int ordinal;
   late Widget Function() tabBuilder;
-  Widget Function() pageBuilder;
+  late Widget Function() pageBuilder;
 
-  TabPageInstance({required this.name, required this.pageBuilder});
+  TabPageInstance({required this.name});
 }
 
 class KeepAlivePageWidget extends StatefulWidget {

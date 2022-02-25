@@ -303,7 +303,7 @@ class SelectableListState extends State<SelectableListWidget> {
                   widget.itemSuffixBuilder?.call(this, realIndex, value) ??
                       Offstage(
                         offstage: !(widget.selectedValues?.contains(value) ?? false),
-                        child: const Icon(Icons.check_circle, size: 25, color: Color(0xFF5E81F4)),
+                        child: const Icon(Icons.check_circle, size: 25, color: Color(0xFF4275FF)),
                       )
                 ],
               ),

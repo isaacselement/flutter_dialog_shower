@@ -95,7 +95,7 @@ class DialogShower {
 
   Future<void> get future async {
     if (_future == null) {
-      await futurePushed;
+      await futurePushed;   // future pushed indeed
     }
     return _future;
   }
@@ -448,15 +448,18 @@ class DialogShower {
       );
     }
 
+    // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
+    // flutter source will throw: Failed assertion: 'decoration != null || clipBehavior == Clip.none': is not true.
+    Decoration? decoration = containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration;
+    Clip clipBehavior = decoration == null ? Clip.none : containerClipBehavior;
+
     // the container as mini as possible for calculate the point if tapped inside
     return Container(
       key: _containerKey,
       width: width,
       height: height,
-      // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
-      // source will assert(decoration != null || clipBehavior == Clip.none),
-      clipBehavior: containerClipBehavior,
-      decoration: containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration,
+      decoration: decoration,
+      clipBehavior: clipBehavior,
       child: widget,
     );
   }

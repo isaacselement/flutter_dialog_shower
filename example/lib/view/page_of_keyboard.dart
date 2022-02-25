@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:example/util/position_util.dart';
+import 'package:example/view/manager/themes_manager.dart';
 import 'package:example/view/widgets/button_widgets.dart';
+import 'package:flutter_dialog_shower/view/bubble_widgets.dart';
 import 'package:flutter_dialog_shower/view/selectable_list_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/event/keyboard_event_listener.dart';
-import 'package:flutter_dialog_shower/view/keyboard_widget.dart';
+import 'package:flutter_dialog_shower/view/keyboard_widgets.dart';
 
 import '../util/logger.dart';
 
@@ -78,16 +80,16 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[0], style: titleStyle)),
-            StrapButton('Show center', onPressed: () {
+            newXpelTextButton('Show center', onPressed: () {
               DialogWrapper.show(getEditBox(width: 500, height: 600), isFixed: true);
             }),
-            StrapButton('Show left', onPressed: () {
+            newXpelTextButton('Show left', onPressed: () {
               DialogWrapper.showLeft(getEditBox(), isFixed: true);
             }),
-            StrapButton('Show right', onPressed: () {
+            newXpelTextButton('Show right', onPressed: () {
               DialogWrapper.showRight(getEditBox(), isFixed: true);
             }),
-            StrapButton('Show x/y', onPressed: () {
+            newXpelTextButton('Show x/y', onPressed: () {
               DialogWrapper.show(
                 getEditBox(),
                 isFixed: true,
@@ -100,16 +102,16 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[1], style: titleStyle)),
-            StrapButton('Show center', onPressed: () {
+            newXpelTextButton('Show center', onPressed: () {
               DialogWrapper.show(getEditBox());
             }),
-            StrapButton('Show left', onPressed: () {
+            newXpelTextButton('Show left', onPressed: () {
               DialogWrapper.showLeft(getEditBox());
             }),
-            StrapButton('Show right', onPressed: () {
+            newXpelTextButton('Show right', onPressed: () {
               DialogWrapper.showRight(getEditBox());
             }),
-            StrapButton('Show x/y', onPressed: () {
+            newXpelTextButton('Show x/y', onPressed: () {
               DialogWrapper.show(getEditBox(), x: 200, y: 200).keyboardEventCallBack = (shower, isKeyboardShow) {
                 shower.setState(() {
                   shower.margin = isKeyboardShow ? const EdgeInsets.only(left: 200) : const EdgeInsets.only(left: 200, top: 200);
@@ -124,18 +126,18 @@ class PageOfKeyboard extends StatelessWidget {
             Expanded(
               child: Wrap(
                 children: [
-                  StrapButton.smallest('Show center', onPressed: () {
+                  newXpelTextButton('Show center', isAsSmallAsPossible: true, onPressed: () {
                     DialogWrapper.show(getEditBox()).obj = flagStickToTopGlobalSetting;
                   }),
-                  StrapButton.smallest('Show left', onPressed: () {
+                  newXpelTextButton('Show left', isAsSmallAsPossible: true, onPressed: () {
                     DialogWrapper.showLeft(getEditBox()).obj = flagStickToTopGlobalSetting;
                   }),
-                  StrapButton.smallest('Show right', onPressed: () {
+                  newXpelTextButton('Show right', isAsSmallAsPossible: true, onPressed: () {
                     DialogWrapper.showRight(getEditBox()).keyboardEventCallBack = (shower, isKeyboardShow) {
                       PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
                     };
                   }),
-                  StrapButton.smallest('x/y Stick Top', onPressed: () {
+                  newXpelTextButton('x/y Stick Top', isAsSmallAsPossible: true, onPressed: () {
                     DialogWrapper.show(
                       getEditBox(),
                       x: 200,
@@ -144,7 +146,7 @@ class PageOfKeyboard extends StatelessWidget {
                       PositionUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
                     };
                   }),
-                  StrapButton.smallest('x/y Stick Bottom', onPressed: () {
+                  newXpelTextButton('x/y Stick Bottom', isAsSmallAsPossible: true, onPressed: () {
                     DialogWrapper.show(
                       getEditBox(width: 500, height: 300),
                       x: 200,
@@ -153,7 +155,7 @@ class PageOfKeyboard extends StatelessWidget {
                       PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
                     };
                   }),
-                  StrapButton.smallest('x/y Stick Bottom', onPressed: () {
+                  newXpelTextButton('x/y Stick Bottom', isAsSmallAsPossible: true, onPressed: () {
                     DialogWrapper.show(
                       SingleChildScrollView(
                         child: Column(
@@ -185,7 +187,7 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[3], style: titleStyle)),
-            StrapButton('Show Invisible', onPressed: () {
+            newXpelTextButton('Show Invisible', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
@@ -205,7 +207,7 @@ class PageOfKeyboard extends StatelessWidget {
                 width: 500,
               );
             }),
-            StrapButton('Show Visible', onPressed: () {
+            newXpelTextButton('Show Visible', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
@@ -226,7 +228,7 @@ class PageOfKeyboard extends StatelessWidget {
                 width: 500,
               );
             }),
-            StrapButton('Rebuilder Widget', onPressed: () {
+            newXpelTextButton('Rebuilder Widget', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
@@ -260,40 +262,39 @@ class PageOfKeyboard extends StatelessWidget {
       children: [
         Row(
           children: [
-            StrapButton('Show bubble', onPressed: () {
-              DialogShower shower = DialogWrapper.pushRoot(getNavigatorRootWidget(), width: 600, height: 700);
-              shower.future.then((value) {
-                print('future then 1 ...>>>>>>>>');
-              });
-              shower.then((value) {
-                print('future then 2 ...>>>>>>>>');
-              });
-              shower.futurePushed.then((value) {
-                print('futurePushed then 0 ...>>>>>>>>');
-              });
+            newXpelTextButton('Show bubble', onPressed: () {
+              DialogShower shower = DialogWrapper.show(BubbleWidget(
+                width: 200,
+                height: 200,
+                child: SelectableListWidget(
+                  values: const ['1', '2', '3', '4', '5'],
+                ),
+              ));
+              shower.containerDecoration = null;
+              // shower.containerClipBehavior = Clip.none;  // will set null internal whern containerDecoration is null
             }),
-            StrapButton('Show bubble on Dialog', onPressed: () {
-              DialogShower shower = DialogWrapper.pushRoot(getNavigatorRootWidget(), width: 600, height: 700);
-              shower.futurePushed.then((value) {
-                print('futurePushed then 0 ...>>>>>>>>');
-              });
-              shower.future.then((value) {
-                print('future then 3 ...>>>>>>>>');
-              });
-              shower.then((value) {
-                print('future then 4 ...>>>>>>>>');
-              });
-              shower.futurePoped.then((value) {
-                print('future then 5 >>>>>>>>>>>>');
-              });
-              shower.futurePoped.then((value) {
-                print('future then 6 >>>>>>>>>>>>');
-              });
-              Future.delayed(Duration(seconds: 3), (){
-                shower.dismiss().then((value) {
-                  print('dismiss then 7 >>>>>>>>>>>>');
-                });
-              });
+            newXpelTextButton('Show bubble on Dialog', onPressed: () {
+              DialogWrapper.show(getClickMeWidget(fnClickMe: (context) {
+                RenderBox renderBox = context.findRenderObject()! as RenderBox;
+                Offset position = renderBox.localToGlobal(Offset.zero);
+                Size size = renderBox.size;
+                DialogWrapper.show(
+                  BubbleWidget(
+                    width: 200,
+                    height: 200,
+                    triangleDirection: TriangleArrowDirection.top,
+                    bubbleTriangleOffset: 20.0,
+                    child: SelectableListWidget(
+                      values: const ['1', '2', '3', '4', '5'],
+                    ),
+                  ),
+                  x: position.dx,
+                  y: position.dy + size.height,
+                )
+                  ..containerDecoration = null
+                  ..transitionBuilder = null
+                  ..barrierDismissible = true;
+              }));
             }),
           ],
         )
@@ -306,11 +307,21 @@ class PageOfKeyboard extends StatelessWidget {
       children: [
         Row(
           children: [
-            StrapButton('Show with navigator with Width & Height', onPressed: () {
-              DialogWrapper.pushRoot(getNavigatorRootWidget(), width: 600, height: 700);
+            newXpelTextButton('Show with navigator with Width & Height', onPressed: () {
+              DialogWrapper.pushRoot(getClickMeWidget(fnClickMe: (context) {
+                rootBundle.loadString('assets/json/NO.json').then((string) {
+                  List<dynamic> value = json.decode(string);
+                  DialogWrapper.push(getSelectableListWidget(value), settings: const RouteSettings(name: '__root_route__'));
+                });
+              }), width: 600, height: 700);
             }),
-            StrapButton('Show with navigator without W&H (Auto size)', onPressed: () {
-              DialogWrapper.pushRoot(getNavigatorRootWidget());
+            newXpelTextButton('Show with navigator without W&H (Auto size)', onPressed: () {
+              DialogWrapper.pushRoot(getClickMeWidget(fnClickMe: (context) {
+                rootBundle.loadString('assets/json/NO.json').then((string) {
+                  List<dynamic> value = json.decode(string);
+                  DialogWrapper.push(getSelectableListWidget(value), settings: const RouteSettings(name: '__root_route__'));
+                });
+              }));
             }),
           ],
         )
@@ -320,7 +331,16 @@ class PageOfKeyboard extends StatelessWidget {
 
   /// Static Methods
 
-  Column getNavigatorRootWidget() {
+  XpTextButton newXpelTextButton(String text, {void Function()? onPressed, bool isAsSmallAsPossible = false}) {
+    return XpTextButton(
+      text,
+      onPressed: onPressed,
+      isAsSmallAsPossible: isAsSmallAsPossible,
+      decorationBuilder: ThemesManager.builderXpButtonDecoration,
+    );
+  }
+
+  Column getClickMeWidget({required Function(BuildContext context) fnClickMe}) {
     return Column(
       mainAxisSize: MainAxisSize.min, // as small as possible
       children: [
@@ -330,14 +350,16 @@ class PageOfKeyboard extends StatelessWidget {
             DialogWrapper.dismissTopDialog();
           },
         ),
-        CupertinoButton(
-          child: const Text('Click me'),
-          onPressed: () {
-            rootBundle.loadString('assets/json/NO.json').then((string) {
-              List<dynamic> value = json.decode(string);
-              DialogWrapper.push(getSelectableListWidget(value), settings: const RouteSettings(name: '__root_route__'));
-            });
-          },
+        Container(
+          // decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+          child: LayoutBuilder(builder: (context, constraints) {
+            return CupertinoButton(
+              child: const Text('Click me'),
+              onPressed: () {
+                fnClickMe.call(context);
+              },
+            );
+          }),
         ),
         Container(
           width: 400,

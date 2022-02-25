@@ -4,10 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class KeyboardEventListener {
-  // static final KeyboardEventListener _instance = KeyboardEventListener();
-
-  // static KeyboardEventListener get instance => _instance;
-
   // only the last instance EventChannel will take effect
   static const EventChannel eventChannel = EventChannel('shower_keyboard_visibility');
 
