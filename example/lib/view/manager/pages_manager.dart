@@ -2,6 +2,7 @@ import 'package:example/view/widgets/button_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/broker.dart';
+import 'package:flutter_dialog_shower/broker/brother.dart';
 
 import '../../util/logger.dart';
 import '../page_of_homeless.dart';
@@ -51,7 +52,7 @@ class PagesManager {
 
   static Map<String, TabPageInstance> tabsPages = {};
 
-  static int currentPageIndex = 0;
+  static Bt<int> currentPageIndex = 0.btw;
 
   static void addTabPage(bool isKeepAlive, String name, Widget tabIcon, Widget tabIconSelected, Widget page) {
     TabPageInstance inst;
@@ -69,24 +70,20 @@ class PagesManager {
             });
     };
     inst.tabBuilder = () {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return CupertinoButton(
-              padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
-              child: Column(
-                children: [
-                  currentPageIndex == inst.ordinal ? tabIconSelected : tabIcon,
-                  const SizedBox(height: 2.0),
-                  Text(name, style: const TextStyle(color: Colors.grey, fontSize: 11)),
-                ],
-              ),
-              onPressed: () {
-                currentPageIndex = inst.ordinal;
-                Broker.get<PageController>()?.jumpToPage(inst.ordinal);
-                setState(() {});
-              });
-        },
-      );
+      bool isSelected = currentPageIndex.value == inst.ordinal;
+      return CupertinoButton(
+          padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
+          child: Column(
+            children: [
+              isSelected ? tabIconSelected : tabIcon,
+              const SizedBox(height: 2.0),
+              Text(name, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+            ],
+          ),
+          onPressed: () {
+            currentPageIndex.value = inst.ordinal;
+            Broker.get<PageController>()?.jumpToPage(inst.ordinal);
+          });
     };
   }
 

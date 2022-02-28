@@ -1,5 +1,6 @@
 import 'dart:async';
 
+// Truck is a Enchance of Bus :P
 class EventTruck {
   final StreamController _streamController;
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dialog_shower/broker/brother.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 
 import 'util/logger.dart';
@@ -49,8 +50,13 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                         child: SingleChildScrollView(
-                          child: Column(
-                            children: PagesManager.getTabs(),
+                          child: Btw(
+                            builder: () {
+                              print(' builder >>>>>>>>>>>>>>>>> call');
+                              return Column(
+                                children: PagesManager.getTabs(),
+                              );
+                            },
                           ),
                         ),
                       ),
