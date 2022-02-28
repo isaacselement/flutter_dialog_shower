@@ -5,6 +5,7 @@ import 'package:flutter_dialog_shower/broker/broker.dart';
 import 'package:flutter_dialog_shower/broker/brother.dart';
 
 import '../../util/logger.dart';
+import '../page_of_basic.dart';
 import '../page_of_homeless.dart';
 import '../page_of_keyboard.dart';
 import '../page_of_widigets.dart';
@@ -21,6 +22,13 @@ class PagesManager {
 
     if (tabsPages.isEmpty) {
       addTabPage(
+        false,
+        'Basic',
+        const Icon(Icons.sports_football, size: 32, color: Colors.black26),
+        const Icon(Icons.sports_football, size: 32, color: Colors.orange),
+        PageOfBasic(),
+      );
+      addTabPage(
         true,
         'Keyboard',
         const Icon(Icons.keyboard, size: 32, color: Colors.black26),
@@ -36,9 +44,9 @@ class PagesManager {
       );
       addTabPage(
         false,
-        'Basic',
-        const Icon(Icons.sports_football, size: 32, color: Colors.black26),
-        const Icon(Icons.sports_football, size: 32, color: Colors.orange),
+        'Homeless',
+        const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
+        const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.orange),
         PageOfHomeless(),
       );
     }

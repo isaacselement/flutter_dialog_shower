@@ -98,6 +98,11 @@ class BtNotifier<T> {
     _stream.add(data);
   }
 
+  // just set data and you should update view later manually for calling update method
+  set data(T data) {
+    _value = data;
+  }
+
   void update() {
     _stream.add(_value);
   }

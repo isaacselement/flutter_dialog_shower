@@ -27,7 +27,6 @@ class PageOfKeyboard extends StatelessWidget {
       return;
     }
     isInited = !isInited;
-
     // set up appearence for keyboard showed up in one place
     StreamSubscription streamSubscription = KeyboardEventListener.listen((isKeyboardShow) {
       Logger.d('PageOfInfoView 【keyboard visibility】---> isKeyboardShow: $isKeyboardShow');
@@ -45,7 +44,7 @@ class PageOfKeyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Logger.d("[PageOfInfoView] ----------->>>>>>>>>>>> build/rebuild!!!");
+    Logger.d("[PageOfKeyboard] ----------->>>>>>>>>>>> build/rebuild!!!");
     PageOfKeyboard.ensureInited();
     return SingleChildScrollView(child: buildContainer());
   }
