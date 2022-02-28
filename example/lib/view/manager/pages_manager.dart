@@ -6,6 +6,7 @@ import 'package:flutter_dialog_shower/broker/brother.dart';
 
 import '../../util/logger.dart';
 import '../page_of_basic.dart';
+import '../page_of_brother.dart';
 import '../page_of_homeless.dart';
 import '../page_of_keyboard.dart';
 import '../page_of_widigets.dart';
@@ -25,28 +26,35 @@ class PagesManager {
         false,
         'Basic',
         const Icon(Icons.sports_football, size: 32, color: Colors.black26),
-        const Icon(Icons.sports_football, size: 32, color: Colors.orange),
+        const Icon(Icons.sports_football_sharp, size: 32, color: Colors.orange),
         PageOfBasic(),
       );
       addTabPage(
         true,
         'Keyboard',
         const Icon(Icons.keyboard, size: 32, color: Colors.black26),
-        const Icon(Icons.keyboard, size: 32, color: Colors.orange),
+        const Icon(Icons.keyboard_sharp, size: 32, color: Colors.orange),
         PageOfKeyboard(),
       );
       addTabPage(
         false,
         'Widgets',
         const Icon(Icons.widgets, size: 32, color: Colors.black26),
-        const Icon(Icons.widgets, size: 32, color: Colors.orange),
+        const Icon(Icons.widgets_sharp, size: 32, color: Colors.orange),
         PageOfWidgets(),
+      );
+      addTabPage(
+        false,
+        'Brother',
+        const Icon(Icons.refresh, size: 32, color: Colors.black26),
+        const Icon(Icons.refresh_sharp, size: 32, color: Colors.orange),
+        PageOfBrother(),
       );
       addTabPage(
         false,
         'Homeless',
         const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
-        const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.orange),
+        const Icon(Icons.auto_awesome_motion_sharp, size: 32, color: Colors.orange),
         PageOfHomeless(),
       );
     }

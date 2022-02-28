@@ -1,11 +1,8 @@
-import 'package:example/util/logger.dart';
-import 'package:example/view/page_of_keyboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/brother.dart';
-import 'package:flutter_dialog_shower/event/event_truck.dart';
 
-class PageOfHomeless extends StatelessWidget {
+class PageOfBrother extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -112,7 +109,7 @@ class PageOfHomeless extends StatelessWidget {
           const SizedBox(height: 2.0),
           Text(
             currentTapedIndex.value == myIndex && currentTapedString.value.isNotEmpty ? currentTapedString.value : name,
-            style: const TextStyle(color: Colors.grey, fontSize: 11),
+            style: TextStyle(color: currentTapedIndex.value == myIndex ? Colors.deepOrange : Colors.grey, fontSize: 11),
           ),
         ],
       ),
