@@ -330,7 +330,7 @@ class PageOfKeyboard extends StatelessWidget {
 
   /// Static Methods
 
-  XpTextButton newXpelTextButton(String text, {void Function()? onPressed, bool isAsSmallAsPossible = false}) {
+  static XpTextButton newXpelTextButton(String text, {void Function()? onPressed, bool isAsSmallAsPossible = false}) {
     return XpTextButton(
       text,
       onPressed: onPressed,
@@ -339,7 +339,7 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
-  Column getClickMeWidget({required Function(BuildContext context) fnClickMe}) {
+  static Column getClickMeWidget({required Function(BuildContext context) fnClickMe}) {
     return Column(
       mainAxisSize: MainAxisSize.min, // as small as possible
       children: [
@@ -370,7 +370,7 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
-  void showCitiesOnClick(SelectableListState state, int index, Object value, List<Object>? selectedValues) {
+  static void showCitiesOnClick(SelectableListState state, int index, Object value, List<Object>? selectedValues) {
     if (value is! Map) {
       return;
     }
@@ -382,7 +382,7 @@ class PageOfKeyboard extends StatelessWidget {
     DialogWrapper.push(getSelectableListWidget(value));
   }
 
-  SelectableListWidget getSelectableListWidget(Object value) {
+  static SelectableListWidget getSelectableListWidget(Object value) {
     return SelectableListWidget(
       title: 'Select The City',
       values: ((value is Map ? value['children'] : value) as List<dynamic>).cast(),

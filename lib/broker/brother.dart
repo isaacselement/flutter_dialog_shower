@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
-// ByTheWay is the simplified version for GetX widget/state management.
+// Brother is the simplified version for GetX widget/state management.
+// Btw -> Observer/StatefulWidget, btv -> Notifier/Data. Wrap your widget with Btw in a scope as small as possible for best practice
 
-/// ByTheWay Values
+/// Brother Values
 class Bt<T> extends BtNotifier<T> {
   Bt(T initial) : super() {
     _value = initial;
@@ -10,27 +11,27 @@ class Bt<T> extends BtNotifier<T> {
 }
 
 extension ExtBtT<T> on T {
-  Bt<T> get btw => Bt<T>(this);
+  Bt<T> get btv => Bt<T>(this);
 }
 
 extension ExtBtString on String {
-  Bt<String> get btw => Bt(this);
+  Bt<String> get btv => Bt(this);
 }
 
 extension ExtBtBool on bool {
-  Bt<bool> get btw => Bt(this);
+  Bt<bool> get btv => Bt(this);
 }
 
 extension ExtBtInt on int {
-  Bt<int> get btw => Bt(this);
+  Bt<int> get btv => Bt(this);
 }
 
 extension ExtBtDouble on double {
-  Bt<double> get btw => Bt(this);
+  Bt<double> get btv => Bt(this);
 }
 
-/// ByTheWay Widgets
-class Btw extends BtwWidget {
+/// Brother Widgets
+class Btw extends BtWidget {
   Widget Function() builder;
 
   Btw({Key? key, required this.builder}) : super(key: key);
@@ -39,17 +40,17 @@ class Btw extends BtwWidget {
   Widget build() => builder();
 }
 
-abstract class BtwWidget extends StatefulWidget {
-  const BtwWidget({Key? key}) : super(key: key);
+abstract class BtWidget extends StatefulWidget {
+  const BtWidget({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _BtwWidgetState();
+  State<StatefulWidget> createState() => _BtWidgetState();
 
   @protected
   Widget build();
 }
 
-class _BtwWidgetState extends State<BtwWidget> {
+class _BtWidgetState extends State<BtWidget> {
   BtObserver observer = BtObserver();
 
   @override
@@ -66,6 +67,7 @@ class _BtwWidgetState extends State<BtwWidget> {
   void dispose() {
     observer.close();
     super.dispose();
+    __bt_debug_log__('BtWidget disposed');
   }
 
   @override
@@ -74,11 +76,15 @@ class _BtwWidgetState extends State<BtwWidget> {
     BtObserver.proxy = observer;
     Widget view = widget.build();
     BtObserver.proxy = bak;
+    if (observer._subscriptions.isEmpty) {
+    __bt_error_log__(
+        '''The improper use of Btw has been detected. The btv value getter method didn't call, pls check your code/conditional logic.''');
+    }
     return view;
   }
 }
 
-/// ByTheWay Notifier
+/// Brother Notifier
 class BtNotifier<T> {
   final BtStream<T> _stream = BtStream();
 
@@ -114,20 +120,20 @@ class BtNotifier<T> {
   void remove(BtSubscription<T> sub) {}
 }
 
-/// ByTheWay Observer
+/// Brother Observer
 class BtObserver<T> {
   static BtObserver? proxy;
 
   final BtStream<T> _stream = BtStream();
   final _subscriptions = <BtNotifier, List<BtSubscription<T>>>{}; // for reclaim notifier resources on close
 
-  void addListener(BtNotifier<T> btwNotifier) {
-    if (!_subscriptions.containsKey(btwNotifier)) {
-      BtSubscription<T> sub = btwNotifier.listen((data) {
+  void addListener(BtNotifier<T> btrNotifier) {
+    if (!_subscriptions.containsKey(btrNotifier)) {
+      BtSubscription<T> sub = btrNotifier.listen((data) {
         if (!_stream.isClosed) _stream.add(data);
       });
-      _subscriptions[btwNotifier] ??= <BtSubscription<T>>[];
-      _subscriptions[btwNotifier]?.add(sub);
+      _subscriptions[btrNotifier] ??= <BtSubscription<T>>[];
+      _subscriptions[btrNotifier]?.add(sub);
     }
   }
 
@@ -147,7 +153,7 @@ class BtObserver<T> {
   }
 }
 
-/// ByTheWay Stream
+/// Brother Stream
 class BtStream<T> {
   bool isClosed = false;
 
@@ -181,7 +187,7 @@ class BtStream<T> {
   }
 }
 
-/// ByTheWay Subscription
+/// Brother Subscription
 class BtSubscription<T> {
   void Function(T data)? onData;
 
@@ -192,14 +198,18 @@ class BtSubscription<T> {
   }
 }
 
-/// ByTheWay Log Utilities
-bool btw_debug_log_enable = true;
+/// Brother Log Utilities
+bool bt_debug_log_enable = true;
 
-__btw_log__(String log) {
+__bt_debug_log__(String log) {
   assert(() {
-    if (btw_debug_log_enable) {
-      print('[__btw_log__] $log');
+    if (bt_debug_log_enable) {
+      print('[__bt_log__] $log');
     }
     return true;
   }());
+}
+
+__bt_error_log__(String log) {
+  print('❗️❗️❗️❗️❗️ ERROR: $log');
 }

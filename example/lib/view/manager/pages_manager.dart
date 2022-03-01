@@ -1,4 +1,3 @@
-import 'package:example/view/widgets/button_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/broker.dart';
@@ -9,6 +8,7 @@ import '../page_of_basic.dart';
 import '../page_of_brother.dart';
 import '../page_of_homeless.dart';
 import '../page_of_keyboard.dart';
+import '../page_of_navigator.dart';
 import '../page_of_widigets.dart';
 
 class PagesManager {
@@ -30,6 +30,13 @@ class PagesManager {
         PageOfBasic(),
       );
       addTabPage(
+        false,
+        'Widgets',
+        const Icon(Icons.widgets, size: 32, color: Colors.black26),
+        const Icon(Icons.widgets_sharp, size: 32, color: Colors.orange),
+        PageOfWidgets(),
+      );
+      addTabPage(
         true,
         'Keyboard',
         const Icon(Icons.keyboard, size: 32, color: Colors.black26),
@@ -37,11 +44,11 @@ class PagesManager {
         PageOfKeyboard(),
       );
       addTabPage(
-        false,
-        'Widgets',
-        const Icon(Icons.widgets, size: 32, color: Colors.black26),
-        const Icon(Icons.widgets_sharp, size: 32, color: Colors.orange),
-        PageOfWidgets(),
+        true,
+        'Navigator',
+        const Icon(Icons.navigation, size: 32, color: Colors.black26),
+        const Icon(Icons.navigation_sharp, size: 32, color: Colors.orange),
+        PageOfNavigator(),
       );
       addTabPage(
         false,
@@ -68,7 +75,7 @@ class PagesManager {
 
   static Map<String, TabPageInstance> tabsPages = {};
 
-  static Bt<int> currentPageIndex = 0.btw;
+  static Bt<int> currentPageIndex = 0.btv;
 
   static void addTabPage(bool isKeepAlive, String name, Widget tabIcon, Widget tabIconSelected, Widget page) {
     TabPageInstance inst;

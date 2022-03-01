@@ -52,7 +52,6 @@ class _HomePageState extends State<HomePage> {
                         child: SingleChildScrollView(
                           child: Btw(
                             builder: () {
-                              print(' builder >>>>>>>>>>>>>>>>> call');
                               return Column(
                                 children: PagesManager.getTabs(),
                               );
