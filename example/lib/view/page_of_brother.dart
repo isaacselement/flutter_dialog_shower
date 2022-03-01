@@ -131,7 +131,7 @@ class PageOfBrother extends StatelessWidget {
           const SizedBox(height: 12),
           Btw(
             builder: () {
-              String text = changeMeText.value.isEmpty ? 'click me / change me' : changeMeText.value;
+              String text = changeMeText.value.isEmpty ? 'Click me / Change me' : changeMeText.value;
               return InkWell(
                 child: Padding(
                     padding: const EdgeInsets.only(left: 16, right: 16),

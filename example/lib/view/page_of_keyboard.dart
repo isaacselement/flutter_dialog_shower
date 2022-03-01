@@ -1,47 +1,21 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:example/util/position_util.dart';
+import 'package:example/util/widgets_util.dart';
 import 'package:example/view/manager/themes_manager.dart';
 import 'package:example/view/widgets/button_widgets.dart';
-import 'package:flutter_dialog_shower/view/bubble_widgets.dart';
-import 'package:flutter_dialog_shower/view/selectable_list_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/event/keyboard_event_listener.dart';
+import 'package:flutter_dialog_shower/view/bubble_widgets.dart';
 import 'package:flutter_dialog_shower/view/keyboard_widgets.dart';
+import 'package:flutter_dialog_shower/view/selectable_list_widget.dart';
 
 import '../util/logger.dart';
 
 class PageOfKeyboard extends StatelessWidget {
-  static bool isInited = false;
-
-  static Object flagStickToTopGlobalSetting = Object();
-
-  static void ensureInited() {
-    Logger.d('PageOfInfoView ensureInited---> $isInited');
-    if (isInited) {
-      return;
-    }
-    isInited = !isInited;
-    // set up appearence for keyboard showed up in one place
-    StreamSubscription streamSubscription = KeyboardEventListener.listen((isKeyboardShow) {
-      Logger.d('PageOfInfoView 【keyboard visibility】---> isKeyboardShow: $isKeyboardShow');
-      DialogShower? topDialog = DialogWrapper.getTopDialog();
-      if (topDialog != null) {
-        DialogShower shower = topDialog;
-        if ((shower.obj == flagStickToTopGlobalSetting || shower.obj is List) && (shower.keyboardEventCallBack == null)) {
-          Logger.d('PageOfInfoView 【keyboard visibility】---> come in ...');
-          PositionUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
-        }
-      }
-    });
-    // streamSubscription.cancel();   // need to cancel by yourself
-  }
-
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfKeyboard] ----------->>>>>>>>>>>> build/rebuild!!!");
@@ -54,17 +28,14 @@ class PageOfKeyboard extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Column(
           children: [
-            getHeaderTitle('You can tap the edit box to see the behaviour when keyboard showed'),
+            getHeaderWidget('You can tap the edit box to see the behaviour when keyboard showed'),
             const SizedBox(height: 8),
             buildButtonsAboutKeyboard(),
             const SizedBox(height: 64),
-            getHeaderTitle('Bubble in shower. Shower in shower'),
+            getHeaderWidget('Bubble in shower. Shower in shower'),
             const SizedBox(height: 8),
             buildButtonsAboutBubble(),
             const SizedBox(height: 64),
-            getHeaderTitle('Navigator inner shower'),
-            const SizedBox(height: 8),
-            buildButtonsAboutNavigator(),
           ],
         ));
   }
@@ -72,25 +43,25 @@ class PageOfKeyboard extends StatelessWidget {
   Widget buildButtonsAboutKeyboard() {
     List<String> titles = ['Positioned: ', 'Un Positioned: ', 'Custome Positioned: ', 'Keyboard Widgets: '];
     TextStyle titleStyle = const TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
-    double maxTitleWidth = getMaxTextWidth(titles, titleStyle);
+    double maxTitleWidth = getMaxWidth4Texts(titles, titleStyle);
 
     return Column(
       children: [
         Row(
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[0], style: titleStyle)),
-            newXpelTextButton('Show center', onPressed: () {
-              DialogWrapper.show(getEditBox(width: 500, height: 600), isFixed: true);
+            WidgetsUtil.newXpelTextButton('Show center', onPressed: () {
+              DialogWrapper.show(getEditBoxWidget(width: 500, height: 600), isFixed: true);
             }),
-            newXpelTextButton('Show left', onPressed: () {
-              DialogWrapper.showLeft(getEditBox(), isFixed: true);
+            WidgetsUtil.newXpelTextButton('Show left', onPressed: () {
+              DialogWrapper.showLeft(getEditBoxWidget(), isFixed: true);
             }),
-            newXpelTextButton('Show right', onPressed: () {
-              DialogWrapper.showRight(getEditBox(), isFixed: true);
+            WidgetsUtil.newXpelTextButton('Show right', onPressed: () {
+              DialogWrapper.showRight(getEditBoxWidget(), isFixed: true);
             }),
-            newXpelTextButton('Show x/y', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show x/y', onPressed: () {
               DialogWrapper.show(
-                getEditBox(),
+                getEditBoxWidget(),
                 isFixed: true,
                 x: 200,
                 y: 200,
@@ -101,17 +72,17 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[1], style: titleStyle)),
-            newXpelTextButton('Show center', onPressed: () {
-              DialogWrapper.show(getEditBox());
+            WidgetsUtil.newXpelTextButton('Show center', onPressed: () {
+              DialogWrapper.show(getEditBoxWidget());
             }),
-            newXpelTextButton('Show left', onPressed: () {
-              DialogWrapper.showLeft(getEditBox());
+            WidgetsUtil.newXpelTextButton('Show left', onPressed: () {
+              DialogWrapper.showLeft(getEditBoxWidget());
             }),
-            newXpelTextButton('Show right', onPressed: () {
-              DialogWrapper.showRight(getEditBox());
+            WidgetsUtil.newXpelTextButton('Show right', onPressed: () {
+              DialogWrapper.showRight(getEditBoxWidget());
             }),
-            newXpelTextButton('Show x/y', onPressed: () {
-              DialogWrapper.show(getEditBox(), x: 200, y: 200).keyboardEventCallBack = (shower, isKeyboardShow) {
+            WidgetsUtil.newXpelTextButton('Show x/y', onPressed: () {
+              DialogWrapper.show(getEditBoxWidget(), x: 200, y: 200).keyboardEventCallBack = (shower, isKeyboardShow) {
                 shower.setState(() {
                   shower.margin = isKeyboardShow ? const EdgeInsets.only(left: 200) : const EdgeInsets.only(left: 200, top: 200);
                 });
@@ -125,41 +96,41 @@ class PageOfKeyboard extends StatelessWidget {
             Expanded(
               child: Wrap(
                 children: [
-                  newXpelTextButton('Show center', isAsSmallAsPossible: true, onPressed: () {
-                    DialogWrapper.show(getEditBox()).obj = flagStickToTopGlobalSetting;
+                  WidgetsUtil.newXpelTextButton('Show center', isSmallest: true, onPressed: () {
+                    DialogWrapper.show(getEditBoxWidget()).obj = flagStickToTopGlobalSetting;
                   }),
-                  newXpelTextButton('Show left', isAsSmallAsPossible: true, onPressed: () {
-                    DialogWrapper.showLeft(getEditBox()).obj = flagStickToTopGlobalSetting;
+                  WidgetsUtil.newXpelTextButton('Show left', isSmallest: true, onPressed: () {
+                    DialogWrapper.showLeft(getEditBoxWidget()).obj = flagStickToTopGlobalSetting;
                   }),
-                  newXpelTextButton('Show right', isAsSmallAsPossible: true, onPressed: () {
-                    DialogWrapper.showRight(getEditBox()).keyboardEventCallBack = (shower, isKeyboardShow) {
+                  WidgetsUtil.newXpelTextButton('Show right', isSmallest: true, onPressed: () {
+                    DialogWrapper.showRight(getEditBoxWidget()).keyboardEventCallBack = (shower, isKeyboardShow) {
                       PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
                     };
                   }),
-                  newXpelTextButton('x/y Stick Top', isAsSmallAsPossible: true, onPressed: () {
+                  WidgetsUtil.newXpelTextButton('x/y Stick Top', isSmallest: true, onPressed: () {
                     DialogWrapper.show(
-                      getEditBox(),
+                      getEditBoxWidget(),
                       x: 200,
                       y: 200,
                     ).keyboardEventCallBack = (shower, isKeyboardShow) {
                       PositionUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
                     };
                   }),
-                  newXpelTextButton('x/y Stick Bottom', isAsSmallAsPossible: true, onPressed: () {
+                  WidgetsUtil.newXpelTextButton('x/y Stick Bottom', isSmallest: true, onPressed: () {
                     DialogWrapper.show(
-                      getEditBox(width: 500, height: 300),
+                      getEditBoxWidget(width: 500, height: 300),
                       x: 200,
                       y: 200,
                     ).keyboardEventCallBack = (shower, isKeyboardShow) {
                       PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
                     };
                   }),
-                  newXpelTextButton('x/y Stick Bottom', isAsSmallAsPossible: true, onPressed: () {
+                  WidgetsUtil.newXpelTextButton('x/y Stick Bottom', isSmallest: true, onPressed: () {
                     DialogWrapper.show(
                       SingleChildScrollView(
                         child: Column(
                           children: [
-                            getEditBox(width: 500, height: 300),
+                            getEditBoxWidget(width: 500, height: 300),
                             Container(
                               color: Colors.yellow,
                               height: 50,
@@ -186,12 +157,12 @@ class PageOfKeyboard extends StatelessWidget {
         Row(
           children: [
             SizedBox(width: maxTitleWidth, child: Text(titles[3], style: titleStyle)),
-            newXpelTextButton('Show Invisible', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show Invisible', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      getEditBox(width: 500, height: 300),
+                      getEditBoxWidget(width: 500, height: 300),
                       KeyboardInvisibleWidget(
                         child: Container(
                           color: Colors.yellow,
@@ -206,12 +177,12 @@ class PageOfKeyboard extends StatelessWidget {
                 width: 500,
               );
             }),
-            newXpelTextButton('Show Visible', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show Visible', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      getEditBox(width: 500, height: 300),
+                      getEditBoxWidget(width: 500, height: 300),
                       KeyboardInvisibleWidget(
                         child: Container(
                           color: Colors.yellow,
@@ -227,12 +198,12 @@ class PageOfKeyboard extends StatelessWidget {
                 width: 500,
               );
             }),
-            newXpelTextButton('Rebuilder Widget', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Rebuilder Widget', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      getEditBox(width: 500, height: 100),
+                      getEditBoxWidget(width: 500, height: 100),
                       KeyboardRebuildWidget(
                         builder: (BuildContext context, bool isKeyboardVisible) {
                           return Container(
@@ -261,7 +232,7 @@ class PageOfKeyboard extends StatelessWidget {
       children: [
         Row(
           children: [
-            newXpelTextButton('Show bubble', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show bubble', onPressed: () {
               DialogShower shower = DialogWrapper.show(BubbleWidget(
                 width: 200,
                 height: 200,
@@ -272,7 +243,7 @@ class PageOfKeyboard extends StatelessWidget {
               shower.containerDecoration = null;
               // shower.containerClipBehavior = Clip.none;  // will set null internal whern containerDecoration is null
             }),
-            newXpelTextButton('Show bubble on Dialog', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: () {
               DialogWrapper.show(getClickMeWidget(fnClickMe: (context) {
                 RenderBox renderBox = context.findRenderObject()! as RenderBox;
                 Offset position = renderBox.localToGlobal(Offset.zero);
@@ -301,43 +272,7 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
-  Widget buildButtonsAboutNavigator() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            newXpelTextButton('Show with navigator with Width & Height', onPressed: () {
-              DialogWrapper.pushRoot(getClickMeWidget(fnClickMe: (context) {
-                rootBundle.loadString('assets/json/NO.json').then((string) {
-                  List<dynamic> value = json.decode(string);
-                  DialogWrapper.push(getSelectableListWidget(value), settings: const RouteSettings(name: '__root_route__'));
-                });
-              }), width: 600, height: 700);
-            }),
-            newXpelTextButton('Show with navigator without W&H (Auto size)', onPressed: () {
-              DialogWrapper.pushRoot(getClickMeWidget(fnClickMe: (context) {
-                rootBundle.loadString('assets/json/NO.json').then((string) {
-                  List<dynamic> value = json.decode(string);
-                  DialogWrapper.push(getSelectableListWidget(value), settings: const RouteSettings(name: '__root_route__'));
-                });
-              }));
-            }),
-          ],
-        )
-      ],
-    );
-  }
-
   /// Static Methods
-
-  static XpTextButton newXpelTextButton(String text, {void Function()? onPressed, bool isAsSmallAsPossible = false}) {
-    return XpTextButton(
-      text,
-      onPressed: onPressed,
-      isAsSmallAsPossible: isAsSmallAsPossible,
-      decorationBuilder: ThemesManager.builderXpButtonDecoration,
-    );
-  }
 
   static Column getClickMeWidget({required Function(BuildContext context) fnClickMe}) {
     return Column(
@@ -401,7 +336,7 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
-  static Widget getHeaderTitle(String titleText) {
+  static Widget getHeaderWidget(String titleText) {
     return Container(
       height: 32,
       alignment: Alignment.center,
@@ -432,7 +367,7 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
-  static Widget getEditBox({double width = 500, double height = 600}) {
+  static Widget getEditBoxWidget({double width = 500, double height = 600}) {
     return Container(
       width: width,
       height: height,
@@ -453,7 +388,7 @@ class PageOfKeyboard extends StatelessWidget {
     );
   }
 
-  static double getMaxTextWidth(List<String> texts, TextStyle style) {
+  static double getMaxWidth4Texts(List<String> texts, TextStyle style) {
     double max = 0;
     for (String text in texts) {
       final TextPainter textPainter = TextPainter(text: TextSpan(text: text, style: style), maxLines: 1, textDirection: TextDirection.ltr)
@@ -464,5 +399,31 @@ class PageOfKeyboard extends StatelessWidget {
       }
     }
     return max;
+  }
+
+  /// for keyboard manually amendment
+  static bool isInited = false;
+
+  static Object flagStickToTopGlobalSetting = Object();
+
+  static void ensureInited() {
+    Logger.d('PageOfInfoView ensureInited---> $isInited');
+    if (isInited) {
+      return;
+    }
+    isInited = !isInited;
+    // set up appearence for keyboard showed up in one place
+    StreamSubscription streamSubscription = KeyboardEventListener.listen((isKeyboardShow) {
+      Logger.d('PageOfInfoView 【keyboard visibility】---> isKeyboardShow: $isKeyboardShow');
+      DialogShower? topDialog = DialogWrapper.getTopDialog();
+      if (topDialog != null) {
+        DialogShower shower = topDialog;
+        if ((shower.obj == flagStickToTopGlobalSetting || shower.obj is List) && (shower.keyboardEventCallBack == null)) {
+          Logger.d('PageOfInfoView 【keyboard visibility】---> come in ...');
+          PositionUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
+        }
+      }
+    });
+    // streamSubscription.cancel();   // need to cancel by yourself
   }
 }

@@ -77,8 +77,8 @@ class _BtWidgetState extends State<BtWidget> {
     Widget view = widget.build();
     BtObserver.proxy = bak;
     if (observer._subscriptions.isEmpty) {
-    __bt_error_log__(
-        '''The improper use of Btw has been detected. The btv value getter method didn't call, pls check your code/conditional logic.''');
+      __bt_error_log__(
+          'The improper use of Btw has been detected. The btv value getter method didn\'t call, pls check your code/conditional logic.');
     }
     return view;
   }
