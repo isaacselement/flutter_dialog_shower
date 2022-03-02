@@ -26,6 +26,7 @@ class PageOfBasic extends StatelessWidget {
       children: [
         const SizedBox(height: 12),
         WidgetsUtil.newHeaderWithLine('DialogShower'),
+        const SizedBox(height: 12),
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show from bottom', isSmallest: true, onPressed: () {
@@ -66,7 +67,7 @@ class PageOfBasic extends StatelessWidget {
                 ..alignment = Alignment.topLeft
                 ..margin = EdgeInsets.only(left: x, top: y);
             }),
-            WidgetsUtil.newXpelTextButton('Shower dimiss manually', isSmallest: true, onPressed: () {
+            WidgetsUtil.newXpelTextButton('Shower dismiss manually', isSmallest: true, onPressed: () {
               DialogShower shower = DialogShower();
               shower
                 ..build()
@@ -78,11 +79,10 @@ class PageOfBasic extends StatelessWidget {
                 width: 200,
                 height: 200,
                 color: Colors.lightGreen,
-                child: CupertinoButton(
-                    child: const Text('Click to Dismiss'),
-                    onPressed: () {
-                      shower.dismiss();
-                    }),
+                padding: const EdgeInsets.only(top: 50, bottom: 50),
+                child: WidgetsUtil.newXpelTextButton('Click to Dismiss', onPressed: () {
+                  shower.dismiss();
+                }),
               ));
             }),
           ],

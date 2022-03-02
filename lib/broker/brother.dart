@@ -120,6 +120,13 @@ class BtNotifier<T> {
   void remove(BtSubscription<T> sub) {}
 }
 
+class BtKey extends BtNotifier {
+  get btv {
+    BtObserver.proxy?.addListener(this);
+    return this;
+  }
+}
+
 /// Brother Observer
 class BtObserver<T> {
   static BtObserver? proxy;
