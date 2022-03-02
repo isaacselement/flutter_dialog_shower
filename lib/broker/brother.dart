@@ -100,7 +100,7 @@ class BtNotifier<T> {
     _stream.add(data);
   }
 
-  void add(T data) {
+  void add(T? data) {
     _stream.add(data);
   }
 
@@ -113,7 +113,7 @@ class BtNotifier<T> {
     _stream.add(_value);
   }
 
-  BtSubscription<T> listen(void Function(T data)? onData) {
+  BtSubscription<T> listen(BtSubscriptionCallBack? onData) {
     return _stream.listen(onData);
   }
 
@@ -121,9 +121,14 @@ class BtNotifier<T> {
 }
 
 class BtKey extends BtNotifier {
-  get btv {
+  get eye {
     BtObserver.proxy?.addListener(this);
     return this;
+  }
+
+  @override
+  void update() {
+    _stream.add(null);
   }
 }
 
@@ -144,7 +149,7 @@ class BtObserver<T> {
     }
   }
 
-  BtSubscription<T> listen(void Function(T data)? onData) {
+  BtSubscription<T> listen(BtSubscriptionCallBack? onData) {
     return _stream.listen(onData);
   }
 
@@ -166,14 +171,14 @@ class BtStream<T> {
 
   List<BtSubscription<T>> subscriptions = <BtSubscription<T>>[];
 
-  BtSubscription<T> listen(void Function(T data)? onData) {
+  BtSubscription<T> listen(BtSubscriptionCallBack? onData) {
     BtSubscription<T> sub = BtSubscription<T>();
     sub.onData = onData;
     subscriptions.add(sub);
     return sub;
   }
 
-  void add(T data) {
+  void add(T? data) {
     for (BtSubscription sub in subscriptions) {
       if (!sub.isClosed) {
         sub.onData?.call(data);
@@ -196,7 +201,7 @@ class BtStream<T> {
 
 /// Brother Subscription
 class BtSubscription<T> {
-  void Function(T data)? onData;
+  BtSubscriptionCallBack? onData;
 
   bool isClosed = false;
 
@@ -204,6 +209,8 @@ class BtSubscription<T> {
     isClosed = true;
   }
 }
+
+typedef BtSubscriptionCallBack<T> = void Function(T? data);
 
 /// Brother Log Utilities
 bool bt_debug_log_enable = true;

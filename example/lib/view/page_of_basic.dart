@@ -85,6 +85,24 @@ class PageOfBasic extends StatelessWidget {
                 }),
               ));
             }),
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first', isSmallest: true, onPressed: () {
+              DialogShower shower = DialogShower();
+              shower
+                ..build()
+                ..barrierDismissible = false
+                ..dismissCallBack = (shower) {
+                  Logger.d('shower dismissCallBack');
+                };
+              shower.show(Container(
+                width: 200,
+                height: 200,
+                color: Colors.lightGreen,
+                padding: const EdgeInsets.only(top: 50, bottom: 50),
+                child: WidgetsUtil.newXpelTextButton('Click to Dismiss', onPressed: () {
+                  shower.dismiss();
+                }),
+              ));
+            }),
           ],
         ),
       ],
