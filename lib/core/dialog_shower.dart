@@ -12,6 +12,8 @@ class DialogShower {
 
   bool isSyncShow = false; // should assign value before show method
   bool isSyncDismiss = false;
+  bool isSyncInvokeShowCallback = false;
+  bool isSyncInvokeDismissCallback = false;
 
   // navigate
   BuildContext? context;
@@ -230,10 +232,7 @@ class DialogShower {
     return BuilderEx(
       // key: _builderExKey,
       showCallBack: () {
-        showCallBack?.call(this);
-        for (int i = 0; i < (showCallbacks?.length ?? 0); i++) {
-          showCallbacks?.elementAt(i).call(this);
-        }
+        isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
 
         // keyboard visibility
         if (keyboardEventCallBack != null) {
@@ -244,10 +243,7 @@ class DialogShower {
         }
       },
       dismissCallBack: () {
-        dismissCallBack?.call(this);
-        for (int i = 0; i < (dismissCallbacks?.length ?? 0); i++) {
-          dismissCallbacks?.elementAt(i).call(this);
-        }
+        isSyncInvokeDismissCallback ? _invokeDismissCallbacks() : Future.microtask(() => _invokeDismissCallbacks());
 
         // keyboard visibility
         _keyboardStreamSubscription?.cancel();
@@ -549,6 +545,20 @@ class DialogShower {
   }
 
   /// Private methods
+
+  void _invokeShowCallbacks() {
+    showCallBack?.call(this);
+    for (int i = 0; i < (showCallbacks?.length ?? 0); i++) {
+      showCallbacks?.elementAt(i).call(this);
+    }
+  }
+
+  void _invokeDismissCallbacks() {
+    dismissCallBack?.call(this);
+    for (int i = 0; i < (dismissCallbacks?.length ?? 0); i++) {
+      dismissCallbacks?.elementAt(i).call(this);
+    }
+  }
 
   Decoration _defContainerDecoration() {
     return BoxDecoration(

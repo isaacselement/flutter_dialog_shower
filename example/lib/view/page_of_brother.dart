@@ -194,8 +194,8 @@ class PageOfBrother extends StatelessWidget {
 
   /// Static fields & methods
 
-  static Bt<int> currentBasicIndex = 0.btv;
-  static Bt<String> currentBasicString = ''.btv;
+  static Btv<int> currentBasicIndex = 0.btv;
+  static Btv<String> currentBasicString = ''.btv;
 
   static Widget createBasicTabButton(String name, int myIndex, Widget tabIcon, Widget tabIconSelected) {
     return CupertinoButton(
@@ -216,10 +216,10 @@ class PageOfBrother extends StatelessWidget {
     );
   }
 
-  static Bt<bool> resetAllFlag = false.btv;
-  static Bt<String> changeMeText = ''.btv;
-  static Bt<int> currentAdvancedIndex = 0.btv;
-  static Bt<String> currentAdvancedString = ''.btv;
+  static Btv<bool> resetAllFlag = false.btv;
+  static Btv<String> changeMeText = ''.btv;
+  static Btv<int> currentAdvancedIndex = 0.btv;
+  static Btv<String> currentAdvancedString = ''.btv;
 
   static Widget createAdvancedTabButton(String name, int myIndex, Widget tabIcon, Widget tabIconSelected) {
     return CupertinoButton(

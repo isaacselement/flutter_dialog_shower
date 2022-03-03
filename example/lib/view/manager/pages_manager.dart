@@ -75,7 +75,7 @@ class PagesManager {
 
   static Map<String, TabPageInstance> tabsPages = {};
 
-  static Bt<int> currentPageIndex = 0.btv;
+  static Btv<int> currentPageIndex = 0.btv;
 
   static void addTabPage(bool isKeepAlive, String name, Widget tabIcon, Widget tabIconSelected, Widget page) {
     TabPageInstance inst;

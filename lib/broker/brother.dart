@@ -4,30 +4,30 @@ import 'package:flutter/cupertino.dart';
 // Btw -> Observer/StatefulWidget, btv -> Notifier/Data. Wrap your widget with Btw in a scope as small as possible for best practice
 
 /// Brother Values
-class Bt<T> extends BtNotifier<T> {
-  Bt(T initial) : super() {
+class Btv<T> extends BtNotifier<T> {
+  Btv(T initial) : super() {
     _value = initial;
   }
 }
 
 extension ExtBtT<T> on T {
-  Bt<T> get btv => Bt<T>(this);
+  Btv<T> get btv => Btv<T>(this);
 }
 
 extension ExtBtString on String {
-  Bt<String> get btv => Bt(this);
+  Btv<String> get btv => Btv(this);
 }
 
 extension ExtBtBool on bool {
-  Bt<bool> get btv => Bt(this);
+  Btv<bool> get btv => Btv(this);
 }
 
 extension ExtBtInt on int {
-  Bt<int> get btv => Bt(this);
+  Btv<int> get btv => Btv(this);
 }
 
 extension ExtBtDouble on double {
-  Bt<double> get btv => Bt(this);
+  Btv<double> get btv => Btv(this);
 }
 
 /// Brother Widgets
@@ -67,7 +67,7 @@ class _BtWidgetState extends State<BtWidget> {
   void dispose() {
     observer.close();
     super.dispose();
-    __bt_debug_log__('BtWidget disposed');
+    __brother_debug_log__('BtWidget disposed');
   }
 
   @override
@@ -77,7 +77,7 @@ class _BtWidgetState extends State<BtWidget> {
     Widget view = widget.build();
     BtObserver.proxy = bak;
     if (observer._subscriptions.isEmpty) {
-      __bt_error_log__(
+      __brother_error_log__(
           'The improper use of Btw has been detected. The btv value getter method didn\'t call, pls check your code/conditional logic.');
     }
     return view;
@@ -213,17 +213,17 @@ class BtSubscription<T> {
 typedef BtSubscriptionCallBack<T> = void Function(T? data);
 
 /// Brother Log Utilities
-bool bt_debug_log_enable = true;
+bool brother_log_enable = true;
 
-__bt_debug_log__(String log) {
+__brother_debug_log__(String log) {
   assert(() {
-    if (bt_debug_log_enable) {
-      print('[__bt_log__] $log');
+    if (brother_log_enable) {
+      print('[__brother_log__] $log');
     }
     return true;
   }());
 }
 
-__bt_error_log__(String log) {
-  print('❗️❗️❗️❗️❗️ ERROR: $log');
+__brother_error_log__(String log) {
+  print('❗️❗️❗️❗️❗️ WARNING/ERROR: $log');
 }

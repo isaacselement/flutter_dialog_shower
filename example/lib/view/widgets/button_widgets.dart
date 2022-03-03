@@ -6,6 +6,10 @@ class XpTextButton extends StatefulWidget {
   double? width;
   double? height;
 
+  Color? textColor;
+  Color? borderColor;
+  Color? backgroundColor;
+
   EdgeInsets? margin;
   EdgeInsets? padding;
   Alignment? alignment;
@@ -21,6 +25,9 @@ class XpTextButton extends StatefulWidget {
     Key? key,
     this.width,
     this.height,
+    this.borderColor,
+    this.textColor = Colors.white,
+    this.backgroundColor = const Color(0xFF4275FF),
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
     this.alignment = Alignment.center,
@@ -90,14 +97,19 @@ class _XpTextButtonState extends State<XpTextButton> {
   }
 
   BoxDecoration _defBoxDecoration(String text, bool isTapingDown) {
+    Color? borderColor = widget.borderColor;
+    Color? backgroundColor = widget.backgroundColor;
+    backgroundColor = (backgroundColor == null ? null : (isTapingDown ? backgroundColor.withAlpha(200) : backgroundColor));
     return BoxDecoration(
+      color: backgroundColor,
       borderRadius: const BorderRadius.all(Radius.circular(5)),
-      color: isTapingDown ? const Color(0xFF00BDAC).withAlpha(200) : const Color(0xFF00BDAC),
+      border: borderColor == null ? null : Border.all(color: isTapingDown ? borderColor.withAlpha(200) : borderColor),
     );
   }
 
   TextStyle _defTextStyle(String text, bool isTapingDown) {
-    return TextStyle(color: isTapingDown ? Colors.white.withAlpha(200) : Colors.white);
+    Color color = widget.textColor ?? Colors.white;
+    return TextStyle(color: isTapingDown ? color.withAlpha(200) : color);
   }
 }
 
@@ -172,7 +184,6 @@ class _IconTextButtonVerState extends State<IconTextButtonVer> {
     return TextStyle(color: isTapingDown ? Colors.white.withAlpha(200) : Colors.white);
   }
 }
-
 
 class IconTextButtonHor extends StatefulWidget {
   Widget icon;
