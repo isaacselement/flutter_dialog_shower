@@ -21,7 +21,7 @@ class PageOfNavigator extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Column(
           children: [
-            PageOfKeyboard.getHeaderWidget('Navigator inner shower'),
+            WidgetsUtil.newHeaderWithGradient('Navigator inner shower'),
             const SizedBox(height: 8),
             buildButtonsAboutNavigator(),
           ],
@@ -29,27 +29,35 @@ class PageOfNavigator extends StatelessWidget {
   }
 
   Widget buildButtonsAboutNavigator() {
+    String desc = 'Tap \'Click me\' button for pushing a view in using navigator';
     return Column(
       children: [
         Row(
           children: [
             WidgetsUtil.newXpelTextButton('Show with navigator with Width & Height', onPressed: () {
-              DialogWrapper.pushRoot(PageOfKeyboard.getClickMeWidget(fnClickMe: (context) {
-                rootBundle.loadString('assets/json/NO.json').then((string) {
-                  List<dynamic> value = json.decode(string);
-                  DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
-                      settings: const RouteSettings(name: '__root_route__'));
-                });
-              }), width: 600, height: 700);
+              DialogWrapper.pushRoot(
+                  WidgetsUtil.newClickMeWidget(
+                      text: desc,
+                      fnClickMe: (context) {
+                        rootBundle.loadString('assets/json/NO.json').then((string) {
+                          List<dynamic> value = json.decode(string);
+                          DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
+                              settings: const RouteSettings(name: '__root_route__'));
+                        });
+                      }),
+                  width: 600,
+                  height: 700);
             }),
             WidgetsUtil.newXpelTextButton('Show with navigator without W&H (Auto size)', onPressed: () {
-              DialogWrapper.pushRoot(PageOfKeyboard.getClickMeWidget(fnClickMe: (context) {
-                rootBundle.loadString('assets/json/NO.json').then((string) {
-                  List<dynamic> value = json.decode(string);
-                  DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
-                      settings: const RouteSettings(name: '__root_route__'));
-                });
-              }));
+              DialogWrapper.pushRoot(WidgetsUtil.newClickMeWidget(
+                  text: desc,
+                  fnClickMe: (context) {
+                    rootBundle.loadString('assets/json/NO.json').then((string) {
+                      List<dynamic> value = json.decode(string);
+                      DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
+                          settings: const RouteSettings(name: '__root_route__'));
+                    });
+                  }));
             }),
           ],
         )

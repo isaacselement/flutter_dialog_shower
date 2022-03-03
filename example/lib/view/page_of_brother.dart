@@ -16,7 +16,6 @@ class PageOfBrother extends StatelessWidget {
           );
         },
       ),
-      // child: smallestContainer(),
     );
   }
 
@@ -24,6 +23,25 @@ class PageOfBrother extends StatelessWidget {
     return Column(
       children: [
         const Spacer(),
+        BrotherBasicView(),
+        const Spacer(),
+        BrotherAdvanceView(),
+        const Spacer(),
+      ],
+    );
+  }
+}
+
+class BrotherBasicView extends StatelessWidget {
+  BrotherBasicView({Key? key}) : super(key: key);
+
+  Btv<int> basicIndex = 0.btv;
+  Btv<String> basicString = ''.btv;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
         const Text('Basic usage of Btw & btv', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         const Text('Just click icons below', style: TextStyle(fontSize: 15, color: Colors.blueGrey)),
@@ -31,41 +49,157 @@ class PageOfBrother extends StatelessWidget {
           return Wrap(
             spacing: 20,
             children: [
-              createBasicTabButton(
+              ViewsGenerator.createIconTabButton(
                 'Support',
                 0,
                 const Icon(Icons.support, size: 50, color: Colors.black26),
                 const Icon(Icons.support_sharp, size: 50, color: Colors.deepOrange),
+                basicIndex,
+                basicString,
               ),
-              createBasicTabButton(
+              ViewsGenerator.createIconTabButton(
                 'Surround',
                 1,
                 const Icon(Icons.surround_sound, size: 50, color: Colors.black26),
                 const Icon(Icons.surround_sound_sharp, size: 50, color: Colors.deepOrange),
+                basicIndex,
+                basicString,
               ),
-              createBasicTabButton(
+              ViewsGenerator.createIconTabButton(
                 'Store',
                 2,
                 const Icon(Icons.store, size: 50, color: Colors.black26),
                 const Icon(Icons.store_sharp, size: 50, color: Colors.deepOrange),
+                basicIndex,
+                basicString,
               ),
-              createBasicTabButton(
+              ViewsGenerator.createIconTabButton(
                 'Esports',
                 3,
                 const Icon(Icons.sports_esports, size: 50, color: Colors.black26),
                 const Icon(Icons.sports_esports_sharp, size: 50, color: Colors.deepOrange),
+                basicIndex,
+                basicString,
               ),
-              createBasicTabButton(
+              ViewsGenerator.createIconTabButton(
                 'Spa',
                 4,
                 const Icon(Icons.spa, size: 50, color: Colors.black26),
                 const Icon(Icons.spa_sharp, size: 50, color: Colors.deepOrange),
+                basicIndex,
+                basicString,
               ),
             ],
           );
         }),
-        const Spacer(),
-        buildNestedBtwsWidget(),
+      ],
+    );
+  }
+}
+
+class BrotherAdvanceView extends StatelessWidget {
+  BrotherAdvanceView({Key? key}) : super(key: key);
+
+  BtKey updateAllKey = BtKey();
+
+  Btv<List<String>> changeMeLists = <String>[].btv;
+  Btv<Map<String, String>> changeMeMaps = <String, String>{}.btv;
+
+  Btv<int> advancedIndex = 0.btv;
+  Btv<String> advancedString = ''.btv;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Btw(builder: () {
+          updateAllKey.eye; // Put an eye here. Dota/LOL online game 插个眼.
+
+          return Column(
+            children: [
+              const Text('Advanced usage of Btw & btv', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 12),
+              Btw(
+                builder: () {
+                  String text = changeMeLists.value.isEmpty ? 'Change me [List]' : changeMeLists.value.toString();
+                  return InkWell(
+                    child: Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: Text(text, style: const TextStyle(fontSize: 15, color: Colors.purple))),
+                    onTap: () {
+                      List<String> list = ['Niu', 'Ok', 'Six', 'Wa', 'Ha', 'WuLa'];
+                      changeMeLists.value.add((list..shuffle()).first);
+                      changeMeLists.update();
+                    },
+                  );
+                },
+              ),
+              const SizedBox(height: 12),
+              Btw(
+                builder: () {
+                  String text = changeMeMaps.value.isEmpty ? 'Change me {Map}' : changeMeMaps.value.toString();
+                  return InkWell(
+                    child: Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: Text(text, style: const TextStyle(fontSize: 15, color: Colors.purple))),
+                    onTap: () {
+                      List<String> v = ['❗️', '🔴', '👠', '⌘', '🏁', '啦', '呀', '呜', '吓', '喝', '嘻', '哈', '咳', 'か', 'нг', 'зз'];
+                      changeMeMaps.value[(v..shuffle()).first] = (v..shuffle()).first;
+                      changeMeMaps.update();
+                    },
+                  );
+                },
+              ),
+              Btw(builder: () {
+                return Wrap(
+                  spacing: 20,
+                  children: [
+                    ViewsGenerator.createIconTabButton(
+                      'Support',
+                      0,
+                      const Icon(Icons.support, size: 50, color: Colors.black26),
+                      const Icon(Icons.support_sharp, size: 50, color: Colors.deepOrange),
+                      advancedIndex,
+                      advancedString,
+                    ),
+                    ViewsGenerator.createIconTabButton(
+                      'Surround',
+                      1,
+                      const Icon(Icons.surround_sound, size: 50, color: Colors.black26),
+                      const Icon(Icons.surround_sound_sharp, size: 50, color: Colors.deepOrange),
+                      advancedIndex,
+                      advancedString,
+                    ),
+                    ViewsGenerator.createIconTabButton(
+                      'Store',
+                      2,
+                      const Icon(Icons.store, size: 50, color: Colors.black26),
+                      const Icon(Icons.store_sharp, size: 50, color: Colors.deepOrange),
+                      advancedIndex,
+                      advancedString,
+                    ),
+                    ViewsGenerator.createIconTabButton(
+                      'Esports',
+                      3,
+                      const Icon(Icons.sports_esports, size: 50, color: Colors.black26),
+                      const Icon(Icons.sports_esports_sharp, size: 50, color: Colors.deepOrange),
+                      advancedIndex,
+                      advancedString,
+                    ),
+                    ViewsGenerator.createIconTabButton(
+                      'Spa',
+                      4,
+                      const Icon(Icons.spa, size: 50, color: Colors.black26),
+                      const Icon(Icons.spa_sharp, size: 50, color: Colors.deepOrange),
+                      advancedIndex,
+                      advancedString,
+                    ),
+                  ],
+                );
+              }),
+            ],
+          );
+        }),
         const SizedBox(height: 18),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -75,10 +209,8 @@ class PageOfBrother extends StatelessWidget {
               child: const Text('Click me', style: TextStyle(color: Colors.blue, fontSize: 15)),
               onPressed: () {
                 List<String> list = [':)', ':P', 'Orz', 'T_T'];
-                changeMeText.value = (list
-                      ..remove(changeMeText.value)
-                      ..shuffle())
-                    .first;
+                changeMeLists.value.add((list..shuffle()).first);
+                changeMeLists.update();
               },
             ),
             const SizedBox(width: 24),
@@ -87,8 +219,8 @@ class PageOfBrother extends StatelessWidget {
               child: const Text('Change the selected icon text', style: TextStyle(color: Colors.blue, fontSize: 15)),
               onPressed: () {
                 List<String> list = [DateTime.now().toString(), 'It\'s not my name', 'Go go go', 'Copy that'];
-                currentAdvancedString.value = (list
-                      ..remove(currentAdvancedString.value)
+                advancedString.value = (list
+                      ..remove(advancedString.value)
                       ..shuffle())
                     .first;
               },
@@ -99,9 +231,9 @@ class PageOfBrother extends StatelessWidget {
               child: const Text('Reset icons', style: TextStyle(color: Colors.blue, fontSize: 15)),
               onPressed: () {
                 // batch update values, set state once
-                currentAdvancedString.data = '';
-                currentAdvancedIndex.data = 0;
-                currentAdvancedIndex.update();
+                advancedIndex.data = 0;
+                advancedString.data = '';
+                advancedString.update();
               },
             ),
             const SizedBox(width: 24),
@@ -109,133 +241,38 @@ class PageOfBrother extends StatelessWidget {
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
               child: const Text('Reset all', style: TextStyle(color: Colors.blue, fontSize: 15)),
               onPressed: () {
-                changeMeText.data = '';
-                currentAdvancedString.data = '';
-                currentAdvancedIndex.data = 0;
-                resetAllFlag.value = !resetAllFlag.value;
+                // using BtKey update values, set state once
+                advancedString.data = '';
+                advancedIndex.data = 0;
+                changeMeLists.value.clear();
+                changeMeMaps.value.clear();
+                updateAllKey.update();
               },
             ),
           ],
         ),
-        const Spacer(),
       ],
     );
   }
+}
 
-  Widget buildNestedBtwsWidget() {
-    return Btw(builder: () {
-      resetAllFlag.value; // a tricky here, place holder for set state in parent, not a good practice :)
-      return Column(
-        children: [
-          const Text('Advanced usage of Btw & btv', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          Btw(
-            builder: () {
-              String text = changeMeText.value.isEmpty ? 'Click me / Change me' : changeMeText.value;
-              return InkWell(
-                child: Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
-                    child: Text(text, style: const TextStyle(fontSize: 15, color: Colors.purple))),
-                onTap: () {
-                  List<String> list = ['Niu', 'Niu Niu Niu', 'Shadow Niu', 'SixSixSix', 'Hahaha'];
-                  changeMeText.value = (list
-                        ..remove(changeMeText.value)
-                        ..shuffle())
-                      .first;
-                },
-              );
-            },
-          ),
-          buildBtwWidget(),
-        ],
-      );
-    });
-  }
-
-  Widget buildBtwWidget() {
-    return Btw(builder: () {
-      return Wrap(
-        spacing: 20,
-        children: [
-          createAdvancedTabButton(
-            'Support',
-            0,
-            const Icon(Icons.support, size: 50, color: Colors.black26),
-            const Icon(Icons.support_sharp, size: 50, color: Colors.deepOrange),
-          ),
-          createAdvancedTabButton(
-            'Surround',
-            1,
-            const Icon(Icons.surround_sound, size: 50, color: Colors.black26),
-            const Icon(Icons.surround_sound_sharp, size: 50, color: Colors.deepOrange),
-          ),
-          createAdvancedTabButton(
-            'Store',
-            2,
-            const Icon(Icons.store, size: 50, color: Colors.black26),
-            const Icon(Icons.store_sharp, size: 50, color: Colors.deepOrange),
-          ),
-          createAdvancedTabButton(
-            'Esports',
-            3,
-            const Icon(Icons.sports_esports, size: 50, color: Colors.black26),
-            const Icon(Icons.sports_esports_sharp, size: 50, color: Colors.deepOrange),
-          ),
-          createAdvancedTabButton(
-            'Spa',
-            4,
-            const Icon(Icons.spa, size: 50, color: Colors.black26),
-            const Icon(Icons.spa_sharp, size: 50, color: Colors.deepOrange),
-          ),
-        ],
-      );
-    });
-  }
-
-  /// Static fields & methods
-
-  static Btv<int> currentBasicIndex = 0.btv;
-  static Btv<String> currentBasicString = ''.btv;
-
-  static Widget createBasicTabButton(String name, int myIndex, Widget tabIcon, Widget tabIconSelected) {
+class ViewsGenerator {
+  static Widget createIconTabButton(
+      String myName, int myIndex, Widget icon, Widget iconSelected, Btv<int> selectedIndex, Btv<String> selectedString) {
     return CupertinoButton(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
       child: Column(
         children: [
-          currentBasicIndex.value == myIndex ? tabIconSelected : tabIcon,
+          selectedIndex.value == myIndex ? iconSelected : icon,
           const SizedBox(height: 2.0),
           Text(
-            currentBasicIndex.value == myIndex && currentBasicString.value.isNotEmpty ? currentBasicString.value : name,
-            style: TextStyle(color: currentBasicIndex.value == myIndex ? Colors.deepOrange : Colors.grey, fontSize: 11),
+            selectedIndex.value == myIndex && selectedString.value.isNotEmpty ? selectedString.value : myName,
+            style: TextStyle(color: selectedIndex.value == myIndex ? Colors.deepOrange : Colors.grey, fontSize: 11),
           ),
         ],
       ),
       onPressed: () {
-        currentBasicIndex.value = myIndex;
-      },
-    );
-  }
-
-  static Btv<bool> resetAllFlag = false.btv;
-  static Btv<String> changeMeText = ''.btv;
-  static Btv<int> currentAdvancedIndex = 0.btv;
-  static Btv<String> currentAdvancedString = ''.btv;
-
-  static Widget createAdvancedTabButton(String name, int myIndex, Widget tabIcon, Widget tabIconSelected) {
-    return CupertinoButton(
-      padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
-      child: Column(
-        children: [
-          currentAdvancedIndex.value == myIndex ? tabIconSelected : tabIcon,
-          const SizedBox(height: 2.0),
-          Text(
-            currentAdvancedIndex.value == myIndex && currentAdvancedString.value.isNotEmpty ? currentAdvancedString.value : name,
-            style: TextStyle(color: currentAdvancedIndex.value == myIndex ? Colors.deepOrange : Colors.grey, fontSize: 11),
-          ),
-        ],
-      ),
-      onPressed: () {
-        currentAdvancedIndex.value = myIndex;
+        selectedIndex.value = myIndex;
       },
     );
   }

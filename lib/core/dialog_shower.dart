@@ -23,6 +23,7 @@ class DialogShower {
   String barrierLabel = "";
   Duration transitionDuration = const Duration(milliseconds: 250);
   RouteTransitionsBuilder? transitionBuilder;
+  bool isDismissKeyboardOnTapped = true;
 
   // scaffold
   Color? scaffoldBackgroundColor = Colors.transparent;
@@ -49,9 +50,9 @@ class DialogShower {
   Color containerShadowColor = Colors.transparent;
 
   // events
-  bool Function(DialogShower shower, Offset point)? wholeOnTapCallback;
   bool Function(DialogShower shower, Offset point)? dialogOnTapCallback;
   bool Function(DialogShower shower, Offset point)? barrierOnTapCallback;
+  bool Function(DialogShower shower, Offset point, bool isTapInside)? wholeOnTapCallback;
 
   ShowerVisibilityCallBack? showCallBack = null;
   ShowerVisibilityCallBack? dismissCallBack = null;
@@ -97,24 +98,24 @@ class DialogShower {
 
   Future<void> get future async {
     if (_future == null) {
-      await futurePushed;   // future pushed indeed
+      await futurePushed; // future pushed indeed
     }
     return _future;
   }
 
   Future<R>? then<R>(FutureOr<R> Function(void value) onValue, {Function? onError}) => future.then(onValue, onError: onError);
 
-  // private .....
-  TapUpDetails? _tapUpDetails;
+  // us as private now .....
+  TapUpDetails? tapUpDetails;
 
   // final GlobalKey _builderExKey = GlobalKey();
-  final GlobalKey _statefulKey = GlobalKey();
-  final GlobalKey _containerKey = GlobalKey();
+  final GlobalKey statefulKey = GlobalKey();
+  final GlobalKey containerKey = GlobalKey();
 
   // extension for navigate inner dialog
   bool isWrappedByNavigator = false;
   bool isAutoSizeForNavigator = true;
-  GlobalKey<NavigatorState>? _navigatorKey;
+  GlobalKey<NavigatorState>? navigatorKey;
 
   // holder object for various uses if you need ...
   Object? obj;
@@ -256,14 +257,14 @@ class DialogShower {
               __shower_log__('TapDownDetails: ${details.globalPosition}, ${details.localPosition}, ${details.kind}');
               return true;
             }());
-            _tapUpDetails = null;
+            tapUpDetails = null;
           },
           onTapUp: (TapUpDetails details) {
             assert(() {
               __shower_log__('TapUpDetails: ${details.globalPosition}, ${details.localPosition}, ${details.kind}');
               return true;
             }());
-            _tapUpDetails = details;
+            tapUpDetails = details;
           },
           onTap: () {
             bool isKeyboardShowed = DialogShower.isKeyboardShowing();
@@ -272,8 +273,8 @@ class DialogShower {
               return true;
             }());
 
-            if (_tapUpDetails != null) {
-              RenderBox containerBox = _containerKey.currentContext?.findRenderObject() as RenderBox;
+            if (tapUpDetails != null) {
+              RenderBox containerBox = containerKey.currentContext?.findRenderObject() as RenderBox;
               double w = containerBox.size.width;
               double h = containerBox.size.height;
               Offset p = containerBox.localToGlobal(Offset.zero);
@@ -282,7 +283,7 @@ class DialogShower {
               double x2 = x1 + w;
               double y2 = y1 + h;
 
-              Offset tapPoint = _tapUpDetails!.globalPosition;
+              Offset tapPoint = tapUpDetails!.globalPosition;
               double tapX = tapPoint.dx;
               double tapY = tapPoint.dy;
               bool isTapInsideX = x1 < tapX && tapX < x2;
@@ -296,21 +297,22 @@ class DialogShower {
                 return true;
               }());
 
-              bool v = wholeOnTapCallback?.call(this, tapPoint) ?? false;
+              bool v = wholeOnTapCallback?.call(this, tapPoint, isTapInside) ?? false;
               if (v) {
                 return;
               }
 
-              if (isKeyboardShowed) {
+              if (isKeyboardShowed && isDismissKeyboardOnTapped) {
                 // https://github.com/flutter/flutter/issues/48464
                 FocusManager.instance.primaryFocus?.unfocus();
               }
 
               if (isTapInside) {
-                bool v = dialogOnTapCallback?.call(this, tapPoint) ?? false;
+                if (dialogOnTapCallback?.call(this, tapPoint) ?? false) {
+                  return;
+                }
               } else {
-                bool v = barrierOnTapCallback?.call(this, tapPoint) ?? false;
-                if (v) {
+                if (barrierOnTapCallback?.call(this, tapPoint) ?? false) {
                   return;
                 }
                 if (barrierDismissible == null) {
@@ -329,7 +331,7 @@ class DialogShower {
             appBar: null,
             backgroundColor: scaffoldBackgroundColor,
             body: StatefulBuilder(
-              key: _statefulKey,
+              key: statefulKey,
               builder: (context, setState) {
                 return _getScaffoldBody(_child);
               },
@@ -431,9 +433,9 @@ class DialogShower {
       );
     } else if (isWrappedByNavigator) {
       __shower_log__('show with navigator');
-      _navigatorKey = GlobalKey<NavigatorState>();
+      navigatorKey = GlobalKey<NavigatorState>();
       widget = Navigator(
-        key: _navigatorKey,
+        key: navigatorKey,
         onGenerateRoute: (RouteSettings settings) {
           return PageRouteBuilder(
             pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
@@ -451,7 +453,7 @@ class DialogShower {
 
     // the container as mini as possible for calculate the point if tapped inside
     return Container(
-      key: _containerKey,
+      key: containerKey,
       width: width,
       height: height,
       decoration: decoration,
@@ -490,7 +492,7 @@ class DialogShower {
 
   /// For navigator
   NavigatorState? getNavigator() {
-    return _navigatorKey?.currentState;
+    return navigatorKey?.currentState;
   }
 
   Future<T?> push<T extends Object?>(
@@ -541,7 +543,7 @@ class DialogShower {
       return true;
     }());
     // _builderExKey.currentState?.setState(fn);
-    _statefulKey.currentState?.setState(fn);
+    statefulKey.currentState?.setState(fn);
   }
 
   /// Private methods
@@ -593,7 +595,7 @@ class DialogShower {
     final List<int> tryTrickyTimes = [10, 10, 10, 20, 20, 30, 50, 50, 100];
     if (index < tryTrickyTimes.length) {
       Future.delayed(Duration(milliseconds: tryTrickyTimes[index]), () {
-        Size? size = (_containerKey.currentContext?.findRenderObject() as RenderBox?)?.size;
+        Size? size = (containerKey.currentContext?.findRenderObject() as RenderBox?)?.size;
         __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $index size: $size');
         size == null ? _tryToGetContainerSize(index: index++) : _setRenderedSizeWithSetState(size);
       });

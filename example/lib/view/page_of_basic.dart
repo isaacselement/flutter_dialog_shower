@@ -59,7 +59,7 @@ class PageOfBasic extends StatelessWidget {
               shower.alignment = Alignment.centerRight;
               shower.margin = const EdgeInsets.only(right: 16);
             }),
-            WidgetsUtil.newXpelTextButton('Show x y', isSmallest: true, onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show with position x y', isSmallest: true, onPressed: () {
               double x = 120;
               double y = 120;
               DialogShower shower = basicShow();
@@ -85,23 +85,71 @@ class PageOfBasic extends StatelessWidget {
                 }),
               ));
             }),
-            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first', isSmallest: true, onPressed: () {
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using wholeOnTapCallback', isSmallest: true, onPressed: () {
               DialogShower shower = DialogShower();
               shower
                 ..build()
-                ..barrierDismissible = false
-                ..dismissCallBack = (shower) {
-                  Logger.d('shower dismissCallBack');
+                ..containerShadowColor = Colors.grey
+                ..containerShadowBlurRadius = 20.0
+                ..containerBorderRadius = 10.0
+                ..wholeOnTapCallback = (shower, point, isTappedInside) {
+                  Logger.d('shower wholeOnTapCallback');
+                  if (DialogShower.isKeyboardShowing()) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  } else {
+                    shower.dismiss();
+                  }
+                  return true;
                 };
-              shower.show(Container(
-                width: 200,
-                height: 200,
-                color: Colors.lightGreen,
-                padding: const EdgeInsets.only(top: 50, bottom: 50),
-                child: WidgetsUtil.newXpelTextButton('Click to Dismiss', onPressed: () {
-                  shower.dismiss();
-                }),
+              shower.show(Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  WidgetsUtil.newEditBox(height: 100),
+                  Container(
+                    height: 50,
+                    child: const Text('Focus edit box first, then Click Me please'),
+                  )
+                ],
               ));
+            }),
+
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using barrierOnTapCallback', isSmallest: true, onPressed: () {
+              DialogShower shower = DialogShower();
+              shower
+                ..build()
+                ..containerShadowColor = Colors.grey
+                ..containerShadowBlurRadius = 20.0
+                ..containerBorderRadius = 10.0
+                ..barrierOnTapCallback = (shower, point) {
+                  Logger.d('shower barrierOnTapCallback');
+                  if (DialogShower.isKeyboardShowing()) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  } else {
+                    shower.dismiss();
+                  }
+                  return true;
+                };
+              shower.show(Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  WidgetsUtil.newEditBox(height: 100),
+                  Container(
+                    height: 50,
+                    child: const Text('Focus edit box first, then Click Me & Click Barrier please'),
+                  )
+                ],
+              ));
+            }),
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using barrierDismissible == null', isSmallest: true,
+                onPressed: () {
+              DialogShower shower = DialogShower();
+              shower
+                ..build()
+                ..barrierDismissible = null // will dismiss keyboard first, then click again will dismisss dialog
+                ..containerShadowColor = Colors.grey
+                ..containerShadowBlurRadius = 20.0
+                ..containerBorderRadius = 10.0;
+              shower.show(WidgetsUtil.newEditBox(height: 300));
             }),
           ],
         ),
@@ -123,7 +171,7 @@ class PageOfBasic extends StatelessWidget {
       ..dismissCallBack = (shower) {
         Logger.d('shower dismissCallBack');
       }
-      ..wholeOnTapCallback = (shower, point) {
+      ..wholeOnTapCallback = (shower, point, isTappedInside) {
         Logger.d('shower wholeOnTapCallback $point');
         return false;
       }

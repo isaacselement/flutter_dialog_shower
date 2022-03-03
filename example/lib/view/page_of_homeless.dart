@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/brother.dart';
 import 'package:flutter_dialog_shower/event/event_truck.dart';
 
+import 'widgets/button_widgets.dart';
+
 class PageOfHomeless extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -24,10 +26,26 @@ class PageOfHomeless extends StatelessWidget {
   }
 
   Widget buildContainer() {
-    return Column(
-      children: [
-        const Spacer(),
-      ],
+    EventTruck.on((object) {
+      print('1 >>>>>>>>>>>>>>>>>> $object');
+    }, key: 'id_1');
+    EventTruck.on((object) {
+      print('2 >>>>>>>>>>>>>>>>>> $object');
+    }, key: 'id_2');
+
+    return Container(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              XpTextButton('EventTruck', onPressed: () {
+                print('>>>>>>>>>>>>>>>>>> fire');
+                EventTruck.fire('object value');
+              }),
+            ],
+          )
+        ],
+      ),
     );
   }
 

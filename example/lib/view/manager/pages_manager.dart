@@ -1,3 +1,4 @@
+import 'package:example/view/page_of_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/broker.dart';
@@ -42,6 +43,13 @@ class PagesManager {
         const Icon(Icons.keyboard, size: 32, color: Colors.black26),
         const Icon(Icons.keyboard_sharp, size: 32, color: Colors.orange),
         PageOfKeyboard(),
+      );
+      addTabPage(
+        false,
+        'Bubble',
+        const Icon(Icons.bubble_chart, size: 32, color: Colors.black26),
+        const Icon(Icons.bubble_chart_sharp, size: 32, color: Colors.orange),
+        PageOfBubble(),
       );
       addTabPage(
         true,
@@ -100,7 +108,7 @@ class PagesManager {
             children: [
               isSelected ? tabIconSelected : tabIcon,
               const SizedBox(height: 2.0),
-              Text(name, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+              Text(name, style: TextStyle(color: isSelected ? Colors.orangeAccent : Colors.grey, fontSize: 11)),
             ],
           ),
           onPressed: () {
