@@ -18,7 +18,7 @@ class PagesManager {
       return;
     }
     addTabPage(
-      false,
+      true,
       'Basic',
       const Icon(Icons.sports_football, size: 32, color: Colors.black26),
       const Icon(Icons.sports_football_sharp, size: 32, color: Colors.orange),
@@ -32,7 +32,7 @@ class PagesManager {
       PageOfWidgets(),
     );
     addTabPage(
-      true,
+      false,
       'Keyboard',
       const Icon(Icons.keyboard, size: 32, color: Colors.black26),
       const Icon(Icons.keyboard_sharp, size: 32, color: Colors.orange),
@@ -46,7 +46,7 @@ class PagesManager {
       PageOfBubble(),
     );
     addTabPage(
-      true,
+      false,
       'Navigator',
       const Icon(Icons.navigation, size: 32, color: Colors.black26),
       const Icon(Icons.navigation_sharp, size: 32, color: Colors.orange),

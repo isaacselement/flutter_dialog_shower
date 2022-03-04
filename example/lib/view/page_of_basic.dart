@@ -188,6 +188,23 @@ class PageOfBasic extends StatelessWidget {
       children: [
         Wrap(
           children: [
+            WidgetsUtil.newXpelTextButton('DialogWrapper Show Cupertino Indicator', onPressed: () {
+              DialogShower dialog = DialogWrapper.show(const CupertinoActivityIndicator());
+              // rewrite properties
+              dialog
+                ..alignment = Alignment.center
+                ..containerDecoration = null
+                ..barrierDismissible = true
+                ..barrierColor = Colors.transparent
+                ..transitionDuration = const Duration(milliseconds: 200)
+                ..transitionBuilder =
+                    (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+                  return ScaleTransition(
+                    child: child,
+                    scale: Tween(begin: 0.0, end: 1.0).animate(animation),
+                  );
+                };
+            }),
             WidgetsUtil.newXpelTextButton('Show with DialogWrapper', onPressed: () {
               DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
                 DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
