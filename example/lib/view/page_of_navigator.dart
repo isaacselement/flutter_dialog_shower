@@ -13,7 +13,15 @@ class PageOfNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfNavigator] ----------->>>>>>>>>>>> build/rebuild!!!");
-    return SingleChildScrollView(child: buildContainer());
+    return Navigator(
+      onGenerateRoute: (RouteSettings settings) {
+        return PageRouteBuilder(
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
+            return SingleChildScrollView(child: buildContainer());
+          },
+        );
+      },
+    );
   }
 
   Widget buildContainer() {
@@ -22,7 +30,7 @@ class PageOfNavigator extends StatelessWidget {
         child: Column(
           children: [
             WidgetsUtil.newHeaderWithGradient('Navigator inner shower'),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             buildButtonsAboutNavigator(),
           ],
         ));
@@ -32,7 +40,7 @@ class PageOfNavigator extends StatelessWidget {
     String desc = 'Tap \'Click me\' button for pushing a view in using navigator';
     return Column(
       children: [
-        Row(
+        Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show with navigator with Width & Height', onPressed: () {
               DialogWrapper.pushRoot(

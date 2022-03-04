@@ -10,18 +10,15 @@ import 'widgets/button_widgets.dart';
 class PageOfHomeless extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Navigator(
-        onGenerateRoute: (RouteSettings settings) {
-          return PageRouteBuilder(
-            pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
-              return buildContainer();
-            },
-          );
-        },
-      ),
-      // child: smallestContainer(),
+    Logger.d("[PageOfHomeless] ----------->>>>>>>>>>>> build/rebuild!!!");
+    return Navigator(
+      onGenerateRoute: (RouteSettings settings) {
+        return PageRouteBuilder(
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
+            return SingleChildScrollView(child: buildContainer());
+          },
+        );
+      },
     );
   }
 

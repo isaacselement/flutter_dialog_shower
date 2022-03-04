@@ -19,7 +19,15 @@ class PageOfBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBubble] ----------->>>>>>>>>>>> build/rebuild!!!");
-    return SingleChildScrollView(child: buildContainer());
+    return Navigator(
+      onGenerateRoute: (RouteSettings settings) {
+        return PageRouteBuilder(
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
+            return SingleChildScrollView(child: buildContainer());
+          },
+        );
+      },
+    );
   }
 
   Widget buildContainer() {
@@ -28,9 +36,8 @@ class PageOfBubble extends StatelessWidget {
         child: Column(
           children: [
             WidgetsUtil.newHeaderWithGradient('Bubble in shower. Shower in shower'),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             buildButtonsAboutBubble(),
-            const SizedBox(height: 64),
           ],
         ));
   }
@@ -38,7 +45,7 @@ class PageOfBubble extends StatelessWidget {
   Widget buildButtonsAboutBubble() {
     return Column(
       children: [
-        Row(
+        Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show bubble', onPressed: () {
               DialogShower shower = DialogWrapper.show(BubbleWidget(

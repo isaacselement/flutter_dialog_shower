@@ -1,3 +1,4 @@
+import 'package:example/util/size_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/brother.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
@@ -11,7 +12,8 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    PagesManager.init();
+    PagesManager.initPageController();
+    PagesManager.initPages();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -34,6 +36,8 @@ class _HomePageState extends State<HomePage> {
     Logger.d("[HomePage] ----------->>>>>>>>>>>> build/rebuild!!!");
 
     DialogShower.init(context);
+
+    SizeUtil.init(context);
 
     return Scaffold(
       body: Container(

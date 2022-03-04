@@ -92,5 +92,14 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
+  fonts:
+    - family: PassionOne-Regular
+      fonts:
+        - asset: assets/font/PassionOne-Regular.ttf
+
+    - family: Pacifico-Regular
+      fonts:
+        - asset: assets/font/Pacifico-Regular.ttf
+
   assets:
     - assets/json/NO.json

@@ -1,3 +1,4 @@
+import 'package:example/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/brother.dart';
@@ -5,28 +6,25 @@ import 'package:flutter_dialog_shower/broker/brother.dart';
 class PageOfBrother extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Navigator(
-        onGenerateRoute: (RouteSettings settings) {
-          return PageRouteBuilder(
-            pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
-              return buildContainer();
-            },
-          );
-        },
-      ),
+    Logger.d("[PageOfBrother] ----------->>>>>>>>>>>> build/rebuild!!!");
+    return Navigator(
+      onGenerateRoute: (RouteSettings settings) {
+        return PageRouteBuilder(
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
+            return SingleChildScrollView(child: buildContainer());
+          },
+        );
+      },
     );
   }
 
   Widget buildContainer() {
     return Column(
       children: [
-        const Spacer(),
+        const SizedBox(height: 32),
         BrotherBasicView(),
-        const Spacer(),
+        const SizedBox(height: 96),
         BrotherAdvanceView(),
-        const Spacer(),
       ],
     );
   }
@@ -201,8 +199,7 @@ class BrotherAdvanceView extends StatelessWidget {
           );
         }),
         const SizedBox(height: 18),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
           children: [
             CupertinoButton(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),

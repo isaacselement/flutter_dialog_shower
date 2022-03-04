@@ -105,17 +105,21 @@ class DialogShower {
 
   Future<R>? then<R>(FutureOr<R> Function(void value) onValue, {Function? onError}) => future.then(onValue, onError: onError);
 
-  // us as private now .....
-  TapUpDetails? tapUpDetails;
+  // private .....
+  TapUpDetails? _tapUpDetails;
+  get tapUpDetails => _tapUpDetails;
 
   // final GlobalKey _builderExKey = GlobalKey();
-  final GlobalKey statefulKey = GlobalKey();
-  final GlobalKey containerKey = GlobalKey();
+  // get builderExKey => _builderExKey;
+  final GlobalKey _statefulKey = GlobalKey();
+  get statefulKey => _statefulKey;
+  final GlobalKey _containerKey = GlobalKey();
+  get containerKey => _containerKey;
 
   // extension for navigate inner dialog
   bool isWrappedByNavigator = false;
   bool isAutoSizeForNavigator = true;
-  GlobalKey<NavigatorState>? navigatorKey;
+  GlobalKey<NavigatorState>? _navigatorKey;
 
   // holder object for various uses if you need ...
   Object? obj;
@@ -257,24 +261,23 @@ class DialogShower {
               __shower_log__('TapDownDetails: ${details.globalPosition}, ${details.localPosition}, ${details.kind}');
               return true;
             }());
-            tapUpDetails = null;
+            _tapUpDetails = null;
           },
           onTapUp: (TapUpDetails details) {
             assert(() {
               __shower_log__('TapUpDetails: ${details.globalPosition}, ${details.localPosition}, ${details.kind}');
               return true;
             }());
-            tapUpDetails = details;
+            _tapUpDetails = details;
           },
           onTap: () {
-            bool isKeyboardShowed = DialogShower.isKeyboardShowing();
             assert(() {
-              __shower_log__('Checking onTap details, keyboard is ${isKeyboardShowed ? '' : 'not'} showing');
+              __shower_log__('Checking onTap details, keyboard is ${DialogShower.isKeyboardShowing() ? '' : 'not'} showing');
               return true;
             }());
 
-            if (tapUpDetails != null) {
-              RenderBox containerBox = containerKey.currentContext?.findRenderObject() as RenderBox;
+            if (_tapUpDetails != null) {
+              RenderBox containerBox = _containerKey.currentContext?.findRenderObject() as RenderBox;
               double w = containerBox.size.width;
               double h = containerBox.size.height;
               Offset p = containerBox.localToGlobal(Offset.zero);
@@ -283,7 +286,7 @@ class DialogShower {
               double x2 = x1 + w;
               double y2 = y1 + h;
 
-              Offset tapPoint = tapUpDetails!.globalPosition;
+              Offset tapPoint = _tapUpDetails!.globalPosition;
               double tapX = tapPoint.dx;
               double tapY = tapPoint.dy;
               bool isTapInsideX = x1 < tapX && tapX < x2;
@@ -302,9 +305,11 @@ class DialogShower {
                 return;
               }
 
-              if (isKeyboardShowed && isDismissKeyboardOnTapped) {
-                // https://github.com/flutter/flutter/issues/48464
-                FocusManager.instance.primaryFocus?.unfocus();
+              if (isDismissKeyboardOnTapped) {
+                if (DialogShower.isKeyboardShowing()) {
+                  // https://github.com/flutter/flutter/issues/48464
+                  FocusManager.instance.primaryFocus?.unfocus();
+                }
               }
 
               if (isTapInside) {
@@ -316,7 +321,7 @@ class DialogShower {
                   return;
                 }
                 if (barrierDismissible == null) {
-                  if (isKeyboardShowed) {
+                  if (DialogShower.isKeyboardShowing()) {
                     FocusManager.instance.primaryFocus?.unfocus();
                   } else {
                     dismiss();
@@ -331,7 +336,7 @@ class DialogShower {
             appBar: null,
             backgroundColor: scaffoldBackgroundColor,
             body: StatefulBuilder(
-              key: statefulKey,
+              key: _statefulKey,
               builder: (context, setState) {
                 return _getScaffoldBody(_child);
               },
@@ -433,9 +438,9 @@ class DialogShower {
       );
     } else if (isWrappedByNavigator) {
       __shower_log__('show with navigator');
-      navigatorKey = GlobalKey<NavigatorState>();
+      _navigatorKey = GlobalKey<NavigatorState>();
       widget = Navigator(
-        key: navigatorKey,
+        key: _navigatorKey,
         onGenerateRoute: (RouteSettings settings) {
           return PageRouteBuilder(
             pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
@@ -453,7 +458,7 @@ class DialogShower {
 
     // the container as mini as possible for calculate the point if tapped inside
     return Container(
-      key: containerKey,
+      key: _containerKey,
       width: width,
       height: height,
       decoration: decoration,
@@ -492,7 +497,7 @@ class DialogShower {
 
   /// For navigator
   NavigatorState? getNavigator() {
-    return navigatorKey?.currentState;
+    return _navigatorKey?.currentState;
   }
 
   Future<T?> push<T extends Object?>(
@@ -543,7 +548,7 @@ class DialogShower {
       return true;
     }());
     // _builderExKey.currentState?.setState(fn);
-    statefulKey.currentState?.setState(fn);
+    _statefulKey.currentState?.setState(fn);
   }
 
   /// Private methods
@@ -595,7 +600,7 @@ class DialogShower {
     final List<int> tryTrickyTimes = [10, 10, 10, 20, 20, 30, 50, 50, 100];
     if (index < tryTrickyTimes.length) {
       Future.delayed(Duration(milliseconds: tryTrickyTimes[index]), () {
-        Size? size = (containerKey.currentContext?.findRenderObject() as RenderBox?)?.size;
+        Size? size = (_containerKey.currentContext?.findRenderObject() as RenderBox?)?.size;
         __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $index size: $size');
         size == null ? _tryToGetContainerSize(index: index++) : _setRenderedSizeWithSetState(size);
       });

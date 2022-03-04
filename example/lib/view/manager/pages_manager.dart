@@ -13,65 +13,68 @@ import '../page_of_navigator.dart';
 import '../page_of_widigets.dart';
 
 class PagesManager {
-  static void init() {
+  static void initPages() {
+    if (tabsPages.isNotEmpty) {
+      return;
+    }
+    addTabPage(
+      false,
+      'Basic',
+      const Icon(Icons.sports_football, size: 32, color: Colors.black26),
+      const Icon(Icons.sports_football_sharp, size: 32, color: Colors.orange),
+      PageOfBasic(),
+    );
+    addTabPage(
+      false,
+      'Widgets',
+      const Icon(Icons.widgets, size: 32, color: Colors.black26),
+      const Icon(Icons.widgets_sharp, size: 32, color: Colors.orange),
+      PageOfWidgets(),
+    );
+    addTabPage(
+      true,
+      'Keyboard',
+      const Icon(Icons.keyboard, size: 32, color: Colors.black26),
+      const Icon(Icons.keyboard_sharp, size: 32, color: Colors.orange),
+      PageOfKeyboard(),
+    );
+    addTabPage(
+      false,
+      'Bubble',
+      const Icon(Icons.bubble_chart, size: 32, color: Colors.black26),
+      const Icon(Icons.bubble_chart_sharp, size: 32, color: Colors.orange),
+      PageOfBubble(),
+    );
+    addTabPage(
+      true,
+      'Navigator',
+      const Icon(Icons.navigation, size: 32, color: Colors.black26),
+      const Icon(Icons.navigation_sharp, size: 32, color: Colors.orange),
+      PageOfNavigator(),
+    );
+    addTabPage(
+      false,
+      'Brother',
+      const Icon(Icons.refresh, size: 32, color: Colors.black26),
+      const Icon(Icons.refresh_sharp, size: 32, color: Colors.orange),
+      PageOfBrother(),
+    );
+    addTabPage(
+      false,
+      'Homeless',
+      const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
+      const Icon(Icons.auto_awesome_motion_sharp, size: 32, color: Colors.orange),
+      PageOfHomeless(),
+    );
+  }
+
+  static void initPageController() {
     if (getPageController() == null) {
       Broker.setIfAbsent<PageController>(PageController());
       PageController pageController = getPageController()!;
       pageController.addListener(() {
         Logger.d('PagesManager jump to page:  ${pageController.page}');
       });
-    }
-
-    if (tabsPages.isEmpty) {
-      addTabPage(
-        false,
-        'Basic',
-        const Icon(Icons.sports_football, size: 32, color: Colors.black26),
-        const Icon(Icons.sports_football_sharp, size: 32, color: Colors.orange),
-        PageOfBasic(),
-      );
-      addTabPage(
-        false,
-        'Widgets',
-        const Icon(Icons.widgets, size: 32, color: Colors.black26),
-        const Icon(Icons.widgets_sharp, size: 32, color: Colors.orange),
-        PageOfWidgets(),
-      );
-      addTabPage(
-        true,
-        'Keyboard',
-        const Icon(Icons.keyboard, size: 32, color: Colors.black26),
-        const Icon(Icons.keyboard_sharp, size: 32, color: Colors.orange),
-        PageOfKeyboard(),
-      );
-      addTabPage(
-        false,
-        'Bubble',
-        const Icon(Icons.bubble_chart, size: 32, color: Colors.black26),
-        const Icon(Icons.bubble_chart_sharp, size: 32, color: Colors.orange),
-        PageOfBubble(),
-      );
-      addTabPage(
-        true,
-        'Navigator',
-        const Icon(Icons.navigation, size: 32, color: Colors.black26),
-        const Icon(Icons.navigation_sharp, size: 32, color: Colors.orange),
-        PageOfNavigator(),
-      );
-      addTabPage(
-        false,
-        'Brother',
-        const Icon(Icons.refresh, size: 32, color: Colors.black26),
-        const Icon(Icons.refresh_sharp, size: 32, color: Colors.orange),
-        PageOfBrother(),
-      );
-      addTabPage(
-        false,
-        'Homeless',
-        const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
-        const Icon(Icons.auto_awesome_motion_sharp, size: 32, color: Colors.orange),
-        PageOfHomeless(),
-      );
     }
   }
 
@@ -87,10 +90,10 @@ class PagesManager {
 
   static void addTabPage(bool isKeepAlive, String name, Widget tabIcon, Widget tabIconSelected, Widget page) {
     TabPageInstance inst;
-    inst = TabPageInstance(name: name);
+    inst = TabPageInstance(name: name, isKeepAlive: isKeepAlive);
     add(inst);
-    inst.pageBuilder = () {
-      return isKeepAlive
+    inst.pageBuilder = (inst) {
+      return inst.isKeepAlive
           ? KeepAlivePageWidget(builder: (ctx, setState) {
               Logger.d('PagesManager >>>>>>>>>>>>> KeepAlivePageWidget rebuild: $name');
               return page;
@@ -100,15 +103,16 @@ class PagesManager {
               return page;
             });
     };
-    inst.tabBuilder = () {
+    inst.tabBuilder = (inst) {
       bool isSelected = currentPageIndex.value == inst.ordinal;
+      Color textColor = isSelected ? (inst.isKeepAlive ? Colors.red : Colors.orangeAccent) : Colors.grey;
       return CupertinoButton(
           padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
           child: Column(
             children: [
               isSelected ? tabIconSelected : tabIcon,
               const SizedBox(height: 2.0),
-              Text(name, style: TextStyle(color: isSelected ? Colors.orangeAccent : Colors.grey, fontSize: 11)),
+              Text(name, style: TextStyle(color: textColor, fontSize: 11)),
             ],
           ),
           onPressed: () {
@@ -165,21 +169,23 @@ class PagesManager {
   }
 
   static List<Widget> getTabs() {
-    return _getSortedTabsPages().map((e) => e.tabBuilder()).toList();
+    return _getSortedTabsPages().map((e) => e.tabBuilder(e)).toList();
   }
 
   static List<Widget> getPages() {
-    return _getSortedTabsPages().map((e) => e.pageBuilder()).toList();
+    return _getSortedTabsPages().map((e) => e.pageBuilder(e)).toList();
   }
 }
 
 class TabPageInstance {
   String name;
   late int ordinal;
-  late Widget Function() tabBuilder;
-  late Widget Function() pageBuilder;
+  late Widget Function(TabPageInstance inst) tabBuilder;
+  late Widget Function(TabPageInstance inst) pageBuilder;
 
-  TabPageInstance({required this.name});
+  bool isKeepAlive;
+
+  TabPageInstance({required this.name, this.isKeepAlive = false});
 }
 
 class KeepAlivePageWidget extends StatefulWidget {

@@ -1,4 +1,5 @@
 import 'package:example/util/logger.dart';
+import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:example/view/page_of_keyboard.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,51 +24,72 @@ class PageOfBasic extends StatelessWidget {
 
   Widget buildContainer() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 12),
         WidgetsUtil.newHeaderWithLine('DialogShower'),
         const SizedBox(height: 12),
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show from bottom', isSmallest: true, onPressed: () {
-              basicShow();
+            WidgetsUtil.newXpelTextButton('Show from bottom', onPressed: () {
+              doBasicShow();
             }),
-            WidgetsUtil.newXpelTextButton('Show from left', isSmallest: true, onPressed: () {
-              basicShow().animationBeginOffset = const Offset(-1.0, 0.0);
+            WidgetsUtil.newXpelTextButton('Show from left', onPressed: () {
+              doBasicShow().animationBeginOffset = const Offset(-1.0, 0.0);
             }),
-            WidgetsUtil.newXpelTextButton('Show from right', isSmallest: true, onPressed: () {
-              basicShow().animationBeginOffset = const Offset(1.0, 0.0);
+            WidgetsUtil.newXpelTextButton('Show from right', onPressed: () {
+              doBasicShow().animationBeginOffset = const Offset(1.0, 0.0);
             }),
-            WidgetsUtil.newXpelTextButton('Show from top', isSmallest: true, onPressed: () {
-              basicShow().animationBeginOffset = const Offset(0.0, -1.0);
+            WidgetsUtil.newXpelTextButton('Show from top', onPressed: () {
+              doBasicShow().animationBeginOffset = const Offset(0.0, -1.0);
             }),
-            WidgetsUtil.newXpelTextButton('Show from top left', isSmallest: true, onPressed: () {
-              basicShow().animationBeginOffset = const Offset(-1.0, -1.0);
+            WidgetsUtil.newXpelTextButton('Show from top left', onPressed: () {
+              doBasicShow().animationBeginOffset = const Offset(-1.0, -1.0);
             }),
-            WidgetsUtil.newXpelTextButton('Show from top right', isSmallest: true, onPressed: () {
-              basicShow().animationBeginOffset = const Offset(1.0, -1.0);
+            WidgetsUtil.newXpelTextButton('Show from top right', onPressed: () {
+              doBasicShow().animationBeginOffset = const Offset(1.0, -1.0);
             }),
-            WidgetsUtil.newXpelTextButton('Show to left', isSmallest: true, onPressed: () {
-              DialogShower shower = basicShow();
+          ],
+        ),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Show in left', onPressed: () {
+              DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(-1.0, 0.0);
               shower.alignment = Alignment.centerLeft;
-              shower.margin = const EdgeInsets.only(left: 16);
+              shower.margin = const EdgeInsets.only(left: 5);
             }),
-            WidgetsUtil.newXpelTextButton('Show to right', isSmallest: true, onPressed: () {
-              DialogShower shower = basicShow();
+            WidgetsUtil.newXpelTextButton('Show in right', onPressed: () {
+              DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(1.0, 0.0);
               shower.alignment = Alignment.centerRight;
-              shower.margin = const EdgeInsets.only(right: 16);
+              shower.margin = const EdgeInsets.only(right: 5);
             }),
-            WidgetsUtil.newXpelTextButton('Show with position x y', isSmallest: true, onPressed: () {
-              double x = 120;
-              double y = 120;
-              DialogShower shower = basicShow();
+            WidgetsUtil.newXpelTextButton('Show in bottom', onPressed: () {
+              DialogShower shower = doBasicShow();
+              shower.animationBeginOffset = const Offset(0.0, 1.0);
+              shower.alignment = Alignment.bottomCenter;
+              shower.margin = const EdgeInsets.only(bottom: 5);
+            }),
+            WidgetsUtil.newXpelTextButton('Show in top', onPressed: () {
+              DialogShower shower = doBasicShow();
+              shower.animationBeginOffset = const Offset(0.0, -1.0);
+              shower.alignment = Alignment.topCenter;
+              shower.margin = EdgeInsets.only(top: SizeUtil.statuBarHeight);
+            }),
+            WidgetsUtil.newXpelTextButton('Show with position x y', onPressed: () {
+              double x = 20;
+              double y = 40;
+              DialogShower shower = doBasicShow();
               shower
                 ..alignment = Alignment.topLeft
                 ..margin = EdgeInsets.only(left: x, top: y);
             }),
-            WidgetsUtil.newXpelTextButton('Shower dismiss manually', isSmallest: true, onPressed: () {
+          ],
+        ),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Shower dismiss manually', onPressed: () {
               DialogShower shower = DialogShower();
               shower
                 ..build()
@@ -76,8 +98,8 @@ class PageOfBasic extends StatelessWidget {
                   Logger.d('shower dismissCallBack');
                 };
               shower.show(Container(
-                width: 200,
-                height: 200,
+                width: _showerWidth,
+                height: _showerHeight,
                 color: Colors.lightGreen,
                 padding: const EdgeInsets.only(top: 50, bottom: 50),
                 child: WidgetsUtil.newXpelTextButton('Click to Dismiss', onPressed: () {
@@ -85,13 +107,18 @@ class PageOfBasic extends StatelessWidget {
                 }),
               ));
             }),
-            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using wholeOnTapCallback', isSmallest: true, onPressed: () {
+          ],
+        ),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using wholeOnTapCallback', onPressed: () {
               DialogShower shower = DialogShower();
               shower
                 ..build()
                 ..containerShadowColor = Colors.grey
                 ..containerShadowBlurRadius = 20.0
                 ..containerBorderRadius = 10.0
+                ..isDismissKeyboardOnTapped = false // disable the default behavior
                 ..wholeOnTapCallback = (shower, point, isTappedInside) {
                   Logger.d('shower wholeOnTapCallback');
                   if (DialogShower.isKeyboardShowing()) {
@@ -101,19 +128,9 @@ class PageOfBasic extends StatelessWidget {
                   }
                   return true;
                 };
-              shower.show(Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  WidgetsUtil.newEditBox(height: 100),
-                  Container(
-                    height: 50,
-                    child: const Text('Focus edit box first, then Click Me please'),
-                  )
-                ],
-              ));
+              shower.show(WidgetsUtil.newEditBotxWithBottomTips(hint: 'Focus edit box first, then [Click Me]'));
             }),
-
-            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using barrierOnTapCallback', isSmallest: true, onPressed: () {
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using barrierOnTapCallback', onPressed: () {
               DialogShower shower = DialogShower();
               shower
                 ..build()
@@ -129,27 +146,19 @@ class PageOfBasic extends StatelessWidget {
                   }
                   return true;
                 };
-              shower.show(Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  WidgetsUtil.newEditBox(height: 100),
-                  Container(
-                    height: 50,
-                    child: const Text('Focus edit box first, then Click Me & Click Barrier please'),
-                  )
-                ],
-              ));
+              shower.show(WidgetsUtil.newEditBotxWithBottomTips(hint: 'Focus edit box first, then [Click Me] / [Click Barrier]'));
             }),
-            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using barrierDismissible == null', isSmallest: true,
-                onPressed: () {
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first with setting barrierDismissible to null', onPressed: () {
               DialogShower shower = DialogShower();
               shower
                 ..build()
-                ..barrierDismissible = null // will dismiss keyboard first, then click again will dismisss dialog
                 ..containerShadowColor = Colors.grey
                 ..containerShadowBlurRadius = 20.0
-                ..containerBorderRadius = 10.0;
-              shower.show(WidgetsUtil.newEditBox(height: 300));
+                ..containerBorderRadius = 10.0
+                ..barrierDismissible = null; // will dismiss keyboard first, then click again will dismisss dialog
+              // if you want to do not dimiss keyboard on [Click Me], disable the default behavior
+              // ..isDismissKeyboardOnTapped = false
+              shower.show(WidgetsUtil.newEditBotxWithBottomTips(hint: 'Focus edit box first, then [Click Me] / [Click Barrier]'));
             }),
           ],
         ),
@@ -157,7 +166,7 @@ class PageOfBasic extends StatelessWidget {
     );
   }
 
-  DialogShower basicShow({Widget? child}) {
+  DialogShower doBasicShow({Widget? child}) {
     DialogShower shower = DialogShower();
     shower
       ..build()
@@ -189,7 +198,11 @@ class PageOfBasic extends StatelessWidget {
     shower.then((value) {
       Logger.d('shower then callback (on dismiss)');
     });
-    shower.show(Container(width: 400, height: 400, color: Colors.orangeAccent));
+    shower.show(Container(width: _showerWidth, height: _showerHeight, color: Colors.orangeAccent));
     return shower;
   }
+
+  get _showerWidth => 400 >= SizeUtil.screenWidth ? SizeUtil.screenWidth - 100 : 400.toDouble();
+
+  get _showerHeight => 400 >= SizeUtil.screenWidth ? SizeUtil.screenWidth - 100 : 400.toDouble();
 }

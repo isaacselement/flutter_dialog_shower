@@ -15,7 +15,6 @@ class XpTextButton extends StatefulWidget {
   Alignment? alignment;
 
   void Function()? onPressed;
-  bool isAsSmallAsPossible = false;
 
   TextStyle? Function(String text, bool isTapingDown)? textStyleBuilder;
   BoxDecoration? Function(String text, bool isTapingDown)? decorationBuilder;
@@ -30,9 +29,7 @@ class XpTextButton extends StatefulWidget {
     this.backgroundColor = const Color(0xFF4275FF),
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
-    this.alignment = Alignment.center,
     this.onPressed,
-    this.isAsSmallAsPossible = false,
     this.textStyleBuilder,
     this.decorationBuilder,
   }) : super(key: key);
@@ -44,9 +41,7 @@ class XpTextButton extends StatefulWidget {
     this.height,
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
-    this.alignment = Alignment.center,
     this.onPressed,
-    this.isAsSmallAsPossible = true,
     this.textStyleBuilder,
     this.decorationBuilder,
   }) : super(key: key);
@@ -68,32 +63,28 @@ class _XpTextButtonState extends State<XpTextButton> {
 
   @override
   Widget build(BuildContext context) {
-    Widget view = Container(
-      padding: widget.margin,
-      width: widget.width,
-      height: widget.height,
-      child: InkWell(
-        child: Container(
-          padding: widget.padding,
-          alignment: widget.alignment,
-          decoration: widget.decorationBuilder?.call(widget.text, isTapingDown) ?? _defBoxDecoration(widget.text, isTapingDown),
-          child: Text(widget.text,
-              style: widget.textStyleBuilder?.call(widget.text, isTapingDown) ?? _defTextStyle(widget.text, isTapingDown)),
-        ),
-        onTap: () {
-          isTapingDown = false;
-          widget.onPressed?.call();
-        },
-        onTapDown: (details) {
-          isTapingDown = true;
-        },
-        onTapCancel: () {
-          isTapingDown = false;
-        },
+    Widget view = InkWell(
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        margin: widget.margin,
+        padding: widget.padding,
+        decoration: widget.decorationBuilder?.call(widget.text, isTapingDown) ?? _defBoxDecoration(widget.text, isTapingDown),
+        child: Text(widget.text,
+            style: widget.textStyleBuilder?.call(widget.text, isTapingDown) ?? _defTextStyle(widget.text, isTapingDown)),
       ),
+      onTap: () {
+        isTapingDown = false;
+        widget.onPressed?.call();
+      },
+      onTapDown: (details) {
+        isTapingDown = true;
+      },
+      onTapCancel: () {
+        isTapingDown = false;
+      },
     );
-    // as small as possible
-    return widget.isAsSmallAsPossible ? Row(mainAxisSize: MainAxisSize.min, children: [view]) : view;
+    return view;
   }
 
   BoxDecoration _defBoxDecoration(String text, bool isTapingDown) {
