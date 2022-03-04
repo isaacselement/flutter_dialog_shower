@@ -32,14 +32,15 @@ class PageOfBubble extends StatelessWidget {
 
   Widget buildContainer() {
     return Container(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: [
-            WidgetsUtil.newHeaderWithGradient('Bubble in shower. Shower in shower'),
-            const SizedBox(height: 16),
-            buildButtonsAboutBubble(),
-          ],
-        ));
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          WidgetsUtil.newHeaderWithGradient('Bubble in shower. Shower in shower'),
+          const SizedBox(height: 16),
+          buildButtonsAboutBubble(),
+        ],
+      ),
+    );
   }
 
   Widget buildButtonsAboutBubble() {

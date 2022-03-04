@@ -41,6 +41,13 @@ class DialogWrapper {
     return shower;
   }
 
+  static DialogShower showBottom(Widget child, {double? width, double? height, String? key}) {
+    DialogShower shower = show(child, width: width, height: height, direction: const Offset(0.0, 1.0), key: key);
+    shower.alignment = Alignment.bottomCenter;
+    shower.margin = const EdgeInsets.only(bottom: 16);
+    return shower;
+  }
+
   static DialogShower show(Widget child,
       {bool isFixed = false, double? x, double? y, double? width, double? height, Offset? direction, String? key}) {
     return showWith(DialogShower(), child, isFixed: isFixed, x: x, y: y, width: width, height: height, direction: direction, key: key);

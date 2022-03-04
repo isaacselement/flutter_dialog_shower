@@ -45,6 +45,4 @@ class PageOfHomeless extends StatelessWidget {
       ),
     );
   }
-
-
 }

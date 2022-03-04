@@ -26,14 +26,15 @@ class PageOfNavigator extends StatelessWidget {
 
   Widget buildContainer() {
     return Container(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: [
-            WidgetsUtil.newHeaderWithGradient('Navigator inner shower'),
-            const SizedBox(height: 16),
-            buildButtonsAboutNavigator(),
-          ],
-        ));
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          WidgetsUtil.newHeaderWithGradient('Navigator inner shower'),
+          const SizedBox(height: 16),
+          buildButtonsAboutNavigator(),
+        ],
+      ),
+    );
   }
 
   Widget buildButtonsAboutNavigator() {

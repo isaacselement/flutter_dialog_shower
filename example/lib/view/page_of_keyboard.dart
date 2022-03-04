@@ -28,14 +28,15 @@ class PageOfKeyboard extends StatelessWidget {
 
   Widget buildContainer() {
     return Container(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: [
-            WidgetsUtil.newHeaderWithGradient('You can tap the edit box to see the behaviour when keyboard showed'),
-            const SizedBox(height: 16),
-            buildButtonsAboutKeyboard(),
-          ],
-        ));
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          WidgetsUtil.newHeaderWithGradient('You can tap the edit box to see the behaviour when keyboard showed'),
+          const SizedBox(height: 16),
+          buildButtonsAboutKeyboard(),
+        ],
+      ),
+    );
   }
 
   Widget buildButtonsAboutKeyboard() {
@@ -54,12 +55,7 @@ class PageOfKeyboard extends StatelessWidget {
               DialogWrapper.showRight(WidgetsUtil.newEditBox(), isFixed: true);
             }),
             WidgetsUtil.newXpelTextButton('Show x/y', onPressed: () {
-              DialogWrapper.show(
-                WidgetsUtil.newEditBox(),
-                isFixed: true,
-                x: 200,
-                y: 200,
-              );
+              DialogWrapper.show(WidgetsUtil.newEditBox(), isFixed: true, x: 20, y: 40);
             }),
           ],
         ),
@@ -77,7 +73,7 @@ class PageOfKeyboard extends StatelessWidget {
               DialogWrapper.showRight(WidgetsUtil.newEditBox());
             }),
             WidgetsUtil.newXpelTextButton('Show x/y', onPressed: () {
-              DialogWrapper.show(WidgetsUtil.newEditBox(), x: 200, y: 200).keyboardEventCallBack = (shower, isKeyboardShow) {
+              DialogWrapper.show(WidgetsUtil.newEditBox(), x: 20, y: 40).keyboardEventCallBack = (shower, isKeyboardShow) {
                 shower.setState(() {
                   shower.margin = isKeyboardShow ? const EdgeInsets.only(left: 200) : const EdgeInsets.only(left: 200, top: 200);
                 });
@@ -101,44 +97,37 @@ class PageOfKeyboard extends StatelessWidget {
               };
             }),
             WidgetsUtil.newXpelTextButton('x/y Stick Top', onPressed: () {
-              DialogWrapper.show(
-                WidgetsUtil.newEditBox(),
-                x: 200,
-                y: 200,
-              ).keyboardEventCallBack = (shower, isKeyboardShow) {
+              DialogWrapper.show(WidgetsUtil.newEditBox(), x: 20, y: 40).keyboardEventCallBack = (shower, isKeyboardShow) {
                 PositionUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
               };
             }),
-            WidgetsUtil.newXpelTextButton('x/y Stick Bottom', onPressed: () {
-              DialogWrapper.show(
-                WidgetsUtil.newEditBox(width: 500, height: 300),
-                x: 200,
-                y: 200,
-              ).keyboardEventCallBack = (shower, isKeyboardShow) {
+            WidgetsUtil.newXpelTextButton('x/y Stick Bottom 1', onPressed: () {
+              DialogWrapper.show(WidgetsUtil.newEditBox(width: 400, height: 100), x: 20, y: 40).keyboardEventCallBack =
+                  (shower, isKeyboardShow) {
                 PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
               };
             }),
-            WidgetsUtil.newXpelTextButton('x/y Stick Bottom', onPressed: () {
+            WidgetsUtil.newXpelTextButton('x/y Stick Bottom 2', onPressed: () {
               DialogWrapper.show(
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      WidgetsUtil.newEditBox(width: 500, height: 300),
+                      WidgetsUtil.newEditBox(width: 400, height: 100),
                       Container(
                         color: Colors.yellow,
-                        height: 50,
-                        width: 500,
+                        height: 100,
+                        width: 400,
                         alignment: Alignment.center,
                         child: const Text('I will be stick bottom when keyboard show up'),
                       )
                     ],
                   ),
                 ),
-                x: 200,
-                y: 200,
+                x: 20,
+                y: 40,
               ).keyboardEventCallBack = (shower, isKeyboardShow) {
                 Future.delayed(isKeyboardShow ? const Duration(milliseconds: 200) : const Duration(milliseconds: 50), () {
-                  PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
+                  PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow, bottom: 0);
                 });
               };
             }),

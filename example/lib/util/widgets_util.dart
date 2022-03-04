@@ -161,6 +161,17 @@ class WidgetsUtil {
     );
   }
 
+  static Widget newDescptions(String desc, {double? width, double? height}) {
+    return Container(
+      width: width,
+      height: height,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(color: Color(0xFFF5F5FA)),
+      padding: const EdgeInsets.only(left: 8, right: 8),
+      child: Text(desc, style: const TextStyle(fontSize: 13, color: Color(0xFF8181A5))),
+    );
+  }
+
   static Column newClickMeWidget({required Function(BuildContext context) fnClickMe, String? text}) {
     return Column(
       mainAxisSize: MainAxisSize.min, // as small as possible

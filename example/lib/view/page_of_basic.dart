@@ -5,6 +5,7 @@ import 'package:example/view/page_of_keyboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
+import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/event/event_truck.dart';
 
 class PageOfBasic extends StatelessWidget {
@@ -29,6 +30,22 @@ class PageOfBasic extends StatelessWidget {
         const SizedBox(height: 12),
         WidgetsUtil.newHeaderWithLine('DialogShower'),
         const SizedBox(height: 12),
+        demoUsageOfDialogShower(),
+        const SizedBox(height: 32),
+        WidgetsUtil.newHeaderWithLine('DialogWrapper'),
+        WidgetsUtil.newDescptions('DialogWrapper is a wrapper for DialogShower. '),
+        WidgetsUtil.newDescptions(
+            'Using DialogWrapper, you can very easy to show a dialog and modify it\'s properties, and take the management of Your ALL Showing Dialogs'),
+        const SizedBox(height: 12),
+        demoUsageOfDialogWrapper(),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+  Column demoUsageOfDialogShower() {
+    return Column(
+      children: [
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show from bottom', onPressed: () {
@@ -156,12 +173,92 @@ class PageOfBasic extends StatelessWidget {
                 ..containerShadowBlurRadius = 20.0
                 ..containerBorderRadius = 10.0
                 ..barrierDismissible = null; // will dismiss keyboard first, then click again will dismisss dialog
-              // if you want to do not dimiss keyboard on [Click Me], disable the default behavior
+              // if you want to do not dismiss keyboard on [Click Me], disable the default behavior
               // ..isDismissKeyboardOnTapped = false
               shower.show(WidgetsUtil.newEditBotxWithBottomTips(hint: 'Focus edit box first, then [Click Me] / [Click Barrier]'));
             }),
           ],
         ),
+      ],
+    );
+  }
+
+  Column demoUsageOfDialogWrapper() {
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Show with DialogWrapper', onPressed: () {
+              DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
+                DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
+                  DialogWrapper.showRight(_container(text: '3')).futurePushed.then((value) {
+                    DialogWrapper.showBottom(_container(text: '4')).futurePushed.then((value) {
+                      DialogWrapper.show(_container(text: 'Click every where'))
+                        ..animationBeginOffset = const Offset(0.0, -1.0)
+                        ..alignment = Alignment.topCenter
+                        ..margin = EdgeInsets.only(top: SizeUtil.statuBarHeight);
+                    });
+                  });
+                });
+              });
+            }),
+            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss all dialogs', onPressed: () {
+              DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
+                DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
+                  DialogWrapper.showRight(_container(text: '3')).futurePushed.then((value) {
+                    DialogWrapper.showBottom(_container(text: '4')).futurePushed.then((value) {
+                      DialogWrapper.show(_container(text: 'Click every where'))
+                        ..animationBeginOffset = const Offset(0.0, -1.0)
+                        ..alignment = Alignment.topCenter
+                        ..margin = EdgeInsets.only(top: SizeUtil.statuBarHeight)
+                        ..future.then((value) => DialogWrapper.dismissAppearingDialogs());
+                    });
+                  });
+                });
+              });
+            }),
+            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog on top', onPressed: () {
+              DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
+                DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
+                  DialogWrapper.showRight(_container(text: 'Will auto dismiss after 2 seconds'))
+                    ..barrierDismissible = false
+                    ..futurePushed.then((value) {
+                      Future.delayed(const Duration(seconds: 2), () {
+                        DialogWrapper.dismissTopDialog();
+                      });
+                    });
+                });
+              });
+            }),
+            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: () {
+              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).futurePushed.then((value) {
+                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').futurePushed.then((value) {
+                  DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
+                    ..barrierDismissible = false
+                    ..futurePushed.then((value) {
+                      Future.delayed(const Duration(seconds: 2), () {
+                        DialogWrapper.dismissDialog(null, key: '__key3__');
+                        DialogWrapper.dismissDialog(null, key: '__key2__'); // will dismiss all dialog on top of me
+                      });
+                    });
+                });
+              });
+            }),
+            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: () {
+              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).futurePushed.then((value) {
+                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').futurePushed.then((value) {
+                  DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
+                    ..barrierDismissible = false
+                    ..futurePushed.then((value) {
+                      Future.delayed(const Duration(seconds: 2), () {
+                        DialogWrapper.dismissDialog(null, key: '__key1__'); // will dismiss all dialog on top of me
+                      });
+                    });
+                });
+              });
+            }),
+          ],
+        )
       ],
     );
   }
@@ -198,8 +295,18 @@ class PageOfBasic extends StatelessWidget {
     shower.then((value) {
       Logger.d('shower then callback (on dismiss)');
     });
-    shower.show(Container(width: _showerWidth, height: _showerHeight, color: Colors.orangeAccent));
+    shower.show(_container());
     return shower;
+  }
+
+  Container _container({String? text}) {
+    return Container(
+      width: _showerWidth,
+      height: _showerHeight,
+      alignment: Alignment.center,
+      color: Colors.orangeAccent,
+      child: Text(text ?? ''),
+    );
   }
 
   get _showerWidth => 400 >= SizeUtil.screenWidth ? SizeUtil.screenWidth - 100 : 400.toDouble();
