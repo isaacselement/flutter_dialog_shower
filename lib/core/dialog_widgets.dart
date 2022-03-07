@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/view/rotate_widget.dart';
@@ -6,42 +8,40 @@ import 'dialog_wrapper.dart';
 import 'dialog_shower.dart';
 
 class DialogWidgets {
+  static Widget? iconSuccessAlert;
+  static Widget? iconFailedAlert;
 
-  static Widget? iconSuccessAlert = null;
-  static Widget? iconFailedAlert = null;
+  static Widget? iconLoading;
 
-  static Widget? iconLoading = null;
-  static Widget? iconSuccess = null;
-  static Widget? iconFailed = null;
+  static Widget? iconSuccess;
+  static Widget? iconFailed;
 
-  static Color? tipsDefColor = null;
-  static TextStyle? tipsDefTextStyle = null;
+  static Color? tipsDefBgColor;
+  static TextStyle? tipsDefTextStyle;
 
   // Tips Of Loading, Success, Failed
 
-  static DialogShower showFailed({String? text = 'Failed'}) {
-    return showTips(icon: iconFailed, text: text);
+  static DialogShower showFailed({String? text = 'Failed', bool dismissible = true}) {
+    return showTips(icon: iconFailed, text: text)..barrierDismissible = dismissible;
   }
 
-  static DialogShower showSuccess({String? text = 'Success'}) {
-    return showTips(icon: iconSuccess!, text: text);
+  static DialogShower showSuccess({String? text = 'Success', bool dismissible = true}) {
+    return showTips(icon: iconSuccess, text: text)..barrierDismissible = dismissible;
   }
 
   static DialogShower showLoading({String? text = 'Loading', bool dismissible = false}) {
-    return showTips(
-      icon: RotateWidget(child: iconLoading!),
-      text: text,
-    )..barrierDismissible = dismissible;
+    Widget widget = RotateWidget(child: iconLoading ?? GappyCirclePainter.getOneGappyCircle());
+    return showTips(icon: widget, text: text)..barrierDismissible = dismissible;
   }
 
   static DialogShower showTips({
     double? width = 150,
     double? height = 150,
+    double? iconTextGap = 6.0,
     Widget? icon,
     String? text,
     TextStyle? textStyle,
-    Color? color,
-    double? iconTextGap = 6.0,
+    Color? bgColor,
   }) {
     List<Widget> children = <Widget>[];
     if (icon != null) {
@@ -51,15 +51,13 @@ class DialogWidgets {
       }
     }
     if (text != null) {
-      children.add(
-        Text(text, style: textStyle ?? tipsDefTextStyle),
-      );
+      children.add(Text(text, style: textStyle ?? tipsDefTextStyle ?? const TextStyle(color: Colors.white, fontSize: 16)));
     }
     DialogShower dialog = DialogWrapper.show(
       Container(
         width: width,
         height: height,
-        color: color ?? tipsDefColor,
+        color: bgColor ?? tipsDefBgColor ?? Colors.black,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: children),
       ),
     );
@@ -78,7 +76,6 @@ class DialogWidgets {
       };
     return dialog;
   }
-
 
   // Alert With Buttons Text
   static DialogShower showAlertFailed({
@@ -230,5 +227,55 @@ class DialogWidgets {
         );
       };
     return dialog;
+  }
+}
+
+class GappyCirclePainter extends CustomPainter {
+  double radius;
+  double strokeWidth;
+
+  // ARC
+  Color? colorBig, colorSmall;
+  double? startAngleBig, sweepAngleBig;
+  double? startAngleSmall, sweepAngleBigSmall;
+
+  GappyCirclePainter(
+      {required this.radius,
+      required this.strokeWidth,
+      this.colorBig,
+      this.colorSmall,
+      this.startAngleBig,
+      this.sweepAngleBig,
+      this.startAngleSmall,
+      this.sweepAngleBigSmall});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double side = radius * 2 - strokeWidth;
+    var paintOne = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..color = colorBig ?? Colors.white;
+    var paintTow = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..color = colorSmall ?? Colors.grey.withAlpha(128);
+    canvas.drawArc(Rect.fromCenter(center: Offset.zero, width: side, height: side), startAngleBig ?? 0, sweepAngleBig ?? 2 * pi / 5 * 4,
+        false, paintOne);
+    canvas.drawArc(Rect.fromCenter(center: Offset.zero, width: side, height: side), startAngleSmall ?? 2 * pi / 5 * 4,
+        sweepAngleBigSmall ?? 2 * pi / 5 * 1, false, paintTow);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+
+  static Widget getOneGappyCircle({double? side, double? stroke}) {
+    side ??= 64.0;
+    stroke ??= 4.0;
+    return Container(
+        width: side,
+        height: side,
+        alignment: Alignment.center,
+        child: CustomPaint(painter: GappyCirclePainter(radius: side / 2, strokeWidth: stroke)));
   }
 }

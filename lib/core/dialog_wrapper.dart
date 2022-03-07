@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -172,6 +173,15 @@ class DialogWrapper {
 
   static DialogShower? getTopDialog() {
     return _list().isNotEmpty ? _list().last : null;
+  }
+
+  static DialogShower? getDialogByIndex(int reverseIndex) {
+    int index = (_list().length - 1) - reverseIndex; // reverse index
+    return index >= 0 && index < _list().length ? _list()[index] : null;
+  }
+
+  static DialogShower? getDialogByKey(String key) {
+    return _map()[key];
   }
 
   static void iterateDialogs(bool Function(DialogShower dialog) handler) {

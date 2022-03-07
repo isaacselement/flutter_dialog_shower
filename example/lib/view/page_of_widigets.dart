@@ -5,32 +5,6 @@ import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_widgets.dart';
 
-class CirclePainter extends CustomPainter {
-  double radius;
-
-  double strokeWidth;
-
-  CirclePainter({required this.radius, required this.strokeWidth});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    double side = radius * 2 - strokeWidth;
-    var paintOne = Paint()
-      ..strokeWidth = strokeWidth
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke;
-    var paintTow = Paint()
-      ..strokeWidth = strokeWidth
-      ..color = Colors.grey.withAlpha(128)
-      ..style = PaintingStyle.stroke;
-    canvas.drawArc(Rect.fromCenter(center: Offset.zero, width: side, height: side), 0, 2 * pi / 6 * 5, false, paintOne);
-    canvas.drawArc(Rect.fromCenter(center: Offset.zero, width: side, height: side), 2 * pi / 6 * 5, 2 * pi, false, paintTow);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
-
 class PageOfWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -46,15 +20,7 @@ class PageOfWidgets extends StatelessWidget {
     );
   }
 
-  PageOfWidgets({Key? key}) : super(key: key) {}
-
   Widget buildContainer() {
-    DialogWidgets.tipsDefColor = const Color(0xCC1C1D21);
-    DialogWidgets.tipsDefTextStyle = const TextStyle(color: Colors.white, fontSize: 16);
-
-    DialogWidgets.iconLoading = const Icon(Icons.change_circle, size: 100);
-    DialogWidgets.iconLoading = getAAAA();
-
     return Column(
       children: [
         Wrap(
@@ -62,23 +28,117 @@ class PageOfWidgets extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('show loading', onPressed: () {
               DialogWidgets.showLoading(dismissible: true);
             }),
+            WidgetsUtil.newXpelTextButton('show success', onPressed: () {
+              DialogWidgets.showSuccess(dismissible: true);
+            }),
           ],
         ),
-        const SizedBox(height: 200),
-        getAAAA(),
+        const SizedBox(height: 10),
+        Container(
+          width: 270,
+          height: 180,
+          color: Colors.grey,
+          child: CustomPaint(
+            painter: YesPainter(width: 270, height: 180),
+          ),
+        ),
+
+        const SizedBox(height: 10),
+
+        Container(
+          width: 270,
+          height: 180,
+          color: Colors.grey,
+          child: const YesWidget(),
+        ),
       ],
     );
   }
+}
 
-  Container getAAAA() {
-    return Container(
-      color: Colors.red,
-      width: 120,
-      height: 120,
-      alignment: Alignment.center,
+class YesWidget extends StatefulWidget {
+  const YesWidget({Key? key}) : super(key: key);
+  @override
+  _YesWidgetState createState() => _YesWidgetState();
+}
+
+class _YesWidgetState extends State<YesWidget> with TickerProviderStateMixin {
+  late AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 4));
+    animationController.repeat();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget child = Container(
+      width: 270,
+      height: 180,
+      color: Colors.grey,
       child: CustomPaint(
-        painter: CirclePainter(radius: 120 / 2, strokeWidth: 20),
+        painter: YesPainter(width: 270, height: 180, progress: animationController.value),
       ),
     );
+    return AnimatedBuilder(
+      child: child,
+      builder: (BuildContext context, Widget? child) {
+        return Transform.rotate(
+          angle: animationController.value * 6.3,
+          child: child,
+        );
+      },
+      animation: animationController,
+    );
+
+  }
+}
+
+class YesPainter extends CustomPainter {
+  double width, height;
+  double? stroke;
+  Color? color;
+
+  double? progress;
+
+  YesPainter({required this.width, required this.height, this.stroke, this.color, this.progress});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke ?? 30
+      ..color = color ?? Colors.green;
+
+    // the best ratio is width: height is 3 : 2
+    Path path = Path();
+    double startX = 0;
+    double startY = height / 2;
+
+    path.moveTo(startX, startY);
+
+    double ratio = (progress ?? 1.0) * 2;
+    double ratio1 = ratio <= 1 ? ratio : 1;
+    double ratio2 = ratio >= 1 ? ratio - 1 : 0;
+
+    print('>>>>>> $ratio, $ratio1, $ratio2');
+
+    path.lineTo(startX + (width / 3 - startX) * ratio1, startY + (height - startY) * ratio1);
+
+    if (ratio2 != 0) {
+      path.lineTo(width / 3 + (width - width / 3) * ratio2, height - ratio2 * height);
+    }
+
+    // path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant YesPainter oldDelegate) {
+    return oldDelegate.progress != progress;
   }
 }

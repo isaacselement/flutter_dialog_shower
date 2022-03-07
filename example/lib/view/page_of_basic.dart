@@ -210,7 +210,7 @@ class PageOfBasic extends StatelessWidget {
                 DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
                   DialogWrapper.showRight(_container(text: '3')).futurePushed.then((value) {
                     DialogWrapper.showBottom(_container(text: '4')).futurePushed.then((value) {
-                      DialogWrapper.show(_container(text: 'Click every where'))
+                      DialogWrapper.show(_container(text: 'Click any where out of this box'))
                         ..animationBeginOffset = const Offset(0.0, -1.0)
                         ..alignment = Alignment.topCenter
                         ..margin = EdgeInsets.only(top: SizeUtil.statuBarHeight);
@@ -224,7 +224,7 @@ class PageOfBasic extends StatelessWidget {
                 DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
                   DialogWrapper.showRight(_container(text: '3')).futurePushed.then((value) {
                     DialogWrapper.showBottom(_container(text: '4')).futurePushed.then((value) {
-                      DialogWrapper.show(_container(text: 'Click every where'))
+                      DialogWrapper.show(_container(text: 'Click any where out of this box'))
                         ..animationBeginOffset = const Offset(0.0, -1.0)
                         ..alignment = Alignment.topCenter
                         ..margin = EdgeInsets.only(top: SizeUtil.statuBarHeight)
@@ -241,7 +241,8 @@ class PageOfBasic extends StatelessWidget {
                     ..barrierDismissible = false
                     ..futurePushed.then((value) {
                       Future.delayed(const Duration(seconds: 2), () {
-                        DialogWrapper.dismissTopDialog();
+                        // DialogWrapper.dismissTopDialog();
+                        DialogWrapper.getTopDialog()?.dismiss();
                       });
                     });
                 });
