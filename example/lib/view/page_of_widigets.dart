@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialog_shower/broker/broker.dart';
 import 'package:flutter_dialog_shower/core/dialog_widgets.dart';
 
 class PageOfWidgets extends StatelessWidget {
@@ -29,116 +30,136 @@ class PageOfWidgets extends StatelessWidget {
               DialogWidgets.showLoading(dismissible: true);
             }),
             WidgetsUtil.newXpelTextButton('show success', onPressed: () {
-              DialogWidgets.showSuccess(dismissible: true);
+              DialogWidgets.showSuccess(
+                  dismissible: true,
+                  icon: Container(
+                    width: 90,
+                    height: 90,
+                    padding: const EdgeInsets.only(left: 5, top: 10),
+                    // color: Colors.yellow,
+                    child: CommonStatefulWidgetWithTicker(
+                      initState: (state) {
+                        AnimationController _controller = AnimationController(vsync: state, duration: const Duration(milliseconds: 500));
+                        Broker.setIfAbsent<AnimationController>(_controller, key: '_key_of_yes_animation_controller_');
+                        _controller.forward();
+                        print('Broker.... map initState ${Broker.instance.map}');
+                      },
+                      dispose: (state) {
+                        Broker.remove<AnimationController>('_key_of_yes_animation_controller_')?.dispose();
+                        print('Broker.... map ${Broker.instance.map}');
+                      },
+                      builder: (state, context) {
+                        AnimationController? _controller = Broker.get(key: '_key_of_yes_animation_controller_');
+                        assert(_controller != null, '_controller cannot be null, should init in initState');
+                        return AnimatedBuilder(
+                            animation: _controller!,
+                            builder: (context, snapshot) {
+                              return CustomPaint(
+                                painter: YesIconPainter(width: 90, height: 60, stroke: 16, progress: _controller.value),
+                              );
+                            });
+                      },
+                    ),
+                  ));
             }),
           ],
         ),
         const SizedBox(height: 10),
-        Container(
-          width: 270,
-          height: 180,
-          color: Colors.grey,
-          child: CustomPaint(
-            painter: YesPainter(width: 270, height: 180),
-          ),
-        ),
-
-        const SizedBox(height: 10),
-
-        Container(
-          width: 270,
-          height: 180,
-          color: Colors.grey,
-          child: const YesWidget(),
-        ),
       ],
     );
   }
 }
 
-class YesWidget extends StatefulWidget {
-  const YesWidget({Key? key}) : super(key: key);
+// Convenient Widget for being easy to use
+class CommonStatefulWidget<T extends CommonStatefulWidgetState> extends StatefulWidget {
+  CommonStatefulWidget({Key? key, this.builder, this.initState, this.dispose}) : super(key: key);
+
+  void Function(T state)? initState;
+  void Function(T state)? dispose;
+  Widget Function(T state, BuildContext context)? builder;
+
   @override
-  _YesWidgetState createState() => _YesWidgetState();
+  T createState() => CommonStatefulWidgetState() as T;
 }
 
-class _YesWidgetState extends State<YesWidget> with TickerProviderStateMixin {
-  late AnimationController animationController;
-
+class CommonStatefulWidgetState extends State<CommonStatefulWidget> {
   @override
   void initState() {
+    widget.initState?.call(this);
     super.initState();
+  }
 
-    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 4));
-    animationController.repeat();
+  @override
+  void dispose() {
+    widget.dispose?.call(this);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget child = Container(
-      width: 270,
-      height: 180,
-      color: Colors.grey,
-      child: CustomPaint(
-        painter: YesPainter(width: 270, height: 180, progress: animationController.value),
-      ),
-    );
-    return AnimatedBuilder(
-      child: child,
-      builder: (BuildContext context, Widget? child) {
-        return Transform.rotate(
-          angle: animationController.value * 6.3,
-          child: child,
-        );
-      },
-      animation: animationController,
-    );
-
+    assert(widget.builder != null, 'Cannot provide a null builder !!!');
+    return widget.builder!(this, context);
   }
 }
 
-class YesPainter extends CustomPainter {
+class CommonStatefulWidgetWithTicker extends CommonStatefulWidget {
+  CommonStatefulWidgetWithTicker({Key? key, builder, initState, dispose})
+      : super(key: key, builder: builder, initState: initState, dispose: dispose);
+
+  @override
+  CommonStatefulWidgetWithTickerState createState() => CommonStatefulWidgetWithTickerState();
+}
+
+class CommonStatefulWidgetWithTickerState extends CommonStatefulWidgetState with SingleTickerProviderStateMixin {}
+
+class CommonStatefulWidgetWithTickers extends CommonStatefulWidget {
+  CommonStatefulWidgetWithTickers({Key? key, builder, initState, dispose})
+      : super(key: key, builder: builder, initState: initState, dispose: dispose);
+
+  @override
+  CommonStatefulWidgetWithTickersState createState() => CommonStatefulWidgetWithTickersState();
+}
+
+class CommonStatefulWidgetWithTickersState extends CommonStatefulWidgetState with TickerProviderStateMixin {}
+
+class YesIconPainter extends CustomPainter {
   double width, height;
   double? stroke;
   Color? color;
-
   double? progress;
 
-  YesPainter({required this.width, required this.height, this.stroke, this.color, this.progress});
+  YesIconPainter({required this.width, required this.height, this.stroke, this.color, this.progress = 1.0});
 
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = stroke ?? 30
-      ..color = color ?? Colors.green;
+      ..strokeWidth = stroke ?? 25
+      ..color = color ?? Colors.white;
 
-    // the best ratio is width: height is 3 : 2
-    Path path = Path();
-    double startX = 0;
-    double startY = height / 2;
+    if (progress != null) {
+      double p = progress!;
 
-    path.moveTo(startX, startY);
+      // the best ratio is width: height is 3 : 2
+      Path path = Path();
+      double shortLineX = 0;
+      double shortLineY = height / 2;
+      double shortLineW = width / 3;
 
-    double ratio = (progress ?? 1.0) * 2;
-    double ratio1 = ratio <= 1 ? ratio : 1;
-    double ratio2 = ratio >= 1 ? ratio - 1 : 0;
+      path.moveTo(shortLineX, shortLineY);
 
-    print('>>>>>> $ratio, $ratio1, $ratio2');
+      double ratio = p * 2;
+      double ratioShort = ratio <= 1 ? ratio : 1, ratioLong = ratio >= 1 ? ratio - 1 : 0;
 
-    path.lineTo(startX + (width / 3 - startX) * ratio1, startY + (height - startY) * ratio1);
-
-    if (ratio2 != 0) {
-      path.lineTo(width / 3 + (width - width / 3) * ratio2, height - ratio2 * height);
+      // draw short line & long line
+      path.lineTo(shortLineX + (shortLineW - shortLineX) * ratioShort, shortLineY + (height - shortLineY) * ratioShort);
+      if (ratioLong != 0) {
+        path.lineTo(shortLineW + (width - shortLineW) * ratioLong, height - ratioLong * height);
+      }
+      canvas.drawPath(path, paint);
     }
-
-    // path.close();
-
-    canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(covariant YesPainter oldDelegate) {
-    return oldDelegate.progress != progress;
-  }
+  bool shouldRepaint(covariant YesIconPainter oldDelegate) => oldDelegate.progress != progress;
 }

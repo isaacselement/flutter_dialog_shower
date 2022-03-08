@@ -1,29 +1,57 @@
 class Broker {
-  static final Map<String, Object> _instances = {};
+  /// Class fields & methods below
+  static Broker? _instance;
+
+  static Broker get instance => (_instance ??= Broker());
 
   static void setIfAbsent<T>(T controller, {String? key}) {
-    if (!contains<T>(key: key)) {
-      set<T>(controller);
-    }
+    instance.setIfAbsentI<T>(controller, key: key);
   }
 
   static void set<T>(T controller, {String? key}) {
-    Type t = T;
-    String k = key ?? t.toString();
-    _instances[k] = controller as Object;
+    instance.setI<T>(controller, key: key);
   }
 
   static T? get<T>({String? key}) {
-    Type t = T;
-    String k = key ?? t.toString();
-    return _instances[k] as T?;
+    return instance.getI<T>(key: key);
   }
 
   static bool contains<T>({String? key}) {
-    return _instances.containsKey(key ?? T.toString());
+    return instance.containsI<T>(key: key);
   }
 
-  static dynamic remove(String? key) {
-    return _instances.remove(key);
+  static T? remove<T>(String? key) {
+    return instance.removeI<T>(key);
+  }
+
+  /// Instance fields & methods below
+  Map<String, Object>? _map;
+
+  Map<String, Object> get map => (_map ??= {});
+
+  void setIfAbsentI<T>(T controller, {String? key}) {
+    if (!containsI<T>(key: key)) {
+      setI<T>(controller, key: key);
+    }
+  }
+
+  void setI<T>(T controller, {String? key}) {
+    Type t = T;
+    String k = key ?? t.toString();
+    map[k] = controller as Object;
+  }
+
+  T? getI<T>({String? key}) {
+    Type t = T;
+    String k = key ?? t.toString();
+    return map[k] as T?;
+  }
+
+  bool containsI<T>({String? key}) {
+    return map.containsKey(key ?? T.toString());
+  }
+
+  T? removeI<T>(String? key) {
+    return map.remove(key ?? T.toString()) as T?;
   }
 }

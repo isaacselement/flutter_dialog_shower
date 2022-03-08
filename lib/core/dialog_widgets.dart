@@ -21,16 +21,18 @@ class DialogWidgets {
 
   // Tips Of Loading, Success, Failed
 
-  static DialogShower showFailed({String? text = 'Failed', bool dismissible = true}) {
-    return showTips(icon: iconFailed, text: text)..barrierDismissible = dismissible;
+  static DialogShower showFailed({Widget? icon, String? text = 'Failed', bool dismissible = true}) {
+    Widget? widget = icon ?? iconFailed;
+    return showTips(icon: widget, text: text)..barrierDismissible = dismissible;
   }
 
-  static DialogShower showSuccess({String? text = 'Success', bool dismissible = true}) {
-    return showTips(icon: iconSuccess, text: text)..barrierDismissible = dismissible;
+  static DialogShower showSuccess({Widget? icon, String? text = 'Success', bool dismissible = true}) {
+    Widget? widget = icon ?? iconSuccess;
+    return showTips(icon: widget, text: text)..barrierDismissible = dismissible;
   }
 
-  static DialogShower showLoading({String? text = 'Loading', bool dismissible = false}) {
-    Widget widget = RotateWidget(child: iconLoading ?? GappyCirclePainter.getOneGappyCircle());
+  static DialogShower showLoading({Widget? icon, String? text = 'Loading', bool dismissible = false}) {
+    Widget widget = RotateWidget(child: icon ?? iconLoading ?? GappyCirclePainter.getOneGappyCircle());
     return showTips(icon: widget, text: text)..barrierDismissible = dismissible;
   }
 
