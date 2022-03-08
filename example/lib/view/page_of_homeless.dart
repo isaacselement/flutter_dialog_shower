@@ -1,9 +1,8 @@
 import 'package:example/util/logger.dart';
+import 'package:example/util/widgets_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/event/event_truck.dart';
-
-import 'widgets/button_widgets.dart';
 
 class PageOfHomeless extends StatelessWidget {
   @override
@@ -31,9 +30,9 @@ class PageOfHomeless extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          Row(
+          Wrap(
             children: [
-              XpTextButton('EventTruck', onPressed: (state) {
+              WidgetsUtil.newXpelTextButton('Event Truck Fire', onPressedState: (state) {
                 print('>>>>>>>>>>>>>>>>>> fire');
                 EventTruck.fire('object value');
               }),
