@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 
-class PositionUtil {
+class InsetsUtil {
   static void rebuildShowerPositionTopOnKeyboardEvent(DialogShower shower, bool isKeyboardShow, {double? top}) {
     assert(() {
       print('[PositionUtil] -> rebuildShowerPositionTopOnKeyboardEvent $isKeyboardShow');

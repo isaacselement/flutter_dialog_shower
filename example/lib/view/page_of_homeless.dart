@@ -1,8 +1,6 @@
 import 'package:example/util/logger.dart';
-import 'package:example/view/page_of_keyboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/broker/brother.dart';
 import 'package:flutter_dialog_shower/event/event_truck.dart';
 
 import 'widgets/button_widgets.dart';
@@ -35,7 +33,7 @@ class PageOfHomeless extends StatelessWidget {
         children: [
           Row(
             children: [
-              XpTextButton('EventTruck', onPressed: () {
+              XpTextButton('EventTruck', onPressed: (state) {
                 print('>>>>>>>>>>>>>>>>>> fire');
                 EventTruck.fire('object value');
               }),

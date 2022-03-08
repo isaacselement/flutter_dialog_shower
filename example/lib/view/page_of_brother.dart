@@ -43,7 +43,7 @@ class BrotherBasicView extends StatelessWidget {
         const Text('Basic usage of Btw & btv', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         const Text('Just click icons below', style: TextStyle(fontSize: 15, color: Colors.blueGrey)),
-        Btw(builder: () {
+        Btw(builder: (context) {
           return Wrap(
             spacing: 20,
             children: [
@@ -110,7 +110,7 @@ class BrotherAdvanceView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Btw(builder: () {
+        Btw(builder: (context) {
           updateAllKey.eye; // Put an eye here. Dota/LOL online game 插个眼.
 
           return Column(
@@ -118,7 +118,7 @@ class BrotherAdvanceView extends StatelessWidget {
               const Text('Advanced usage of Btw & btv', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               Btw(
-                builder: () {
+                builder: (context) {
                   String text = changeMeLists.value.isEmpty ? 'Change me [List]' : changeMeLists.value.toString();
                   return InkWell(
                     child: Padding(
@@ -134,7 +134,7 @@ class BrotherAdvanceView extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Btw(
-                builder: () {
+                builder: (context) {
                   String text = changeMeMaps.value.isEmpty ? 'Change me {Map}' : changeMeMaps.value.toString();
                   return InkWell(
                     child: Padding(
@@ -148,7 +148,7 @@ class BrotherAdvanceView extends StatelessWidget {
                   );
                 },
               ),
-              Btw(builder: () {
+              Btw(builder: (context) {
                 return Wrap(
                   spacing: 20,
                   children: [

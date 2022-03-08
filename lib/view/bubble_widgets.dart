@@ -3,11 +3,11 @@ import 'dart:math' as Math;
 import 'package:flutter/material.dart';
 
 class BubbleWidget extends StatelessWidget {
-
   Widget? child;
 
   double width;
   double height;
+  Color? bubbleColor;
   double bubbleRadius;
   Color? bubbleShadowColor;
   double bubbleShadowRadius;
@@ -20,14 +20,15 @@ class BubbleWidget extends StatelessWidget {
     required this.width,
     required this.height,
     this.child,
+    this.bubbleColor = Colors.white,
     this.bubbleRadius = 12.0,
     this.bubbleShadowColor = Colors.grey,
     this.bubbleShadowRadius = 32.0,
     this.bubbleTriangleHeight = 8.0,
-    this.bubbleTriangleWidth  = 12.0,
+    this.bubbleTriangleWidth = 12.0,
     this.bubbleTriangleOffset,
     this.triangleDirection = TriangleArrowDirection.left,
-  }) ;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +67,7 @@ class BubbleWidget extends StatelessWidget {
         triangleHeight: bubbleTriangleHeight,
         triangleDirection: triangleDirection,
         triangleOffset: triangleOffset,
+        paintColor: bubbleColor,
       ),
       child: Container(
         width: width,
@@ -173,8 +175,8 @@ class BubblePainter extends CustomPainter {
     pointsPath.moveTo(leftCircleCenterX, y);
 
     // top line
-    _applyTriangleArrow(
-        pointsPath, PathLinePosition.top, leftCircleCenterX, y, rightCircleCenterX, y, triangleDirection, triangleWidth, triangleHeight, triangleOffset);
+    _applyTriangleArrow(pointsPath, PathLinePosition.top, leftCircleCenterX, y, rightCircleCenterX, y, triangleDirection, triangleWidth,
+        triangleHeight, triangleOffset);
     pointsPath.lineTo(rightCircleCenterX, y);
 
     Rect rect;
@@ -185,8 +187,8 @@ class BubblePainter extends CustomPainter {
     }
 
     // right line
-    _applyTriangleArrow(pointsPath, PathLinePosition.right, x + w, topCircleCenterY, x + w, bottomCircleCenterY, triangleDirection, triangleWidth,
-        triangleHeight, triangleOffset);
+    _applyTriangleArrow(pointsPath, PathLinePosition.right, x + w, topCircleCenterY, x + w, bottomCircleCenterY, triangleDirection,
+        triangleWidth, triangleHeight, triangleOffset);
     pointsPath.lineTo(x + w, bottomCircleCenterY);
 
     if (radius != 0) {
@@ -196,8 +198,8 @@ class BubblePainter extends CustomPainter {
     }
 
     // bottom line
-    _applyTriangleArrow(pointsPath, PathLinePosition.bottom, rightCircleCenterX, y + h, leftCircleCenterX, y + h, triangleDirection, triangleWidth,
-        triangleHeight, triangleOffset);
+    _applyTriangleArrow(pointsPath, PathLinePosition.bottom, rightCircleCenterX, y + h, leftCircleCenterX, y + h, triangleDirection,
+        triangleWidth, triangleHeight, triangleOffset);
     pointsPath.lineTo(leftCircleCenterX, y + h);
 
     if (radius != 0) {

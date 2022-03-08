@@ -32,12 +32,12 @@ extension ExtBtDouble on double {
 
 /// Brother Widgets
 class Btw extends BtWidget {
-  Widget Function() builder;
+  Widget Function(BuildContext context) builder;
 
   Btw({Key? key, required this.builder}) : super(key: key);
 
   @override
-  Widget build() => builder();
+  Widget build(BuildContext context) => builder(context);
 }
 
 abstract class BtWidget extends StatefulWidget {
@@ -47,7 +47,7 @@ abstract class BtWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _BtWidgetState();
 
   @protected
-  Widget build();
+  Widget build(BuildContext context);
 }
 
 class _BtWidgetState extends State<BtWidget> {
@@ -74,7 +74,7 @@ class _BtWidgetState extends State<BtWidget> {
   Widget build(BuildContext context) {
     BtObserver? bak = BtObserver.proxy;
     BtObserver.proxy = observer;
-    Widget view = widget.build();
+    Widget view = widget.build(context);
     BtObserver.proxy = bak;
     if (observer._subscriptions.isEmpty) {
       __brother_error_log__(

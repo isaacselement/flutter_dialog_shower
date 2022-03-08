@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:example/util/position_util.dart';
+import 'package:example/util/insets_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
@@ -93,18 +93,18 @@ class PageOfKeyboard extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('Show right', onPressed: () {
               DialogWrapper.showRight(WidgetsUtil.newEditBox()).keyboardEventCallBack = (shower, isKeyboardShow) {
-                PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
+                InsetsUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
               };
             }),
             WidgetsUtil.newXpelTextButton('x/y Stick Top', onPressed: () {
               DialogWrapper.show(WidgetsUtil.newEditBox(), x: 20, y: 40).keyboardEventCallBack = (shower, isKeyboardShow) {
-                PositionUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
+                InsetsUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
               };
             }),
             WidgetsUtil.newXpelTextButton('x/y Stick Bottom 1', onPressed: () {
               DialogWrapper.show(WidgetsUtil.newEditBox(width: 400, height: 100), x: 20, y: 40).keyboardEventCallBack =
                   (shower, isKeyboardShow) {
-                PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
+                InsetsUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow);
               };
             }),
             WidgetsUtil.newXpelTextButton('x/y Stick Bottom 2', onPressed: () {
@@ -127,7 +127,7 @@ class PageOfKeyboard extends StatelessWidget {
                 y: 40,
               ).keyboardEventCallBack = (shower, isKeyboardShow) {
                 Future.delayed(isKeyboardShow ? const Duration(milliseconds: 200) : const Duration(milliseconds: 50), () {
-                  PositionUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow, bottom: 0);
+                  InsetsUtil.rebuildShowerPositionBottomOnKeyboardEvent(shower, isKeyboardShow, bottom: 0);
                 });
               };
             }),
@@ -272,7 +272,7 @@ class PageOfKeyboard extends StatelessWidget {
         DialogShower shower = topDialog;
         if ((shower.obj == flagStickToTopGlobalSetting || shower.obj is List) && (shower.keyboardEventCallBack == null)) {
           Logger.d('PageOfInfoView 【keyboard visibility】---> come in ...');
-          PositionUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
+          InsetsUtil.rebuildShowerPositionTopOnKeyboardEvent(shower, isKeyboardShow);
         }
       }
     });

@@ -87,12 +87,16 @@ class PageOfBasic extends StatelessWidget {
               shower.animationBeginOffset = const Offset(0.0, 1.0);
               shower.alignment = Alignment.bottomCenter;
               shower.margin = const EdgeInsets.only(bottom: 5);
+              // barrier color
+              shower.barrierColor = const Color(0x4D1C1D21);
             }),
             WidgetsUtil.newXpelTextButton('Show in top', onPressed: () {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(0.0, -1.0);
               shower.alignment = Alignment.topCenter;
               shower.margin = EdgeInsets.only(top: SizeUtil.statuBarHeight);
+              // background color
+              shower.scaffoldBackgroundColor = const Color(0x4D1C1D21);
             }),
             WidgetsUtil.newXpelTextButton('Show with position x y', onPressed: () {
               double x = 20;

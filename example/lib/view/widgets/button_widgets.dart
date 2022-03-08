@@ -14,7 +14,7 @@ class XpTextButton extends StatefulWidget {
   EdgeInsets? padding;
   Alignment? alignment;
 
-  void Function()? onPressed;
+  void Function(State state)? onPressed;
 
   TextStyle? Function(String text, bool isTapingDown)? textStyleBuilder;
   BoxDecoration? Function(String text, bool isTapingDown)? decorationBuilder;
@@ -75,7 +75,7 @@ class _XpTextButtonState extends State<XpTextButton> {
       ),
       onTap: () {
         isTapingDown = false;
-        widget.onPressed?.call();
+        widget.onPressed?.call(this);
       },
       onTapDown: (details) {
         isTapingDown = true;
