@@ -16,11 +16,11 @@ description: A Flutter project. Writted with pure dart, supported both iOS and A
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0
-author: isaacs <isaacselement@gmail.com>
 homepage: https://github.com/isaacselement/flutter_dialog_shower
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.12.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions

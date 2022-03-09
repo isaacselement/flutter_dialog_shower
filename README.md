@@ -11,9 +11,9 @@
 <img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_loading.png" width="30%" height="30%"  />
 </div>
 
-<br/>
+
 ### Build & Run example/lib/main.dart on iOS/Android device for more demostrations
-<br/>
+
 
 
 # DialogShower
