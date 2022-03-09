@@ -3,7 +3,7 @@
 
 <tr>
 
-<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="30%" height="30%" alt="" align=center />
+<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="50%" height="50%" alt="" align=center />
 
 <img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png" width="30%" height="30%" alt="" align=center />
 
