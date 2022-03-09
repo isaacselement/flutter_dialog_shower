@@ -58,12 +58,13 @@ class PageOfWidgets extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('show title icon message', onPressed: () {
               DialogWidgets.showAlert(
-                  width: 360,
-                  height: 240,
-                  padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                  title: 'Attention Please!',
-                  icon: const Icon(Icons.info, size: 100, color: Colors.green),
-                  text: 'A view of the sea when the author was a child made the author invisibly.');
+                width: 360,
+                height: 240,
+                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                title: 'Attention Please!',
+                icon: const Icon(Icons.info, size: 100, color: Colors.green),
+                text: 'A view of the sea when the author was a child made the author invisibly.',
+              ).barrierColor = const Color(0x4D1C1D21);
             }),
             WidgetsUtil.newXpelTextButton('show title icon message with button', onPressed: () {
               DialogWidgets.showAlert(
@@ -75,7 +76,7 @@ class PageOfWidgets extends StatelessWidget {
                 text: 'A view of the sea when the author was a child made the author invisibly.',
                 button1Text: 'OK',
                 button1Event: (D) => DialogWrapper.dismissTopDialog(),
-              ).barrierColor = const Color(0x4D1C1D21);
+              );
             }),
             WidgetsUtil.newXpelTextButton('show notification', onPressed: () {
               DialogWidgets.showAlert(

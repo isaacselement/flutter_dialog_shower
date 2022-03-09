@@ -1,19 +1,19 @@
 
 
-####Bubble menu picker
+#### Bubble menu picker
 <img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="50%" height="50%" alt="" align=center />
 
-####Alert with icon
+#### Alert with icon
 <img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png" width="50%" height="50%" alt="" align=center />
 
-####Loading
+#### Loading
 <img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_loading.png" width="50%" height="50%" alt="" align=center />
 
 
 
-#DialogShower
+# DialogShower
 
-####Simple to use
+##### Simple to use
 
 ```
 DialogShower.init(context);  # init with a root context in your app
@@ -31,9 +31,9 @@ DialogShower shower = DialogShower()
 ```
 
 
-#Brother
+# Brother
 
-#### Update by key for decoupling
+##### 1. Update by key for decoupling
 
 
 ```
@@ -57,7 +57,7 @@ return InkWell(
 
 
 
-### Update by value
+##### 2. Update by value
 
 
 ```
