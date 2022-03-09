@@ -44,7 +44,7 @@ class PageOfBubble extends StatelessWidget {
         const SizedBox(height: 100),
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show My Bottom', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show on My Bottom', onPressedState: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
@@ -56,7 +56,7 @@ class PageOfBubble extends StatelessWidget {
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
-            WidgetsUtil.newXpelTextButton('Show My Top', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show on My Top', onPressedState: (state) {
               // caculate the x & y by your selft here, ensure x >= 0 && y >= 0. I'm just messing around here.
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
@@ -89,7 +89,7 @@ class PageOfBubble extends StatelessWidget {
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
-            WidgetsUtil.newXpelTextButton('Show My Left', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show on My Left', onPressedState: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
@@ -102,7 +102,7 @@ class PageOfBubble extends StatelessWidget {
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
-            WidgetsUtil.newXpelTextButton('Show My Right', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show on My Right', onPressedState: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
