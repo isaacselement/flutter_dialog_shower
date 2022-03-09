@@ -57,7 +57,7 @@ class PageOfBubble extends StatelessWidget {
           shower.transitionBuilder = null;
           shower.containerDecoration = null;
         }),
-        
+
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show on My Bottom', onPressedState: (state) {

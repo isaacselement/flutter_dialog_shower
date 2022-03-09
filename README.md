@@ -1,7 +1,7 @@
 
 
 
-<img style="float: right;" src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="33%" height="33%" />
+<img style="float: right;" src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="30%" height="30%" />
 
 <img style="float: right;" src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png" width="30%" height="30%"  />
 
@@ -74,6 +74,7 @@ return InkWell(
 );
 }
 ```
+
 
 
 
