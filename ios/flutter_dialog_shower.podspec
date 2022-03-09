@@ -4,14 +4,14 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_dialog_shower'
-  s.version          = '0.0.1'
+  s.version          = '1.0.0'
   s.summary          = 'flutter_dialog_shower'
   s.description      = <<-DESC
 Flutter keyboard visibility
                        DESC
   s.homepage         = 'https://github.com/isaacselement/flutter_dialog_shower'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Jason Rai' => 'suchavision@gmail.com' }
+  s.author           = { 'Isaacs' => 'isaacselement@gmail.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
