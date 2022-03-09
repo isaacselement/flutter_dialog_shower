@@ -41,23 +41,7 @@ class PageOfBubble extends StatelessWidget {
   Widget buildButtonsAboutBubble() {
     return Column(
       children: [
-        const SizedBox(height: 200),
-
-        WidgetsUtil.newXpelTextButton('Show on My Top', onPressedState: (state) {
-          // caculate the x & y by your selft here, ensure x >= 0 && y >= 0. I'm just messing around here.
-          Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-          Size size = SizeUtil.getSizeS(state) ?? Size.zero;
-          DialogShower shower = DialogWrapper.show(
-              WidgetsUtil.getMenuBubble(
-                direction: TriangleArrowDirection.bottom,
-              ),
-              x: offset.dx - (242 - size.width) / 2,
-              y: offset.dy - 161);
-
-          shower.transitionBuilder = null;
-          shower.containerDecoration = null;
-        }),
-
+        const SizedBox(height: 100),
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show on My Bottom', onPressedState: (state) {
@@ -73,7 +57,6 @@ class PageOfBubble extends StatelessWidget {
               shower.containerDecoration = null;
             }),
             WidgetsUtil.newXpelTextButton('Show on My Top', onPressedState: (state) {
-              // caculate the x & y by your selft here, ensure x >= 0 && y >= 0. I'm just messing around here.
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
