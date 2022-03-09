@@ -48,7 +48,7 @@ class PageOfNavigator extends StatelessWidget {
                   WidgetsUtil.newClickMeWidget(
                       text: desc,
                       fnClickMe: (context) {
-                        rootBundle.loadString('assets/json/NO.json').then((string) {
+                        rootBundle.loadString('assets/json/CN.json').then((string) {
                           List<dynamic> value = json.decode(string);
                           DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
                               settings: const RouteSettings(name: '__root_route__'));
@@ -61,7 +61,7 @@ class PageOfNavigator extends StatelessWidget {
               DialogWrapper.pushRoot(WidgetsUtil.newClickMeWidget(
                   text: desc,
                   fnClickMe: (context) {
-                    rootBundle.loadString('assets/json/NO.json').then((string) {
+                    rootBundle.loadString('assets/json/CN.json').then((string) {
                       List<dynamic> value = json.decode(string);
                       DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
                           settings: const RouteSettings(name: '__root_route__'));

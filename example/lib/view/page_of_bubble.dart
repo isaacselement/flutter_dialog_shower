@@ -1,22 +1,14 @@
-import 'dart:async';
-
-import 'package:example/util/insets_util.dart';
 import 'package:example/util/offset_util.dart';
 import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
-import 'package:example/view/manager/themes_manager.dart';
-import 'package:example/view/widgets/button_widgets.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/broker/brother.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
-import 'package:flutter_dialog_shower/event/keyboard_event_listener.dart';
 import 'package:flutter_dialog_shower/view/bubble_widgets.dart';
-import 'package:flutter_dialog_shower/view/keyboard_widgets.dart';
 import 'package:flutter_dialog_shower/view/selectable_list_widget.dart';
 
 import '../util/logger.dart';
+import 'widgets/cc_widgets.dart';
 
 class PageOfBubble extends StatelessWidget {
   @override
@@ -37,7 +29,6 @@ class PageOfBubble extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           WidgetsUtil.newHeaderWithGradient('Bubble in shower. Shower in shower'),
           const SizedBox(height: 16),
@@ -52,27 +43,66 @@ class PageOfBubble extends StatelessWidget {
       children: [
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show on My Right', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show My Bottom', onPressedState: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.createMenuBubble(
-                    triOffset: 30.0,
+                  WidgetsUtil.getMenuBubble(
+                    direction: TriangleArrowDirection.top,
                   ),
-                  x: offset.dx + size.width,
+                  x: offset.dx,
+                  y: offset.dy + size.height);
+              shower.transitionBuilder = null;
+              shower.containerDecoration = null;
+            }),
+            WidgetsUtil.newXpelTextButton('Show My Top', onPressedState: (state) {
+              // caculate the x & y by your selft here, ensure x >= 0 && y >= 0. I'm just messing around here.
+              Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+              Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+              DialogShower shower = DialogWrapper.show(
+                  Container(
+                    width: 242,
+                    height: 60,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(
+                          top: -100,
+                          child: WidgetsUtil.getMenuBubble(
+                            direction: TriangleArrowDirection.bottom,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  x: offset.dx - (242 - size.width) / 2,
+                  y: offset.dy - 60);
+              shower.transitionBuilder = null;
+              shower.containerDecoration = null;
+            }),
+            WidgetsUtil.newXpelTextButton('Show My Left', onPressedState: (state) {
+              Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+              Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+              DialogShower shower = DialogWrapper.show(
+                  WidgetsUtil.getMenuBubble(
+                    direction: TriangleArrowDirection.right,
+                    triangleOffset: 30.0,
+                  ),
+                  x: offset.dx - CcMenuPopup.currentMenuPopupWidth,
                   y: offset.dy - 20);
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
-            WidgetsUtil.newXpelTextButton('Show on My Bottom', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show My Right', onPressedState: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.createMenuBubble(
-                    triDirection: TriangleArrowDirection.top,
+                  WidgetsUtil.getMenuBubble(
+                    direction: TriangleArrowDirection.left,
+                    triangleOffset: 30.0,
                   ),
-                  x: offset.dx - 20,
-                  y: offset.dy + size.height);
+                  x: offset.dx + size.width,
+                  y: offset.dy - 20);
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),

@@ -102,4 +102,4 @@ flutter:
         - asset: assets/font/Pacifico-Regular.ttf
 
   assets:
-    - assets/json/NO.json
+    - assets/json/CN.json

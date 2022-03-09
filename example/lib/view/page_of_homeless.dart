@@ -22,10 +22,10 @@ class PageOfHomeless extends StatelessWidget {
   Widget buildContainer() {
     EventTruck.on((object) {
       print('1 >>>>>>>>>>>>>>>>>> $object');
-    }, key: 'id_1');
+    }, key: 'event_key_1');
     EventTruck.on((object) {
       print('2 >>>>>>>>>>>>>>>>>> $object');
-    }, key: 'id_2');
+    }, key: 'event_key_2');
 
     return Container(
       child: Column(

@@ -5,55 +5,61 @@ import 'package:flutter/material.dart';
 class BubbleWidget extends StatelessWidget {
   Widget? child;
 
-  double width;
-  double height;
+  double? width;
+  double? height;
   Color? bubbleColor;
   double bubbleRadius;
   Color? bubbleShadowColor;
   double bubbleShadowRadius;
   double? bubbleTriangleWidth;
-  double bubbleTriangleHeight;
+  double? bubbleTriangleHeight;
   double? bubbleTriangleOffset;
   TriangleArrowDirection triangleDirection;
+  bool isTriangleOccupiedSpace;
 
   BubbleWidget({
-    required this.width,
-    required this.height,
+    Key? key,
+    this.width,
+    this.height,
     this.child,
     this.bubbleColor = Colors.white,
     this.bubbleRadius = 12.0,
     this.bubbleShadowColor = Colors.grey,
     this.bubbleShadowRadius = 32.0,
-    this.bubbleTriangleHeight = 8.0,
-    this.bubbleTriangleWidth = 12.0,
+    this.bubbleTriangleWidth,
+    this.bubbleTriangleHeight,
     this.bubbleTriangleOffset,
     this.triangleDirection = TriangleArrowDirection.left,
-  });
+    this.isTriangleOccupiedSpace = true,
+  }) : super(key: key) {
+    _bubbleTriangleWidth = bubbleTriangleWidth ?? 12.0;
+    _bubbleTriangleHeight = bubbleTriangleHeight ?? 8.0;
+  }
+
+  double _bubbleTriangleWidth = 12.0;
+  double _bubbleTriangleHeight = 8.0;
 
   @override
   Widget build(BuildContext context) {
-    double triangleOffset = width / 2;
-    if (triangleDirection == TriangleArrowDirection.left || triangleDirection == TriangleArrowDirection.right) {
-      triangleOffset = height / 2 - bubbleTriangleWidth! / 2 - bubbleRadius;
-    } else if (triangleDirection == TriangleArrowDirection.top || triangleDirection == TriangleArrowDirection.bottom) {
-      triangleOffset = width / 2 - bubbleTriangleWidth! / 2 - bubbleRadius;
+    double px = 0;
+    double py = 0;
+    EdgeInsets margin = EdgeInsets.zero;
+    // default triangle is on stage, that means it take position/occupy space
+    if (isTriangleOccupiedSpace) {
+      if (triangleDirection == TriangleArrowDirection.left) {
+        px = _bubbleTriangleHeight;
+        margin = EdgeInsets.only(left: _bubbleTriangleHeight);
+      } else if (triangleDirection == TriangleArrowDirection.top) {
+        py = _bubbleTriangleHeight;
+        margin = EdgeInsets.only(top: _bubbleTriangleHeight);
+      } else if (triangleDirection == TriangleArrowDirection.right) {
+        margin = EdgeInsets.only(right: _bubbleTriangleHeight);
+      } else if (triangleDirection == TriangleArrowDirection.bottom) {
+        margin = EdgeInsets.only(bottom: _bubbleTriangleHeight);
+      }
     }
-    triangleOffset = bubbleTriangleOffset ?? triangleOffset;
 
-    EdgeInsets innerMargin = EdgeInsets.zero;
-    if (triangleDirection == TriangleArrowDirection.left) {
-      innerMargin = EdgeInsets.only(left: bubbleTriangleHeight);
-    } else if (triangleDirection == TriangleArrowDirection.top) {
-      innerMargin = EdgeInsets.only(top: bubbleTriangleHeight);
-    } else if (triangleDirection == TriangleArrowDirection.right) {
-      innerMargin = EdgeInsets.only(right: bubbleTriangleHeight);
-    } else if (triangleDirection == TriangleArrowDirection.bottom) {
-      innerMargin = EdgeInsets.only(bottom: bubbleTriangleHeight);
-    }
-
-    double px = triangleDirection == TriangleArrowDirection.left ? bubbleTriangleHeight : 0;
-    double py = triangleDirection == TriangleArrowDirection.top ? bubbleTriangleHeight : 0;
-
+    // CustomPaint as parent
     return CustomPaint(
       painter: BubblePainter(
         x: px,
@@ -61,26 +67,26 @@ class BubbleWidget extends StatelessWidget {
         w: width,
         h: height,
         radius: bubbleRadius,
+        paintColor: bubbleColor,
         shadowColor: bubbleShadowColor,
         shadowBlurRadius: bubbleShadowRadius,
-        triangleWidth: bubbleTriangleWidth!,
-        triangleHeight: bubbleTriangleHeight,
+        triangleWidth: _bubbleTriangleWidth,
+        triangleHeight: _bubbleTriangleHeight,
         triangleDirection: triangleDirection,
-        triangleOffset: triangleOffset,
-        paintColor: bubbleColor,
+        triangleOffset: bubbleTriangleOffset,
+        isTriangleOccupiedSpace: isTriangleOccupiedSpace,
       ),
       child: Container(
         width: width,
         height: height,
-        margin: innerMargin,
+        margin: margin,
         clipBehavior: Clip.antiAlias,
-        alignment: Alignment.center,
         decoration: BoxDecoration(
           // color: Colors.red,
           // border: Border.all(color: Colors.greenAccent),
           borderRadius: BorderRadius.all(Radius.circular(bubbleRadius)),
         ),
-        child: child ?? const Offstage(offstage: true),
+        child: child,
       ),
     );
   }
@@ -94,33 +100,35 @@ enum PathLinePosition { top, right, bottom, left }
 class BubblePainter extends CustomPainter {
   double x;
   double y;
-  double w;
-  double h;
-  double radius;
+  double? w;
+  double? h;
+  double? radius;
 
   double triangleWidth = 0;
   double triangleHeight = 0;
-  double triangleOffset = 0;
+  double? triangleOffset; // null for in the center
   TriangleArrowDirection triangleDirection = TriangleArrowDirection.top;
+  bool isTriangleOccupiedSpace;
 
   Color? shadowColor;
-  Offset shadowOffset;
-  double shadowBlurRadius;
-  double shadowSpreadRadius;
+  Offset? shadowOffset;
+  double? shadowBlurRadius;
+  double? shadowSpreadRadius;
 
   Color? paintColor;
 
   BubblePainter({
     required this.x,
     required this.y,
-    required this.w,
-    required this.h,
+    this.w,
+    this.h,
     this.radius = 0,
     this.triangleWidth = 0,
     this.triangleHeight = 0,
-    this.triangleOffset = 0,
+    this.triangleOffset,
     this.triangleDirection = TriangleArrowDirection.top,
-    this.shadowColor,
+    this.isTriangleOccupiedSpace = true,
+    this.shadowColor = Colors.grey,
     this.shadowOffset = Offset.zero,
     this.shadowBlurRadius = 10,
     this.shadowSpreadRadius = 0,
@@ -164,58 +172,74 @@ class BubblePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    double _w = w ?? (isTriangleOccupiedSpace ? size.width - triangleWidth : size.width);
+    double _h = h ?? (isTriangleOccupiedSpace ? size.height - triangleHeight : size.height);
+    double _radius = radius ?? 0;
+
     Path pointsPath = Path();
 
-    double leftCircleCenterX = x + radius;
-    double rightCircleCenterX = x + w - radius;
-    double topCircleCenterY = y + radius;
-    double bottomCircleCenterY = y + h - radius;
+    double leftCircleCenterX = x + _radius;
+    double rightCircleCenterX = x + _w - _radius;
+    double topCircleCenterY = y + _radius;
+    double bottomCircleCenterY = y + _h - _radius;
+
+    // make triangle is in center or by custom
+    double _triangleOffset = 0;
+    if (triangleOffset == null) {
+      if (triangleDirection == TriangleArrowDirection.left || triangleDirection == TriangleArrowDirection.right) {
+        _triangleOffset = _h / 2 - triangleWidth / 2 - _radius;
+      } else if (triangleDirection == TriangleArrowDirection.top || triangleDirection == TriangleArrowDirection.bottom) {
+        _triangleOffset = _w / 2 - triangleWidth / 2 - _radius;
+      }
+    } else {
+      _triangleOffset = triangleOffset!;
+    }
 
     // start from original point
     pointsPath.moveTo(leftCircleCenterX, y);
 
     // top line
     _applyTriangleArrow(pointsPath, PathLinePosition.top, leftCircleCenterX, y, rightCircleCenterX, y, triangleDirection, triangleWidth,
-        triangleHeight, triangleOffset);
+        triangleHeight, _triangleOffset);
     pointsPath.lineTo(rightCircleCenterX, y);
 
     Rect rect;
     if (radius != 0) {
       // top right arc
-      rect = Rect.fromCircle(center: Offset(rightCircleCenterX, topCircleCenterY), radius: radius);
+      rect = Rect.fromCircle(center: Offset(rightCircleCenterX, topCircleCenterY), radius: _radius);
       pointsPath.arcTo(rect, Math.pi * -0.5, Math.pi * 0.5, false);
     }
 
     // right line
-    _applyTriangleArrow(pointsPath, PathLinePosition.right, x + w, topCircleCenterY, x + w, bottomCircleCenterY, triangleDirection,
-        triangleWidth, triangleHeight, triangleOffset);
-    pointsPath.lineTo(x + w, bottomCircleCenterY);
+    _applyTriangleArrow(pointsPath, PathLinePosition.right, x + _w, topCircleCenterY, x + _w, bottomCircleCenterY, triangleDirection,
+        triangleWidth, triangleHeight, _triangleOffset);
+    pointsPath.lineTo(x + _w, bottomCircleCenterY);
 
     if (radius != 0) {
       // bottom right arc
-      rect = Rect.fromCircle(center: Offset(rightCircleCenterX, bottomCircleCenterY), radius: radius);
+      rect = Rect.fromCircle(center: Offset(rightCircleCenterX, bottomCircleCenterY), radius: _radius);
       pointsPath.arcTo(rect, Math.pi * 0, Math.pi * 0.5, false);
     }
 
     // bottom line
-    _applyTriangleArrow(pointsPath, PathLinePosition.bottom, rightCircleCenterX, y + h, leftCircleCenterX, y + h, triangleDirection,
-        triangleWidth, triangleHeight, triangleOffset);
-    pointsPath.lineTo(leftCircleCenterX, y + h);
+    _applyTriangleArrow(pointsPath, PathLinePosition.bottom, rightCircleCenterX, y + _h, leftCircleCenterX, y + _h, triangleDirection,
+        triangleWidth, triangleHeight, _triangleOffset);
+    pointsPath.lineTo(leftCircleCenterX, y + _h);
 
     if (radius != 0) {
       // bottom left arc
-      rect = Rect.fromCircle(center: Offset(leftCircleCenterX, bottomCircleCenterY), radius: radius);
+      rect = Rect.fromCircle(center: Offset(leftCircleCenterX, bottomCircleCenterY), radius: _radius);
       pointsPath.arcTo(rect, Math.pi * 0.5, Math.pi * 0.5, false);
     }
 
     // left line
     _applyTriangleArrow(pointsPath, PathLinePosition.left, x, bottomCircleCenterY, x, topCircleCenterY, triangleDirection, triangleWidth,
-        triangleHeight, triangleOffset);
+        triangleHeight, _triangleOffset);
     pointsPath.lineTo(x, topCircleCenterY);
 
     if (radius != 0) {
       // top left arc
-      rect = Rect.fromCircle(center: Offset(leftCircleCenterX, topCircleCenterY), radius: radius);
+      rect = Rect.fromCircle(center: Offset(leftCircleCenterX, topCircleCenterY), radius: _radius);
       pointsPath.arcTo(rect, Math.pi * -1, Math.pi * 0.5, false);
     }
 
@@ -235,10 +259,10 @@ class BubblePainter extends CustomPainter {
     // 1. first draw shadow
     if (shadowColor != null) {
       BoxShadow boxShadow = BoxShadow(
-        color: shadowColor!,
-        offset: shadowOffset,
-        blurRadius: shadowBlurRadius,
-        spreadRadius: shadowSpreadRadius,
+        color: shadowColor ?? Colors.grey,
+        offset: shadowOffset ?? Offset.zero,
+        blurRadius: shadowBlurRadius ?? 10.0,
+        spreadRadius: shadowSpreadRadius ?? 0.0,
       );
       Paint boxShadowPaint = boxShadow.toPaint();
       canvas.drawPath(pointsPath, boxShadowPaint);

@@ -1,0 +1,3378 @@
+[
+  {
+    "areaCode": "150000",
+    "areaName": "内蒙古自治区",
+    "children": [
+      {
+        "areaCode": "150100",
+        "areaName": "呼和浩特市",
+        "children": [
+          {
+            "areaCode": "150102",
+            "areaName": "新城区",
+            "children": null
+          },
+          {
+            "areaCode": "150103",
+            "areaName": "回民区",
+            "children": null
+          },
+          {
+            "areaCode": "150104",
+            "areaName": "玉泉区",
+            "children": null
+          },
+          {
+            "areaCode": "150105",
+            "areaName": "赛罕区",
+            "children": null
+          },
+          {
+            "areaCode": "150121",
+            "areaName": "土默特左旗",
+            "children": null
+          },
+          {
+            "areaCode": "150122",
+            "areaName": "托克托县",
+            "children": null
+          },
+          {
+            "areaCode": "150123",
+            "areaName": "和林格尔县",
+            "children": null
+          },
+          {
+            "areaCode": "150124",
+            "areaName": "清水河县",
+            "children": null
+          },
+          {
+            "areaCode": "150125",
+            "areaName": "武川县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "150200",
+        "areaName": "包头市",
+        "children": [
+          {
+            "areaCode": "150202",
+            "areaName": "东河区",
+            "children": null
+          },
+          {
+            "areaCode": "150203",
+            "areaName": "昆都仑区",
+            "children": null
+          },
+          {
+            "areaCode": "150204",
+            "areaName": "青山区",
+            "children": null
+          },
+          {
+            "areaCode": "150205",
+            "areaName": "石拐区",
+            "children": null
+          },
+          {
+            "areaCode": "150206",
+            "areaName": "白云鄂博矿区",
+            "children": null
+          },
+          {
+            "areaCode": "150207",
+            "areaName": "九原区",
+            "children": null
+          },
+          {
+            "areaCode": "150221",
+            "areaName": "土默特右旗",
+            "children": null
+          },
+          {
+            "areaCode": "150222",
+            "areaName": "固阳县",
+            "children": null
+          },
+          {
+            "areaCode": "150223",
+            "areaName": "达尔罕茂明安联合旗",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "150300",
+        "areaName": "乌海市",
+        "children": [
+          {
+            "areaCode": "150302",
+            "areaName": "海勃湾区",
+            "children": null
+          },
+          {
+            "areaCode": "150303",
+            "areaName": "海南区",
+            "children": null
+          },
+          {
+            "areaCode": "150304",
+            "areaName": "乌达区",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "150400",
+        "areaName": "赤峰市",
+        "children": [
+          {
+            "areaCode": "150402",
+            "areaName": "红山区",
+            "children": null
+          },
+          {
+            "areaCode": "150403",
+            "areaName": "元宝山区",
+            "children": null
+          },
+          {
+            "areaCode": "150404",
+            "areaName": "松山区",
+            "children": null
+          },
+          {
+            "areaCode": "150421",
+            "areaName": "阿鲁科尔沁旗",
+            "children": null
+          },
+          {
+            "areaCode": "150422",
+            "areaName": "巴林左旗",
+            "children": null
+          },
+          {
+            "areaCode": "150423",
+            "areaName": "巴林右旗",
+            "children": null
+          },
+          {
+            "areaCode": "150424",
+            "areaName": "林西县",
+            "children": null
+          },
+          {
+            "areaCode": "150425",
+            "areaName": "克什克腾旗",
+            "children": null
+          },
+          {
+            "areaCode": "150426",
+            "areaName": "翁牛特旗",
+            "children": null
+          },
+          {
+            "areaCode": "150428",
+            "areaName": "喀喇沁旗",
+            "children": null
+          },
+          {
+            "areaCode": "150429",
+            "areaName": "宁城县",
+            "children": null
+          },
+          {
+            "areaCode": "150430",
+            "areaName": "敖汉旗",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "150500",
+        "areaName": "通辽市",
+        "children": [
+          {
+            "areaCode": "150502",
+            "areaName": "科尔沁区",
+            "children": null
+          },
+          {
+            "areaCode": "150521",
+            "areaName": "科尔沁左翼中旗",
+            "children": null
+          },
+          {
+            "areaCode": "150522",
+            "areaName": "科尔沁左翼后旗",
+            "children": null
+          },
+          {
+            "areaCode": "150523",
+            "areaName": "开鲁县",
+            "children": null
+          },
+          {
+            "areaCode": "150524",
+            "areaName": "库伦旗",
+            "children": null
+          },
+          {
+            "areaCode": "150525",
+            "areaName": "奈曼旗",
+            "children": null
+          },
+          {
+            "areaCode": "150526",
+            "areaName": "扎鲁特旗",
+            "children": null
+          },
+          {
+            "areaCode": "150581",
+            "areaName": "霍林郭勒市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "150600",
+        "areaName": "鄂尔多斯市",
+        "children": [
+          {
+            "areaCode": "150602",
+            "areaName": "东胜区",
+            "children": null
+          },
+          {
+            "areaCode": "150603",
+            "areaName": "康巴什区",
+            "children": null
+          },
+          {
+            "areaCode": "150621",
+            "areaName": "达拉特旗",
+            "children": null
+          },
+          {
+            "areaCode": "150622",
+            "areaName": "准格尔旗",
+            "children": null
+          },
+          {
+            "areaCode": "150623",
+            "areaName": "鄂托克前旗",
+            "children": null
+          },
+          {
+            "areaCode": "150624",
+            "areaName": "鄂托克旗",
+            "children": null
+          },
+          {
+            "areaCode": "150625",
+            "areaName": "杭锦旗",
+            "children": null
+          },
+          {
+            "areaCode": "150626",
+            "areaName": "乌审旗",
+            "children": null
+          },
+          {
+            "areaCode": "150627",
+            "areaName": "伊金霍洛旗",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "150700",
+        "areaName": "呼伦贝尔市",
+        "children": [
+          {
+            "areaCode": "150702",
+            "areaName": "海拉尔区",
+            "children": null
+          },
+          {
+            "areaCode": "150703",
+            "areaName": "扎赉诺尔区",
+            "children": null
+          },
+          {
+            "areaCode": "150721",
+            "areaName": "阿荣旗",
+            "children": null
+          },
+          {
+            "areaCode": "150722",
+            "areaName": "莫力达瓦达斡尔族自治旗",
+            "children": null
+          },
+          {
+            "areaCode": "150723",
+            "areaName": "鄂伦春自治旗",
+            "children": null
+          },
+          {
+            "areaCode": "150724",
+            "areaName": "鄂温克族自治旗",
+            "children": null
+          },
+          {
+            "areaCode": "150725",
+            "areaName": "陈巴尔虎旗",
+            "children": null
+          },
+          {
+            "areaCode": "150726",
+            "areaName": "新巴尔虎左旗",
+            "children": null
+          },
+          {
+            "areaCode": "150727",
+            "areaName": "新巴尔虎右旗",
+            "children": null
+          },
+          {
+            "areaCode": "150781",
+            "areaName": "满洲里市",
+            "children": null
+          },
+          {
+            "areaCode": "150782",
+            "areaName": "牙克石市",
+            "children": null
+          },
+          {
+            "areaCode": "150783",
+            "areaName": "扎兰屯市",
+            "children": null
+          },
+          {
+            "areaCode": "150784",
+            "areaName": "额尔古纳市",
+            "children": null
+          },
+          {
+            "areaCode": "150785",
+            "areaName": "根河市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "150800",
+        "areaName": "巴彦淖尔市",
+        "children": [
+          {
+            "areaCode": "150802",
+            "areaName": "临河区",
+            "children": null
+          },
+          {
+            "areaCode": "150821",
+            "areaName": "五原县",
+            "children": null
+          },
+          {
+            "areaCode": "150822",
+            "areaName": "磴口县",
+            "children": null
+          },
+          {
+            "areaCode": "150823",
+            "areaName": "乌拉特前旗",
+            "children": null
+          },
+          {
+            "areaCode": "150824",
+            "areaName": "乌拉特中旗",
+            "children": null
+          },
+          {
+            "areaCode": "150825",
+            "areaName": "乌拉特后旗",
+            "children": null
+          },
+          {
+            "areaCode": "150826",
+            "areaName": "杭锦后旗",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "150900",
+        "areaName": "乌兰察布市",
+        "children": [
+          {
+            "areaCode": "150902",
+            "areaName": "集宁区",
+            "children": null
+          },
+          {
+            "areaCode": "150921",
+            "areaName": "卓资县",
+            "children": null
+          },
+          {
+            "areaCode": "150922",
+            "areaName": "化德县",
+            "children": null
+          },
+          {
+            "areaCode": "150923",
+            "areaName": "商都县",
+            "children": null
+          },
+          {
+            "areaCode": "150924",
+            "areaName": "兴和县",
+            "children": null
+          },
+          {
+            "areaCode": "150925",
+            "areaName": "凉城县",
+            "children": null
+          },
+          {
+            "areaCode": "150926",
+            "areaName": "察哈尔右翼前旗",
+            "children": null
+          },
+          {
+            "areaCode": "150927",
+            "areaName": "察哈尔右翼中旗",
+            "children": null
+          },
+          {
+            "areaCode": "150928",
+            "areaName": "察哈尔右翼后旗",
+            "children": null
+          },
+          {
+            "areaCode": "150929",
+            "areaName": "四子王旗",
+            "children": null
+          },
+          {
+            "areaCode": "150981",
+            "areaName": "丰镇市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "152200",
+        "areaName": "兴安盟",
+        "children": [
+          {
+            "areaCode": "152201",
+            "areaName": "乌兰浩特市",
+            "children": null
+          },
+          {
+            "areaCode": "152202",
+            "areaName": "阿尔山市",
+            "children": null
+          },
+          {
+            "areaCode": "152221",
+            "areaName": "科尔沁右翼前旗",
+            "children": null
+          },
+          {
+            "areaCode": "152222",
+            "areaName": "科尔沁右翼中旗",
+            "children": null
+          },
+          {
+            "areaCode": "152223",
+            "areaName": "扎赉特旗",
+            "children": null
+          },
+          {
+            "areaCode": "152224",
+            "areaName": "突泉县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "152500",
+        "areaName": "锡林郭勒盟",
+        "children": [
+          {
+            "areaCode": "152501",
+            "areaName": "二连浩特市",
+            "children": null
+          },
+          {
+            "areaCode": "152502",
+            "areaName": "锡林浩特市",
+            "children": null
+          },
+          {
+            "areaCode": "152522",
+            "areaName": "阿巴嘎旗",
+            "children": null
+          },
+          {
+            "areaCode": "152523",
+            "areaName": "苏尼特左旗",
+            "children": null
+          },
+          {
+            "areaCode": "152524",
+            "areaName": "苏尼特右旗",
+            "children": null
+          },
+          {
+            "areaCode": "152525",
+            "areaName": "东乌珠穆沁旗",
+            "children": null
+          },
+          {
+            "areaCode": "152526",
+            "areaName": "西乌珠穆沁旗",
+            "children": null
+          },
+          {
+            "areaCode": "152527",
+            "areaName": "太仆寺旗",
+            "children": null
+          },
+          {
+            "areaCode": "152528",
+            "areaName": "镶黄旗",
+            "children": null
+          },
+          {
+            "areaCode": "152529",
+            "areaName": "正镶白旗",
+            "children": null
+          },
+          {
+            "areaCode": "152530",
+            "areaName": "正蓝旗",
+            "children": null
+          },
+          {
+            "areaCode": "152531",
+            "areaName": "多伦县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "152900",
+        "areaName": "阿拉善盟",
+        "children": [
+          {
+            "areaCode": "152921",
+            "areaName": "阿拉善左旗",
+            "children": null
+          },
+          {
+            "areaCode": "152922",
+            "areaName": "阿拉善右旗",
+            "children": null
+          },
+          {
+            "areaCode": "152923",
+            "areaName": "额济纳旗",
+            "children": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "areaCode": "210000",
+    "areaName": "辽宁省",
+    "children": [
+      {
+        "areaCode": "210100",
+        "areaName": "沈阳市",
+        "children": [
+          {
+            "areaCode": "210102",
+            "areaName": "和平区",
+            "children": null
+          },
+          {
+            "areaCode": "210103",
+            "areaName": "沈河区",
+            "children": null
+          },
+          {
+            "areaCode": "210104",
+            "areaName": "大东区",
+            "children": null
+          },
+          {
+            "areaCode": "210105",
+            "areaName": "皇姑区",
+            "children": null
+          },
+          {
+            "areaCode": "210106",
+            "areaName": "铁西区",
+            "children": null
+          },
+          {
+            "areaCode": "210111",
+            "areaName": "苏家屯区",
+            "children": null
+          },
+          {
+            "areaCode": "210112",
+            "areaName": "浑南区",
+            "children": null
+          },
+          {
+            "areaCode": "210113",
+            "areaName": "沈北新区",
+            "children": null
+          },
+          {
+            "areaCode": "210114",
+            "areaName": "于洪区",
+            "children": null
+          },
+          {
+            "areaCode": "210115",
+            "areaName": "辽中区",
+            "children": null
+          },
+          {
+            "areaCode": "210123",
+            "areaName": "康平县",
+            "children": null
+          },
+          {
+            "areaCode": "210124",
+            "areaName": "法库县",
+            "children": null
+          },
+          {
+            "areaCode": "210181",
+            "areaName": "新民市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "210200",
+        "areaName": "大连市",
+        "children": [
+          {
+            "areaCode": "210202",
+            "areaName": "中山区",
+            "children": null
+          },
+          {
+            "areaCode": "210203",
+            "areaName": "西岗区",
+            "children": null
+          },
+          {
+            "areaCode": "210204",
+            "areaName": "沙河口区",
+            "children": null
+          },
+          {
+            "areaCode": "210211",
+            "areaName": "甘井子区",
+            "children": null
+          },
+          {
+            "areaCode": "210212",
+            "areaName": "旅顺口区",
+            "children": null
+          },
+          {
+            "areaCode": "210213",
+            "areaName": "金州区",
+            "children": null
+          },
+          {
+            "areaCode": "210214",
+            "areaName": "普兰店区",
+            "children": null
+          },
+          {
+            "areaCode": "210224",
+            "areaName": "长海县",
+            "children": null
+          },
+          {
+            "areaCode": "210281",
+            "areaName": "瓦房店市",
+            "children": null
+          },
+          {
+            "areaCode": "210283",
+            "areaName": "庄河市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "210300",
+        "areaName": "鞍山市",
+        "children": [
+          {
+            "areaCode": "210302",
+            "areaName": "铁东区",
+            "children": null
+          },
+          {
+            "areaCode": "210303",
+            "areaName": "铁西区",
+            "children": null
+          },
+          {
+            "areaCode": "210304",
+            "areaName": "立山区",
+            "children": null
+          },
+          {
+            "areaCode": "210311",
+            "areaName": "千山区",
+            "children": null
+          },
+          {
+            "areaCode": "210321",
+            "areaName": "台安县",
+            "children": null
+          },
+          {
+            "areaCode": "210323",
+            "areaName": "岫岩满族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "210381",
+            "areaName": "海城市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "210400",
+        "areaName": "抚顺市",
+        "children": [
+          {
+            "areaCode": "210402",
+            "areaName": "新抚区",
+            "children": null
+          },
+          {
+            "areaCode": "210403",
+            "areaName": "东洲区",
+            "children": null
+          },
+          {
+            "areaCode": "210404",
+            "areaName": "望花区",
+            "children": null
+          },
+          {
+            "areaCode": "210411",
+            "areaName": "顺城区",
+            "children": null
+          },
+          {
+            "areaCode": "210421",
+            "areaName": "抚顺县",
+            "children": null
+          },
+          {
+            "areaCode": "210422",
+            "areaName": "新宾满族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "210423",
+            "areaName": "清原满族自治县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "210500",
+        "areaName": "本溪市",
+        "children": [
+          {
+            "areaCode": "210502",
+            "areaName": "平山区",
+            "children": null
+          },
+          {
+            "areaCode": "210503",
+            "areaName": "溪湖区",
+            "children": null
+          },
+          {
+            "areaCode": "210504",
+            "areaName": "明山区",
+            "children": null
+          },
+          {
+            "areaCode": "210505",
+            "areaName": "南芬区",
+            "children": null
+          },
+          {
+            "areaCode": "210521",
+            "areaName": "本溪满族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "210522",
+            "areaName": "桓仁满族自治县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "210600",
+        "areaName": "丹东市",
+        "children": [
+          {
+            "areaCode": "210602",
+            "areaName": "元宝区",
+            "children": null
+          },
+          {
+            "areaCode": "210603",
+            "areaName": "振兴区",
+            "children": null
+          },
+          {
+            "areaCode": "210604",
+            "areaName": "振安区",
+            "children": null
+          },
+          {
+            "areaCode": "210624",
+            "areaName": "宽甸满族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "210681",
+            "areaName": "东港市",
+            "children": null
+          },
+          {
+            "areaCode": "210682",
+            "areaName": "凤城市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "210700",
+        "areaName": "锦州市",
+        "children": [
+          {
+            "areaCode": "210702",
+            "areaName": "古塔区",
+            "children": null
+          },
+          {
+            "areaCode": "210703",
+            "areaName": "凌河区",
+            "children": null
+          },
+          {
+            "areaCode": "210711",
+            "areaName": "太和区",
+            "children": null
+          },
+          {
+            "areaCode": "210726",
+            "areaName": "黑山县",
+            "children": null
+          },
+          {
+            "areaCode": "210727",
+            "areaName": "义县",
+            "children": null
+          },
+          {
+            "areaCode": "210781",
+            "areaName": "凌海市",
+            "children": null
+          },
+          {
+            "areaCode": "210782",
+            "areaName": "北镇市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "210800",
+        "areaName": "营口市",
+        "children": [
+          {
+            "areaCode": "210802",
+            "areaName": "站前区",
+            "children": null
+          },
+          {
+            "areaCode": "210803",
+            "areaName": "西市区",
+            "children": null
+          },
+          {
+            "areaCode": "210804",
+            "areaName": "鲅鱼圈区",
+            "children": null
+          },
+          {
+            "areaCode": "210811",
+            "areaName": "老边区",
+            "children": null
+          },
+          {
+            "areaCode": "210881",
+            "areaName": "盖州市",
+            "children": null
+          },
+          {
+            "areaCode": "210882",
+            "areaName": "大石桥市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "210900",
+        "areaName": "阜新市",
+        "children": [
+          {
+            "areaCode": "210902",
+            "areaName": "海州区",
+            "children": null
+          },
+          {
+            "areaCode": "210903",
+            "areaName": "新邱区",
+            "children": null
+          },
+          {
+            "areaCode": "210904",
+            "areaName": "太平区",
+            "children": null
+          },
+          {
+            "areaCode": "210905",
+            "areaName": "清河门区",
+            "children": null
+          },
+          {
+            "areaCode": "210911",
+            "areaName": "细河区",
+            "children": null
+          },
+          {
+            "areaCode": "210921",
+            "areaName": "阜新蒙古族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "210922",
+            "areaName": "彰武县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "211000",
+        "areaName": "辽阳市",
+        "children": [
+          {
+            "areaCode": "211002",
+            "areaName": "白塔区",
+            "children": null
+          },
+          {
+            "areaCode": "211003",
+            "areaName": "文圣区",
+            "children": null
+          },
+          {
+            "areaCode": "211004",
+            "areaName": "宏伟区",
+            "children": null
+          },
+          {
+            "areaCode": "211005",
+            "areaName": "弓长岭区",
+            "children": null
+          },
+          {
+            "areaCode": "211011",
+            "areaName": "太子河区",
+            "children": null
+          },
+          {
+            "areaCode": "211021",
+            "areaName": "辽阳县",
+            "children": null
+          },
+          {
+            "areaCode": "211081",
+            "areaName": "灯塔市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "211100",
+        "areaName": "盘锦市",
+        "children": [
+          {
+            "areaCode": "211102",
+            "areaName": "双台子区",
+            "children": null
+          },
+          {
+            "areaCode": "211103",
+            "areaName": "兴隆台区",
+            "children": null
+          },
+          {
+            "areaCode": "211104",
+            "areaName": "大洼区",
+            "children": null
+          },
+          {
+            "areaCode": "211122",
+            "areaName": "盘山县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "211200",
+        "areaName": "铁岭市",
+        "children": [
+          {
+            "areaCode": "211202",
+            "areaName": "银州区",
+            "children": null
+          },
+          {
+            "areaCode": "211204",
+            "areaName": "清河区",
+            "children": null
+          },
+          {
+            "areaCode": "211221",
+            "areaName": "铁岭县",
+            "children": null
+          },
+          {
+            "areaCode": "211223",
+            "areaName": "西丰县",
+            "children": null
+          },
+          {
+            "areaCode": "211224",
+            "areaName": "昌图县",
+            "children": null
+          },
+          {
+            "areaCode": "211281",
+            "areaName": "调兵山市",
+            "children": null
+          },
+          {
+            "areaCode": "211282",
+            "areaName": "开原市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "211300",
+        "areaName": "朝阳市",
+        "children": [
+          {
+            "areaCode": "211302",
+            "areaName": "双塔区",
+            "children": null
+          },
+          {
+            "areaCode": "211303",
+            "areaName": "龙城区",
+            "children": null
+          },
+          {
+            "areaCode": "211321",
+            "areaName": "朝阳县",
+            "children": null
+          },
+          {
+            "areaCode": "211322",
+            "areaName": "建平县",
+            "children": null
+          },
+          {
+            "areaCode": "211324",
+            "areaName": "喀喇沁左翼蒙古族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "211381",
+            "areaName": "北票市",
+            "children": null
+          },
+          {
+            "areaCode": "211382",
+            "areaName": "凌源市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "211400",
+        "areaName": "葫芦岛市",
+        "children": [
+          {
+            "areaCode": "211402",
+            "areaName": "连山区",
+            "children": null
+          },
+          {
+            "areaCode": "211403",
+            "areaName": "龙港区",
+            "children": null
+          },
+          {
+            "areaCode": "211404",
+            "areaName": "南票区",
+            "children": null
+          },
+          {
+            "areaCode": "211421",
+            "areaName": "绥中县",
+            "children": null
+          },
+          {
+            "areaCode": "211422",
+            "areaName": "建昌县",
+            "children": null
+          },
+          {
+            "areaCode": "211481",
+            "areaName": "兴城市",
+            "children": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "areaCode": "220000",
+    "areaName": "吉林省",
+    "children": [
+      {
+        "areaCode": "220100",
+        "areaName": "长春市",
+        "children": [
+          {
+            "areaCode": "220102",
+            "areaName": "南关区",
+            "children": null
+          },
+          {
+            "areaCode": "220103",
+            "areaName": "宽城区",
+            "children": null
+          },
+          {
+            "areaCode": "220104",
+            "areaName": "朝阳区",
+            "children": null
+          },
+          {
+            "areaCode": "220105",
+            "areaName": "二道区",
+            "children": null
+          },
+          {
+            "areaCode": "220106",
+            "areaName": "绿园区",
+            "children": null
+          },
+          {
+            "areaCode": "220112",
+            "areaName": "双阳区",
+            "children": null
+          },
+          {
+            "areaCode": "220113",
+            "areaName": "九台区",
+            "children": null
+          },
+          {
+            "areaCode": "220122",
+            "areaName": "农安县",
+            "children": null
+          },
+          {
+            "areaCode": "220182",
+            "areaName": "榆树市",
+            "children": null
+          },
+          {
+            "areaCode": "220183",
+            "areaName": "德惠市",
+            "children": null
+          },
+          {
+            "areaCode": "220184",
+            "areaName": "公主岭市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "220200",
+        "areaName": "吉林市",
+        "children": [
+          {
+            "areaCode": "220202",
+            "areaName": "昌邑区",
+            "children": null
+          },
+          {
+            "areaCode": "220203",
+            "areaName": "龙潭区",
+            "children": null
+          },
+          {
+            "areaCode": "220204",
+            "areaName": "船营区",
+            "children": null
+          },
+          {
+            "areaCode": "220211",
+            "areaName": "丰满区",
+            "children": null
+          },
+          {
+            "areaCode": "220221",
+            "areaName": "永吉县",
+            "children": null
+          },
+          {
+            "areaCode": "220281",
+            "areaName": "蛟河市",
+            "children": null
+          },
+          {
+            "areaCode": "220282",
+            "areaName": "桦甸市",
+            "children": null
+          },
+          {
+            "areaCode": "220283",
+            "areaName": "舒兰市",
+            "children": null
+          },
+          {
+            "areaCode": "220284",
+            "areaName": "磐石市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "220300",
+        "areaName": "四平市",
+        "children": [
+          {
+            "areaCode": "220302",
+            "areaName": "铁西区",
+            "children": null
+          },
+          {
+            "areaCode": "220303",
+            "areaName": "铁东区",
+            "children": null
+          },
+          {
+            "areaCode": "220322",
+            "areaName": "梨树县",
+            "children": null
+          },
+          {
+            "areaCode": "220323",
+            "areaName": "伊通满族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "220382",
+            "areaName": "双辽市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "220400",
+        "areaName": "辽源市",
+        "children": [
+          {
+            "areaCode": "220402",
+            "areaName": "龙山区",
+            "children": null
+          },
+          {
+            "areaCode": "220403",
+            "areaName": "西安区",
+            "children": null
+          },
+          {
+            "areaCode": "220421",
+            "areaName": "东丰县",
+            "children": null
+          },
+          {
+            "areaCode": "220422",
+            "areaName": "东辽县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "220500",
+        "areaName": "通化市",
+        "children": [
+          {
+            "areaCode": "220502",
+            "areaName": "东昌区",
+            "children": null
+          },
+          {
+            "areaCode": "220503",
+            "areaName": "二道江区",
+            "children": null
+          },
+          {
+            "areaCode": "220521",
+            "areaName": "通化县",
+            "children": null
+          },
+          {
+            "areaCode": "220523",
+            "areaName": "辉南县",
+            "children": null
+          },
+          {
+            "areaCode": "220524",
+            "areaName": "柳河县",
+            "children": null
+          },
+          {
+            "areaCode": "220581",
+            "areaName": "梅河口市",
+            "children": null
+          },
+          {
+            "areaCode": "220582",
+            "areaName": "集安市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "220600",
+        "areaName": "白山市",
+        "children": [
+          {
+            "areaCode": "220602",
+            "areaName": "浑江区",
+            "children": null
+          },
+          {
+            "areaCode": "220605",
+            "areaName": "江源区",
+            "children": null
+          },
+          {
+            "areaCode": "220621",
+            "areaName": "抚松县",
+            "children": null
+          },
+          {
+            "areaCode": "220622",
+            "areaName": "靖宇县",
+            "children": null
+          },
+          {
+            "areaCode": "220623",
+            "areaName": "长白朝鲜族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "220681",
+            "areaName": "临江市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "220700",
+        "areaName": "松原市",
+        "children": [
+          {
+            "areaCode": "220702",
+            "areaName": "宁江区",
+            "children": null
+          },
+          {
+            "areaCode": "220721",
+            "areaName": "前郭尔罗斯蒙古族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "220722",
+            "areaName": "长岭县",
+            "children": null
+          },
+          {
+            "areaCode": "220723",
+            "areaName": "乾安县",
+            "children": null
+          },
+          {
+            "areaCode": "220781",
+            "areaName": "扶余市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "220800",
+        "areaName": "白城市",
+        "children": [
+          {
+            "areaCode": "220802",
+            "areaName": "洮北区",
+            "children": null
+          },
+          {
+            "areaCode": "220821",
+            "areaName": "镇赉县",
+            "children": null
+          },
+          {
+            "areaCode": "220822",
+            "areaName": "通榆县",
+            "children": null
+          },
+          {
+            "areaCode": "220881",
+            "areaName": "洮南市",
+            "children": null
+          },
+          {
+            "areaCode": "220882",
+            "areaName": "大安市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "222400",
+        "areaName": "延边朝鲜族自治州",
+        "children": [
+          {
+            "areaCode": "222401",
+            "areaName": "延吉市",
+            "children": null
+          },
+          {
+            "areaCode": "222402",
+            "areaName": "图们市",
+            "children": null
+          },
+          {
+            "areaCode": "222403",
+            "areaName": "敦化市",
+            "children": null
+          },
+          {
+            "areaCode": "222404",
+            "areaName": "珲春市",
+            "children": null
+          },
+          {
+            "areaCode": "222405",
+            "areaName": "龙井市",
+            "children": null
+          },
+          {
+            "areaCode": "222406",
+            "areaName": "和龙市",
+            "children": null
+          },
+          {
+            "areaCode": "222424",
+            "areaName": "汪清县",
+            "children": null
+          },
+          {
+            "areaCode": "222426",
+            "areaName": "安图县",
+            "children": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "areaCode": "230000",
+    "areaName": "黑龙江省",
+    "children": [
+      {
+        "areaCode": "230100",
+        "areaName": "哈尔滨市",
+        "children": [
+          {
+            "areaCode": "230102",
+            "areaName": "道里区",
+            "children": null
+          },
+          {
+            "areaCode": "230103",
+            "areaName": "南岗区",
+            "children": null
+          },
+          {
+            "areaCode": "230104",
+            "areaName": "道外区",
+            "children": null
+          },
+          {
+            "areaCode": "230108",
+            "areaName": "平房区",
+            "children": null
+          },
+          {
+            "areaCode": "230109",
+            "areaName": "松北区",
+            "children": null
+          },
+          {
+            "areaCode": "230110",
+            "areaName": "香坊区",
+            "children": null
+          },
+          {
+            "areaCode": "230111",
+            "areaName": "呼兰区",
+            "children": null
+          },
+          {
+            "areaCode": "230112",
+            "areaName": "阿城区",
+            "children": null
+          },
+          {
+            "areaCode": "230113",
+            "areaName": "双城区",
+            "children": null
+          },
+          {
+            "areaCode": "230123",
+            "areaName": "依兰县",
+            "children": null
+          },
+          {
+            "areaCode": "230124",
+            "areaName": "方正县",
+            "children": null
+          },
+          {
+            "areaCode": "230125",
+            "areaName": "宾县",
+            "children": null
+          },
+          {
+            "areaCode": "230126",
+            "areaName": "巴彦县",
+            "children": null
+          },
+          {
+            "areaCode": "230127",
+            "areaName": "木兰县",
+            "children": null
+          },
+          {
+            "areaCode": "230128",
+            "areaName": "通河县",
+            "children": null
+          },
+          {
+            "areaCode": "230129",
+            "areaName": "延寿县",
+            "children": null
+          },
+          {
+            "areaCode": "230183",
+            "areaName": "尚志市",
+            "children": null
+          },
+          {
+            "areaCode": "230184",
+            "areaName": "五常市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "230200",
+        "areaName": "齐齐哈尔市",
+        "children": [
+          {
+            "areaCode": "230202",
+            "areaName": "龙沙区",
+            "children": null
+          },
+          {
+            "areaCode": "230203",
+            "areaName": "建华区",
+            "children": null
+          },
+          {
+            "areaCode": "230204",
+            "areaName": "铁锋区",
+            "children": null
+          },
+          {
+            "areaCode": "230205",
+            "areaName": "昂昂溪区",
+            "children": null
+          },
+          {
+            "areaCode": "230206",
+            "areaName": "富拉尔基区",
+            "children": null
+          },
+          {
+            "areaCode": "230207",
+            "areaName": "碾子山区",
+            "children": null
+          },
+          {
+            "areaCode": "230208",
+            "areaName": "梅里斯达斡尔族区",
+            "children": null
+          },
+          {
+            "areaCode": "230221",
+            "areaName": "龙江县",
+            "children": null
+          },
+          {
+            "areaCode": "230223",
+            "areaName": "依安县",
+            "children": null
+          },
+          {
+            "areaCode": "230224",
+            "areaName": "泰来县",
+            "children": null
+          },
+          {
+            "areaCode": "230225",
+            "areaName": "甘南县",
+            "children": null
+          },
+          {
+            "areaCode": "230227",
+            "areaName": "富裕县",
+            "children": null
+          },
+          {
+            "areaCode": "230229",
+            "areaName": "克山县",
+            "children": null
+          },
+          {
+            "areaCode": "230230",
+            "areaName": "克东县",
+            "children": null
+          },
+          {
+            "areaCode": "230231",
+            "areaName": "拜泉县",
+            "children": null
+          },
+          {
+            "areaCode": "230281",
+            "areaName": "讷河市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "230300",
+        "areaName": "鸡西市",
+        "children": [
+          {
+            "areaCode": "230302",
+            "areaName": "鸡冠区",
+            "children": null
+          },
+          {
+            "areaCode": "230303",
+            "areaName": "恒山区",
+            "children": null
+          },
+          {
+            "areaCode": "230304",
+            "areaName": "滴道区",
+            "children": null
+          },
+          {
+            "areaCode": "230305",
+            "areaName": "梨树区",
+            "children": null
+          },
+          {
+            "areaCode": "230306",
+            "areaName": "城子河区",
+            "children": null
+          },
+          {
+            "areaCode": "230307",
+            "areaName": "麻山区",
+            "children": null
+          },
+          {
+            "areaCode": "230321",
+            "areaName": "鸡东县",
+            "children": null
+          },
+          {
+            "areaCode": "230381",
+            "areaName": "虎林市",
+            "children": null
+          },
+          {
+            "areaCode": "230382",
+            "areaName": "密山市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "230400",
+        "areaName": "鹤岗市",
+        "children": [
+          {
+            "areaCode": "230402",
+            "areaName": "向阳区",
+            "children": null
+          },
+          {
+            "areaCode": "230403",
+            "areaName": "工农区",
+            "children": null
+          },
+          {
+            "areaCode": "230404",
+            "areaName": "南山区",
+            "children": null
+          },
+          {
+            "areaCode": "230405",
+            "areaName": "兴安区",
+            "children": null
+          },
+          {
+            "areaCode": "230406",
+            "areaName": "东山区",
+            "children": null
+          },
+          {
+            "areaCode": "230407",
+            "areaName": "兴山区",
+            "children": null
+          },
+          {
+            "areaCode": "230421",
+            "areaName": "萝北县",
+            "children": null
+          },
+          {
+            "areaCode": "230422",
+            "areaName": "绥滨县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "230500",
+        "areaName": "双鸭山市",
+        "children": [
+          {
+            "areaCode": "230502",
+            "areaName": "尖山区",
+            "children": null
+          },
+          {
+            "areaCode": "230503",
+            "areaName": "岭东区",
+            "children": null
+          },
+          {
+            "areaCode": "230505",
+            "areaName": "四方台区",
+            "children": null
+          },
+          {
+            "areaCode": "230506",
+            "areaName": "宝山区",
+            "children": null
+          },
+          {
+            "areaCode": "230521",
+            "areaName": "集贤县",
+            "children": null
+          },
+          {
+            "areaCode": "230522",
+            "areaName": "友谊县",
+            "children": null
+          },
+          {
+            "areaCode": "230523",
+            "areaName": "宝清县",
+            "children": null
+          },
+          {
+            "areaCode": "230524",
+            "areaName": "饶河县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "230600",
+        "areaName": "大庆市",
+        "children": [
+          {
+            "areaCode": "230602",
+            "areaName": "萨尔图区",
+            "children": null
+          },
+          {
+            "areaCode": "230603",
+            "areaName": "龙凤区",
+            "children": null
+          },
+          {
+            "areaCode": "230604",
+            "areaName": "让胡路区",
+            "children": null
+          },
+          {
+            "areaCode": "230605",
+            "areaName": "红岗区",
+            "children": null
+          },
+          {
+            "areaCode": "230606",
+            "areaName": "大同区",
+            "children": null
+          },
+          {
+            "areaCode": "230621",
+            "areaName": "肇州县",
+            "children": null
+          },
+          {
+            "areaCode": "230622",
+            "areaName": "肇源县",
+            "children": null
+          },
+          {
+            "areaCode": "230623",
+            "areaName": "林甸县",
+            "children": null
+          },
+          {
+            "areaCode": "230624",
+            "areaName": "杜尔伯特蒙古族自治县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "230700",
+        "areaName": "伊春市",
+        "children": [
+          {
+            "areaCode": "230717",
+            "areaName": "伊美区",
+            "children": null
+          },
+          {
+            "areaCode": "230718",
+            "areaName": "乌翠区",
+            "children": null
+          },
+          {
+            "areaCode": "230719",
+            "areaName": "友好区",
+            "children": null
+          },
+          {
+            "areaCode": "230722",
+            "areaName": "嘉荫县",
+            "children": null
+          },
+          {
+            "areaCode": "230723",
+            "areaName": "汤旺县",
+            "children": null
+          },
+          {
+            "areaCode": "230724",
+            "areaName": "丰林县",
+            "children": null
+          },
+          {
+            "areaCode": "230725",
+            "areaName": "大箐山县",
+            "children": null
+          },
+          {
+            "areaCode": "230726",
+            "areaName": "南岔县",
+            "children": null
+          },
+          {
+            "areaCode": "230751",
+            "areaName": "金林区",
+            "children": null
+          },
+          {
+            "areaCode": "230781",
+            "areaName": "铁力市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "230800",
+        "areaName": "佳木斯市",
+        "children": [
+          {
+            "areaCode": "230803",
+            "areaName": "向阳区",
+            "children": null
+          },
+          {
+            "areaCode": "230804",
+            "areaName": "前进区",
+            "children": null
+          },
+          {
+            "areaCode": "230805",
+            "areaName": "东风区",
+            "children": null
+          },
+          {
+            "areaCode": "230811",
+            "areaName": "郊区",
+            "children": null
+          },
+          {
+            "areaCode": "230822",
+            "areaName": "桦南县",
+            "children": null
+          },
+          {
+            "areaCode": "230826",
+            "areaName": "桦川县",
+            "children": null
+          },
+          {
+            "areaCode": "230828",
+            "areaName": "汤原县",
+            "children": null
+          },
+          {
+            "areaCode": "230881",
+            "areaName": "同江市",
+            "children": null
+          },
+          {
+            "areaCode": "230882",
+            "areaName": "富锦市",
+            "children": null
+          },
+          {
+            "areaCode": "230883",
+            "areaName": "抚远市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "230900",
+        "areaName": "七台河市",
+        "children": [
+          {
+            "areaCode": "230902",
+            "areaName": "新兴区",
+            "children": null
+          },
+          {
+            "areaCode": "230903",
+            "areaName": "桃山区",
+            "children": null
+          },
+          {
+            "areaCode": "230904",
+            "areaName": "茄子河区",
+            "children": null
+          },
+          {
+            "areaCode": "230921",
+            "areaName": "勃利县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "231000",
+        "areaName": "牡丹江市",
+        "children": [
+          {
+            "areaCode": "231002",
+            "areaName": "东安区",
+            "children": null
+          },
+          {
+            "areaCode": "231003",
+            "areaName": "阳明区",
+            "children": null
+          },
+          {
+            "areaCode": "231004",
+            "areaName": "爱民区",
+            "children": null
+          },
+          {
+            "areaCode": "231005",
+            "areaName": "西安区",
+            "children": null
+          },
+          {
+            "areaCode": "231025",
+            "areaName": "林口县",
+            "children": null
+          },
+          {
+            "areaCode": "231081",
+            "areaName": "绥芬河市",
+            "children": null
+          },
+          {
+            "areaCode": "231083",
+            "areaName": "海林市",
+            "children": null
+          },
+          {
+            "areaCode": "231084",
+            "areaName": "宁安市",
+            "children": null
+          },
+          {
+            "areaCode": "231085",
+            "areaName": "穆棱市",
+            "children": null
+          },
+          {
+            "areaCode": "231086",
+            "areaName": "东宁市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "231100",
+        "areaName": "黑河市",
+        "children": [
+          {
+            "areaCode": "231102",
+            "areaName": "爱辉区",
+            "children": null
+          },
+          {
+            "areaCode": "231123",
+            "areaName": "逊克县",
+            "children": null
+          },
+          {
+            "areaCode": "231124",
+            "areaName": "孙吴县",
+            "children": null
+          },
+          {
+            "areaCode": "231181",
+            "areaName": "北安市",
+            "children": null
+          },
+          {
+            "areaCode": "231182",
+            "areaName": "五大连池市",
+            "children": null
+          },
+          {
+            "areaCode": "231183",
+            "areaName": "嫩江市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "231200",
+        "areaName": "绥化市",
+        "children": [
+          {
+            "areaCode": "231202",
+            "areaName": "北林区",
+            "children": null
+          },
+          {
+            "areaCode": "231221",
+            "areaName": "望奎县",
+            "children": null
+          },
+          {
+            "areaCode": "231222",
+            "areaName": "兰西县",
+            "children": null
+          },
+          {
+            "areaCode": "231223",
+            "areaName": "青冈县",
+            "children": null
+          },
+          {
+            "areaCode": "231224",
+            "areaName": "庆安县",
+            "children": null
+          },
+          {
+            "areaCode": "231225",
+            "areaName": "明水县",
+            "children": null
+          },
+          {
+            "areaCode": "231226",
+            "areaName": "绥棱县",
+            "children": null
+          },
+          {
+            "areaCode": "231281",
+            "areaName": "安达市",
+            "children": null
+          },
+          {
+            "areaCode": "231282",
+            "areaName": "肇东市",
+            "children": null
+          },
+          {
+            "areaCode": "231283",
+            "areaName": "海伦市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "232700",
+        "areaName": "大兴安岭地区",
+        "children": [
+          {
+            "areaCode": "232701",
+            "areaName": "漠河市",
+            "children": null
+          },
+          {
+            "areaCode": "232721",
+            "areaName": "呼玛县",
+            "children": null
+          },
+          {
+            "areaCode": "232722",
+            "areaName": "塔河县",
+            "children": null
+          },
+          {
+            "areaCode": "232761",
+            "areaName": "加格达奇区",
+            "children": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "areaCode": "540000",
+    "areaName": "西藏自治区",
+    "children": [
+      {
+        "areaCode": "540100",
+        "areaName": "拉萨市",
+        "children": [
+          {
+            "areaCode": "540102",
+            "areaName": "城关区",
+            "children": null
+          },
+          {
+            "areaCode": "540103",
+            "areaName": "堆龙德庆区",
+            "children": null
+          },
+          {
+            "areaCode": "540104",
+            "areaName": "达孜区",
+            "children": null
+          },
+          {
+            "areaCode": "540121",
+            "areaName": "林周县",
+            "children": null
+          },
+          {
+            "areaCode": "540122",
+            "areaName": "当雄县",
+            "children": null
+          },
+          {
+            "areaCode": "540123",
+            "areaName": "尼木县",
+            "children": null
+          },
+          {
+            "areaCode": "540124",
+            "areaName": "曲水县",
+            "children": null
+          },
+          {
+            "areaCode": "540127",
+            "areaName": "墨竹工卡县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540200",
+        "areaName": "日喀则市",
+        "children": [
+          {
+            "areaCode": "540202",
+            "areaName": "桑珠孜区",
+            "children": null
+          },
+          {
+            "areaCode": "540221",
+            "areaName": "南木林县",
+            "children": null
+          },
+          {
+            "areaCode": "540222",
+            "areaName": "江孜县",
+            "children": null
+          },
+          {
+            "areaCode": "540223",
+            "areaName": "定日县",
+            "children": null
+          },
+          {
+            "areaCode": "540224",
+            "areaName": "萨迦县",
+            "children": null
+          },
+          {
+            "areaCode": "540225",
+            "areaName": "拉孜县",
+            "children": null
+          },
+          {
+            "areaCode": "540226",
+            "areaName": "昂仁县",
+            "children": null
+          },
+          {
+            "areaCode": "540227",
+            "areaName": "谢通门县",
+            "children": null
+          },
+          {
+            "areaCode": "540228",
+            "areaName": "白朗县",
+            "children": null
+          },
+          {
+            "areaCode": "540229",
+            "areaName": "仁布县",
+            "children": null
+          },
+          {
+            "areaCode": "540230",
+            "areaName": "康马县",
+            "children": null
+          },
+          {
+            "areaCode": "540231",
+            "areaName": "定结县",
+            "children": null
+          },
+          {
+            "areaCode": "540232",
+            "areaName": "仲巴县",
+            "children": null
+          },
+          {
+            "areaCode": "540233",
+            "areaName": "亚东县",
+            "children": null
+          },
+          {
+            "areaCode": "540234",
+            "areaName": "吉隆县",
+            "children": null
+          },
+          {
+            "areaCode": "540235",
+            "areaName": "聂拉木县",
+            "children": null
+          },
+          {
+            "areaCode": "540236",
+            "areaName": "萨嘎县",
+            "children": null
+          },
+          {
+            "areaCode": "540237",
+            "areaName": "岗巴县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540300",
+        "areaName": "昌都市",
+        "children": [
+          {
+            "areaCode": "540302",
+            "areaName": "卡若区",
+            "children": null
+          },
+          {
+            "areaCode": "540321",
+            "areaName": "江达县",
+            "children": null
+          },
+          {
+            "areaCode": "540322",
+            "areaName": "贡觉县",
+            "children": null
+          },
+          {
+            "areaCode": "540323",
+            "areaName": "类乌齐县",
+            "children": null
+          },
+          {
+            "areaCode": "540324",
+            "areaName": "丁青县",
+            "children": null
+          },
+          {
+            "areaCode": "540325",
+            "areaName": "察雅县",
+            "children": null
+          },
+          {
+            "areaCode": "540326",
+            "areaName": "八宿县",
+            "children": null
+          },
+          {
+            "areaCode": "540327",
+            "areaName": "左贡县",
+            "children": null
+          },
+          {
+            "areaCode": "540328",
+            "areaName": "芒康县",
+            "children": null
+          },
+          {
+            "areaCode": "540329",
+            "areaName": "洛隆县",
+            "children": null
+          },
+          {
+            "areaCode": "540330",
+            "areaName": "边坝县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540400",
+        "areaName": "林芝市",
+        "children": [
+          {
+            "areaCode": "540402",
+            "areaName": "巴宜区",
+            "children": null
+          },
+          {
+            "areaCode": "540421",
+            "areaName": "工布江达县",
+            "children": null
+          },
+          {
+            "areaCode": "540422",
+            "areaName": "米林县",
+            "children": null
+          },
+          {
+            "areaCode": "540423",
+            "areaName": "墨脱县",
+            "children": null
+          },
+          {
+            "areaCode": "540424",
+            "areaName": "波密县",
+            "children": null
+          },
+          {
+            "areaCode": "540425",
+            "areaName": "察隅县",
+            "children": null
+          },
+          {
+            "areaCode": "540426",
+            "areaName": "朗县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540500",
+        "areaName": "山南市",
+        "children": [
+          {
+            "areaCode": "540502",
+            "areaName": "乃东区",
+            "children": null
+          },
+          {
+            "areaCode": "540521",
+            "areaName": "扎囊县",
+            "children": null
+          },
+          {
+            "areaCode": "540522",
+            "areaName": "贡嘎县",
+            "children": null
+          },
+          {
+            "areaCode": "540523",
+            "areaName": "桑日县",
+            "children": null
+          },
+          {
+            "areaCode": "540524",
+            "areaName": "琼结县",
+            "children": null
+          },
+          {
+            "areaCode": "540525",
+            "areaName": "曲松县",
+            "children": null
+          },
+          {
+            "areaCode": "540526",
+            "areaName": "措美县",
+            "children": null
+          },
+          {
+            "areaCode": "540527",
+            "areaName": "洛扎县",
+            "children": null
+          },
+          {
+            "areaCode": "540528",
+            "areaName": "加查县",
+            "children": null
+          },
+          {
+            "areaCode": "540529",
+            "areaName": "隆子县",
+            "children": null
+          },
+          {
+            "areaCode": "540530",
+            "areaName": "错那县",
+            "children": null
+          },
+          {
+            "areaCode": "540531",
+            "areaName": "浪卡子县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540600",
+        "areaName": "那曲市",
+        "children": [
+          {
+            "areaCode": "540602",
+            "areaName": "色尼区",
+            "children": null
+          },
+          {
+            "areaCode": "540621",
+            "areaName": "嘉黎县",
+            "children": null
+          },
+          {
+            "areaCode": "540622",
+            "areaName": "比如县",
+            "children": null
+          },
+          {
+            "areaCode": "540623",
+            "areaName": "聂荣县",
+            "children": null
+          },
+          {
+            "areaCode": "540624",
+            "areaName": "安多县",
+            "children": null
+          },
+          {
+            "areaCode": "540625",
+            "areaName": "申扎县",
+            "children": null
+          },
+          {
+            "areaCode": "540626",
+            "areaName": "索县",
+            "children": null
+          },
+          {
+            "areaCode": "540627",
+            "areaName": "班戈县",
+            "children": null
+          },
+          {
+            "areaCode": "540628",
+            "areaName": "巴青县",
+            "children": null
+          },
+          {
+            "areaCode": "540629",
+            "areaName": "尼玛县",
+            "children": null
+          },
+          {
+            "areaCode": "540630",
+            "areaName": "双湖县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "542500",
+        "areaName": "阿里地区",
+        "children": [
+          {
+            "areaCode": "542521",
+            "areaName": "普兰县",
+            "children": null
+          },
+          {
+            "areaCode": "542522",
+            "areaName": "札达县",
+            "children": null
+          },
+          {
+            "areaCode": "542523",
+            "areaName": "噶尔县",
+            "children": null
+          },
+          {
+            "areaCode": "542524",
+            "areaName": "日土县",
+            "children": null
+          },
+          {
+            "areaCode": "542525",
+            "areaName": "革吉县",
+            "children": null
+          },
+          {
+            "areaCode": "542526",
+            "areaName": "改则县",
+            "children": null
+          },
+          {
+            "areaCode": "542527",
+            "areaName": "措勤县",
+            "children": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "areaCode": "640000",
+    "areaName": "宁夏回族自治区",
+    "children": [
+      {
+        "areaCode": "640100",
+        "areaName": "银川市",
+        "children": [
+          {
+            "areaCode": "640104",
+            "areaName": "兴庆区",
+            "children": null
+          },
+          {
+            "areaCode": "640105",
+            "areaName": "西夏区",
+            "children": null
+          },
+          {
+            "areaCode": "640106",
+            "areaName": "金凤区",
+            "children": null
+          },
+          {
+            "areaCode": "640121",
+            "areaName": "永宁县",
+            "children": null
+          },
+          {
+            "areaCode": "640122",
+            "areaName": "贺兰县",
+            "children": null
+          },
+          {
+            "areaCode": "640181",
+            "areaName": "灵武市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "640200",
+        "areaName": "石嘴山市",
+        "children": [
+          {
+            "areaCode": "640202",
+            "areaName": "大武口区",
+            "children": null
+          },
+          {
+            "areaCode": "640205",
+            "areaName": "惠农区",
+            "children": null
+          },
+          {
+            "areaCode": "640221",
+            "areaName": "平罗县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "640300",
+        "areaName": "吴忠市",
+        "children": [
+          {
+            "areaCode": "640302",
+            "areaName": "利通区",
+            "children": null
+          },
+          {
+            "areaCode": "640303",
+            "areaName": "红寺堡区",
+            "children": null
+          },
+          {
+            "areaCode": "640323",
+            "areaName": "盐池县",
+            "children": null
+          },
+          {
+            "areaCode": "640324",
+            "areaName": "同心县",
+            "children": null
+          },
+          {
+            "areaCode": "640381",
+            "areaName": "青铜峡市",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "640400",
+        "areaName": "固原市",
+        "children": [
+          {
+            "areaCode": "640402",
+            "areaName": "原州区",
+            "children": null
+          },
+          {
+            "areaCode": "640422",
+            "areaName": "西吉县",
+            "children": null
+          },
+          {
+            "areaCode": "640423",
+            "areaName": "隆德县",
+            "children": null
+          },
+          {
+            "areaCode": "640424",
+            "areaName": "泾源县",
+            "children": null
+          },
+          {
+            "areaCode": "640425",
+            "areaName": "彭阳县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "640500",
+        "areaName": "中卫市",
+        "children": [
+          {
+            "areaCode": "640502",
+            "areaName": "沙坡头区",
+            "children": null
+          },
+          {
+            "areaCode": "640521",
+            "areaName": "中宁县",
+            "children": null
+          },
+          {
+            "areaCode": "640522",
+            "areaName": "海原县",
+            "children": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "areaCode": "650000",
+    "areaName": "新疆维吾尔自治区",
+    "children": [
+      {
+        "areaCode": "650100",
+        "areaName": "乌鲁木齐市",
+        "children": [
+          {
+            "areaCode": "650102",
+            "areaName": "天山区",
+            "children": null
+          },
+          {
+            "areaCode": "650103",
+            "areaName": "沙依巴克区",
+            "children": null
+          },
+          {
+            "areaCode": "650104",
+            "areaName": "新市区",
+            "children": null
+          },
+          {
+            "areaCode": "650105",
+            "areaName": "水磨沟区",
+            "children": null
+          },
+          {
+            "areaCode": "650106",
+            "areaName": "头屯河区",
+            "children": null
+          },
+          {
+            "areaCode": "650107",
+            "areaName": "达坂城区",
+            "children": null
+          },
+          {
+            "areaCode": "650109",
+            "areaName": "米东区",
+            "children": null
+          },
+          {
+            "areaCode": "650121",
+            "areaName": "乌鲁木齐县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "650200",
+        "areaName": "克拉玛依市",
+        "children": [
+          {
+            "areaCode": "650202",
+            "areaName": "独山子区",
+            "children": null
+          },
+          {
+            "areaCode": "650203",
+            "areaName": "克拉玛依区",
+            "children": null
+          },
+          {
+            "areaCode": "650204",
+            "areaName": "白碱滩区",
+            "children": null
+          },
+          {
+            "areaCode": "650205",
+            "areaName": "乌尔禾区",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "650400",
+        "areaName": "吐鲁番市",
+        "children": [
+          {
+            "areaCode": "650402",
+            "areaName": "高昌区",
+            "children": null
+          },
+          {
+            "areaCode": "650421",
+            "areaName": "鄯善县",
+            "children": null
+          },
+          {
+            "areaCode": "650422",
+            "areaName": "托克逊县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "650500",
+        "areaName": "哈密市",
+        "children": [
+          {
+            "areaCode": "650502",
+            "areaName": "伊州区",
+            "children": null
+          },
+          {
+            "areaCode": "650521",
+            "areaName": "巴里坤哈萨克自治县",
+            "children": null
+          },
+          {
+            "areaCode": "650522",
+            "areaName": "伊吾县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "652300",
+        "areaName": "昌吉回族自治州",
+        "children": [
+          {
+            "areaCode": "652301",
+            "areaName": "昌吉市",
+            "children": null
+          },
+          {
+            "areaCode": "652302",
+            "areaName": "阜康市",
+            "children": null
+          },
+          {
+            "areaCode": "652323",
+            "areaName": "呼图壁县",
+            "children": null
+          },
+          {
+            "areaCode": "652324",
+            "areaName": "玛纳斯县",
+            "children": null
+          },
+          {
+            "areaCode": "652325",
+            "areaName": "奇台县",
+            "children": null
+          },
+          {
+            "areaCode": "652327",
+            "areaName": "吉木萨尔县",
+            "children": null
+          },
+          {
+            "areaCode": "652328",
+            "areaName": "木垒哈萨克自治县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "652700",
+        "areaName": "博尔塔拉蒙古自治州",
+        "children": [
+          {
+            "areaCode": "652701",
+            "areaName": "博乐市",
+            "children": null
+          },
+          {
+            "areaCode": "652702",
+            "areaName": "阿拉山口市",
+            "children": null
+          },
+          {
+            "areaCode": "652722",
+            "areaName": "精河县",
+            "children": null
+          },
+          {
+            "areaCode": "652723",
+            "areaName": "温泉县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "652800",
+        "areaName": "巴音郭楞蒙古自治州",
+        "children": [
+          {
+            "areaCode": "652801",
+            "areaName": "库尔勒市",
+            "children": null
+          },
+          {
+            "areaCode": "652822",
+            "areaName": "轮台县",
+            "children": null
+          },
+          {
+            "areaCode": "652823",
+            "areaName": "尉犁县",
+            "children": null
+          },
+          {
+            "areaCode": "652824",
+            "areaName": "若羌县",
+            "children": null
+          },
+          {
+            "areaCode": "652825",
+            "areaName": "且末县",
+            "children": null
+          },
+          {
+            "areaCode": "652826",
+            "areaName": "焉耆回族自治县",
+            "children": null
+          },
+          {
+            "areaCode": "652827",
+            "areaName": "和静县",
+            "children": null
+          },
+          {
+            "areaCode": "652828",
+            "areaName": "和硕县",
+            "children": null
+          },
+          {
+            "areaCode": "652829",
+            "areaName": "博湖县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "652900",
+        "areaName": "阿克苏地区",
+        "children": [
+          {
+            "areaCode": "652901",
+            "areaName": "阿克苏市",
+            "children": null
+          },
+          {
+            "areaCode": "652902",
+            "areaName": "库车市",
+            "children": null
+          },
+          {
+            "areaCode": "652922",
+            "areaName": "温宿县",
+            "children": null
+          },
+          {
+            "areaCode": "652924",
+            "areaName": "沙雅县",
+            "children": null
+          },
+          {
+            "areaCode": "652925",
+            "areaName": "新和县",
+            "children": null
+          },
+          {
+            "areaCode": "652926",
+            "areaName": "拜城县",
+            "children": null
+          },
+          {
+            "areaCode": "652927",
+            "areaName": "乌什县",
+            "children": null
+          },
+          {
+            "areaCode": "652928",
+            "areaName": "阿瓦提县",
+            "children": null
+          },
+          {
+            "areaCode": "652929",
+            "areaName": "柯坪县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "653000",
+        "areaName": "克孜勒苏柯尔克孜自治州",
+        "children": [
+          {
+            "areaCode": "653001",
+            "areaName": "阿图什市",
+            "children": null
+          },
+          {
+            "areaCode": "653022",
+            "areaName": "阿克陶县",
+            "children": null
+          },
+          {
+            "areaCode": "653023",
+            "areaName": "阿合奇县",
+            "children": null
+          },
+          {
+            "areaCode": "653024",
+            "areaName": "乌恰县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "653100",
+        "areaName": "喀什地区",
+        "children": [
+          {
+            "areaCode": "653101",
+            "areaName": "喀什市",
+            "children": null
+          },
+          {
+            "areaCode": "653121",
+            "areaName": "疏附县",
+            "children": null
+          },
+          {
+            "areaCode": "653122",
+            "areaName": "疏勒县",
+            "children": null
+          },
+          {
+            "areaCode": "653123",
+            "areaName": "英吉沙县",
+            "children": null
+          },
+          {
+            "areaCode": "653124",
+            "areaName": "泽普县",
+            "children": null
+          },
+          {
+            "areaCode": "653125",
+            "areaName": "莎车县",
+            "children": null
+          },
+          {
+            "areaCode": "653126",
+            "areaName": "叶城县",
+            "children": null
+          },
+          {
+            "areaCode": "653127",
+            "areaName": "麦盖提县",
+            "children": null
+          },
+          {
+            "areaCode": "653128",
+            "areaName": "岳普湖县",
+            "children": null
+          },
+          {
+            "areaCode": "653129",
+            "areaName": "伽师县",
+            "children": null
+          },
+          {
+            "areaCode": "653130",
+            "areaName": "巴楚县",
+            "children": null
+          },
+          {
+            "areaCode": "653131",
+            "areaName": "塔什库尔干塔吉克自治县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "653200",
+        "areaName": "和田地区",
+        "children": [
+          {
+            "areaCode": "653201",
+            "areaName": "和田市",
+            "children": null
+          },
+          {
+            "areaCode": "653221",
+            "areaName": "和田县",
+            "children": null
+          },
+          {
+            "areaCode": "653222",
+            "areaName": "墨玉县",
+            "children": null
+          },
+          {
+            "areaCode": "653223",
+            "areaName": "皮山县",
+            "children": null
+          },
+          {
+            "areaCode": "653224",
+            "areaName": "洛浦县",
+            "children": null
+          },
+          {
+            "areaCode": "653225",
+            "areaName": "策勒县",
+            "children": null
+          },
+          {
+            "areaCode": "653226",
+            "areaName": "于田县",
+            "children": null
+          },
+          {
+            "areaCode": "653227",
+            "areaName": "民丰县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "654000",
+        "areaName": "伊犁哈萨克自治州",
+        "children": [
+          {
+            "areaCode": "654002",
+            "areaName": "伊宁市",
+            "children": null
+          },
+          {
+            "areaCode": "654003",
+            "areaName": "奎屯市",
+            "children": null
+          },
+          {
+            "areaCode": "654004",
+            "areaName": "霍尔果斯市",
+            "children": null
+          },
+          {
+            "areaCode": "654021",
+            "areaName": "伊宁县",
+            "children": null
+          },
+          {
+            "areaCode": "654022",
+            "areaName": "察布查尔锡伯自治县",
+            "children": null
+          },
+          {
+            "areaCode": "654023",
+            "areaName": "霍城县",
+            "children": null
+          },
+          {
+            "areaCode": "654024",
+            "areaName": "巩留县",
+            "children": null
+          },
+          {
+            "areaCode": "654025",
+            "areaName": "新源县",
+            "children": null
+          },
+          {
+            "areaCode": "654026",
+            "areaName": "昭苏县",
+            "children": null
+          },
+          {
+            "areaCode": "654027",
+            "areaName": "特克斯县",
+            "children": null
+          },
+          {
+            "areaCode": "654028",
+            "areaName": "尼勒克县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "654200",
+        "areaName": "塔城地区",
+        "children": [
+          {
+            "areaCode": "654201",
+            "areaName": "塔城市",
+            "children": null
+          },
+          {
+            "areaCode": "654202",
+            "areaName": "乌苏市",
+            "children": null
+          },
+          {
+            "areaCode": "654221",
+            "areaName": "额敏县",
+            "children": null
+          },
+          {
+            "areaCode": "654223",
+            "areaName": "沙湾县",
+            "children": null
+          },
+          {
+            "areaCode": "654224",
+            "areaName": "托里县",
+            "children": null
+          },
+          {
+            "areaCode": "654225",
+            "areaName": "裕民县",
+            "children": null
+          },
+          {
+            "areaCode": "654226",
+            "areaName": "和布克赛尔蒙古自治县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "654300",
+        "areaName": "阿勒泰地区",
+        "children": [
+          {
+            "areaCode": "654301",
+            "areaName": "阿勒泰市",
+            "children": null
+          },
+          {
+            "areaCode": "654321",
+            "areaName": "布尔津县",
+            "children": null
+          },
+          {
+            "areaCode": "654322",
+            "areaName": "富蕴县",
+            "children": null
+          },
+          {
+            "areaCode": "654323",
+            "areaName": "福海县",
+            "children": null
+          },
+          {
+            "areaCode": "654324",
+            "areaName": "哈巴河县",
+            "children": null
+          },
+          {
+            "areaCode": "654325",
+            "areaName": "青河县",
+            "children": null
+          },
+          {
+            "areaCode": "654326",
+            "areaName": "吉木乃县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "659000",
+        "areaName": "新疆直辖县",
+        "children": null
+      }
+    ]
+  }
+]

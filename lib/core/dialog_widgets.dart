@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/broker.dart';
 import 'package:flutter_dialog_shower/view/rotate_widget.dart';
 import 'dialog_wrapper.dart';
-
 import 'dialog_shower.dart';
 
 class DialogWidgets {
@@ -16,7 +15,18 @@ class DialogWidgets {
   static Color? iconTextDefBgColor;
   static TextStyle? iconTextDefTextStyle;
 
-  // Show Tips Of Loading, Success, Failed
+  // Indicator, Loading, Success, Failed
+
+  static DialogShower showIndicator() {
+    return DialogWrapper.show(const CupertinoActivityIndicator())
+      ..alignment = Alignment.center
+      ..containerDecoration = null
+      ..barrierDismissible = true
+      ..transitionDuration = const Duration(milliseconds: 200)
+      ..transitionBuilder = (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+        return ScaleTransition(child: child, scale: Tween(begin: 0.0, end: 1.0).animate(animation));
+      };
+  }
 
   static DialogShower showLoading({Widget? icon, String? text = 'Loading', bool dismissible = false}) {
     Widget w = RotateWidget(child: icon ?? iconLoading ?? CcWidgetUtils.getOneGappyCircle());
@@ -56,7 +66,7 @@ class DialogWidgets {
     if (text != null) {
       children.add(Text(text, style: textStyle ?? iconTextDefTextStyle ?? const TextStyle(color: Colors.white, fontSize: 16)));
     }
-    DialogShower dialog = DialogWrapper.show(
+    DialogShower shower = DialogWrapper.show(
       Container(
         width: width,
         height: height,
@@ -66,7 +76,7 @@ class DialogWidgets {
     );
 
     // rewrite properties cause show actually in the next micro task :)
-    dialog
+    shower
       ..barrierDismissible = true
       ..alignment = Alignment.center
       ..barrierColor = Colors.black.withAlpha(64)
@@ -74,7 +84,7 @@ class DialogWidgets {
       ..transitionBuilder = (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
         return ScaleTransition(child: child, scale: Tween(begin: 0.0, end: 1.0).animate(animation));
       };
-    return dialog;
+    return shower;
   }
 
   // Show Alert With Texts & Buttons
@@ -135,7 +145,8 @@ class DialogWidgets {
       decoration: decoration,
       child: Column(
         children: [
-          Expanded(child: Padding(
+          Expanded(
+              child: Padding(
             padding: padding ?? const EdgeInsets.all(0),
             child: Column(mainAxisAlignment: columnMainAxis, children: children),
           )),
