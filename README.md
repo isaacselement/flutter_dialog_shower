@@ -2,24 +2,12 @@
 <table>
 
 <tr>
-<th>#### Bubble menu picker</th>
-<th#### Alert with icon</th>
-<th#### Loading</th>
-</tr>
 
-<tr>
-
-<td>
 <img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="30%" height="30%" alt="" align=center />
-<td/>
 
-<td>
 <img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png" width="30%" height="30%" alt="" align=center />
-<td/>
 
-<td>
 <img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_loading.png" width="30%" height="30%" alt="" align=center />
-<td/>
 
 </tr>
 
