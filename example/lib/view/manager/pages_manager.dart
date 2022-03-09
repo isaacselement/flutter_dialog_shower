@@ -7,6 +7,7 @@ import 'package:flutter_dialog_shower/broker/brother.dart';
 import '../../util/logger.dart';
 import '../page_of_basic.dart';
 import '../page_of_brother.dart';
+import '../page_of_home.dart';
 import '../page_of_homeless.dart';
 import '../page_of_keyboard.dart';
 import '../page_of_navigator.dart';
@@ -17,6 +18,13 @@ class PagesManager {
     if (tabsPages.isNotEmpty) {
       return;
     }
+    addTabPage(
+      true,
+      'Home',
+      const Icon(Icons.home_outlined, size: 32, color: Colors.black26),
+      const Icon(Icons.home, size: 32, color: Colors.orange),
+      PageOfHome(),
+    );
     addTabPage(
       true,
       'Basic',

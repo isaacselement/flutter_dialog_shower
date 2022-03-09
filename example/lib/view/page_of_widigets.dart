@@ -54,28 +54,27 @@ class PageOfWidgets extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                   title: 'Attention Please!',
                   titleBottomGap: 50,
-                  text: 'A view of the sea when the author was a child made the author invisibly.'
-              );
+                  text: 'A view of the sea when the author was a child made the author invisibly.');
             }),
             WidgetsUtil.newXpelTextButton('show title icon message', onPressed: () {
               DialogWidgets.showAlert(
-                width: 360,
-                height: 240,
-                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                title: 'Attention Please!',
-                icon: const Icon(Icons.info, size: 100, color: Colors.green),
-                text: 'A view of the sea when the author was a child made the author invisibly.'
-              );
-            }),
-            WidgetsUtil.newXpelTextButton('show title icon message with button', onPressed: () {
-              DialogWidgets.showAlert(
                   width: 360,
-                  height: 270,
+                  height: 240,
                   padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                   title: 'Attention Please!',
                   icon: const Icon(Icons.info, size: 100, color: Colors.green),
-                  text: 'A view of the sea when the author was a child made the author invisibly.',
+                  text: 'A view of the sea when the author was a child made the author invisibly.');
+            }),
+            WidgetsUtil.newXpelTextButton('show title icon message with button', onPressed: () {
+              DialogWidgets.showAlert(
+                width: 360,
+                height: 270,
+                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                title: 'Attention Please!',
+                icon: const Icon(Icons.info, size: 100, color: Colors.green),
+                text: 'A view of the sea when the author was a child made the author invisibly.',
                 button1Text: 'OK',
+                button1Event: (D) => DialogWrapper.dismissTopDialog(),
               ).barrierColor = const Color(0x4D1C1D21);
             }),
             WidgetsUtil.newXpelTextButton('show notification', onPressed: () {

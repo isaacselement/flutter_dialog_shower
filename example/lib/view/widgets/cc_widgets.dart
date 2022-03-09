@@ -145,10 +145,12 @@ class CcMenuPopup extends StatelessWidget {
       children.add(item);
     }
     CcMenuPopup.currentMenuPopupHeight = size / CcMenuPopup.currentMenuItemCountPerRow * CcMenuPopup.currentMenuItemHeight;
-    return Container(
-      width: popupWidth,
-      decoration: BoxDecoration(color: popupBackGroundColor),
-      child: Wrap(spacing: 1.0, runSpacing: 1.0, children: children),
+    return SingleChildScrollView(
+      child: Container(
+        width: popupWidth,
+        decoration: BoxDecoration(color: popupBackGroundColor),
+        child: Wrap(spacing: 1.0, runSpacing: 1.0, children: children),
+      ),
     );
   }
 

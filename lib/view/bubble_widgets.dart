@@ -172,8 +172,18 @@ class BubblePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double _w = w ?? (isTriangleOccupiedSpace ? size.width - triangleWidth : size.width);
-    double _h = h ?? (isTriangleOccupiedSpace ? size.height - triangleHeight : size.height);
+    // triangleHeight indeed, we defind the triangleHeight is the middle line to the arrow
+    double _w = w ?? size.width;
+    double _h = h ?? size.height;
+    if (isTriangleOccupiedSpace) {
+      if (w == null && (triangleDirection == TriangleArrowDirection.left || triangleDirection == TriangleArrowDirection.right)) {
+        _w = size.width - triangleHeight;
+      }
+      if (h == null && (triangleDirection == TriangleArrowDirection.top || triangleDirection == TriangleArrowDirection.bottom)) {
+        _h = size.height - triangleHeight;
+      }
+    }
+
     double _radius = radius ?? 0;
 
     Path pointsPath = Path();
