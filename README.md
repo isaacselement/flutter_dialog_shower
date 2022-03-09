@@ -1,22 +1,18 @@
-# flutter_dialog_shower
 
 
-![mahua](https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png){:height="200px" width="200px"}
+#####Bubble menu picker
+<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="50%" height="50%" alt="" align=center />
 
-![mahua](https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_notification.png){:height="200px" width="200px"}
+#####Alert with icon
+<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png" width="50%" height="50%" alt="" align=center />
 
-![mahua](https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_loading.png){:height="200px" width="200px"}
-
-![mahua](https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_success.png){:height="200px" width="200px"}
-
-![mahua](https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_failed.png){:height="200px" width="200px"}
-
-![mahua](https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png){:height="200px" width="200px"}
-
+#####Loading
+<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_loading.png" width="50%" height="50%" alt="" align=center />
 
 
 
 ##DialogShower
+
 ####Simple to use
 
 ```
@@ -34,9 +30,12 @@
     ..show(__your_widget_here__);
 ```
 
+
 ##Brother
 
 #### Update by key for decoupling
+
+
 ```
     BtKey updateWidgetsKey = BtKey();
     
@@ -56,7 +55,11 @@
     }
 ```
 
+
+
 ### Update by value
+
+
 ```
   Btv<String> text = 'You are so awesome'.btv;
 
@@ -71,6 +74,5 @@
     );
   }
 ```
-
 
 
