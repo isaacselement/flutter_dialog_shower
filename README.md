@@ -3,11 +3,11 @@
 <center>
 <figure>
 
-<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="33%" height="33%" alt="" align=center />
+<img style="float: right;" src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="33%" height="33%" />
 
-<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png" width="30%" height="30%" alt="" align=center />
+<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png" width="30%" height="30%"  />
 
-<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_loading.png" width="30%" height="30%" alt="" align=center />
+<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_loading.png" width="30%" height="30%"  />
 
 </figure>
 </center>
@@ -78,5 +78,6 @@ return InkWell(
 );
 }
 ```
+
 
 
