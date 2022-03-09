@@ -98,7 +98,7 @@ class BrotherBasicView extends StatelessWidget {
 class BrotherAdvanceView extends StatelessWidget {
   BrotherAdvanceView({Key? key}) : super(key: key);
 
-  BtKey updateAllKey = BtKey();
+  BtKey updateWidgetsKey = BtKey();
 
   Btv<List<String>> changeMeLists = <String>[].btv;
   Btv<Map<String, String>> changeMeMaps = <String, String>{}.btv;
@@ -111,7 +111,7 @@ class BrotherAdvanceView extends StatelessWidget {
     return Column(
       children: [
         Btw(builder: (context) {
-          updateAllKey.eye; // Put an eye here. Dota/LOL online game 插个眼.
+          updateWidgetsKey.eye; // Put an eye here. Dota/LOL online game 插个眼.
 
           return Column(
             children: [
@@ -243,7 +243,7 @@ class BrotherAdvanceView extends StatelessWidget {
                 advancedIndex.data = 0;
                 changeMeLists.value.clear();
                 changeMeMaps.value.clear();
-                updateAllKey.update();
+                updateWidgetsKey.update();
               },
             ),
           ],
