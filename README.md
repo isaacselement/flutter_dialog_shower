@@ -1,14 +1,19 @@
 
+<div style="display: inline;">
+<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="30%" height="30%" />
+</div>
 
+<div style="display: inline;">
+<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png" width="30%" height="30%"  />
+</div>
 
-<img style="float: right;" src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="30%" height="30%" />
+<div style="display: inline;">
+<img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_loading.png" width="30%" height="30%"  />
+</div>
 
-<img style="float: right;" src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_alert.png" width="30%" height="30%"  />
-
-<img style="float: right;" src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_loading.png" width="30%" height="30%"  />
-
-
-
+<br/>
+### Build & Run example/lib/main.dart on iOS/Android device for more demostrations
+<br/>
 
 
 # DialogShower
@@ -74,6 +79,7 @@ return InkWell(
 );
 }
 ```
+
 
 
 
