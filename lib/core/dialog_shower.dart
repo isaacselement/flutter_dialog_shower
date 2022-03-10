@@ -439,7 +439,8 @@ class DialogShower {
     if (_isTryToGetSmallestSize && width == null && height == null) {
       __shower_log__('[GetSizeWidget] try for getting size now ...');
       widget = GetSizeWidget(
-        onLayoutChanged: (box, size) {
+        isInvokedOnlyOnSizeChanged: true,
+        onLayoutChanged: (box, legacy, size) {
           __shower_log__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
           _setRenderedSizeWithSetState(size);
         },
@@ -762,35 +763,45 @@ class NavigatorObserverEx extends NavigatorObserver {
 
 /// For get size immediately
 class GetSizeWidget extends SingleChildRenderObjectWidget {
-  final void Function(RenderProxyBox box, Size? size) onLayoutChanged;
+  final bool isInvokedOnlyOnSizeChanged;
+  final void Function(RenderProxyBox box, Size? legacy, Size? size) onLayoutChanged;
 
-  const GetSizeWidget({Key? key, required Widget child, required this.onLayoutChanged}) : super(key: key, child: child);
+  const GetSizeWidget({Key? key, required Widget child, required this.onLayoutChanged, this.isInvokedOnlyOnSizeChanged = true})
+      : super(key: key, child: child);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return _GetSizeRenderObject()..onLayoutChanged = onLayoutChanged;
+    __shower_log__('[GetSizeWidget] createRenderObject');
+    return _GetSizeRenderObject()
+      ..onLayoutChanged = onLayoutChanged
+      ..isInvokedOnlyOnSizeChanged = isInvokedOnlyOnSizeChanged;
   }
 }
 
 class _GetSizeRenderObject extends RenderProxyBox {
   Size? _size;
-  void Function(RenderProxyBox box, Size? size)? onLayoutChanged;
+  late bool isInvokedOnlyOnSizeChanged;
+  late void Function(RenderProxyBox box, Size? legacy, Size? size) onLayoutChanged;
 
   @override
   void performLayout() {
     super.performLayout();
 
-    if (onLayoutChanged != null) {
-      Size? size = child?.size;
-      __shower_log__('[GetSizeWidget] performLayout >>>>>>>>> size: $size');
-      bool isSizeChanged = size != null && size != _size;
-      if (isSizeChanged) {
-        _size = size;
-        WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-          onLayoutChanged?.call(this, size);
-        });
-      }
+    Size? size = child?.size;
+    __shower_log__('[GetSizeWidget] performLayout >>>>>>>>> size: $size');
+    bool isSizeChanged = size != null && size != _size;
+    if (!isInvokedOnlyOnSizeChanged || isSizeChanged) {
+      _invoke(_size, size);
     }
+    if (isSizeChanged) {
+      _size = size;
+    }
+  }
+
+  void _invoke(Size? legacy, Size? size) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      onLayoutChanged.call(this, legacy, size);
+    });
   }
 }
 

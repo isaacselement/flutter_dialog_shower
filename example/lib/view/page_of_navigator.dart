@@ -66,6 +66,9 @@ class PageOfNavigator extends StatelessWidget {
                       DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
                           settings: const RouteSettings(name: '__root_route__'));
                     });
+                  },
+                  fnClickMe2: (context) {
+                    DialogWrapper.getTopDialog()?.setState(() { });
                   }));
             }),
           ],
