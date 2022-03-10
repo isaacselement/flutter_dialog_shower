@@ -147,7 +147,7 @@ class DialogWidgets {
 
     Widget widget = Container(
       width: width ?? defAlertWidth,
-      height: height ?? defAlertWidth,
+      height: height ?? defAlertHeight,
       decoration: decoration,
       child: Column(
         children: [
