@@ -9,11 +9,14 @@ import 'dialog_wrapper.dart';
 import 'dialog_shower.dart';
 
 class DialogWidgets {
-  static Widget? iconLoading;
-  static Widget? iconSuccess;
-  static Widget? iconFailed;
-  static Color? iconTextDefBgColor;
-  static TextStyle? iconTextDefTextStyle;
+  static Widget? defIconLoading;
+  static Widget? defIconSuccess;
+  static Widget? defIconFailed;
+  static Color? defIconBgColor;
+  static TextStyle? defIconTextStyle;
+
+  static double? defAlertWidth;
+  static double? defAlertHeight;
 
   // Indicator, Loading, Success, Failed
 
@@ -29,21 +32,21 @@ class DialogWidgets {
   }
 
   static DialogShower showLoading({Widget? icon, String? text = 'Loading', bool dismissible = false}) {
-    Widget w = RotateWidget(child: icon ?? iconLoading ?? CcWidgetUtils.getOneGappyCircle());
+    Widget w = RotateWidget(child: icon ?? defIconLoading ?? CcWidgetUtils.getOneGappyCircle());
     return showIconText(icon: w, text: text)..barrierDismissible = dismissible;
   }
 
   static DialogShower showSuccess({Widget? icon, String? text = 'Success', bool dismissible = true}) {
     Widget? w = icon ??
-        iconSuccess ??
-        SizedBox(width: 70, height: 46, child: CcWidgetUtils.getOnePainteWidget((v) => SuccessIconPainter(progress: v)));
+        defIconSuccess ??
+        SizedBox(width: 70, height: 46, child: CcWidgetUtils.getOnePainterWidget(painter: (v) => SuccessIconPainter(progress: v)));
     return showIconText(icon: w, text: text)..barrierDismissible = dismissible;
   }
 
   static DialogShower showFailed({Widget? icon, String? text = 'Failed', bool dismissible = true}) {
     Widget? w = icon ??
-        iconFailed ??
-        SizedBox(width: 60, height: 60, child: CcWidgetUtils.getOnePainteWidget((v) => FailedIconPainter(progress: v)));
+        defIconFailed ??
+        SizedBox(width: 60, height: 60, child: CcWidgetUtils.getOnePainterWidget(painter: (v) => FailedIconPainter(progress: v)));
     return showIconText(icon: w, text: text)..barrierDismissible = dismissible;
   }
 
@@ -54,7 +57,9 @@ class DialogWidgets {
     Widget? icon,
     String? text,
     TextStyle? textStyle,
-    Color? bgColor,
+    EdgeInsets? padding,
+    Decoration? decoration,
+    Color? backgroundColor,
   }) {
     List<Widget> children = <Widget>[];
     if (icon != null) {
@@ -64,13 +69,14 @@ class DialogWidgets {
       }
     }
     if (text != null) {
-      children.add(Text(text, style: textStyle ?? iconTextDefTextStyle ?? const TextStyle(color: Colors.white, fontSize: 16)));
+      children.add(Text(text, style: textStyle ?? defIconTextStyle ?? const TextStyle(color: Colors.white, fontSize: 16)));
     }
     DialogShower shower = DialogWrapper.show(
       Container(
         width: width,
         height: height,
-        color: bgColor ?? iconTextDefBgColor ?? Colors.black,
+        padding: padding,
+        decoration: decoration ?? BoxDecoration(color: backgroundColor ?? defIconBgColor ?? Colors.black),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: children),
       ),
     );
@@ -89,8 +95,8 @@ class DialogWidgets {
 
   // Show Alert With Texts & Buttons
   static DialogShower showAlert({
-    required double width,
-    required double height,
+    double? width,
+    double? height,
     Decoration? decoration = const BoxDecoration(color: Colors.white),
     EdgeInsets? padding,
     String? title,
@@ -140,16 +146,17 @@ class DialogWidgets {
     }
 
     Widget widget = Container(
-      width: width,
-      height: height,
+      width: width ?? defAlertWidth,
+      height: height ?? defAlertWidth,
       decoration: decoration,
       child: Column(
         children: [
           Expanded(
-              child: Padding(
-            padding: padding ?? const EdgeInsets.all(0),
-            child: Column(mainAxisAlignment: columnMainAxis, children: children),
-          )),
+            child: Padding(
+              padding: padding ?? const EdgeInsets.all(0),
+              child: Column(mainAxisAlignment: columnMainAxis, children: children),
+            ),
+          ),
           button1Text == null && button2Text == null ? const Offstage(offstage: true) : const Divider(height: 1),
           IntrinsicHeight(child: Row(children: buttonsRowChildren)),
         ],
@@ -275,6 +282,9 @@ abstract class ProgressIconPainter extends CustomPainter {
   ProgressIconPainter({this.color, this.stroke, this.progress = 1.0});
 
   @override
+  bool shouldRepaint(covariant ProgressIconPainter oldDelegate) => oldDelegate.progress != progress;
+
+  @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..style = PaintingStyle.stroke
@@ -288,9 +298,6 @@ abstract class ProgressIconPainter extends CustomPainter {
   }
 
   void paintWithProgress(Canvas canvas, Size size, Paint paint, double p);
-
-  @override
-  bool shouldRepaint(covariant ProgressIconPainter oldDelegate) => oldDelegate.progress != progress;
 }
 
 class FailedIconPainter extends ProgressIconPainter {
@@ -355,7 +362,7 @@ class CcWidgetUtils {
     );
   }
 
-  static Widget getOnePainteWidget(CustomPainter Function(double progress) painterBuilder) {
+  static Widget getOnePainterWidget({required CustomPainter Function(double progress) painter}) {
     String controllerKey = 'Painter_${DateTime.now().millisecondsSinceEpoch}_${shortHash(UniqueKey())}';
     return CommonStatefulWidgetWithTicker(
       initState: (state) {
@@ -370,11 +377,11 @@ class CcWidgetUtils {
         AnimationController? _controller = Broker.get(key: controllerKey);
         assert(_controller != null, '_controller cannot be null, should init in initState');
         return _controller == null
-            ? CustomPaint(painter: painterBuilder(1.0))
+            ? CustomPaint(painter: painter(1.0))
             : AnimatedBuilder(
                 animation: _controller,
                 builder: (context, snapshot) {
-                  return CustomPaint(painter: painterBuilder(_controller.value));
+                  return CustomPaint(painter: painter(_controller.value));
                 });
       },
     );

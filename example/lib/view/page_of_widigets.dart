@@ -72,7 +72,7 @@ class PageOfWidgets extends StatelessWidget {
                 height: 270,
                 padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                 title: 'Attention Please!',
-                icon: const Icon(Icons.info, size: 100, color: Colors.green),
+                icon: const Icon(Icons.info, size: 80, color: Colors.green),
                 text: 'A view of the sea when the author was a child made the author invisibly.',
                 button1Text: 'OK',
                 button1Event: (D) => DialogWrapper.dismissTopDialog(),
