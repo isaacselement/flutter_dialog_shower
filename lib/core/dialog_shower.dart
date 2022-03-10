@@ -107,13 +107,16 @@ class DialogShower {
 
   // private .....
   TapUpDetails? _tapUpDetails;
+
   get tapUpDetails => _tapUpDetails;
 
   // final GlobalKey _builderExKey = GlobalKey();
   // get builderExKey => _builderExKey;
   final GlobalKey _statefulKey = GlobalKey();
+
   get statefulKey => _statefulKey;
   final GlobalKey _containerKey = GlobalKey();
+
   get containerKey => _containerKey;
 
   // extension for navigate inner dialog
@@ -294,9 +297,9 @@ class DialogShower {
               bool isTapInside = isTapInsideX && isTapInsideY;
 
               assert(() {
-                __shower_log__(
-                    'HitTest: Container [$x1, $y1], [$x2, $y2]. Tap [$tapX, $tapY]. isTapInside X$isTapInsideX && Y$isTapInsideY = $isTapInside, '
-                    'barrierDismissible: $barrierDismissible, isShowing: $isShowing');
+                __shower_log__('HitTest: Container [$x1, $y1], [$x2, $y2]. Tap [$tapX, $tapY]. '
+                    'isTapInside X$isTapInsideX && Y$isTapInsideY = $isTapInside, '
+                    'barrierDismissible: $barrierDismissible, I\'m showing: $isShowing');
                 return true;
               }());
 
@@ -305,11 +308,13 @@ class DialogShower {
                 return;
               }
 
-              if (isDismissKeyboardOnTapped) {
-                if (DialogShower.isKeyboardShowing()) {
-                  // https://github.com/flutter/flutter/issues/48464
-                  FocusManager.instance.primaryFocus?.unfocus();
-                }
+              if (isDismissKeyboardOnTapped && DialogShower.isKeyboardShowing()) {
+                // https://github.com/flutter/flutter/issues/48464
+                FocusManager.instance.primaryFocus?.unfocus();
+                assert(() {
+                  __shower_log__('I dismiss the keyboard, if you dislike this default behaviour, set isDismissKeyboardOnTapped = false');
+                  return true;
+                }());
               }
 
               if (isTapInside) {
@@ -323,6 +328,10 @@ class DialogShower {
                 if (barrierDismissible == null) {
                   if (DialogShower.isKeyboardShowing()) {
                     FocusManager.instance.primaryFocus?.unfocus();
+                    assert(() {
+                      __shower_log__('I dismiss the keyboard, if u dislike this default behaviour, do not set barrierDismissible = null');
+                      return true;
+                    }());
                   } else {
                     dismiss();
                   }
