@@ -4,24 +4,24 @@ class Broker {
 
   static Broker get instance => (_instance ??= Broker());
 
-  static void setIfAbsent<T>(T controller, {String? key}) {
-    instance.setIfAbsentI<T>(controller, key: key);
+  static T setIfAbsent<T>(T controller, {String? key}) {
+    return instance.setIfAbsentI<T>(controller, key: key);
   }
 
-  static void set<T>(T controller, {String? key}) {
-    instance.setI<T>(controller, key: key);
+  static T set<T>(T controller, {String? key}) {
+    return instance.setI<T>(controller, key: key);
   }
 
-  static T? get<T>({String? key}) {
+  static T get<T>({String? key}) {
     return instance.getI<T>(key: key);
   }
 
-  static bool contains<T>({String? key}) {
-    return instance.containsI<T>(key: key);
+  static bool contains<T>({T? value, String? key}) {
+    return instance.containsI<T>(value: value, key: key);
   }
 
-  static T? remove<T>(String? key) {
-    return instance.removeI<T>(key);
+  static T? remove<T>({T? value, String? key}) {
+    return instance.removeI<T>(value: value, key: key);
   }
 
   /// Instance fields & methods below
@@ -29,29 +29,36 @@ class Broker {
 
   Map<String, Object> get map => (_map ??= {});
 
-  void setIfAbsentI<T>(T controller, {String? key}) {
-    if (!containsI<T>(key: key)) {
-      setI<T>(controller, key: key);
-    }
+  T setIfAbsentI<T>(T controller, {String? key}) {
+    String k = key ?? T.toString();
+    return containsI<T>(key: k) ? getI(key: k) : setI<T>(controller, key: key);
   }
 
-  void setI<T>(T controller, {String? key}) {
+  T setI<T>(T controller, {String? key}) {
     Type t = T;
     String k = key ?? t.toString();
     map[k] = controller as Object;
+    return controller;
   }
 
-  T? getI<T>({String? key}) {
+  T getI<T>({String? key}) {
     Type t = T;
     String k = key ?? t.toString();
-    return map[k] as T?;
+    Object? object = map[k];
+    if (object == null) {
+      throw '"$T" not found. You need to call "Broker.set($T())" first or check if exist using Broker.contains<$T>() first';
+    }
+    return object as T;
   }
 
-  bool containsI<T>({String? key}) {
-    return map.containsKey(key ?? T.toString());
+  bool containsI<T>({T? value, String? key}) {
+    return value != null && map.containsValue(value) || map.containsKey(key ?? T.toString());
   }
 
-  T? removeI<T>(String? key) {
-    return map.remove(key ?? T.toString()) as T?;
+  T? removeI<T>({T? value, String? key}) {
+    if (value != null) {
+      map.removeWhere((k, v) => v == value);
+    }
+    return (map.remove(key ?? T.toString()) as T?) ?? value;
   }
 }

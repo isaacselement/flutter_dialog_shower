@@ -371,7 +371,7 @@ class CcWidgetUtils {
         _controller.forward();
       },
       dispose: (state) {
-        Broker.remove<AnimationController>(controllerKey)?.dispose();
+        Broker.remove<AnimationController>(key: controllerKey)?.dispose();
       },
       builder: (state, context) {
         AnimationController? _controller = Broker.get(key: controllerKey);
