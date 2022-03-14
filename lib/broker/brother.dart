@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 // Inspired by GetX[https://github.com/jonataslaw/getx]. Brother is the simplified version for GetX widget/state management.
 // Btw -> Observer/StatefulWidget, btv -> Notifier/Data. Wrap your widget with Btw in a scope as small as possible for best practice.
-// BtKey is for decoupling, cause btv plays two roles of Notifier & Data. In some business scenarios, we need to separate them withou btv.
+// BtKey -> For decoupling, btv plays two roles of Notifier & Data, but we may need Notifier only in some business scenarios.
 
 /// Brother Values
 class Btv<T> extends BtNotifier<T> {
@@ -32,33 +32,37 @@ extension ExtBtDouble on double {
 }
 
 /// Brother Widgets
+typedef BtWidgetShouldRebuild<T> = bool Function(BtWidgetState state);
+
 class Btw extends BtWidget {
   Widget Function(BuildContext context) builder;
 
-  Btw({Key? key, required this.builder}) : super(key: key);
+  Btw({Key? key, required this.builder, BtWidgetShouldRebuild? shouldRebuild}) : super(key: key, shouldRebuild: shouldRebuild);
 
   @override
   Widget build(BuildContext context) => builder(context);
 }
 
 abstract class BtWidget extends StatefulWidget {
-  const BtWidget({Key? key}) : super(key: key);
+  BtWidget({Key? key, this.shouldRebuild}) : super(key: key);
+
+  BtWidgetShouldRebuild? shouldRebuild;
 
   @override
-  State<StatefulWidget> createState() => _BtWidgetState();
+  State<StatefulWidget> createState() => BtWidgetState();
 
   @protected
   Widget build(BuildContext context);
 }
 
-class _BtWidgetState extends State<BtWidget> {
+class BtWidgetState extends State<BtWidget> {
   BtObserver observer = BtObserver();
 
   @override
   void initState() {
     super.initState();
     observer.listen((data) {
-      if (mounted) {
+      if (mounted && (widget.shouldRebuild?.call(this) ?? true)) {
         setState(() {});
       }
     });
@@ -201,6 +205,8 @@ class BtStream<T> {
 }
 
 /// Brother Subscription
+typedef BtSubscriptionCallBack<T> = void Function(T? data);
+
 class BtSubscription<T> {
   BtSubscriptionCallBack? onData;
 
@@ -210,8 +216,6 @@ class BtSubscription<T> {
     isClosed = true;
   }
 }
-
-typedef BtSubscriptionCallBack<T> = void Function(T? data);
 
 /// Brother Log Utilities
 bool brother_log_enable = true;
