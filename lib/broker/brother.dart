@@ -44,8 +44,9 @@ class Btw extends BtWidget {
 }
 
 abstract class BtWidget extends StatefulWidget {
-  BtWidget({Key? key, this.shouldRebuild}) : super(key: key);
+  BtWidget({Key? key, this.updateKey, this.shouldRebuild}) : super(key: key);
 
+  String? updateKey;
   BtWidgetShouldRebuild? shouldRebuild;
 
   @override
@@ -62,7 +63,7 @@ class BtWidgetState extends State<BtWidget> {
   void initState() {
     super.initState();
     observer.listen((data) {
-      if (mounted && (widget.shouldRebuild?.call(this) ?? true)) {
+      if ((widget.shouldRebuild?.call(this) ?? true) && mounted) {
         setState(() {});
       }
     });
@@ -79,6 +80,9 @@ class BtWidgetState extends State<BtWidget> {
   Widget build(BuildContext context) {
     BtObserver? bak = BtObserver.proxy;
     BtObserver.proxy = observer;
+    if (widget.updateKey != null) {
+      // TODO: Feature: update widget by a string update key .
+    }
     Widget view = widget.build(context);
     BtObserver.proxy = bak;
     if (observer._subscriptions.isEmpty) {
@@ -126,15 +130,17 @@ class BtNotifier<T> {
 }
 
 class BtKey extends BtNotifier {
-  get eye {
-    BtObserver.proxy?.addListener(this);
-    return this;
-  }
+  get eye => BtObserver.proxy?.addListener(this);
 
   @override
   void update() {
     _stream.add(null);
   }
+
+  // Feature: update widget by a string update key .
+  static Map<String, BtKey>? _map;
+
+  static Map<String, BtKey> get map => (_map ??= {});
 }
 
 /// Brother Observer

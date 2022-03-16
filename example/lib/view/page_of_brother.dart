@@ -213,7 +213,7 @@ class BrotherAdvanceView extends StatelessWidget {
             const SizedBox(width: 24),
             CupertinoButton(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
-              child: const Text('Change the selected icon text', style: TextStyle(color: Colors.blue, fontSize: 15)),
+              child: const Text('Change the selected icon text with dot value', style: TextStyle(color: Colors.blue, fontSize: 15)),
               onPressed: () {
                 List<String> list = [DateTime.now().toString(), 'It\'s not my name', 'Go go go', 'Copy that'];
                 advancedString.value = (list
@@ -225,7 +225,7 @@ class BrotherAdvanceView extends StatelessWidget {
             const SizedBox(width: 24),
             CupertinoButton(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
-              child: const Text('Reset icons', style: TextStyle(color: Colors.blue, fontSize: 15)),
+              child: const Text('Reset icons with update method', style: TextStyle(color: Colors.blue, fontSize: 15)),
               onPressed: () {
                 // batch update values, set state once
                 advancedIndex.data = 0;
@@ -236,13 +236,13 @@ class BrotherAdvanceView extends StatelessWidget {
             const SizedBox(width: 24),
             CupertinoButton(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
-              child: const Text('Reset all', style: TextStyle(color: Colors.blue, fontSize: 15)),
+              child: const Text('Reset all with BtKey', style: TextStyle(color: Colors.blue, fontSize: 15)),
               onPressed: () {
                 // using BtKey update values, set state once
                 advancedString.data = '';
                 advancedIndex.data = 0;
-                changeMeLists.value.clear();
-                changeMeMaps.value.clear();
+                changeMeLists.value.clear(); // will not update the view, unless .value = something will trigger the setState
+                changeMeMaps.value.clear(); // will not update the view, unless .value = something will trigger the setState
                 updateWidgetsKey.update();
               },
             ),

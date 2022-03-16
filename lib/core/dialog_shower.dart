@@ -376,7 +376,8 @@ class DialogShower {
       __shower_log__('self: _width: $_width, _height: $_height');
       __shower_log__(
           'Window: mWidth: $mWidth, mHeight: $mHeight, mTop: $mTop; MediaQuery kWidth: $kWidth, kHeight: $kHeight, kTop: $kTop');
-      __shower_log__('Media.Window width: ${query.size.width}, height: ${query.size.height}, padding: ${query.padding}');
+      __shower_log__(
+          'Media.Window width: ${query.size.width}, height: ${query.size.height}, top: ${query.padding.top}, padding: ${query.padding}');
       return true;
     }());
 
@@ -412,7 +413,6 @@ class DialogShower {
     }());
     // ---------------------------- calculate _margin, _width, _height ----------------------------
 
-    // alignment == null
     Widget smallestContainer = _getContainer(_child, _width, _height);
     if (alignment == null) {
       return _margin != null ? Padding(padding: _margin, child: smallestContainer) : smallestContainer;
