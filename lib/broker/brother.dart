@@ -11,14 +11,6 @@ class Btv<T> extends BtNotifier<T> {
   }
 }
 
-extension ExtBtT<T> on T {
-  Btv<T> get btv => Btv<T>(this);
-}
-
-extension ExtBtString on String {
-  Btv<String> get btv => Btv(this);
-}
-
 extension ExtBtBool on bool {
   Btv<bool> get btv => Btv(this);
 }
@@ -29,6 +21,14 @@ extension ExtBtInt on int {
 
 extension ExtBtDouble on double {
   Btv<double> get btv => Btv(this);
+}
+
+extension ExtBtString on String {
+  Btv<String> get btv => Btv(this);
+}
+
+extension ExtBtT<T> on T {
+  Btv<T> get btv => Btv<T>(this);
 }
 
 /// Brother Widgets

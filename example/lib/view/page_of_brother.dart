@@ -35,6 +35,13 @@ class PageOfBrother extends StatelessWidget {
             const Spacer(),
             Column(
               children: [
+                const Text('Btw & btv null', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                _buildBtwBtvNull(),
+              ],
+            ),
+            const Spacer(),
+            Column(
+              children: [
                 const Text('Btw & btKey', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 _buildBtwBtKey(),
               ],
@@ -64,7 +71,26 @@ class PageOfBrother extends StatelessWidget {
         return CupertinoButton(
             child: Icon(Icons.swipe, size: 50, color: color.value),
             onPressed: () {
-              color.value = color.value == Colors.black ? Colors.green : Colors.black;
+              color.value = (color.value == Colors.black) ? Colors.green : Colors.black;
+            });
+      },
+    );
+  }
+
+  Widget _buildBtwBtvNull() {
+    Btv<Color?> color = Btv<Color?>(null);
+    return Btw(
+      builder: (context) {
+        return CupertinoButton(
+            child: Icon(Icons.flare, size: 50, color: color.value??Colors.purpleAccent),
+            onPressed: () {
+              if (color.value == null) {
+                color.value = Colors.deepOrange;
+              } else if (color.value == Colors.deepOrange) {
+                color.value = Colors.black;
+              } else if (color.value == Colors.black) {
+                color.value = null;
+              }
             });
       },
     );
