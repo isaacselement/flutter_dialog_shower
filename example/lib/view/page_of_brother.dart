@@ -22,9 +22,98 @@ class PageOfBrother extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 32),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            Column(
+              children: [
+                const Text('Btw & btv', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                _buildBtwBtv(),
+              ],
+            ),
+            const Spacer(),
+            Column(
+              children: [
+                const Text('Btw & btKey', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                _buildBtwBtKey(),
+              ],
+            ),
+            const Spacer(),
+            Column(
+              children: [
+                const Text('Btw & String Key', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                _buildBtwWithStringKey(),
+              ],
+            ),
+            const Spacer(),
+          ],
+        ),
+        const SizedBox(height: 32),
         BrotherBasicView(),
         const SizedBox(height: 96),
         BrotherAdvanceView(),
+      ],
+    );
+  }
+
+  Widget _buildBtwBtv() {
+    Btv<Color> color = Colors.black26.btv;
+    return Btw(
+      builder: (context) {
+        return CupertinoButton(
+            child: Icon(Icons.swipe, size: 50, color: color.value),
+            onPressed: () {
+              color.value = color.value == Colors.black ? Colors.green : Colors.black;
+            });
+      },
+    );
+  }
+
+  Widget _buildBtwBtKey() {
+    Color color = Colors.black26;
+    BtKey btKey = BtKey();
+    return Btw(
+      builder: (context) {
+        btKey.eye; // Put an eye here. Just like ... Dota/LOL online game 插个眼.
+        return CupertinoButton(
+            child: Icon(Icons.fingerprint, size: 50, color: color),
+            onPressed: () {
+              color = color == Colors.red ? Colors.purpleAccent : Colors.red;
+              btKey.update();
+            });
+      },
+    );
+  }
+
+  Widget _buildBtwWithStringKey() {
+    Color colorHello = Colors.black26;
+    Color colorRefresh = Colors.black26;
+    return Row(
+      children: [
+        Btw(
+          updateKey: '__hello_hello_hello__',
+          builder: (context) {
+            return CupertinoButton(
+                child: Icon(Icons.restore_from_trash, size: 50, color: colorHello),
+                onPressed: () {
+                  colorHello = colorHello == Colors.red ? Colors.purpleAccent : Colors.red;
+                  Btw.update('__hello_hello_hello__');
+                });
+          },
+        ),
+        Btw(
+          updateKey: '__can_you_see__',
+          builder: (context) {
+            return CupertinoButton(
+                child: Icon(Icons.refresh, size: 50, color: colorRefresh),
+                onPressed: () {
+                  colorHello = colorHello == Colors.red ? Colors.purpleAccent : Colors.red;
+                  colorRefresh = colorRefresh == Colors.red ? Colors.purpleAccent : Colors.red;
+                  Btw.updates(['__hello_hello_hello__', '__can_you_see__']);
+                });
+          },
+        ),
       ],
     );
   }

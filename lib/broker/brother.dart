@@ -36,11 +36,26 @@ typedef BtWidgetShouldRebuild<T> = bool Function(BtWidgetState state);
 
 class Btw extends BtWidget {
   Widget Function(BuildContext context) builder;
+  String? updateKey;
 
-  Btw({Key? key, required this.builder, BtWidgetShouldRebuild? shouldRebuild}) : super(key: key, shouldRebuild: shouldRebuild);
+  Btw({Key? key, required this.builder, this.updateKey, BtWidgetShouldRebuild? shouldRebuild})
+      : super(key: key, updateKey: updateKey, shouldRebuild: shouldRebuild);
 
   @override
   Widget build(BuildContext context) => builder(context);
+
+  // New Feature: update widget by a string key .
+  static Map<String, BtKey>? _map;
+
+  static Map<String, BtKey> get map => (_map ??= {});
+
+  static update(String updateKey) {
+    map[updateKey]?.update();
+  }
+
+  static updates(List<String> keys) {
+    keys.forEach(update);
+  }
 }
 
 abstract class BtWidget extends StatefulWidget {
@@ -72,24 +87,51 @@ class BtWidgetState extends State<BtWidget> {
   @override
   void dispose() {
     observer.close();
+    _updateKeyRemove();
     super.dispose();
     __brother_debug_log__('BtWidget disposed');
   }
 
   @override
   Widget build(BuildContext context) {
-    BtObserver? bak = BtObserver.proxy;
+    BtObserver? bakup = BtObserver.proxy;
     BtObserver.proxy = observer;
-    if (widget.updateKey != null) {
-      // TODO: Feature: update widget by a string update key .
-    }
-    Widget view = widget.build(context);
-    BtObserver.proxy = bak;
+    _updateKeyAdd();
+    Widget result = widget.build(context);
+    BtObserver.proxy = bakup;
     if (observer._subscriptions.isEmpty) {
       __brother_error_log__(
           'The improper use of Btw has been detected. The btv value getter method didn\'t call, pls check your code/conditional logic.');
     }
-    return view;
+    return result;
+  }
+
+  void _updateKeyAdd() {
+    if (widget.updateKey != null) {
+      String updateKey = widget.updateKey!;
+      BtObserver.proxy?.addListener(Btw.map[updateKey] ?? (Btw.map[updateKey] = BtKey()));
+    }
+  }
+
+  void _updateKeyRemove() {
+    if (widget.updateKey != null) {
+      String updateKey = widget.updateKey!;
+      BtKey? btKey = Btw.map[updateKey];
+      if (btKey?.isSubscriptionsEmpty() ?? false) {
+        Btw.map.remove(updateKey);
+        __brother_debug_log__('BtWidget remove updateKey: $updateKey');
+      }
+    }
+  }
+}
+
+/// Brother Key is a Notifier
+class BtKey extends BtNotifier {
+  get eye => BtObserver.proxy?.addListener(this);
+
+  @override
+  void update() {
+    _stream.add(null);
   }
 }
 
@@ -126,21 +168,13 @@ class BtNotifier<T> {
     return _stream.listen(onData);
   }
 
-  void remove(BtSubscription<T> sub) {}
-}
-
-class BtKey extends BtNotifier {
-  get eye => BtObserver.proxy?.addListener(this);
-
-  @override
-  void update() {
-    _stream.add(null);
+  void remove(BtSubscription<T> sub) {
+    _stream.subscriptions.remove(sub);
   }
 
-  // Feature: update widget by a string update key .
-  static Map<String, BtKey>? _map;
-
-  static Map<String, BtKey> get map => (_map ??= {});
+  bool isSubscriptionsEmpty() {
+    return _stream.subscriptions.isEmpty;
+  }
 }
 
 /// Brother Observer
