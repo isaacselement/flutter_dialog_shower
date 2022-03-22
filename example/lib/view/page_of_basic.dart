@@ -1,12 +1,10 @@
 import 'package:example/util/logger.dart';
 import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
-import 'package:example/view/page_of_keyboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
-import 'package:flutter_dialog_shower/event/event_truck.dart';
 
 class PageOfBasic extends StatelessWidget {
   @override

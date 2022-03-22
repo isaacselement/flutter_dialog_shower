@@ -4,7 +4,7 @@ import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
-import 'package:flutter_dialog_shower/view/bubble_widgets.dart';
+import 'package:flutter_dialog_shower/view/cc_bubble_widgets.dart';
 import 'package:flutter_dialog_shower/view/cc_select_list_widgets.dart';
 
 import '../util/logger.dart';
@@ -100,7 +100,7 @@ class PageOfBubble extends StatelessWidget {
                 Offset position = OffsetUtil.getOffsetB(context) ?? Offset.zero;
                 Size size = SizeUtil.getSizeB(context) ?? Size.zero;
                 DialogWrapper.show(
-                  BubbleWidget(
+                  CcBubbleWidget(
                     width: 200,
                     height: 200,
                     bubbleTriangleOffset: 20.0,

@@ -2,7 +2,7 @@ import 'dart:math' as Math;
 
 import 'package:flutter/material.dart';
 
-class BubbleWidget extends StatelessWidget {
+class CcBubbleWidget extends StatelessWidget {
   Widget? child;
 
   double? width;
@@ -17,7 +17,7 @@ class BubbleWidget extends StatelessWidget {
   TriangleArrowDirection triangleDirection;
   bool isTriangleOccupiedSpace;
 
-  BubbleWidget({
+  CcBubbleWidget({
     Key? key,
     this.width,
     this.height,
@@ -61,7 +61,7 @@ class BubbleWidget extends StatelessWidget {
 
     // CustomPaint as parent
     return CustomPaint(
-      painter: BubblePainter(
+      painter: CcBubblePainter(
         x: px,
         y: py,
         w: width,
@@ -94,10 +94,10 @@ class BubbleWidget extends StatelessWidget {
 
 /// Painter Below
 
-enum TriangleArrowDirection { top, right, bottom, left }
-enum PathLinePosition { top, right, bottom, left }
+enum TriangleArrowDirection { top, right, bottom, left, topRight, topLeft, bottomLeft, bottomRight }  /// TODO ....
+enum _PathLinePosition { top, right, bottom, left }
 
-class BubblePainter extends CustomPainter {
+class CcBubblePainter extends CustomPainter {
   double x;
   double y;
   double? w;
@@ -117,7 +117,7 @@ class BubblePainter extends CustomPainter {
 
   Color? paintColor;
 
-  BubblePainter({
+  CcBubblePainter({
     required this.x,
     required this.y,
     this.w,
@@ -145,25 +145,25 @@ class BubblePainter extends CustomPainter {
 
   // triangleOffset is based on clockwise direction
   // draw a small equilateral triangle pointing to a certain direction  // 绘制指向某个方向的等边小三角
-  void _applyTriangleArrow(Path path, PathLinePosition pathPosition, double startX, double startY, double endX, double endY,
+  void _applyTriangleArrow(Path path, _PathLinePosition pathPosition, double startX, double startY, double endX, double endY,
       TriangleArrowDirection triangleDirection, double triangleWidth, double triangleHeight, double triangleOffset) {
     if (triangleWidth <= 0 || triangleHeight <= 0) {
       return;
     }
     // double triangleEqSide = sqrt(pow(triangleWidth, 2) + pow(triangleHeight, 2));
-    if (pathPosition == PathLinePosition.top && triangleDirection == TriangleArrowDirection.top) {
+    if (pathPosition == _PathLinePosition.top && triangleDirection == TriangleArrowDirection.top) {
       path.lineTo(startX + triangleOffset, startY);
       path.lineTo(startX + (triangleOffset + triangleWidth / 2), startY - triangleHeight);
       path.lineTo(startX + (triangleOffset + triangleWidth), startY);
-    } else if (pathPosition == PathLinePosition.right && triangleDirection == TriangleArrowDirection.right) {
+    } else if (pathPosition == _PathLinePosition.right && triangleDirection == TriangleArrowDirection.right) {
       path.lineTo(startX, startY + triangleOffset);
       path.lineTo(startX + triangleHeight, startY + (triangleOffset + triangleWidth / 2));
       path.lineTo(startX, startY + (triangleOffset + triangleWidth));
-    } else if (pathPosition == PathLinePosition.bottom && triangleDirection == TriangleArrowDirection.bottom) {
+    } else if (pathPosition == _PathLinePosition.bottom && triangleDirection == TriangleArrowDirection.bottom) {
       path.lineTo(endX + (triangleOffset + triangleWidth), endY);
       path.lineTo(endX + (triangleOffset + triangleWidth / 2), endY + triangleHeight);
       path.lineTo(endX + triangleOffset, endY);
-    } else if (pathPosition == PathLinePosition.left && triangleDirection == TriangleArrowDirection.left) {
+    } else if (pathPosition == _PathLinePosition.left && triangleDirection == TriangleArrowDirection.left) {
       path.lineTo(endX, endY + (triangleOffset + triangleWidth));
       path.lineTo(endX - triangleHeight, endY + (triangleOffset + triangleWidth / 2));
       path.lineTo(endX, endY + triangleOffset);
@@ -209,7 +209,7 @@ class BubblePainter extends CustomPainter {
     pointsPath.moveTo(leftCircleCenterX, y);
 
     // top line
-    _applyTriangleArrow(pointsPath, PathLinePosition.top, leftCircleCenterX, y, rightCircleCenterX, y, triangleDirection, triangleWidth,
+    _applyTriangleArrow(pointsPath, _PathLinePosition.top, leftCircleCenterX, y, rightCircleCenterX, y, triangleDirection, triangleWidth,
         triangleHeight, _triangleOffset);
     pointsPath.lineTo(rightCircleCenterX, y);
 
@@ -221,7 +221,7 @@ class BubblePainter extends CustomPainter {
     }
 
     // right line
-    _applyTriangleArrow(pointsPath, PathLinePosition.right, x + _w, topCircleCenterY, x + _w, bottomCircleCenterY, triangleDirection,
+    _applyTriangleArrow(pointsPath, _PathLinePosition.right, x + _w, topCircleCenterY, x + _w, bottomCircleCenterY, triangleDirection,
         triangleWidth, triangleHeight, _triangleOffset);
     pointsPath.lineTo(x + _w, bottomCircleCenterY);
 
@@ -232,7 +232,7 @@ class BubblePainter extends CustomPainter {
     }
 
     // bottom line
-    _applyTriangleArrow(pointsPath, PathLinePosition.bottom, rightCircleCenterX, y + _h, leftCircleCenterX, y + _h, triangleDirection,
+    _applyTriangleArrow(pointsPath, _PathLinePosition.bottom, rightCircleCenterX, y + _h, leftCircleCenterX, y + _h, triangleDirection,
         triangleWidth, triangleHeight, _triangleOffset);
     pointsPath.lineTo(leftCircleCenterX, y + _h);
 
@@ -243,7 +243,7 @@ class BubblePainter extends CustomPainter {
     }
 
     // left line
-    _applyTriangleArrow(pointsPath, PathLinePosition.left, x, bottomCircleCenterY, x, topCircleCenterY, triangleDirection, triangleWidth,
+    _applyTriangleArrow(pointsPath, _PathLinePosition.left, x, bottomCircleCenterY, x, topCircleCenterY, triangleDirection, triangleWidth,
         triangleHeight, _triangleOffset);
     pointsPath.lineTo(x, topCircleCenterY);
 

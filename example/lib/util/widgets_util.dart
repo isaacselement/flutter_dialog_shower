@@ -1,14 +1,12 @@
+import 'package:example/util/logger.dart';
 import 'package:example/util/size_util.dart';
 import 'package:example/view/manager/themes_manager.dart';
-import 'package:example/view/widgets/button_widgets.dart';
 import 'package:example/view/widgets/cc_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_dialog_shower/broker/brother.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
-import 'package:flutter_dialog_shower/view/bubble_widgets.dart';
+import 'package:flutter_dialog_shower/view/cc_bubble_widgets.dart';
 
 import 'offset_util.dart';
 
@@ -70,7 +68,7 @@ class WidgetsUtil {
               maxLines: 100,
               maxLength: 1000,
               onChanged: (str) {
-                print('u enter text: $str');
+                Logger.d('u enter text: $str');
               },
             )
           ],
@@ -228,7 +226,7 @@ class WidgetsUtil {
 
   /// Bubble Menus
   static Widget getMenuBubble({TriangleArrowDirection direction = TriangleArrowDirection.left, double? triangleOffset}) {
-    return BubbleWidget(
+    return CcBubbleWidget(
       bubbleColor: Colors.black, // triangle color
       triangleDirection: direction,
       bubbleTriangleOffset: triangleOffset,
@@ -243,7 +241,7 @@ class WidgetsUtil {
           [Icons.menu_sharp, 'More'],
         ],
         onTap: (index, value, context) {
-          print('=========>>>>> you tap $index, value is $value, toString(): ${value.toString()}');
+          Logger.d('=========>>>>> you tap $index, value is $value, toString(): ${value.toString()}');
           if (value.toString().contains('More')) {
             Offset offset = OffsetUtil.getOffsetB(context) ?? Offset.zero;
             Size size = SizeUtil.getSizeB(context) ?? Size.zero;

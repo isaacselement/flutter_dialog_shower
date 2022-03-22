@@ -1,9 +1,7 @@
-import 'dart:math';
 
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/broker/broker.dart';
 import 'package:flutter_dialog_shower/core/dialog_widgets.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
 
