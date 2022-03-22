@@ -8,7 +8,7 @@ class InsetsUtil {
       print('[PositionUtil] -> rebuildShowerPositionTopOnKeyboardEvent $isKeyboardShow');
       return true;
     }());
-    shower.obj = shower.obj is List ? shower.obj : [shower.alignment, shower.margin];
+    shower.obj = shower.obj is List ? shower.obj : [shower.alignment, shower.padding];
     Alignment? aliOld = (shower.obj as List)[0];
     Alignment aliNew = Alignment(aliOld?.x ?? 0.0, -1.0); // Alignment topCenter = Alignment(0.0, -1.0);
     EdgeInsets? insOld = (shower.obj as List)[1];
@@ -20,7 +20,7 @@ class InsetsUtil {
     );
     shower.setState(() {
       shower.alignment = isKeyboardShow ? aliNew : aliOld;
-      shower.margin = isKeyboardShow ? insNew : insOld;
+      shower.padding = isKeyboardShow ? insNew : insOld;
     });
   }
 
@@ -29,7 +29,7 @@ class InsetsUtil {
       print('[PositionUtil] -> rebuildShowerPositionBottomOnKeyboardEvent $isKeyboardShow');
       return true;
     }());
-    shower.obj = shower.obj is List ? shower.obj : [shower.alignment, shower.margin];
+    shower.obj = shower.obj is List ? shower.obj : [shower.alignment, shower.padding];
     Alignment? aliOld = (shower.obj as List)[0];
     Alignment aliNew = Alignment(aliOld?.x ?? 0.0, 1.0); // Alignment bottomCenter = Alignment(0.0, 1.0);
     EdgeInsets? insOld = (shower.obj as List)[1];
@@ -41,7 +41,7 @@ class InsetsUtil {
     );
     shower.setState(() {
       shower.alignment = isKeyboardShow ? aliNew : aliOld;
-      shower.margin = isKeyboardShow ? insNew : insOld;
+      shower.padding = isKeyboardShow ? insNew : insOld;
     });
   }
 }

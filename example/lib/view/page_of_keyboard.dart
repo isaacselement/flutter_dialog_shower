@@ -75,7 +75,7 @@ class PageOfKeyboard extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Show x/y', onPressed: () {
               DialogWrapper.show(WidgetsUtil.newEditBox(), x: 20, y: 40).keyboardEventCallBack = (shower, isKeyboardShow) {
                 shower.setState(() {
-                  shower.margin = isKeyboardShow ? const EdgeInsets.only(left: 200) : const EdgeInsets.only(left: 200, top: 200);
+                  shower.padding = isKeyboardShow ? const EdgeInsets.only(left: 200) : const EdgeInsets.only(left: 200, top: 200);
                 });
               };
             }),

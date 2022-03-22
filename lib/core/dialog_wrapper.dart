@@ -21,10 +21,10 @@ class DialogWrapper {
     DialogShower shower = show(child, width: width, height: height, direction: const Offset(1.0, 0.0), key: key);
     if (isFixed) {
       shower.alignment = Alignment.topRight;
-      shower.margin = const EdgeInsets.only(top: -1, right: 16);
+      shower.padding = const EdgeInsets.only(top: -1, right: 16);
     } else {
       shower.alignment = Alignment.centerRight;
-      shower.margin = const EdgeInsets.only(right: 16);
+      shower.padding = const EdgeInsets.only(right: 16);
     }
     return shower;
   }
@@ -33,10 +33,10 @@ class DialogWrapper {
     DialogShower shower = show(child, width: width, height: height, direction: const Offset(-1.0, 0.0), key: key);
     if (isFixed) {
       shower.alignment = Alignment.topLeft;
-      shower.margin = const EdgeInsets.only(top: -1, left: 16);
+      shower.padding = const EdgeInsets.only(top: -1, left: 16);
     } else {
       shower.alignment = Alignment.centerLeft;
-      shower.margin = const EdgeInsets.only(left: 16);
+      shower.padding = const EdgeInsets.only(left: 16);
     }
     return shower;
   }
@@ -44,7 +44,7 @@ class DialogWrapper {
   static DialogShower showBottom(Widget child, {double? width, double? height, String? key}) {
     DialogShower shower = show(child, width: width, height: height, direction: const Offset(0.0, 1.0), key: key);
     shower.alignment = Alignment.bottomCenter;
-    shower.margin = const EdgeInsets.only(bottom: 16);
+    shower.padding = const EdgeInsets.only(bottom: 16);
     return shower;
   }
 
@@ -69,12 +69,12 @@ class DialogWrapper {
     if (isFixed) {
       shower
         ..alignment = null
-        ..margin = const EdgeInsets.only(left: -1, top: -1);
+        ..padding = const EdgeInsets.only(left: -1, top: -1);
     }
     if (x != null && y != null) {
       shower
         ..alignment = isFixed ? null : Alignment.topLeft
-        ..margin = EdgeInsets.only(left: x, top: y);
+        ..padding = EdgeInsets.only(left: x, top: y);
     }
 
     centralOfShower?.call(shower);

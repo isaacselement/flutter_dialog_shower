@@ -35,7 +35,7 @@ class DialogShower {
   AlignmentGeometry? alignment = Alignment.center;
 
   // container
-  EdgeInsets? margin;
+  EdgeInsets? padding;
   double? width;
   double? height;
   double? _renderedWidth;
@@ -357,7 +357,7 @@ class DialogShower {
   }
 
   Widget _getScaffoldBody(Widget _child) {
-    // ---------------------------- calculate _margin, _width, _height ----------------------------
+    // ---------------------------- calculate _padding, _width, _height ----------------------------
     double? _width = width ?? _renderedWidth;
     double? _height = height ?? _renderedHeight;
 
@@ -384,42 +384,42 @@ class DialogShower {
     // We use a Padding outside for handle vertically center instead of Container Alignment.Center, cause when keyboard comes out once child get focus,
     // will make the child stick to the top of the container.
 
-    EdgeInsets? _margin;
+    EdgeInsets? _padding;
 
     // when the Scaffold's body is Padding instead of Container (or Container without height & alignment) , you should calculate the top padding
     // if you do not use a calculated value as padding top (when use the alignment or set height for align center child), it child will stick to screen top when keyboard show up !!!
 
-    if (margin != null) {
-      EdgeInsets m = margin!;
+    if (padding != null) {
+      EdgeInsets m = padding!;
       if (m.top < 0 || m.left < 0) {
         if (_width == null || _height == null) {
           // _tryToGetContainerSize(); // replace with _tryToGetSizeOrNot now
           _isTryToGetSmallestSize = true;
         }
 
-        // [Center Vertically] if height is given when margin not given or top is negative
+        // [Center Vertically] if height is given when padding not given or top is negative
         double centerTop = _height != null ? (kHeight - _height) / 2 : 0;
-        // [Center Horizontal] if width is given when margin not given or top is negative
+        // [Center Horizontal] if width is given when padding not given or top is negative
         double centerLeft = _width != null ? (kWidth - _width) / 2 : 0;
-        _margin = EdgeInsets.fromLTRB(m.left < 0 ? centerLeft : m.left, m.top < 0 ? centerTop : m.top, m.right, m.bottom);
+        _padding = EdgeInsets.fromLTRB(m.left < 0 ? centerLeft : m.left, m.top < 0 ? centerTop : m.top, m.right, m.bottom);
       } else {
-        _margin = m;
+        _padding = m;
       }
     }
 
     assert(() {
-      __shower_log__('_margin: $_margin, alignment: $alignment, animationBeginOffset: $animationBeginOffset');
+      __shower_log__('_padding: $_padding, alignment: $alignment, animationBeginOffset: $animationBeginOffset');
       return true;
     }());
-    // ---------------------------- calculate _margin, _width, _height ----------------------------
+    // ---------------------------- calculate _padding, _width, _height ----------------------------
 
     Widget smallestContainer = _getContainer(_child, _width, _height);
     if (alignment == null) {
-      return _margin != null ? Padding(padding: _margin, child: smallestContainer) : smallestContainer;
+      return _padding != null ? Padding(padding: _padding, child: smallestContainer) : smallestContainer;
     } else {
       return Container(
         // color: Colors.red,
-        padding: _margin,
+        padding: _padding,
         alignment: alignment,
         child: smallestContainer,
       );

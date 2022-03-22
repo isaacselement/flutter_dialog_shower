@@ -72,19 +72,19 @@ class PageOfBasic extends StatelessWidget {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(-1.0, 0.0);
               shower.alignment = Alignment.centerLeft;
-              shower.margin = const EdgeInsets.only(left: 5);
+              shower.padding = const EdgeInsets.only(left: 5);
             }),
             WidgetsUtil.newXpelTextButton('Show in right', onPressed: () {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(1.0, 0.0);
               shower.alignment = Alignment.centerRight;
-              shower.margin = const EdgeInsets.only(right: 5);
+              shower.padding = const EdgeInsets.only(right: 5);
             }),
             WidgetsUtil.newXpelTextButton('Show in bottom', onPressed: () {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(0.0, 1.0);
               shower.alignment = Alignment.bottomCenter;
-              shower.margin = const EdgeInsets.only(bottom: 5);
+              shower.padding = const EdgeInsets.only(bottom: 5);
               // barrier color
               shower.barrierColor = const Color(0x4D1C1D21);
             }),
@@ -92,7 +92,7 @@ class PageOfBasic extends StatelessWidget {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(0.0, -1.0);
               shower.alignment = Alignment.topCenter;
-              shower.margin = EdgeInsets.only(top: SizeUtil.statuBarHeight);
+              shower.padding = EdgeInsets.only(top: SizeUtil.statuBarHeight);
               // background color
               shower.scaffoldBackgroundColor = const Color(0x4D1C1D21);
             }),
@@ -102,7 +102,7 @@ class PageOfBasic extends StatelessWidget {
               DialogShower shower = doBasicShow();
               shower
                 ..alignment = Alignment.topLeft
-                ..margin = EdgeInsets.only(left: x, top: y);
+                ..padding = EdgeInsets.only(left: x, top: y);
             }),
           ],
         ),
@@ -215,7 +215,7 @@ class PageOfBasic extends StatelessWidget {
                       DialogWrapper.show(_container(text: 'Click any where out of this box'))
                         ..animationBeginOffset = const Offset(0.0, -1.0)
                         ..alignment = Alignment.topCenter
-                        ..margin = EdgeInsets.only(top: SizeUtil.statuBarHeight);
+                        ..padding = EdgeInsets.only(top: SizeUtil.statuBarHeight);
                     });
                   });
                 });
@@ -229,7 +229,7 @@ class PageOfBasic extends StatelessWidget {
                       DialogWrapper.show(_container(text: 'Click any where out of this box'))
                         ..animationBeginOffset = const Offset(0.0, -1.0)
                         ..alignment = Alignment.topCenter
-                        ..margin = EdgeInsets.only(top: SizeUtil.statuBarHeight)
+                        ..padding = EdgeInsets.only(top: SizeUtil.statuBarHeight)
                         ..future.then((value) => DialogWrapper.dismissAppearingDialogs());
                     });
                   });
