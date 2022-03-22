@@ -35,6 +35,7 @@ class DialogShower {
   AlignmentGeometry? alignment = Alignment.center;
 
   // container
+  EdgeInsets? margin;
   EdgeInsets? padding;
   double? width;
   double? height;
@@ -419,6 +420,7 @@ class DialogShower {
     } else {
       return Container(
         // color: Colors.red,
+        margin: margin,
         padding: _padding,
         alignment: alignment,
         child: smallestContainer,
