@@ -35,38 +35,32 @@ class EventTruck {
 
   static EventTruck? _instance;
 
-  static get instance => _instance ??= EventTruck();
+  static get _mInstance => _instance ??= EventTruck();
 
   static Map<String, StreamSubscription>? managedSubscriptions;
 
   // Note, the key parameters is needed unless you take management of the subscription ~~~
-  static StreamSubscription<T> on<T>(void Function(T object) onData, {String? key}) {
-    StreamSubscription<T> subscription = instance.listen<T>(onData);
-    if (key != null) {
+  static StreamSubscription<T> on<T>(void Function(T object) onData, {String? managedKey}) {
+    StreamSubscription<T> subscription = _mInstance.listen<T>(onData);
+    if (managedKey != null) {
       managedSubscriptions ??= {};
-      managedSubscriptions!.remove(key)?.cancel();
-      managedSubscriptions![key] = subscription;
+      managedSubscriptions!.remove(managedKey)?.cancel();
+      managedSubscriptions![managedKey] = subscription;
     }
     return subscription;
   }
 
   static void fire(object) {
-    instance.broadcast(object);
+    _mInstance.broadcast(object);
   }
 
-  static void remove({StreamSubscription<bool>? subscription, String? key}) {
+  static void remove({StreamSubscription<bool>? subscription, String? managedKey}) {
     if (subscription != null) {
       subscription.cancel();
-      managedSubscriptions?.removeWhere((key, value) {
-        bool isBingo = value == subscription;
-        if (isBingo) {
-          value.cancel();
-        }
-        return isBingo;
-      });
+      managedSubscriptions?.removeWhere((key, value) => value == subscription);
     }
-    if (key != null) {
-      managedSubscriptions?.remove(key)?.cancel();
+    if (managedKey != null) {
+      managedSubscriptions?.remove(managedKey)?.cancel();
     }
   }
 }

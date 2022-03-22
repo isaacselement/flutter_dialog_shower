@@ -436,7 +436,7 @@ class DialogShower {
       _isTryToGetSmallestSize = true;
     }
 
-    if (_isTryToGetSmallestSize && width == null && height == null) {
+    if (_isTryToGetSmallestSize && (width == null || height == null)) {
       __shower_log__('[GetSizeWidget] try for getting size now ...');
       widget = GetSizeWidget(
         isInvokedOnlyOnSizeChanged: true,
