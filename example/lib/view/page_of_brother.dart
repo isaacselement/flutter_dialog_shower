@@ -22,38 +22,37 @@ class PageOfBrother extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 32),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
+          spacing: 32,
           children: [
-            const Spacer(),
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Btw & btv', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 _buildBtwBtv(),
               ],
             ),
-            const Spacer(),
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Btw & btv null', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 _buildBtwBtvNull(),
               ],
             ),
-            const Spacer(),
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Btw & btKey', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 _buildBtwBtKey(),
               ],
             ),
-            const Spacer(),
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Btw & String Key', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 _buildBtwWithStringKey(),
               ],
             ),
-            const Spacer(),
           ],
         ),
         const SizedBox(height: 32),
@@ -116,6 +115,7 @@ class PageOfBrother extends StatelessWidget {
     Color colorHello = Colors.black26;
     Color colorRefresh = Colors.black26;
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Btw(
           updateKey: '__hello_hello_hello__',
@@ -315,6 +315,7 @@ class BrotherAdvanceView extends StatelessWidget {
         }),
         const SizedBox(height: 18),
         Wrap(
+          spacing: 18,
           children: [
             CupertinoButton(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
@@ -325,7 +326,6 @@ class BrotherAdvanceView extends StatelessWidget {
                 changeMeLists.update();
               },
             ),
-            const SizedBox(width: 24),
             CupertinoButton(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
               child: const Text('Change the selected icon text with dot value', style: TextStyle(color: Colors.blue, fontSize: 15)),
@@ -337,7 +337,6 @@ class BrotherAdvanceView extends StatelessWidget {
                     .first;
               },
             ),
-            const SizedBox(width: 24),
             CupertinoButton(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
               child: const Text('Reset icons with update method', style: TextStyle(color: Colors.blue, fontSize: 15)),
@@ -348,7 +347,6 @@ class BrotherAdvanceView extends StatelessWidget {
                 advancedString.update();
               },
             ),
-            const SizedBox(width: 24),
             CupertinoButton(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
               child: const Text('Reset all with BtKey', style: TextStyle(color: Colors.blue, fontSize: 15)),

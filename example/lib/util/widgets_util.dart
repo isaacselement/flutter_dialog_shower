@@ -190,34 +190,39 @@ class WidgetsUtil {
     );
   }
 
-  static Column newClickMeWidget(
-      {required Function(BuildContext context) fnClickMe, Function(BuildContext context)? fnClickMe2, String? text}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min, // as small as possible
-      children: [
-        WidgetsUtil.newXpelTextButton('Dismiss', onPressed: () {
-          DialogWrapper.dismissTopDialog();
-        }),
-        LayoutBuilder(builder: (context, constraints) {
-          return CupertinoButton(
-            child: const Text('Click me'),
-            onPressed: () {
-              fnClickMe.call(context);
-            },
-          );
-        }),
-        fnClickMe2 != null
-            ? LayoutBuilder(builder: (context, constraints) {
-                return CupertinoButton(
-                  child: const Text('Click me 2'),
-                  onPressed: () {
-                    fnClickMe2.call(context);
-                  },
-                );
-              })
-            : const Offstage(offstage: true),
-        SizedBox(width: 400, height: 400, child: Center(child: Text(text ?? ''))),
-      ],
+  static Widget newClickMeWidget({
+    required Function(BuildContext context) fnClickMe,
+    Function(BuildContext context)? fnClickMe2,
+    String? text,
+  }) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // as small as possible
+        children: [
+          WidgetsUtil.newXpelTextButton('Dismiss', onPressed: () {
+            DialogWrapper.dismissTopDialog();
+          }),
+          LayoutBuilder(builder: (context, constraints) {
+            return CupertinoButton(
+              child: const Text('Click me'),
+              onPressed: () {
+                fnClickMe.call(context);
+              },
+            );
+          }),
+          fnClickMe2 != null
+              ? LayoutBuilder(builder: (context, constraints) {
+                  return CupertinoButton(
+                    child: const Text('Click me 2'),
+                    onPressed: () {
+                      fnClickMe2.call(context);
+                    },
+                  );
+                })
+              : const Offstage(offstage: true),
+          SizedBox(width: 400, height: 400, child: Center(child: Text(text ?? ''))),
+        ],
+      ),
     );
   }
 

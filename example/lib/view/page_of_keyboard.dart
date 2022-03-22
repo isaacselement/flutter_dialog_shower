@@ -7,7 +7,7 @@ import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/event/keyboard_event_listener.dart';
 import 'package:flutter_dialog_shower/view/keyboard_widgets.dart';
-import 'package:flutter_dialog_shower/view/selectable_list_widget.dart';
+import 'package:flutter_dialog_shower/view/cc_select_list_widgets.dart';
 
 import '../util/logger.dart';
 
@@ -209,7 +209,7 @@ class PageOfKeyboard extends StatelessWidget {
 
   /// Static Methods
 
-  static void showCitiesOnClick(SelectableListState state, int index, Object value, List<Object>? selectedValues) {
+  static void showCitiesOnClick(CcSelectListState state, int index, Object value, List<Object>? selectedValues) {
     if (value is! Map) {
       return;
     }
@@ -221,8 +221,8 @@ class PageOfKeyboard extends StatelessWidget {
     DialogWrapper.push(getSelectableListWidget(value));
   }
 
-  static SelectableListWidget getSelectableListWidget(Object value) {
-    return SelectableListWidget(
+  static CcSelectListWidget getSelectableListWidget(Object value) {
+    return CcSelectListWidget(
       title: 'Select The City',
       values: ((value is Map ? value['children'] : value) as List<dynamic>).cast(),
       functionOfName: (s, i, e) => e is Map ? e['areaName'] : '',

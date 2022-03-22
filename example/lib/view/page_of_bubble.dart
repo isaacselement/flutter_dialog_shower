@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
 import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/view/bubble_widgets.dart';
-import 'package:flutter_dialog_shower/view/selectable_list_widget.dart';
+import 'package:flutter_dialog_shower/view/cc_select_list_widgets.dart';
 
 import '../util/logger.dart';
 import 'widgets/cc_widgets.dart';
@@ -105,7 +105,7 @@ class PageOfBubble extends StatelessWidget {
                     height: 200,
                     bubbleTriangleOffset: 20.0,
                     triangleDirection: TriangleArrowDirection.top,
-                    child: SelectableListWidget(
+                    child: CcSelectListWidget(
                       values: const ['1', '2', '3', '4', '5'],
                     ),
                   ),
