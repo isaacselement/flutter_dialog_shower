@@ -72,15 +72,14 @@ class DialogWidgets {
     if (text != null) {
       children.add(Text(text, style: textStyle ?? defIconTextStyle ?? const TextStyle(color: Colors.white, fontSize: 16)));
     }
-    DialogShower shower = DialogWrapper.show(
-      Container(
-        width: width,
-        height: height,
-        padding: padding,
-        decoration: decoration ?? BoxDecoration(color: backgroundColor ?? defIconBgColor ?? Colors.black),
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: children),
-      ),
+    Widget widget = Container(
+      width: width,
+      height: height,
+      padding: padding,
+      decoration: decoration ?? BoxDecoration(color: backgroundColor ?? defIconBgColor ?? Colors.black),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: children),
     );
+    DialogShower shower = DialogWrapper.show(widget);
 
     // rewrite properties cause show actually in the next micro task :)
     shower

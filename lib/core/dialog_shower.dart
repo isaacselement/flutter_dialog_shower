@@ -107,18 +107,16 @@ class DialogShower {
   Future<R>? then<R>(FutureOr<R> Function(void value) onValue, {Function? onError}) => future.then(onValue, onError: onError);
 
   // private .....
+  TapUpDetails? get tapUpDetails => _tapUpDetails;
   TapUpDetails? _tapUpDetails;
 
-  get tapUpDetails => _tapUpDetails;
-
+  // GlobalKey get builderExKey => _builderExKey;
   // final GlobalKey _builderExKey = GlobalKey();
-  // get builderExKey => _builderExKey;
+  GlobalKey get statefulKey => _statefulKey;
   final GlobalKey _statefulKey = GlobalKey();
 
-  get statefulKey => _statefulKey;
+  GlobalKey get containerKey => _containerKey;
   final GlobalKey _containerKey = GlobalKey();
-
-  get containerKey => _containerKey;
 
   // extension for navigate inner dialog
   bool isWrappedByNavigator = false;
