@@ -55,11 +55,11 @@ class DialogShower {
   bool Function(DialogShower shower, Offset point)? barrierOnTapCallback;
   bool Function(DialogShower shower, Offset point, bool isTapInside)? wholeOnTapCallback;
 
-  ShowerVisibilityCallBack? showCallBack = null;
-  ShowerVisibilityCallBack? dismissCallBack = null;
+  ShowerVisibilityCallBack? showCallBack;
+  ShowerVisibilityCallBack? dismissCallBack;
 
-  List<ShowerVisibilityCallBack>? showCallbacks = null;
-  List<ShowerVisibilityCallBack>? dismissCallbacks = null;
+  List<ShowerVisibilityCallBack>? showCallbacks;
+  List<ShowerVisibilityCallBack>? dismissCallbacks;
 
   void addShowCallBack(ShowerVisibilityCallBack callBack) => (showCallbacks = showCallbacks ?? []).add(callBack);
 
@@ -110,10 +110,10 @@ class DialogShower {
   TapUpDetails? get tapUpDetails => _tapUpDetails;
   TapUpDetails? _tapUpDetails;
 
-  // GlobalKey get builderExKey => _builderExKey;
-  // final GlobalKey _builderExKey = GlobalKey();
-  GlobalKey get statefulKey => _statefulKey;
-  final GlobalKey _statefulKey = GlobalKey();
+  GlobalKey<BuilderExState> get builderExKey => _builderExKey;
+  final GlobalKey<BuilderExState> _builderExKey = GlobalKey<BuilderExState>();
+  // GlobalKey get statefulKey => _statefulKey;
+  // final GlobalKey _statefulKey = GlobalKey();
 
   GlobalKey get containerKey => _containerKey;
   final GlobalKey _containerKey = GlobalKey();
@@ -237,7 +237,7 @@ class DialogShower {
 
   Widget _getInternalWidget(Widget _child) {
     return BuilderEx(
-      // key: _builderExKey,
+      key: _builderExKey,
       showCallBack: () {
         isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
 
@@ -343,12 +343,7 @@ class DialogShower {
           child: Scaffold(
             appBar: null,
             backgroundColor: scaffoldBackgroundColor,
-            body: StatefulBuilder(
-              key: _statefulKey,
-              builder: (context, setState) {
-                return _getScaffoldBody(_child);
-              },
-            ),
+            body: _getScaffoldBody(_child),
           ),
         );
       },
@@ -356,6 +351,15 @@ class DialogShower {
   }
 
   Widget _getScaffoldBody(Widget _child) {
+    // return StatefulBuilder(
+    // key: _statefulKey,
+    // builder: (context, setState) {
+    return _getScaffoldContainer(_child);
+    // },
+    // );
+  }
+
+  Widget _getScaffoldContainer(Widget _child) {
     // ---------------------------- calculate _padding, _width, _height ----------------------------
     double? _width = width ?? renderedWidth;
     double? _height = height ?? renderedHeight;
@@ -412,7 +416,7 @@ class DialogShower {
     }());
     // ---------------------------- calculate _padding, _width, _height ----------------------------
 
-    Widget smallestContainer = _getContainer(_child, _width, _height);
+    Widget smallestContainer = _getSmallestContainer(_child, _width, _height);
     if (alignment == null) {
       return _padding != null ? Padding(padding: _padding, child: smallestContainer) : smallestContainer;
     } else {
@@ -428,7 +432,7 @@ class DialogShower {
 
   bool _isTryToGetSmallestSize = false;
 
-  Widget _getContainer(Widget child, double? width, double? height) {
+  Widget _getSmallestContainer(Widget child, double? width, double? height) {
     Widget ccccc = child;
     Widget widget = ccccc;
     if (isWrappedByNavigator && isAutoSizeForNavigator && (width == null || height == null)) {
@@ -557,8 +561,8 @@ class DialogShower {
       __shower_log__('[DialogShower] setState was called, rebuilding...');
       return true;
     }());
-    // _builderExKey.currentState?.setState(fn);
-    _statefulKey.currentState?.setState(fn);
+    _builderExKey.currentState?.setState(fn);
+    // _statefulKey.currentState?.setState(fn);
   }
 
   /// Private methods
@@ -641,22 +645,15 @@ class DialogShower {
 /// For setSate & show or dismiss callback
 class BuilderEx extends StatefulWidget {
   final WidgetBuilder builder;
+  final Function()? showCallBack, dismissCallBack;
 
-  late Function()? showCallBack = null;
-  late Function()? dismissCallBack = null;
-
-  BuilderEx({
-    Key? key,
-    required this.builder,
-    this.showCallBack,
-    this.dismissCallBack,
-  }) : super(key: key);
+  const BuilderEx({Key? key, required this.builder, this.showCallBack, this.dismissCallBack}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _BuilderExState();
+  State<BuilderEx> createState() => BuilderExState();
 }
 
-class _BuilderExState extends State<BuilderEx> {
+class BuilderExState extends State<BuilderEx> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
