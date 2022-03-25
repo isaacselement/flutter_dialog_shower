@@ -39,8 +39,8 @@ class DialogShower {
   EdgeInsets? padding;
   double? width;
   double? height;
-  double? _renderedWidth;
-  double? _renderedHeight;
+  double? renderedWidth;
+  double? renderedHeight;
 
   Clip containerClipBehavior = Clip.antiAlias;
   Decoration? containerDecoration = _notInitializedDecoration;
@@ -357,8 +357,8 @@ class DialogShower {
 
   Widget _getScaffoldBody(Widget _child) {
     // ---------------------------- calculate _padding, _width, _height ----------------------------
-    double? _width = width ?? _renderedWidth;
-    double? _height = height ?? _renderedHeight;
+    double? _width = width ?? renderedWidth;
+    double? _height = height ?? renderedHeight;
 
     MediaQueryData _queryData = MediaQuery.of(context!);
     double kWidth = _queryData.size.width;
@@ -431,7 +431,7 @@ class DialogShower {
   Widget _getContainer(Widget child, double? width, double? height) {
     Widget ccccc = child;
     Widget widget = ccccc;
-    if (isWrappedByNavigator && isAutoSizeForNavigator && width == null && height == null) {
+    if (isWrappedByNavigator && isAutoSizeForNavigator && (width == null || height == null)) {
       __shower_log__('[GetSizeWidget] try to get size, casue navigator will lead to max stretch of container child ...');
       _isTryToGetSmallestSize = true;
     }
@@ -618,9 +618,9 @@ class DialogShower {
   }
 
   void _setRenderedSizeWithSetState(Size? size) {
-    _renderedWidth = size?.width;
-    _renderedHeight = size?.height;
-    if (_renderedWidth != null && _renderedHeight != null) {
+    renderedWidth = size?.width;
+    renderedHeight = size?.height;
+    if (renderedWidth != null && renderedHeight != null) {
       setState(() {});
     }
   }
