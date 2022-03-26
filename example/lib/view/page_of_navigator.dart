@@ -38,38 +38,38 @@ class PageOfNavigator extends StatelessWidget {
   }
 
   Widget buildButtonsAboutNavigator() {
-    String desc = 'Tap \'Click me\' button for pushing a view in using navigator';
     return Column(
       children: [
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show with navigator with Width & Height', onPressed: () {
               DialogWrapper.pushRoot(
-                  WidgetsUtil.newClickMeWidget(
-                      text: desc,
-                      fnClickMe: (context) {
-                        rootBundle.loadString('assets/json/CN.json').then((string) {
-                          List<dynamic> value = json.decode(string);
-                          DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
-                              settings: const RouteSettings(name: '__root_route__'));
-                        });
-                      }),
-                  width: 600,
-                  height: 700);
-            }),
-            WidgetsUtil.newXpelTextButton('Show with navigator without W&H (Auto size)', onPressed: () {
-              DialogWrapper.pushRoot(WidgetsUtil.newClickMeWidget(
-                  text: desc,
-                  fnClickMe: (context) {
+                WidgetsUtil.newClickMeWidget(clickMeFunctions: {
+                  'Click me': (context) {
                     rootBundle.loadString('assets/json/CN.json').then((string) {
                       List<dynamic> value = json.decode(string);
                       DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
                           settings: const RouteSettings(name: '__root_route__'));
                     });
-                  },
-                  fnClickMe2: (context) {
-                    DialogWrapper.getTopDialog()?.setState(() { });
-                  }));
+                  }
+                }),
+                width: 600,
+                height: 600,
+              );
+            }),
+            WidgetsUtil.newXpelTextButton('Show with navigator without W&H (Auto size)', onPressed: () {
+              DialogWrapper.pushRoot(WidgetsUtil.newClickMeWidget(clickMeFunctions: {
+                'Click me to push': (context) {
+                  rootBundle.loadString('assets/json/CN.json').then((string) {
+                    List<dynamic> value = json.decode(string);
+                    DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
+                        settings: const RouteSettings(name: '__root_route__'));
+                  });
+                },
+                'Click me to setState': (context) {
+                  DialogWrapper.getTopDialog()?.setState(() {});
+                }
+              }));
             }),
           ],
         )
@@ -77,31 +77,31 @@ class PageOfNavigator extends StatelessWidget {
     );
   }
 
-  // void animationDemo() {
-  //   AnimationController _controller = AnimationController(
-  //     vsync: shower.builderExKey.currentState!,
-  //     duration: const Duration(milliseconds: 200),
-  //   );
-  //   shower
-  //     ..isAutoSizeForNavigator = false
-  //     ..isSyncInvokeDismissCallback = true
-  //     ..dismissCallBack = (d) {
-  //       _controller.dispose();
-  //     };
-  //
-  //   Animation<double> _animation = Tween<double>(begin: AppConst.dialogViewWidth, end: XpSizeConst.bigDialogWidth)
-  //       .chain(CurveTween(curve: Curves.ease))
-  //       .animate(_controller);
-  //   _animation.addListener(() {
-  //     containerWidth = _animation.value;
-  //     print('_animation.value >>>>>>>> ${_animation.value}');
-  //     shower.width = _animation.value;
-  //     shower.setState(() {});
-  //   });
-  //   _controller.forward().then((value) {
-  //     print('>>>>>>>>>>>>>>>>> done!!!!!!');
-  //
-  //   });
-  //
-  // }
+// void animationDemo() {
+//   AnimationController _controller = AnimationController(
+//     vsync: shower.builderExKey.currentState!,
+//     duration: const Duration(milliseconds: 200),
+//   );
+//   shower
+//     ..isAutoSizeForNavigator = false
+//     ..isSyncInvokeDismissCallback = true
+//     ..dismissCallBack = (d) {
+//       _controller.dispose();
+//     };
+//
+//   Animation<double> _animation = Tween<double>(begin: AppConst.dialogViewWidth, end: XpSizeConst.bigDialogWidth)
+//       .chain(CurveTween(curve: Curves.ease))
+//       .animate(_controller);
+//   _animation.addListener(() {
+//     containerWidth = _animation.value;
+//     print('_animation.value >>>>>>>> ${_animation.value}');
+//     shower.width = _animation.value;
+//     shower.setState(() {});
+//   });
+//   _controller.forward().then((value) {
+//     print('>>>>>>>>>>>>>>>>> done!!!!!!');
+//
+//   });
+//
+// }
 }
