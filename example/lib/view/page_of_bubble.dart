@@ -96,26 +96,28 @@ class PageOfBubble extends StatelessWidget {
               shower.containerDecoration = null;
             }),
             WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: () {
-              DialogWrapper.show(WidgetsUtil.newClickMeWidget(fnClickMe: (context) {
-                Offset position = OffsetUtil.getOffsetB(context) ?? Offset.zero;
-                Size size = SizeUtil.getSizeB(context) ?? Size.zero;
-                DialogWrapper.show(
-                  CcBubbleWidget(
-                    width: 200,
-                    height: 200,
-                    bubbleTriangleOffset: 20.0,
-                    triangleDirection: TriangleArrowDirection.top,
-                    child: CcSelectListWidget(
-                      values: const ['1', '2', '3', '4', '5'],
+              DialogWrapper.show(WidgetsUtil.newClickMeWidget(clickMeFunctions: {
+                'Click me': (context) {
+                  Offset position = OffsetUtil.getOffsetB(context) ?? Offset.zero;
+                  Size size = SizeUtil.getSizeB(context) ?? Size.zero;
+                  DialogWrapper.show(
+                    CcBubbleWidget(
+                      width: 200,
+                      height: 200,
+                      bubbleTriangleOffset: 20.0,
+                      triangleDirection: TriangleArrowDirection.top,
+                      child: CcSelectListWidget(
+                        values: const ['1', '2', '3', '4', '5'],
+                      ),
                     ),
-                  ),
-                  x: position.dx,
-                  y: position.dy + size.height,
-                )
-                  ..containerDecoration = null // BubbleWidget already has the shadow
-                  // ..containerClipBehavior = Clip.none;  // will set null internal whern containerDecoration is null
-                  ..transitionBuilder = null
-                  ..barrierDismissible = true;
+                    x: position.dx,
+                    y: position.dy + size.height,
+                  )
+                    ..containerDecoration = null // BubbleWidget already has the shadow
+                    // ..containerClipBehavior = Clip.none;  // will set null internal whern containerDecoration is null
+                    ..transitionBuilder = null
+                    ..barrierDismissible = true;
+                }
               }));
             }),
           ],

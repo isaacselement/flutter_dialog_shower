@@ -177,7 +177,7 @@ class WidgetsUtil {
     );
   }
 
-  static Widget newDescptions(String desc, {double? width, double? height}) {
+  static Widget newDescriptions(String desc, {double? width, double? height}) {
     return Container(
       width: width,
       height: height,
@@ -189,37 +189,32 @@ class WidgetsUtil {
   }
 
   static Widget newClickMeWidget({
-    required Function(BuildContext context) fnClickMe,
-    Function(BuildContext context)? fnClickMe2,
-    String? text,
+    required Map<String, Function(BuildContext context)> clickMeFunctions,
   }) {
+    List<Widget> children = [];
+    children.add(
+      WidgetsUtil.newXpelTextButton('Dismiss', onPressed: () {
+        DialogWrapper.dismissTopDialog();
+      }),
+    );
+
+    List<Widget> clickMeWidgets = clickMeFunctions.map((key, value) {
+      return MapEntry(key, LayoutBuilder(builder: (context, constraints) {
+        return CupertinoButton(
+          child: Text(key),
+          onPressed: () {
+            value.call(context);
+          },
+        );
+      }));
+    }).values.toList();
+    children.addAll(clickMeWidgets);
+
+    children.add(const SizedBox(width: 400, height: 400, child: Center(child: Text('Placeholder'))));
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min, // as small as possible
-        children: [
-          WidgetsUtil.newXpelTextButton('Dismiss', onPressed: () {
-            DialogWrapper.dismissTopDialog();
-          }),
-          LayoutBuilder(builder: (context, constraints) {
-            return CupertinoButton(
-              child: const Text('Click me'),
-              onPressed: () {
-                fnClickMe.call(context);
-              },
-            );
-          }),
-          fnClickMe2 != null
-              ? LayoutBuilder(builder: (context, constraints) {
-                  return CupertinoButton(
-                    child: const Text('Click me 2'),
-                    onPressed: () {
-                      fnClickMe2.call(context);
-                    },
-                  );
-                })
-              : const Offstage(offstage: true),
-          SizedBox(width: 400, height: 400, child: Center(child: Text(text ?? ''))),
-        ],
+        children: children,
       ),
     );
   }

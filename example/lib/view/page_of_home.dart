@@ -24,7 +24,7 @@ class PageOfHome extends StatelessWidget {
         children: [
           const SizedBox(height: 20),
           WidgetsUtil.newHeaderWithLine('User is God'),
-          WidgetsUtil.newDescptions('Mor demonstrations are on the way ...'),
+          WidgetsUtil.newDescriptions('Mor demonstrations are on the way ...'),
           const SizedBox(height: 200),
           WidgetsUtil.newHeaderWithLine('Feel free to use DialogShower & Brother :)')
         ],
