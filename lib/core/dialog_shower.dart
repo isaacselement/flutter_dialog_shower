@@ -11,6 +11,7 @@ class DialogShower {
   static const Decoration _notInitializedDecoration = BoxDecoration();
 
   bool isSyncShow = false; // should assign value before show method
+  bool isWithTicker = false; // should assign value before show method
   bool isSyncDismiss = false;
   bool isSyncInvokeShowCallback = false;
   bool isSyncInvokeDismissCallback = false;
@@ -110,10 +111,11 @@ class DialogShower {
   TapUpDetails? get tapUpDetails => _tapUpDetails;
   TapUpDetails? _tapUpDetails;
 
-  GlobalKey<BuilderExState> get builderExKey => _builderExKey;
-  final GlobalKey<BuilderExState> _builderExKey = GlobalKey<BuilderExState>();
-  // GlobalKey get statefulKey => _statefulKey;
-  // final GlobalKey _statefulKey = GlobalKey();
+  // GlobalKey<BuilderExState> get builderExKey => _builderExKey;
+  // final GlobalKey<BuilderExState> _builderExKey = GlobalKey<BuilderExState>();
+
+  GlobalKey get statefulKey => _statefulKey;
+  final GlobalKey _statefulKey = GlobalKey();
 
   GlobalKey get containerKey => _containerKey;
   final GlobalKey _containerKey = GlobalKey();
@@ -237,7 +239,7 @@ class DialogShower {
 
   Widget _getInternalWidget(Widget _child) {
     return BuilderEx(
-      key: _builderExKey,
+      // key: _builderExKey,
       showCallBack: () {
         isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
 
@@ -351,12 +353,11 @@ class DialogShower {
   }
 
   Widget _getScaffoldBody(Widget _child) {
-    // return StatefulBuilder(
-    // key: _statefulKey,
-    // builder: (context, setState) {
-    return _getScaffoldContainer(_child);
-    // },
-    // );
+    GlobalKey mKey = _statefulKey;
+    if (isWithTicker) {
+      return StatefulBuilderEx(key: mKey, builder: (context, setState) => _getScaffoldContainer(_child));
+    }
+    return StatefulBuilder(key: mKey, builder: (context, setState) => _getScaffoldContainer(_child));
   }
 
   Widget _getScaffoldContainer(Widget _child) {
@@ -561,8 +562,8 @@ class DialogShower {
       __shower_log__('[DialogShower] setState was called, rebuilding...');
       return true;
     }());
-    _builderExKey.currentState?.setState(fn);
-    // _statefulKey.currentState?.setState(fn);
+    // _builderExKey.currentState?.setState(fn);
+    _statefulKey.currentState?.setState(fn);
   }
 
   /// Private methods
@@ -653,7 +654,7 @@ class BuilderEx extends StatefulWidget {
   State<BuilderEx> createState() => BuilderExState();
 }
 
-class BuilderExState extends State<BuilderEx> with TickerProviderStateMixin {
+class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin */ {
   @override
   void initState() {
     super.initState();
@@ -698,6 +699,20 @@ class BuilderExState extends State<BuilderEx> with TickerProviderStateMixin {
       return true;
     }());
   }
+}
+
+class StatefulBuilderEx extends StatefulWidget {
+  final StatefulWidgetBuilder builder;
+
+  const StatefulBuilderEx({Key? key, required this.builder}) : super(key: key);
+
+  @override
+  State<StatefulBuilderEx> createState() => StatefulBuilderExState();
+}
+
+class StatefulBuilderExState extends State<StatefulBuilderEx> with TickerProviderStateMixin {
+  @override
+  Widget build(BuildContext context) => widget.builder(context, setState);
 }
 
 /// For observer lifecycle
