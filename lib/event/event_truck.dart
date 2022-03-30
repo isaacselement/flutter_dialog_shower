@@ -39,13 +39,18 @@ class EventTruck {
 
   static Map<String, StreamSubscription>? managedSubscriptions;
 
-  // Note, the key parameters is needed unless you take management of the subscription ~~~
-  static StreamSubscription<T> on<T>(void Function(T object) onData, {String? managedKey}) {
+  static StreamSubscription<T> on<T>(void Function(T object) onData) {
     StreamSubscription<T> subscription = _mInstance.listen<T>(onData);
-    if (managedKey != null) {
+    return subscription;
+  }
+
+  // Note, the key parameters is needed unless you take management of the subscription ~~~
+  static StreamSubscription<T> onWithKey<T>({String? key, required void Function(T object) onData}) {
+    StreamSubscription<T> subscription = _mInstance.listen<T>(onData);
+    if (key != null) {
       managedSubscriptions ??= {};
-      managedSubscriptions!.remove(managedKey)?.cancel();
-      managedSubscriptions![managedKey] = subscription;
+      managedSubscriptions!.remove(key)?.cancel();
+      managedSubscriptions![key] = subscription;
     }
     return subscription;
   }

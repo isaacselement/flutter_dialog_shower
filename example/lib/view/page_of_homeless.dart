@@ -20,12 +20,18 @@ class PageOfHomeless extends StatelessWidget {
   }
 
   Widget buildContainer() {
-    EventTruck.on((object) {
-      print('1 >>>>>>>>>>>>>>>>>> $object');
-    }, managedKey: 'event_key_1');
-    EventTruck.on((object) {
-      print('2 >>>>>>>>>>>>>>>>>> $object');
-    }, managedKey: 'event_key_2');
+    EventTruck.onWithKey(
+      key: 'event_key_1',
+      onData: (object) {
+        print('1 >>>>>>>>>>>>>>>>>> $object');
+      },
+    );
+    EventTruck.onWithKey(
+      key: 'event_key_2',
+      onData: (object) {
+        print('2 >>>>>>>>>>>>>>>>>> $object');
+      },
+    );
 
     return Container(
       child: Column(
