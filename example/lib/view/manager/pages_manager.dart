@@ -80,8 +80,8 @@ class PagesManager {
     addTabPage(
       false,
       'Homeless',
-      const Icon(Icons.auto_awesome_mosaic, size: 32, color: Colors.black26),
-      const Icon(Icons.auto_awesome_mosaic_sharp, size: 32, color: Colors.orange),
+      const Icon(Icons.auto_awesome, size: 32, color: Colors.black26),
+      const Icon(Icons.auto_awesome_sharp, size: 32, color: Colors.orange),
       PageOfHomeless(),
     );
   }
