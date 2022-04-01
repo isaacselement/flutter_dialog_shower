@@ -2,6 +2,7 @@ import 'package:example/util/size_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/broker/brother.dart';
 import 'package:flutter_dialog_shower/core/dialog_shower.dart';
+import 'package:flutter_dialog_shower/overlay/overlay_shower.dart';
 
 import 'util/logger.dart';
 import 'view/manager/pages_manager.dart';
@@ -36,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     Logger.d("[HomePage] ----------->>>>>>>>>>>> build/rebuild!!!");
 
     DialogShower.init(context);
+    OverlayShower.init(context);
 
     SizeUtil.init(context);
 

@@ -11,6 +11,7 @@ import '../page_of_home.dart';
 import '../page_of_homeless.dart';
 import '../page_of_keyboard.dart';
 import '../page_of_navigator.dart';
+import '../page_of_overlay.dart';
 import '../page_of_widigets.dart';
 
 class PagesManager {
@@ -18,6 +19,14 @@ class PagesManager {
     if (tabsPages.isNotEmpty) {
       return;
     }
+    addTabPage(
+      false,
+      'Overlay',
+      const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
+      const Icon(Icons.auto_awesome_motion_sharp, size: 32, color: Colors.orange),
+      PageOfOverlay(),
+    );
+
     addTabPage(
       true,
       'Home',
@@ -67,12 +76,12 @@ class PagesManager {
       const Icon(Icons.refresh_sharp, size: 32, color: Colors.orange),
       PageOfBrother(),
     );
+
     addTabPage(
       false,
       'Homeless',
-      const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
-      const Icon(Icons.auto_awesome_motion_sharp,
-          size: 32, color: Colors.orange),
+      const Icon(Icons.auto_awesome_mosaic, size: 32, color: Colors.black26),
+      const Icon(Icons.auto_awesome_mosaic_sharp, size: 32, color: Colors.orange),
       PageOfHomeless(),
     );
   }
@@ -97,32 +106,26 @@ class PagesManager {
 
   static Btv<int> currentPageIndex = 0.btv;
 
-  static void addTabPage(bool isKeepAlive, String name, Widget tabIcon,
-      Widget tabIconSelected, Widget page) {
+  static void addTabPage(bool isKeepAlive, String name, Widget tabIcon, Widget tabIconSelected, Widget page) {
     TabPageInstance inst;
     inst = TabPageInstance(name: name, isKeepAlive: isKeepAlive);
     add(inst);
     inst.pageBuilder = (inst) {
       return inst.isKeepAlive
           ? KeepAlivePageWidget(builder: (ctx, setState) {
-              Logger.d(
-                  'PagesManager >>>>>>>>>>>>> KeepAlivePageWidget rebuild: $name');
+              Logger.d('PagesManager >>>>>>>>>>>>> KeepAlivePageWidget rebuild: $name');
               return page;
             })
           : StatefulBuilder(builder: (ctx, setState) {
-              Logger.d(
-                  'PagesManager >>>>>>>>>>>>> StatefulBuilder rebuild: $name');
+              Logger.d('PagesManager >>>>>>>>>>>>> StatefulBuilder rebuild: $name');
               return page;
             });
     };
     inst.tabBuilder = (inst) {
       bool isSelected = currentPageIndex.value == inst.ordinal;
-      Color textColor = isSelected
-          ? (inst.isKeepAlive ? Colors.red : Colors.orangeAccent)
-          : Colors.grey;
+      Color textColor = isSelected ? (inst.isKeepAlive ? Colors.red : Colors.orangeAccent) : Colors.grey;
       return CupertinoButton(
-          padding:
-              const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
+          padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
           child: Column(
             children: [
               isSelected ? tabIconSelected : tabIcon,
@@ -212,8 +215,7 @@ class KeepAlivePageWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _KeepAlivePageWidgetState();
 }
 
-class _KeepAlivePageWidgetState extends State<KeepAlivePageWidget>
-    with AutomaticKeepAliveClientMixin {
+class _KeepAlivePageWidgetState extends State<KeepAlivePageWidget> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
