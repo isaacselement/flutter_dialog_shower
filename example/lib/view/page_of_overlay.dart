@@ -109,8 +109,56 @@ class PageOfOverlay extends StatelessWidget {
                 };
               });
             }),
-            WidgetsUtil.newXpelTextButton('Show from top left', onPressed: () {}),
-            WidgetsUtil.newXpelTextButton('Show from top right', onPressed: () {}),
+            WidgetsUtil.newXpelTextButton('Show Toast', onPressed: () {
+              OverlayShower shower = OverlayShower()
+                ..alignment = Alignment.topCenter
+                ..margin = const EdgeInsets.only(top: 200)
+                ..isWithTicker = true; // key point !!!
+              shower.show(const Offstage(offstage: true)); // tricky, generate the StatefulBuilderExState instance first
+
+              WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+                AnimationController animationController = AnimationController(
+                  vsync: shower.statefulKey.currentState as StatefulBuilderExState,
+                  duration: const Duration(milliseconds: 2 * 1000),
+                  reverseDuration: const Duration(milliseconds: 500),
+                );
+                Animation animation = Tween(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(curve: const Interval(0.0, 1.0, curve: Curves.linearToEaseOut), parent: animationController),
+                );
+                animationController.addListener(() {
+                  shower.setState(() {}); // will rebuild with builder belowed
+                });
+                shower.builder = (shower) {
+                  return Opacity(
+                    opacity: animation.value,
+                    child: Card(
+                      child: Container(
+                        clipBehavior: Clip.antiAlias,
+                        padding: const EdgeInsets.all(5),
+                        decoration: const BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 20.0, offset: Offset(5.0, 5.0))]),
+                        child: const Text(
+                          'You are heading to mogelia city, please take the books on board!',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                };
+                animationController.forward();
+                shower.onTapCallback = (shower) {
+                  animationController.reverse().then((value) {
+                    animationController.dispose();
+                    shower.dismiss();
+                  });
+                };
+              });
+            }),
           ],
         ),
       ],
