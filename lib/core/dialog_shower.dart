@@ -298,7 +298,7 @@ class DialogShower {
               bool isTapInside = isTapInsideX && isTapInsideY;
 
               assert(() {
-                __shower_log__('HitTest: Container [$x1, $y1], [$x2, $y2]. Tap [$tapX, $tapY]. '
+                __shower_log__('HitTest: $routeName, Container [$x1, $y1], [$x2, $y2]. Tap [$tapX, $tapY]. '
                     'isTapInside X$isTapInsideX && Y$isTapInsideY = $isTapInside, '
                     'barrierDismissible: $barrierDismissible, I\'m showing: $isShowing');
                 return true;
