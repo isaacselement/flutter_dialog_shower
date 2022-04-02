@@ -232,17 +232,6 @@ class DialogShower {
       arguments: null,
     );
 
-    // _future = showGeneralDialog(
-    //   context: context!,
-    //   useRootNavigator: isUseRootNavigator,
-    //   barrierColor: barrierColor,
-    //   barrierDismissible: barrierDismissible ?? false,
-    //   barrierLabel: barrierLabel,
-    //   transitionDuration: transitionDuration,
-    //   transitionBuilder: transitionBuilder,
-    //   routeSettings: routeSettings,
-    //   pageBuilder: (BuildContext ctx, Animation<double> first, Animation<double> second) => _getInternalWidget(_child),
-    // );
     route = RawDialogRoute(
       pageBuilder: (BuildContext ctx, Animation<double> first, Animation<double> second) => _getInternalWidget(_child),
       barrierDismissible: barrierDismissible ?? false,
