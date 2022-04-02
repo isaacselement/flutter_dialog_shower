@@ -16,6 +16,8 @@ class OverlayShower {
 
   bool isUseRootOverlay = false;
 
+  OverlayEntry? showBelow, showAbove;  // insert below or above entry
+
   // for Container
   EdgeInsets? margin;
   EdgeInsets? padding;

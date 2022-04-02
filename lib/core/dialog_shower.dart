@@ -377,7 +377,7 @@ class DialogShower {
       MediaQueryData query = MediaQueryData.fromWindow(_window);
       double mTop = _window.padding.top;
       double kTop = _queryData.padding.top;
-      __shower_log__('self: _width: $_width, _height: $_height');
+      __shower_log__('self: $routeName, _width: $_width, _height: $_height');
       __shower_log__(
           'Window: mWidth: $mWidth, mHeight: $mHeight, mTop: $mTop; MediaQuery kWidth: $kWidth, kHeight: $kHeight, kTop: $kTop');
       __shower_log__(
@@ -487,7 +487,7 @@ class DialogShower {
       _isShowing = false;
       if (isPopped) {
         assert(() {
-          __shower_log__('⛑⛑⛑ dismiss??? already popped by others using the most primitive pop: $routeName');
+          __shower_log__('⛑⛑⛑ dismissed??? already popped by others using the most primitive pop: $routeName');
           return true;
         }());
         return;
