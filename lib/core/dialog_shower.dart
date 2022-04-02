@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:math' as Math;
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -75,7 +75,11 @@ class DialogShower {
   StreamSubscription? _keyboardStreamSubscription;
 
   // modified/assigned internal .....
+
   String routeName = '';
+
+  late Route route;
+
   bool _isShowing = false;
 
   bool get isShowing => _isShowing;
@@ -197,10 +201,10 @@ class DialogShower {
       if (NavigatorObserverEx.statesChangingShowers?[routeName] != null) {
         // check it out please !!!!
         assert(() {
-          __shower_log__('❗️❗️❗️ already contains route name: $routeName ???');
+          __shower_log__('❗️❗️❗️ observer already contains this route name: $routeName ???');
           return true;
         }());
-        routeName = routeName + '_${1000 + Math.Random().nextInt(10000)}';
+        routeName = routeName + '-${1000 + math.Random().nextInt(10000)}';
       }
     }
     NavigatorObserverEx.statesChangingShowers?[routeName] = this;
@@ -223,21 +227,33 @@ class DialogShower {
       return true;
     }());
 
-    _future = showGeneralDialog(
-      context: context!,
-      useRootNavigator: isUseRootNavigator,
-      barrierColor: barrierColor,
+    RouteSettings routeSettings = RouteSettings(
+      name: routeName,
+      arguments: null,
+    );
+
+    // _future = showGeneralDialog(
+    //   context: context!,
+    //   useRootNavigator: isUseRootNavigator,
+    //   barrierColor: barrierColor,
+    //   barrierDismissible: barrierDismissible ?? false,
+    //   barrierLabel: barrierLabel,
+    //   transitionDuration: transitionDuration,
+    //   transitionBuilder: transitionBuilder,
+    //   routeSettings: routeSettings,
+    //   pageBuilder: (BuildContext ctx, Animation<double> first, Animation<double> second) => _getInternalWidget(_child),
+    // );
+    route = RawDialogRoute(
+      pageBuilder: (BuildContext ctx, Animation<double> first, Animation<double> second) => _getInternalWidget(_child),
       barrierDismissible: barrierDismissible ?? false,
       barrierLabel: barrierLabel,
+      barrierColor: barrierColor,
       transitionDuration: transitionDuration,
       transitionBuilder: transitionBuilder,
-      routeSettings: RouteSettings(
-        name: routeName,
-      ),
-      pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
-        return _getInternalWidget(_child);
-      },
+      settings: routeSettings,
     );
+    _future = Navigator.of(context!, rootNavigator: isUseRootNavigator).push(route);
+
     if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
       isPushed = true;
     }
@@ -313,7 +329,7 @@ class DialogShower {
               assert(() {
                 __shower_log__('HitTest: $routeName, Container [$x1, $y1], [$x2, $y2]. Tap [$tapX, $tapY]. '
                     'isTapInside X$isTapInsideX && Y$isTapInsideY = $isTapInside, '
-                    'barrierDismissible: $barrierDismissible, I\'m showing: $isShowing');
+                    'barrierDismissible: $barrierDismissible, I\'m showing: $isShowing, activing: ${route.isActive}');
                 return true;
               }());
 
@@ -502,7 +518,7 @@ class DialogShower {
       if (isPopped) {
         // check it out please !!!!
         assert(() {
-          __shower_log__('❗️❗️❗️ dismissed??? already popped by using the most primitive pop: $routeName ???');
+          __shower_log__('❗️❗️❗️ $routeName dismissed ??? already popped by using the most primitive pop ???');
           return true;
         }());
       } else {
@@ -511,10 +527,6 @@ class DialogShower {
           return true;
         }());
         isSyncDismiss ? _dissmiss() : Future.microtask(() => _dissmiss());
-        assert(() {
-          __shower_log__('>>>>>>>>>>>>>> dismiss popped: $routeName');
-          return true;
-        }());
         if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
           isPopped = true;
         }
@@ -756,7 +768,7 @@ class NavigatorObserverEx extends NavigatorObserver {
     ensureInit();
 
     assert(() {
-      __shower_log__('[Observer] didPush: ${previousRoute?.settings.name} To>>> ${route.settings.name}');
+      __shower_log__('[Observer] didPush: ${route.settings.name} ,     [pre: ${previousRoute?.settings.name}]');
       return true;
     }());
     if (route.settings.name != null) {
@@ -769,7 +781,7 @@ class NavigatorObserverEx extends NavigatorObserver {
     super.didPop(route, previousRoute);
 
     assert(() {
-      __shower_log__('[Observer] didPop: ${previousRoute?.settings.name} From>>> ${route.settings.name}');
+      __shower_log__('[Observer] didPop: ${route.settings.name} ,    [pre: ${previousRoute?.settings.name}]');
       return true;
     }());
     if (route.settings.name != null) {
