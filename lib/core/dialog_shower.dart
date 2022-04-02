@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as Math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -190,7 +191,18 @@ class DialogShower {
   }
 
   DialogShower show(Widget _child, {double? width, double? height}) {
-    routeName = routeName.isNotEmpty ? routeName : 'SHOWER-${DateTime.now().microsecondsSinceEpoch}'; // const Uuid().v1();
+    if (routeName.isEmpty) {
+      routeName = 'SHOWER-${DateTime.now().microsecondsSinceEpoch}';
+
+      if (NavigatorObserverEx.statesChangingShowers?[routeName] != null) {
+        // check it out please !!!!
+        assert(() {
+          __shower_log__('❗️❗️❗️ already contains route name: $routeName ???');
+          return true;
+        }());
+        routeName = routeName + '_${1000 + Math.Random().nextInt(10000)}';
+      }
+    }
     NavigatorObserverEx.statesChangingShowers?[routeName] = this;
     isSyncShow ? _show(_child, width: width, height: height) : Future.microtask(() => _show(_child, width: width, height: height));
     return this;
@@ -240,6 +252,7 @@ class DialogShower {
   Widget _getInternalWidget(Widget _child) {
     return BuilderEx(
       // key: _builderExKey,
+      name: routeName,
       showCallBack: () {
         isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
 
@@ -485,30 +498,32 @@ class DialogShower {
   Future<void> dismiss() async {
     if (_isShowing) {
       _isShowing = false;
+
       if (isPopped) {
+        // check it out please !!!!
         assert(() {
-          __shower_log__('⛑⛑⛑ dismissed??? already popped by others using the most primitive pop: $routeName');
+          __shower_log__('❗️❗️❗️ dismissed??? already popped by using the most primitive pop: $routeName ???');
           return true;
         }());
-        return;
+      } else {
+        assert(() {
+          __shower_log__('>>>>>>>>>>>>>> dismiss popping: $routeName');
+          return true;
+        }());
+        isSyncDismiss ? _dissmiss() : Future.microtask(() => _dissmiss());
+        assert(() {
+          __shower_log__('>>>>>>>>>>>>>> dismiss popped: $routeName');
+          return true;
+        }());
+        if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
+          isPopped = true;
+        }
+        await futurePoped;
+        assert(() {
+          __shower_log__('>>>>>>>>>>>>>> dismiss popped done: $routeName');
+          return true;
+        }());
       }
-      assert(() {
-        __shower_log__('>>>>>>>>>>>>>> dismiss popping: $routeName');
-        return true;
-      }());
-      isSyncDismiss ? _dissmiss() : Future.microtask(() => _dissmiss());
-      assert(() {
-        __shower_log__('>>>>>>>>>>>>>> dismiss popped: $routeName');
-        return true;
-      }());
-      if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
-        isPopped = true;
-      }
-      await futurePoped;
-      assert(() {
-        __shower_log__('>>>>>>>>>>>>>> dismiss popped done: $routeName');
-        return true;
-      }());
       NavigatorObserverEx.statesChangingShowers?.remove(routeName);
     }
   }
@@ -652,10 +667,11 @@ class DialogShower {
 
 /// For setSate & show or dismiss callback
 class BuilderEx extends StatefulWidget {
+  final String? name;
   final WidgetBuilder builder;
   final Function()? showCallBack, dismissCallBack;
 
-  const BuilderEx({Key? key, required this.builder, this.showCallBack, this.dismissCallBack}) : super(key: key);
+  const BuilderEx({Key? key, required this.builder, this.name, this.showCallBack, this.dismissCallBack}) : super(key: key);
 
   @override
   State<BuilderEx> createState() => BuilderExState();
@@ -675,7 +691,7 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
       }());
     }
     assert(() {
-      __shower_log__('[BuilderEx] >>>>>>>>>>>>>> initState');
+      __shower_log__('[BuilderEx] ${widget.name} >>>>> initState');
       return true;
     }());
   }
@@ -683,7 +699,7 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
   @override
   Widget build(BuildContext context) {
     assert(() {
-      __shower_log__('[BuilderEx] >>>>>>>>>>>>>> build');
+      __shower_log__('[BuilderEx] ${widget.name} >>>>> build');
       return true;
     }());
     return widget.builder(context);
@@ -702,7 +718,7 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
     }
     super.dispose();
     assert(() {
-      __shower_log__('[BuilderEx] >>>>>>>>>>>>>> dispose');
+      __shower_log__('[BuilderEx] ${widget.name} >>>>> dispose');
       return true;
     }());
   }
@@ -740,7 +756,7 @@ class NavigatorObserverEx extends NavigatorObserver {
     ensureInit();
 
     assert(() {
-      __shower_log__('didPush: ${route.settings.name}');
+      __shower_log__('[Observer] didPush: ${previousRoute?.settings.name} To>>> ${route.settings.name}');
       return true;
     }());
     if (route.settings.name != null) {
@@ -753,7 +769,7 @@ class NavigatorObserverEx extends NavigatorObserver {
     super.didPop(route, previousRoute);
 
     assert(() {
-      __shower_log__('didPop: ${route.settings.name}');
+      __shower_log__('[Observer] didPop: ${previousRoute?.settings.name} From>>> ${route.settings.name}');
       return true;
     }());
     if (route.settings.name != null) {
@@ -765,7 +781,7 @@ class NavigatorObserverEx extends NavigatorObserver {
   void didRemove(Route route, Route? previousRoute) {
     super.didRemove(route, previousRoute);
     assert(() {
-      __shower_log__('didRemove: ${route.settings.name}');
+      __shower_log__('[Observer] didRemove: ${route.settings.name}');
       return true;
     }());
   }
@@ -774,7 +790,7 @@ class NavigatorObserverEx extends NavigatorObserver {
   void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     assert(() {
-      __shower_log__('didReplace: ${oldRoute?.settings.name} -> ${newRoute?.settings.name}');
+      __shower_log__('[Observer] didReplace: ${oldRoute?.settings.name} -> ${newRoute?.settings.name}');
       return true;
     }());
   }
