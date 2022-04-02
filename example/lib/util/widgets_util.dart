@@ -236,7 +236,7 @@ class WidgetsUtil {
           [Icons.menu_sharp, 'More'],
         ],
         onTap: (index, value, context) {
-          Logger.d('=========>>>>> you tap $index, value is $value, toString(): ${value.toString()}');
+          Logger.d('👉👉👉>>>>> u tap $index, value: $value, toString(): ${value.toString()}');
           if (value.toString().contains('More')) {
             Offset offset = OffsetUtil.getOffsetB(context) ?? Offset.zero;
             Size size = SizeUtil.getSizeB(context) ?? Size.zero;

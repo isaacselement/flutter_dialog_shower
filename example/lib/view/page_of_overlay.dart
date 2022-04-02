@@ -57,36 +57,55 @@ class PageOfOverlay extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('Show padding aligment', onPressed: () {
               OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
-                ..padding = EdgeInsets.only(top: 20)
+                ..padding = const EdgeInsets.only(top: 20)
                 ..alignment = Alignment.topCenter
                 ..onTapCallback = (shower) => shower.dismiss();
             }),
-            WidgetsUtil.newXpelTextButton('Show with animation', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show with opacity animation', onPressed: () {
               OverlayShower shower = OverlayShower()
-                ..alignment = Alignment.center
+                ..alignment = Alignment.bottomCenter
+                ..margin = const EdgeInsets.only(bottom: 50)
                 ..isWithTicker = true; // key point !!!
-              shower.show(Offstage(offstage: true));  // tricky, generate the StatefulBuilderExState instance first
+              shower.show(const Offstage(offstage: true)); // tricky, generate the StatefulBuilderExState instance first
 
               WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
                 AnimationController animationController = AnimationController(
                   vsync: shower.statefulKey.currentState as StatefulBuilderExState,
                   duration: const Duration(milliseconds: 5 * 1000),
+                  reverseDuration: const Duration(milliseconds: 1 * 1000),
                 );
                 Animation animation = Tween(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(curve: Interval(0.0, 1.0, curve: Curves.linearToEaseOut), parent: animationController),
+                  CurvedAnimation(curve: const Interval(0.0, 1.0, curve: Curves.linearToEaseOut), parent: animationController),
                 );
                 animationController.addListener(() {
-                  shower.setState(() {});
+                  shower.setState(() {}); // will rebuild with builder belowed
                 });
-
                 shower.builder = (shower) {
                   return Opacity(
-                      opacity: animation.value, child: const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)));
+                    opacity: animation.value,
+                    child: Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)), boxShadow: [
+                        BoxShadow(
+                          color: Colors.redAccent,
+                          blurRadius: 20.0,
+                          offset: Offset(5.0, 5.0),
+                        )
+                      ]),
+                      child: const SizedBox(
+                        width: 200,
+                        height: 200,
+                        child: ColoredBox(color: Colors.red),
+                      ),
+                    ),
+                  );
                 };
                 animationController.forward();
                 shower.onTapCallback = (shower) {
-                  animationController.dispose();
-                  shower.dismiss();
+                  animationController.reverse().then((value) {
+                    animationController.dispose();
+                    shower.dismiss();
+                  });
                 };
               });
             }),

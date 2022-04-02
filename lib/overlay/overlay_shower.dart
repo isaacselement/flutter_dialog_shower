@@ -64,15 +64,14 @@ class OverlayShower {
   // show ----------------------------------------
 
   OverlayShower show([Widget? child]) {
-    isSyncShow ? _show(child) : Future.microtask(() => _show(child));
+    isSyncShow ? showImmediately(child) : Future.microtask(() => showImmediately(child));
     return this;
   }
 
-  OverlayShower _show(Widget? child) {
+  OverlayShower showImmediately(Widget? child, {OverlayEntry? below, OverlayEntry? above}) {
     _isShowing = true;
-    Widget _body = _getBody(child);
-    _entry = OverlayEntry(builder: (context) => _body);
-    Overlay.of(context!, rootOverlay: isUseRootOverlay)!.insert(_entry);
+    _entry = OverlayEntry(builder: (context) => _getBody(child));
+    Overlay.of(context!, rootOverlay: isUseRootOverlay)!.insert(_entry, below: below, above: above);
     if (onShowCallBack != null) {
       isSyncInvokeShowCallback ? onShowCallBack?.call(this) : Future.microtask(() => onShowCallBack?.call(this));
     }

@@ -485,13 +485,20 @@ class DialogShower {
   Future<void> dismiss() async {
     if (_isShowing) {
       _isShowing = false;
+      if (isPopped) {
+        assert(() {
+          __shower_log__('⛑⛑⛑ dismiss??? already popped by others using the most primitive pop: $routeName');
+          return true;
+        }());
+        return;
+      }
       assert(() {
-        __shower_log__('>>>>>>>>>>>>>> popping: $routeName');
+        __shower_log__('>>>>>>>>>>>>>> dismiss popping: $routeName');
         return true;
       }());
       isSyncDismiss ? _dissmiss() : Future.microtask(() => _dissmiss());
       assert(() {
-        __shower_log__('>>>>>>>>>>>>>> popped: $routeName');
+        __shower_log__('>>>>>>>>>>>>>> dismiss popped: $routeName');
         return true;
       }());
       if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
@@ -499,7 +506,7 @@ class DialogShower {
       }
       await futurePoped;
       assert(() {
-        __shower_log__('>>>>>>>>>>>>>> popped done: $routeName');
+        __shower_log__('>>>>>>>>>>>>>> dismiss popped done: $routeName');
         return true;
       }());
       NavigatorObserverEx.statesChangingShowers?.remove(routeName);
