@@ -177,3 +177,24 @@
     7. Just Build & Run and see if `Frida: Listening on 127.0.0.1 TCP port 27042` occurs and the process is on pending state
     8. Terminal -> `frida-ps -Rai` -> `frida-trace -R -f re.frida.Gadget -i "open*"` then the process resume
 
+
+
+### Build frida gadget on Macos
+
+    1. Xcode with command-line tools
+    2. brew install node
+    3. brew install python@3.8
+
+    4. Open Keychain Access.app -> Create a Certificate... and named it to frida-cert, set it with Keychain to System, not Login.
+    5. When created, then select Get Info on it, open the Trust item, and set Code Signing to Always Trust. 
+
+    export MACOS_CERTID=frida-cert
+    export IOS_CERTID=frida-cert
+
+    git clone --recurse-submodules https://github.com/frida/frida.git
+    cd frida
+    make
+    make gadget-ios
+
+    otool -L build/frida-ios-arm64/usr/lib/frida/frida-gadget.dylib  # @executable_path/Frameworks/FridaGadget.dylib autually name is 'FridaGadget.dylib'
+
