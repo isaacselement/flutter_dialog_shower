@@ -80,26 +80,6 @@ class PageOfOverlay extends StatelessWidget {
                 animationController.addListener(() {
                   shower.setState(() {}); // will rebuild with builder belowed
                 });
-                shower.builder = (shower) {
-                  return Opacity(
-                    opacity: animation.value,
-                    child: Container(
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)), boxShadow: [
-                        BoxShadow(
-                          color: Colors.redAccent,
-                          blurRadius: 20.0,
-                          offset: Offset(5.0, 5.0),
-                        )
-                      ]),
-                      child: const SizedBox(
-                        width: 200,
-                        height: 200,
-                        child: ColoredBox(color: Colors.red),
-                      ),
-                    ),
-                  );
-                };
                 animationController.forward();
                 shower.onTapCallback = (shower) {
                   animationController.reverse().then((value) {
@@ -107,20 +87,34 @@ class PageOfOverlay extends StatelessWidget {
                     shower.dismiss();
                   });
                 };
+
+                shower.builder = (shower) {
+                  return Opacity(
+                    opacity: animation.value,
+                    child: Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        boxShadow: [BoxShadow(color: Colors.redAccent, blurRadius: 20.0, offset: Offset(5.0, 5.0))],
+                      ),
+                      child: const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)),
+                    ),
+                  );
+                };
               });
             }),
             WidgetsUtil.newXpelTextButton('Show Toast', onPressed: () {
               OverlayShower shower = OverlayShower()
-                ..alignment = Alignment.topCenter
-                ..margin = const EdgeInsets.only(top: 200)
+                ..alignment = Alignment.bottomCenter
+                ..margin = const EdgeInsets.only(bottom: 50)
                 ..isWithTicker = true; // key point !!!
               shower.show(const Offstage(offstage: true)); // tricky, generate the StatefulBuilderExState instance first
 
               WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
                 AnimationController animationController = AnimationController(
                   vsync: shower.statefulKey.currentState as StatefulBuilderExState,
-                  duration: const Duration(milliseconds: 2 * 1000),
-                  reverseDuration: const Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 5 * 1000),
+                  reverseDuration: const Duration(milliseconds: 1 * 1000),
                 );
                 Animation animation = Tween(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(curve: const Interval(0.0, 1.0, curve: Curves.linearToEaseOut), parent: animationController),
@@ -128,28 +122,6 @@ class PageOfOverlay extends StatelessWidget {
                 animationController.addListener(() {
                   shower.setState(() {}); // will rebuild with builder belowed
                 });
-                shower.builder = (shower) {
-                  return Opacity(
-                    opacity: animation.value,
-                    child: Card(
-                      child: Container(
-                        clipBehavior: Clip.antiAlias,
-                        padding: const EdgeInsets.all(5),
-                        decoration: const BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 20.0, offset: Offset(5.0, 5.0))]),
-                        child: const Text(
-                          'You are heading to mogelia city, please take the books on board!',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                };
                 animationController.forward();
                 shower.onTapCallback = (shower) {
                   animationController.reverse().then((value) {
@@ -157,8 +129,40 @@ class PageOfOverlay extends StatelessWidget {
                     shower.dismiss();
                   });
                 };
+
+                shower.builder = (shower) {
+                  return Opacity(
+                    opacity: animation.value,
+                    child:
+                    Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 20.0, offset: Offset(5.0, 5.0))],
+                      ),
+                      child: const Material(
+                        elevation: 1.0,
+                        type: MaterialType.transparency,
+                        // borderOnForeground: false,
+                        // color: Colors.black,
+                        // shadowColor: Colors.black,
+                        // clipBehavior: Clip.antiAlias,
+                        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
+                        child: Text(
+                          'You are heading to mogelia city, please take the books on board!',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                };
               });
             }),
+
           ],
         ),
       ],
