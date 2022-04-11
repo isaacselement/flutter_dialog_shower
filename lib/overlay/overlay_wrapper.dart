@@ -25,6 +25,7 @@ class OverlayWrapper {
   }
 
   static OverlayShower showWith(OverlayShower shower, Widget child, {double? x, double? y, String? key}) {
+    shower.alignment = Alignment.center;
     if (x != null && y != null) {
       shower
         ..alignment = Alignment.topLeft
