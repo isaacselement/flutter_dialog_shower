@@ -113,8 +113,8 @@ class PageOfOverlay extends StatelessWidget {
               WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
                 AnimationController animationController = AnimationController(
                   vsync: shower.statefulKey.currentState as StatefulBuilderExState,
-                  duration: const Duration(milliseconds: 5 * 1000),
-                  reverseDuration: const Duration(milliseconds: 1 * 1000),
+                  duration: const Duration(milliseconds: 500),
+                  reverseDuration: const Duration(milliseconds: 500),
                 );
                 Animation animation = Tween(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(curve: const Interval(0.0, 1.0, curve: Curves.linearToEaseOut), parent: animationController),
@@ -133,27 +133,31 @@ class PageOfOverlay extends StatelessWidget {
                 shower.builder = (shower) {
                   return Opacity(
                     opacity: animation.value,
-                    child:
-                    Container(
+                    child: Container(
                       clipBehavior: Clip.antiAlias,
                       decoration: const BoxDecoration(
                         color: Colors.black,
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 20.0, offset: Offset(5.0, 5.0))],
+                        borderRadius: BorderRadius.all(Radius.circular(6)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 20.0,
+                          )
+                        ],
                       ),
                       child: const Material(
-                        elevation: 1.0,
                         type: MaterialType.transparency,
+                        // elevation: 1.0,
                         // borderOnForeground: false,
                         // color: Colors.black,
                         // shadowColor: Colors.black,
                         // clipBehavior: Clip.antiAlias,
                         // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
-                        child: Text(
-                          'You are heading to mogelia city, please take the books on board!',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16
+                        child: Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            'You are heading to mogelia city, please take the books on board!',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ),
                       ),
@@ -162,7 +166,6 @@ class PageOfOverlay extends StatelessWidget {
                 };
               });
             }),
-
           ],
         ),
       ],

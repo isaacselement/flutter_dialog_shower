@@ -16,14 +16,22 @@ class OverlayShower {
 
   bool isUseRootOverlay = false;
 
-  OverlayEntry? showBelow, showAbove;  // insert below or above entry
+  OverlayEntry? showBelow, showAbove; // insert below or above entry
 
-  // for Container
+  late OverlayEntry _entry;
+
+  OverlayEntry get entry => _entry;
+
+  bool _isShowing = false;
+
+  bool get isShowing => _isShowing;
+
+  /// for Container
   EdgeInsets? margin;
   EdgeInsets? padding;
   AlignmentGeometry? alignment = Alignment.topLeft;
 
-  // for Positioned
+  /// for Positioned
   double? x;
   double? y;
   double? top;
@@ -33,21 +41,26 @@ class OverlayShower {
   double? width;
   double? height;
 
+  /// for set state
   GlobalKey get statefulKey => _statefulKey;
   final GlobalKey _statefulKey = GlobalKey();
 
-  bool _isShowing = false;
-
-  bool get isShowing => _isShowing;
-
-  late OverlayEntry _entry;
-
-  OverlayEntry get entry => _entry;
-
+  /// for Events
   Widget Function(OverlayShower shower)? builder;
   void Function(OverlayShower shower)? onTapCallback;
   void Function(OverlayShower shower)? onShowCallBack;
   void Function(OverlayShower shower)? onDismissCallBack;
+
+  List<void Function(OverlayShower shower)>? showCallbacks;
+  List<void Function(OverlayShower shower)>? dismissCallbacks;
+
+  void addShowCallBack(void Function(OverlayShower shower) cb) => (showCallbacks = showCallbacks ?? []).add(cb);
+
+  void removeShowCallBack(void Function(OverlayShower shower) cb) => (showCallbacks = showCallbacks ?? []).remove(cb);
+
+  void addDismissCallBack(void Function(OverlayShower shower) cb) => (dismissCallbacks = dismissCallbacks ?? []).add(cb);
+
+  void removeDismissCallBack(void Function(OverlayShower shower) cb) => (dismissCallbacks = dismissCallbacks ?? []).remove(cb);
 
   // init methods ----------------------------------------
 
@@ -74,9 +87,9 @@ class OverlayShower {
     _isShowing = true;
     _entry = OverlayEntry(builder: (context) => _getBody(child));
     Overlay.of(context!, rootOverlay: isUseRootOverlay)!.insert(_entry, below: below, above: above);
-    if (onShowCallBack != null) {
-      isSyncInvokeShowCallback ? onShowCallBack?.call(this) : Future.microtask(() => onShowCallBack?.call(this));
-    }
+
+    isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
+
     return this;
   }
 
@@ -129,14 +142,29 @@ class OverlayShower {
 
   void _dissmiss() {
     _entry.remove();
-    if (onDismissCallBack != null) {
-      isSyncInvokeShowCallback ? onDismissCallBack?.call(this) : Future.microtask(() => onDismissCallBack?.call(this));
-    }
+
+    isSyncInvokeDismissCallback ? _invokeDismissCallbacks() : Future.microtask(() => _invokeDismissCallbacks());
   }
 
   // setState ----------------------------------------
 
   void setState(VoidCallback fn) {
     _statefulKey.currentState?.setState(fn);
+  }
+
+  // others ----------------------------------------
+
+  void _invokeShowCallbacks() {
+    onShowCallBack?.call(this);
+    for (int i = 0; i < (showCallbacks?.length ?? 0); i++) {
+      showCallbacks?.elementAt(i).call(this);
+    }
+  }
+
+  void _invokeDismissCallbacks() {
+    onDismissCallBack?.call(this);
+    for (int i = 0; i < (dismissCallbacks?.length ?? 0); i++) {
+      dismissCallbacks?.elementAt(i).call(this);
+    }
   }
 }

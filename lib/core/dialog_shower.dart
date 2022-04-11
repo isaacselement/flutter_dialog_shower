@@ -17,7 +17,7 @@ class DialogShower {
   bool isSyncInvokeShowCallback = false;
   bool isSyncInvokeDismissCallback = false;
 
-  // navigate
+  /// navigate
   BuildContext? context;
   bool isUseRootNavigator = true;
   Color barrierColor = Colors.transparent;
@@ -27,22 +27,25 @@ class DialogShower {
   RouteTransitionsBuilder? transitionBuilder;
   bool isDismissKeyboardOnTapped = true;
 
-  // scaffold
+  /// scaffold
   Color? scaffoldBackgroundColor = Colors.transparent;
 
-  // Animation direction  // default from Bottom
-  Offset? animationBeginOffset = const Offset(0.0, 1.0);
+  /// Animation direction
+  Offset? animationBeginOffset = const Offset(0.0, 1.0); // default from Bottom
 
-  // Important!!! alignment center default!!!
-  AlignmentGeometry? alignment = Alignment.center;
-
-  // container
+  /// container
+  AlignmentGeometry? alignment = Alignment.center; // alignment center default
   EdgeInsets? margin;
   EdgeInsets? padding;
   double? width;
   double? height;
   double? renderedWidth;
   double? renderedHeight;
+
+  // should set aligment to Alignment.topLeft if u want base is top left for the x y. Then call setState of shower if set x y later .
+  set x(v) => padding = EdgeInsets.only(left: v, top: padding?.top ?? 0);
+
+  set y(v) => padding = EdgeInsets.only(left: padding?.left ?? 0, top: v);
 
   Clip containerClipBehavior = Clip.antiAlias;
   Decoration? containerDecoration = _notInitializedDecoration;
@@ -52,7 +55,7 @@ class DialogShower {
   double containerShadowBlurRadius = 0.0;
   Color containerShadowColor = Colors.transparent;
 
-  // events
+  /// events
   bool Function(DialogShower shower, Offset point)? dialogOnTapCallback;
   bool Function(DialogShower shower, Offset point)? barrierOnTapCallback;
   bool Function(DialogShower shower, Offset point, bool isTapInside)? wholeOnTapCallback;
@@ -74,7 +77,7 @@ class DialogShower {
   KeyboardVisibilityCallBack? keyboardEventCallBack;
   StreamSubscription? _keyboardStreamSubscription;
 
-  // modified/assigned internal .....
+  /// modified/assigned internal .....
 
   String routeName = '';
 
@@ -112,7 +115,7 @@ class DialogShower {
 
   Future<R>? then<R>(FutureOr<R> Function(void value) onValue, {Function? onError}) => future.then(onValue, onError: onError);
 
-  // private .....
+  /// private .....
   TapUpDetails? get tapUpDetails => _tapUpDetails;
   TapUpDetails? _tapUpDetails;
 
@@ -125,12 +128,12 @@ class DialogShower {
   GlobalKey get containerKey => _containerKey;
   final GlobalKey _containerKey = GlobalKey();
 
-  // extension for navigate inner dialog
+  /// extension for navigate inner dialog
   bool isWrappedByNavigator = false;
   bool isAutoSizeForNavigator = true;
   GlobalKey<NavigatorState>? _navigatorKey;
 
-  // holder object for various uses if you need ...
+  /// holder object for various uses if you need ...
   Object? obj;
 
   /// Important!!! Navigator operation requested with a context that does include a Navigator.
@@ -396,6 +399,7 @@ class DialogShower {
       double mTop = _window.padding.top;
       double kTop = _queryData.padding.top;
       __shower_log__('self: $routeName, _width: $_width, _height: $_height');
+      __shower_log__('Size: width: $width, height: $height, renderedWidth: $renderedWidth, renderedHeight: $renderedHeight');
       __shower_log__(
           'Window: mWidth: $mWidth, mHeight: $mHeight, mTop: $mTop; MediaQuery kWidth: $kWidth, kHeight: $kHeight, kTop: $kTop');
       __shower_log__(
@@ -408,8 +412,10 @@ class DialogShower {
 
     EdgeInsets? _padding;
 
-    // when the Scaffold's body is Padding instead of Container (or Container without height & alignment) , you should calculate the top padding
-    // if you do not use a calculated value as padding top (when use the alignment or set height for align center child), it child will stick to screen top when keyboard show up !!!
+    // when the Scaffold's body is Padding instead of Container (or Container without height & alignment) ,
+    // you should calculate the top padding ,
+    // if you do not use a calculated value as padding top (when use the alignment or set height for align center child),
+    // it child will stick to screen top when keyboard show up !!!
 
     if (padding != null) {
       EdgeInsets m = padding!;
@@ -420,9 +426,9 @@ class DialogShower {
         }
 
         // [Center Vertically] if height is given when padding not given or top is negative
-        double centerTop = _height != null ? (kHeight - _height) / 2 : 0;
+        double centerTop = _height != null ? math.max(0, (kHeight - _height)) / 2 : 0;
         // [Center Horizontal] if width is given when padding not given or top is negative
-        double centerLeft = _width != null ? (kWidth - _width) / 2 : 0;
+        double centerLeft = _width != null ? math.max(0, (kWidth - _width)) / 2 : 0;
         _padding = EdgeInsets.fromLTRB(m.left < 0 ? centerLeft : m.left, m.top < 0 ? centerTop : m.top, m.right, m.bottom);
       } else {
         _padding = m;

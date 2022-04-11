@@ -92,13 +92,13 @@ class DialogWrapper {
 
   /// Navigator push and pop
   static DialogShower? getTopNavigatorDialog() {
-    DialogShower? result;
+    DialogShower? shower;
     DialogWrapper.iterateDialogs((dialog) {
       bool isBingo = dialog.isWrappedByNavigator;
-      result = isBingo ? dialog : null;
-      return result != null;
+      shower = isBingo ? dialog : null;
+      return shower != null;
     });
-    return result;
+    return shower;
   }
 
   static DialogShower pushRoot(Widget widget,
@@ -125,8 +125,8 @@ class DialogWrapper {
     bool? maintainState,
     bool? fullscreenDialog,
   }) {
-    DialogShower? topNavigatorDialog = getTopNavigatorDialog();
-    return topNavigatorDialog!.push(
+    DialogShower? shower = getTopNavigatorDialog();
+    return shower!.push(
       widget,
       duration: duration ?? const Duration(milliseconds: 200),
       reverseDuration: reverseDuration ?? const Duration(milliseconds: 200),
@@ -165,7 +165,6 @@ class DialogWrapper {
     return (appearingDialogs = appearingDialogs ?? []);
   }
 
-  // TODO ... insert a prefix into key for ordinal, then pop until ...
   static Map<String, DialogShower> _map() {
     return (appearingDialogsMappings = appearingDialogsMappings ?? {});
   }
@@ -200,12 +199,11 @@ class DialogWrapper {
       await _dismiss(dialog);
     }
 
-    // TODO ... not in top to bottom ordinal now ...
-    Map<String, DialogShower> map = {}..addAll(_map());
-    _map().clear();
-    map.forEach((key, dialog) async {
-      await _dismiss(dialog);
-    });
+    // Map<String, DialogShower> map = {}..addAll(_map());
+    _map().clear();   // just clear, cause _addDialog entry method: _map element already in _list
+    // map.forEach((key, dialog) async {
+    //   await _dismiss(dialog);
+    // });
   }
 
   static Future<void> dismissTopDialog({int? count}) async {
