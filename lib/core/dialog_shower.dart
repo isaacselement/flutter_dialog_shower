@@ -143,11 +143,16 @@ class DialogShower {
     }
     gContext = context;
 
+    assert(() {
+      __shower_log__('[init] current context size: ${MediaQuery.of(context).size}');
+      return true;
+    }());
+
     Navigator? navigator;
     if (context is Element && context.widget is Navigator) {
       navigator = context.widget as Navigator;
       assert(() {
-        __shower_log__('current context already with a navigator >>> $navigator');
+        __shower_log__('[init] current context already with a navigator >>> $navigator');
         return true;
       }());
     }
@@ -159,21 +164,21 @@ class DialogShower {
     Navigator? anotherNavigator = naviWidget != null && naviWidget is Navigator ? naviWidget : null;
     if (navigator != anotherNavigator) {
       assert(() {
-        __shower_log__('found another navigator from ancestor >>> $anotherNavigator');
+        __shower_log__('[init] found another navigator from ancestor >>> $anotherNavigator');
         return true;
       }());
       navigator = anotherNavigator;
     }
     RenderObject? naviRenderObject = naviContext?.findRenderObject();
     assert(() {
-      __shower_log__('naviState >>> $naviState, naviContext >>> $naviContext, naviWidget >>> $naviWidget, navigator >>> $navigator,'
-          ' naviRenderObject >>> $naviRenderObject');
+      __shower_log__('[init] naviState >>> $naviState, naviContext >>> $naviContext, naviWidget >>> $naviWidget, '
+          'navigator >>> $navigator, naviRenderObject >>> $naviRenderObject');
       return true;
     }());
 
     if (navigator?.observers.contains(DialogShower.getObserver()) ?? false) {
       assert(() {
-        __shower_log__('already register observer in navigator!!!!');
+        __shower_log__('[init] already register observer in navigator!!!!');
         return true;
       }());
       NavigatorObserverEx.ensureInit();
@@ -386,24 +391,28 @@ class DialogShower {
     double? _width = width ?? renderedWidth;
     double? _height = height ?? renderedHeight;
 
-    MediaQueryData _queryData = MediaQuery.of(context!);
-    double kWidth = _queryData.size.width;
-    double kHeight = _queryData.size.height;
+    MediaQueryData contextQuery = MediaQuery.of(context!);
+    double contextWidth = contextQuery.size.width;
+    double contextHeight = contextQuery.size.height;
+
+    ui.SingletonFlutterWindow _window = WidgetsBinding.instance?.window ?? ui.window;
+
+    MediaQueryData windowQuery = MediaQueryData.fromWindow(_window);
+    double windowWidth = windowQuery.size.width;
+    double windowHeight = windowQuery.size.height;
 
     assert(() {
-      ui.SingletonFlutterWindow _window = WidgetsBinding.instance?.window ?? ui.window;
-      double mWidth = _window.physicalSize.width;
-      double mHeight = _window.physicalSize.height;
+      double physicalWidth = _window.physicalSize.width;
+      double physicalHeight = _window.physicalSize.height;
+      double physicalTop = _window.padding.top;
 
-      MediaQueryData query = MediaQueryData.fromWindow(_window);
-      double mTop = _window.padding.top;
-      double kTop = _queryData.padding.top;
-      __shower_log__('self: $routeName, _width: $_width, _height: $_height');
+      EdgeInsets contextPadding = contextQuery.padding;
+      EdgeInsets windowPadding = windowQuery.padding;
+      __shower_log__('Self: $routeName, _width: $_width, _height: $_height');
       __shower_log__('Size: width: $width, height: $height, renderedWidth: $renderedWidth, renderedHeight: $renderedHeight');
-      __shower_log__(
-          'Window: mWidth: $mWidth, mHeight: $mHeight, mTop: $mTop; MediaQuery kWidth: $kWidth, kHeight: $kHeight, kTop: $kTop');
-      __shower_log__(
-          'Media.Window width: ${query.size.width}, height: ${query.size.height}, top: ${query.padding.top}, padding: ${query.padding}');
+      __shower_log__('Window: physicalWidth: $physicalWidth, physicalHeight: $physicalHeight, physicalTop: $physicalTop');
+      __shower_log__('QueryContext: width: $contextWidth, height: $contextHeight, top: ${contextPadding.top}, padding: $contextPadding');
+      __shower_log__('QueryWindow: width: $windowWidth, height: $windowHeight, top: ${windowPadding.top}, padding: $windowPadding');
       return true;
     }());
 
@@ -426,9 +435,17 @@ class DialogShower {
         }
 
         // [Center Vertically] if height is given when padding not given or top is negative
-        double centerTop = _height != null ? math.max(0, (kHeight - _height)) / 2 : 0;
-        // [Center Horizontal] if width is given when padding not given or top is negative
-        double centerLeft = _width != null ? math.max(0, (kWidth - _width)) / 2 : 0;
+        // [Center Horizontal] if width is given when padding not given left top is negative
+        double centerLeft = 0;
+        double centerTop = 0;
+        if (_width != null) {
+          double screenWidth = windowWidth; // contextWidth < _width ? windowWidth : contextWidth;
+          centerLeft = math.max(0, (screenWidth - _width)) / 2;
+        }
+        if (_height != null) {
+          double screenHeight = windowHeight; // contextHeight < _height ? windowHeight : contextHeight;
+          centerTop = math.max(0, (screenHeight - _height)) / 2;
+        }
         _padding = EdgeInsets.fromLTRB(m.left < 0 ? centerLeft : m.left, m.top < 0 ? centerTop : m.top, m.right, m.bottom);
       } else {
         _padding = m;
