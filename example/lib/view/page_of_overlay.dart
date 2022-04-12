@@ -3,9 +3,10 @@ import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/core/dialog_shower.dart';
-import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
+import 'package:flutter_dialog_shower/dialog/dialog_shower.dart';
+import 'package:flutter_dialog_shower/dialog/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_shower.dart';
+import 'package:flutter_dialog_shower/overlay/overlay_widgets.dart';
 
 class PageOfOverlay extends StatelessWidget {
   static late BuildContext context;
@@ -104,67 +105,7 @@ class PageOfOverlay extends StatelessWidget {
               });
             }),
             WidgetsUtil.newXpelTextButton('Show Toast', onPressed: () {
-              OverlayShower shower = OverlayShower()
-                ..alignment = Alignment.bottomCenter
-                ..margin = const EdgeInsets.only(bottom: 50)
-                ..isWithTicker = true; // key point !!!
-              shower.show(const Offstage(offstage: true)); // tricky, generate the StatefulBuilderExState instance first
-
-              WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-                AnimationController animationController = AnimationController(
-                  vsync: shower.statefulKey.currentState as StatefulBuilderExState,
-                  duration: const Duration(milliseconds: 500),
-                  reverseDuration: const Duration(milliseconds: 500),
-                );
-                Animation animation = Tween(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(curve: const Interval(0.0, 1.0, curve: Curves.linearToEaseOut), parent: animationController),
-                );
-                animationController.addListener(() {
-                  shower.setState(() {}); // will rebuild with builder belowed
-                });
-                animationController.forward();
-                shower.onTapCallback = (shower) {
-                  animationController.reverse().then((value) {
-                    animationController.dispose();
-                    shower.dismiss();
-                  });
-                };
-
-                shower.builder = (shower) {
-                  return Opacity(
-                    opacity: animation.value,
-                    child: Container(
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.all(Radius.circular(6)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 20.0,
-                          )
-                        ],
-                      ),
-                      child: const Material(
-                        type: MaterialType.transparency,
-                        // elevation: 1.0,
-                        // borderOnForeground: false,
-                        // color: Colors.black,
-                        // shadowColor: Colors.black,
-                        // clipBehavior: Clip.antiAlias,
-                        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
-                        child: Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Text(
-                            'You are heading to mogelia city, please take the books on board!',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                };
-              });
+              OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!');
             }),
           ],
         ),

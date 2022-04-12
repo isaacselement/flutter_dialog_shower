@@ -4,7 +4,7 @@ import 'package:example/util/widgets_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
+import 'package:flutter_dialog_shower/dialog/dialog_wrapper.dart';
 
 import '../util/logger.dart';
 import 'page_of_keyboard.dart';

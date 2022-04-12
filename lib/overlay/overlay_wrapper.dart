@@ -46,16 +46,16 @@ class OverlayWrapper {
   static Function(OverlayShower shower)? centralOfShower;
 
   /// Appearing overlays management
-  static List<OverlayShower>? appearingDialogs;
+  static List<OverlayShower>? appearingShowers;
 
-  static Map<String, OverlayShower>? appearingDialogsMappings;
+  static Map<String, OverlayShower>? appearingShowersMappings;
 
   static List<OverlayShower> _list() {
-    return (appearingDialogs = appearingDialogs ?? []);
+    return (appearingShowers = appearingShowers ?? []);
   }
 
   static Map<String, OverlayShower> _map() {
-    return (appearingDialogsMappings = appearingDialogsMappings ?? {});
+    return (appearingShowersMappings = appearingShowersMappings ?? {});
   }
 
   static OverlayShower? getTopDialog() {
@@ -71,7 +71,7 @@ class OverlayWrapper {
     return _map()[key];
   }
 
-  static void iterateDialogs(bool Function(OverlayShower dialog) handler) {
+  static void iterateDialogs(bool Function(OverlayShower shower) handler) {
     List<OverlayShower> tmp = [..._list()];
     for (int i = tmp.length - 1; i >= 0; i--) {
       if (handler(tmp.elementAt(i))) {
@@ -84,14 +84,14 @@ class OverlayWrapper {
     List<OverlayShower> tmp = [..._list()];
     _list().clear();
     for (int i = tmp.length - 1; i >= 0; i--) {
-      var dialog = tmp[i];
-      await _dismiss(dialog);
+      var shower = tmp[i];
+      await _dismiss(shower);
     }
 
     // Map<String, OverlayShower> map = {}..addAll(_map());
     _map().clear(); // just clear, cause _addDialog entry method: _map element already in _list
-    // map.forEach((key, dialog) async {
-    //   await _dismiss(dialog);
+    // map.forEach((key, shower) async {
+    //   await _dismiss(shower);
     // });
   }
 
@@ -105,49 +105,49 @@ class OverlayWrapper {
     await dismissDialog(_list().isNotEmpty ? _list().last : null);
   }
 
-  static Future<void> dismissDialog(OverlayShower? dialog, {String? key}) async {
+  static Future<void> dismissDialog(OverlayShower? shower, {String? key}) async {
     // remove & dismiss from top to bottom
-    if (dialog != null) {
+    if (shower != null) {
       List<OverlayShower> tmp = [..._list()];
       for (int i = tmp.length - 1; i >= 0; i--) {
         OverlayShower d = tmp.elementAt(i);
         _remove(d);
         await _dismiss(d);
-        if (d == dialog) {
+        if (d == shower) {
           break;
         }
       }
     }
-    if (key != null && (dialog = _map()[key]) != null) {
+    if (key != null && (shower = _map()[key]) != null) {
       List<OverlayShower> tmp = [..._list()];
       for (int i = tmp.length - 1; i >= 0; i--) {
         OverlayShower d = tmp.elementAt(i);
         _remove(d);
         await _dismiss(d);
-        if (d == dialog) {
+        if (d == shower) {
           break;
         }
       }
     }
   }
 
-  // important!!! do not use this method unless you take management of your own dialog
-  static Future<void> _dismiss(OverlayShower? dialog) async {
-    if (dialog != null) {
-      await dialog.dismiss();
+  // important!!! do not use this method unless you take management of your own shower
+  static Future<void> _dismiss(OverlayShower? shower) async {
+    if (shower != null) {
+      await shower.dismiss();
     }
   }
 
-  // dialog management: add/remove/iterate in ordinal
-  static void _remove(OverlayShower? dialog) {
-    _list().remove(dialog);
-    _map().removeWhere((key, value) => value == dialog);
+  // shower management: add/remove/iterate in ordinal
+  static void _remove(OverlayShower? shower) {
+    _list().remove(shower);
+    _map().removeWhere((key, value) => value == shower);
   }
 
-  static void _addDialog(OverlayShower dialog, {String? key}) {
+  static void _addDialog(OverlayShower shower, {String? key}) {
     if (key != null) {
-      _map()[key] = dialog;
+      _map()[key] = shower;
     }
-    _list().add(dialog);
+    _list().add(shower);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:example/util/size_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/broker/brother.dart';
-import 'package:flutter_dialog_shower/core/dialog_shower.dart';
+import 'package:flutter_dialog_shower/core/brother.dart';
+import 'package:flutter_dialog_shower/dialog/dialog_shower.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_shower.dart';
 
 import 'util/logger.dart';

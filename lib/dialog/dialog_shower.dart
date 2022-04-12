@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_dialog_shower/event/keyboard_event_listener.dart'; // delete this line if u dont need keyboard interaction.
+import '../event/keyboard_event_listener.dart'; // delete this line if u dont need keyboard interaction.
 
 class DialogShower {
   static BuildContext? gContext;

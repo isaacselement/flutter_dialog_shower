@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/broker/brother.dart';
+import 'package:flutter_dialog_shower/core/brother.dart';
 
 class CcTextButton extends StatefulWidget {
   String text;

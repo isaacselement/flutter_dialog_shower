@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_dialog_shower (0.0.1):
+  - flutter_dialog_shower (1.0.0):
     - Flutter
 
 DEPENDENCIES:
@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_dialog_shower: a9100d8edb14d65d62aa43c87794d201b6938fc6
+  flutter_dialog_shower: dd6c19779e23f9e78eb22b31136f21b165ee7988
 
 PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
 

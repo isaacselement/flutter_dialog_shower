@@ -2,8 +2,8 @@ import 'package:example/util/offset_util.dart';
 import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/core/dialog_shower.dart';
-import 'package:flutter_dialog_shower/core/dialog_wrapper.dart';
+import 'package:flutter_dialog_shower/dialog/dialog_shower.dart';
+import 'package:flutter_dialog_shower/dialog/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/view/cc_bubble_widgets.dart';
 import 'package:flutter_dialog_shower/view/cc_select_list_widgets.dart';
 
