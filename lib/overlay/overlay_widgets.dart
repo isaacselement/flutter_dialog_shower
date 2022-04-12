@@ -6,6 +6,7 @@ import 'overlay_shower.dart';
 import 'overlay_wrapper.dart';
 
 class OverlayWidgets {
+
   static OverlayShower showToast(
     String text, {
     TextStyle? textStyle,
@@ -22,6 +23,47 @@ class OverlayWidgets {
     Duration? duration,
     Curves? curves,
   }) {
+    return showOpacity(
+      appearDuraion: appearDuraion,
+      dismissDuraion: dismissDuraion,
+      duration: duration,
+      curves: curves,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: decoration ??
+            BoxDecoration(
+              color: backgroundColor ?? Colors.black,
+              borderRadius: radius ?? const BorderRadius.all(Radius.circular(6)),
+              boxShadow: [shadow ?? const BoxShadow(color: Colors.grey, blurRadius: 25.0 /*, offset: Offset(4.0, 4.0)*/)],
+            ),
+        child: Material(
+          type: MaterialType.transparency,
+          // elevation: 1.0,
+          // borderOnForeground: false,
+          // color: Colors.black,
+          // shadowColor: Colors.black,
+          // clipBehavior: Clip.antiAlias,
+          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
+          child: Padding(
+            padding: padding ?? const EdgeInsets.all(10.0),
+            child: Text(
+              text,
+              style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+
+  }
+
+  static OverlayShower showOpacity({
+    required Widget child,
+    Duration? appearDuraion,
+    Duration? dismissDuraion,
+    Duration? duration,
+    Curves? curves,
+  }) {
     OverlayShower shower = OverlayWrapper.showTop(const Offstage(offstage: true));
     shower.isWithTicker = true;
 
@@ -32,7 +74,7 @@ class OverlayWidgets {
         reverseDuration: dismissDuraion ?? const Duration(milliseconds: 500),
       );
       Animation animation = Tween(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(curve: const Interval(0.0, 1.0, curve: Curves.linearToEaseOut), parent: animationController),
+        CurvedAnimation(curve: Interval(0.0, 1.0, curve: (curves ?? Curves.linearToEaseOut) as Curve), parent: animationController),
       );
       animationController.addListener(() {
         shower.setState(() {}); // will rebuild with builder belowed
@@ -47,37 +89,11 @@ class OverlayWidgets {
       });
 
       shower.builder = (shower) {
-        return Opacity(
-          opacity: animation.value,
-          child: Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: decoration ??
-                BoxDecoration(
-                  color: backgroundColor ?? Colors.black,
-                  borderRadius: radius ?? const BorderRadius.all(Radius.circular(6)),
-                  boxShadow: [shadow ?? const BoxShadow(color: Colors.grey, blurRadius: 25.0)],
-                ),
-            child: Material(
-              type: MaterialType.transparency,
-              // elevation: 1.0,
-              // borderOnForeground: false,
-              // color: Colors.black,
-              // shadowColor: Colors.black,
-              // clipBehavior: Clip.antiAlias,
-              // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
-              child: Padding(
-                padding: padding ?? const EdgeInsets.all(10.0),
-                child: Text(
-                  text,
-                  style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              ),
-            ),
-          ),
-        );
+        return Opacity(opacity: animation.value, child: child);
       };
     });
 
     return shower;
   }
+
 }

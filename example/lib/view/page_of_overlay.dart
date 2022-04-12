@@ -104,8 +104,19 @@ class PageOfOverlay extends StatelessWidget {
                 };
               });
             }),
-            WidgetsUtil.newXpelTextButton('Show Toast', onPressed: () {
-              OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!');
+            WidgetsUtil.newXpelTextButton('Show Toast on Top', onPressed: () {
+              OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!').margin =
+                  const EdgeInsets.only(top: 80);
+            }),
+            WidgetsUtil.newXpelTextButton('Show Toast on Bottom', onPressed: () {
+              OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!')
+                ..alignment = Alignment.bottomCenter
+                ..margin = const EdgeInsets.only(bottom: 80);
+            }),
+            WidgetsUtil.newXpelTextButton('Show Toast on Center', onPressed: () {
+              OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!')
+                ..alignment = Alignment.center
+                ..margin = EdgeInsets.zero;
             }),
           ],
         ),
