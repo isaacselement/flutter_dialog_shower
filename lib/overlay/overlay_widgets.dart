@@ -45,10 +45,10 @@ class OverlayWidgets {
           // clipBehavior: Clip.antiAlias,
           // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
           child: Padding(
-            padding: padding ?? const EdgeInsets.all(10.0),
+            padding: padding ?? const EdgeInsets.all(8.0),
             child: Text(
               text,
-              style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 16),
+              style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 15),
             ),
           ),
         ),
