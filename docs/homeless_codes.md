@@ -28,3 +28,20 @@
     httpd.serve_forever()
 
 
+
+### Jail Broken iOS
+
+    brew install usbmuxd
+    iproxy 2222 22
+    ssh -p 2222 root@127.0.0.1
+    # enter default password: alpine
+
+    cd /
+    find -name *.app
+    ls -al /var/containers/Bundle/Application/
+    ls -al /var/mobile/Containers/Data/Application
+    ls -al /var/mobile/Library/FrontBoard/applicationState.db
+    cat /var/mobile/Library/FrontBoard/applicationState.db | grep -a "com.ss"
+
+    scp -P 2222 root@127.0.0.1:/var/mobile/Library/FrontBoard/applicationState.db  ./
+    sqlite3 applicationState.db 
