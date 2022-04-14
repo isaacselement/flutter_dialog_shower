@@ -23,15 +23,15 @@ class DialogShower {
   Color barrierColor = Colors.transparent;
   bool? barrierDismissible = false;
   String barrierLabel = "";
+  bool isDismissKeyboardOnTapped = true;
   Duration transitionDuration = const Duration(milliseconds: 250);
   RouteTransitionsBuilder? transitionBuilder;
-  bool isDismissKeyboardOnTapped = true;
-
-  /// scaffold
-  Color? scaffoldBackgroundColor = Colors.transparent;
 
   /// Animation direction
   Offset? animationBeginOffset = const Offset(0.0, 1.0); // default from Bottom
+
+  /// scaffold
+  Color? scaffoldBackgroundColor = Colors.transparent;
 
   /// container
   AlignmentGeometry? alignment = Alignment.center; // alignment center default

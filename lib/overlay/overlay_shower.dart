@@ -63,6 +63,9 @@ class OverlayShower {
 
   void removeDismissCallBack(void Function(OverlayShower shower) cb) => (dismissCallbacks = dismissCallbacks ?? []).remove(cb);
 
+  /// holder object for various uses if you need ...
+  Object? obj;
+
   // init methods ----------------------------------------
 
   static void init(BuildContext context) {

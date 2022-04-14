@@ -1,10 +1,7 @@
 import 'package:example/util/logger.dart';
-import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/dialog/dialog_shower.dart';
-import 'package:flutter_dialog_shower/dialog/dialog_wrapper.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_shower.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_widgets.dart';
 
@@ -34,13 +31,15 @@ class PageOfOverlay extends StatelessWidget {
         const SizedBox(height: 12),
         WidgetsUtil.newHeaderWithLine('Overlay'),
         const SizedBox(height: 12),
-        demoUsageOfDialogShower(),
+        demoUsageOfOverlayShower(),
         const SizedBox(height: 32),
+        WidgetsUtil.newHeaderWithLine('Toast'),
+        demoUsageOfToasts(),
       ],
     );
   }
 
-  Column demoUsageOfDialogShower() {
+  Column demoUsageOfOverlayShower() {
     return Column(
       children: [
         Wrap(
@@ -104,6 +103,17 @@ class PageOfOverlay extends StatelessWidget {
                 };
               });
             }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Column demoUsageOfToasts() {
+    return Column(
+      children: [
+        Wrap(
+          children: [
             WidgetsUtil.newXpelTextButton('Show Toast on Top', onPressed: () {
               OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!').margin =
                   const EdgeInsets.only(top: 80);
@@ -117,6 +127,38 @@ class PageOfOverlay extends StatelessWidget {
               OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!')
                 ..alignment = Alignment.center
                 ..margin = EdgeInsets.zero;
+            }),
+            WidgetsUtil.newXpelTextButton('Show Toast on Top Queue', onPressed: () {
+              OverlayWidgets.showToastInQueue(
+                'You are heading to mogelia city, please click button again and again!',
+                increaseOffset: const EdgeInsets.only(top: 45),
+              )
+                ..alignment = Alignment.topCenter
+                ..margin = const EdgeInsets.only(top: 80);
+            }),
+            WidgetsUtil.newXpelTextButton('Show Toast on Bottom Queue', onPressed: () {
+              OverlayWidgets.showToastInQueue(
+                'You are heading to mogelia city, please click button again and again!',
+                increaseOffset: const EdgeInsets.only(bottom: 45),
+              )
+                ..alignment = Alignment.bottomCenter
+                ..margin = const EdgeInsets.only(bottom: 80);
+            }),
+            WidgetsUtil.newXpelTextButton('Show Toast on Left Queue', onPressed: () {
+              OverlayWidgets.showToastInQueue(
+                'You are heading to mogelia city, please click button again and again!',
+                increaseOffset: const EdgeInsets.only(top: 45, left: 18),
+              )
+                ..alignment = Alignment.topLeft
+                ..margin = const EdgeInsets.only(top: 220, left: 20);
+            }),
+            WidgetsUtil.newXpelTextButton('Show Toast on Right Queue', onPressed: () {
+              OverlayWidgets.showToastInQueue(
+                'You are heading to mogelia city, please click button again and again!',
+                increaseOffset: const EdgeInsets.only(top: 45, right: 18),
+              )
+                ..alignment = Alignment.topRight
+                ..margin = const EdgeInsets.only(top: 220, right: 20);
             }),
           ],
         ),
