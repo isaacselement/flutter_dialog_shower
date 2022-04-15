@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../dialog/dialog_shower.dart';
 
@@ -12,7 +11,7 @@ class OverlayShower {
   bool isSyncShow = false; // should assign value before show method
   bool isWithTicker = false; // should assign value before show method
 
-  bool isUseRootOverlay = false;
+  bool isUseRootOverlay = true;
   bool isWrappedMaterial = true;
 
   OverlayEntry? showBelow, showAbove; // insert below or above entry
