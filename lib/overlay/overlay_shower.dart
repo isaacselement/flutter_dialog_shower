@@ -13,6 +13,7 @@ class OverlayShower {
   bool isWithTicker = false; // should assign value before show method
 
   bool isUseRootOverlay = false;
+  bool isWrappedMaterial = true;
 
   OverlayEntry? showBelow, showAbove; // insert below or above entry
 
@@ -124,10 +125,11 @@ class OverlayShower {
   }
 
   Widget _wrapperChild(Widget? child) {
-    return GestureDetector(
+    GestureDetector gesture = GestureDetector(
       onTap: () => onTapCallback?.call(this),
       child: builder?.call(this) ?? _newChild ?? child,
     );
+    return isWrappedMaterial ? Material(type: MaterialType.transparency, child: gesture) : gesture;
   }
 
   // dismiss ----------------------------------------

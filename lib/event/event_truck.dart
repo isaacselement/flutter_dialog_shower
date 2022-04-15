@@ -35,7 +35,7 @@ class EventTruck {
 
   static EventTruck? _instance;
 
-  static get _mInstance => _instance ??= EventTruck();
+  static EventTruck get _mInstance => _instance ??= EventTruck();
 
   static Map<String, StreamSubscription>? managedSubscriptions;
 
@@ -67,5 +67,9 @@ class EventTruck {
     if (managedKey != null) {
       managedSubscriptions?.remove(managedKey)?.cancel();
     }
+  }
+
+  static void dispose() {
+    _mInstance.destroy();
   }
 }

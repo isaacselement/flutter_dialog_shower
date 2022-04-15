@@ -35,7 +35,7 @@ class OverlayWrapper {
     centralOfShower?.call(shower);
 
     shower.show(child);
-    _addDialog(shower, key: key);
+    _addLayer(shower, key: key);
     shower.addDismissCallBack((d) {
       _remove(d);
     });
@@ -58,20 +58,20 @@ class OverlayWrapper {
     return (appearingShowersMappings = appearingShowersMappings ?? {});
   }
 
-  static OverlayShower? getTopDialog() {
+  static OverlayShower? getTopLayer() {
     return _list().isNotEmpty ? _list().last : null;
   }
 
-  static OverlayShower? getDialogByIndex(int reverseIndex) {
+  static OverlayShower? getLayerByIndex(int reverseIndex) {
     int index = (_list().length - 1) - reverseIndex; // reverse index
     return index >= 0 && index < _list().length ? _list()[index] : null;
   }
 
-  static OverlayShower? getDialogByKey(String key) {
+  static OverlayShower? getLayerByKey(String key) {
     return _map()[key];
   }
 
-  static void iterateDialogs(bool Function(OverlayShower shower) handler) {
+  static void iterateLayers(bool Function(OverlayShower shower) handler) {
     List<OverlayShower> tmp = [..._list()];
     for (int i = tmp.length - 1; i >= 0; i--) {
       if (handler(tmp.elementAt(i))) {
@@ -80,7 +80,7 @@ class OverlayWrapper {
     }
   }
 
-  static Future<void> dismissAppearingDialogs() async {
+  static Future<void> dismissAppearingLayers() async {
     List<OverlayShower> tmp = [..._list()];
     _list().clear();
     for (int i = tmp.length - 1; i >= 0; i--) {
@@ -89,23 +89,23 @@ class OverlayWrapper {
     }
 
     // Map<String, OverlayShower> map = {}..addAll(_map());
-    _map().clear(); // just clear, cause _addDialog entry method: _map element already in _list
+    _map().clear(); // just clear, cause _addLayer entry method: _map element already in _list
     // map.forEach((key, shower) async {
     //   await _dismiss(shower);
     // });
   }
 
-  static Future<void> dismissTopDialog({int? count}) async {
+  static Future<void> dismissTopLayer({int? count}) async {
     if (count != null && count > 0) {
       for (int i = 0; i < count; i++) {
-        await dismissDialog(_list().isNotEmpty ? _list().last : null);
+        await dismissLayer(_list().isNotEmpty ? _list().last : null);
       }
       return;
     }
-    await dismissDialog(_list().isNotEmpty ? _list().last : null);
+    await dismissLayer(_list().isNotEmpty ? _list().last : null);
   }
 
-  static Future<void> dismissDialog(OverlayShower? shower, {String? key}) async {
+  static Future<void> dismissLayer(OverlayShower? shower, {String? key}) async {
     // remove & dismiss from top to bottom
     if (shower != null) {
       List<OverlayShower> tmp = [..._list()];
@@ -144,7 +144,7 @@ class OverlayWrapper {
     _map().removeWhere((key, value) => value == shower);
   }
 
-  static void _addDialog(OverlayShower shower, {String? key}) {
+  static void _addLayer(OverlayShower shower, {String? key}) {
     if (key != null) {
       _map()[key] = shower;
     }

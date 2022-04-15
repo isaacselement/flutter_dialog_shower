@@ -136,20 +136,11 @@ class OverlayWidgets {
               borderRadius: radius ?? const BorderRadius.all(Radius.circular(6)),
               boxShadow: [shadow ?? const BoxShadow(color: Colors.grey, blurRadius: 25.0 /*, offset: Offset(4.0, 4.0)*/)],
             ),
-        child: Material(
-          type: MaterialType.transparency,
-          // elevation: 1.0,
-          // borderOnForeground: false,
-          // color: Colors.black,
-          // shadowColor: Colors.black,
-          // clipBehavior: Clip.antiAlias,
-          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
-          child: Padding(
-            padding: padding ?? const EdgeInsets.all(8.0),
-            child: Text(
-              text,
-              style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 15),
-            ),
+        child: Padding(
+          padding: padding ?? const EdgeInsets.all(8.0),
+          child: Text(
+            text,
+            style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 15),
           ),
         ),
       ),

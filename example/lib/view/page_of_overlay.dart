@@ -1,9 +1,12 @@
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
+import 'package:example/view/widgets/cc_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/dialog/dialog_shower.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_shower.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_widgets.dart';
+import 'package:flutter_dialog_shower/overlay/overlay_wrapper.dart';
+import 'package:flutter_dialog_shower/view/cc_bubble_widgets.dart';
 
 class PageOfOverlay extends StatelessWidget {
   static late BuildContext context;
@@ -102,6 +105,31 @@ class PageOfOverlay extends StatelessWidget {
                   );
                 };
               });
+            }),
+            WidgetsUtil.newXpelTextButton('Show menu', onPressed: () {
+              OverlayWrapper.show(
+                CcBubbleWidget(
+                  bubbleColor: Colors.black, // triangle color
+                  triangleDirection: TriangleArrowDirection.top,
+                  child: CcMenuPopup(
+                    popupBackGroundColor: Colors.green, // spacing line color
+                    values: const [
+                      [Icons.local_print_shop_sharp, 'Print'],
+                      [Icons.home_sharp, 'Home'],
+                      [Icons.mail_sharp, 'Mail'],
+                      [Icons.qr_code_sharp, 'QRCode'],
+                      [Icons.settings_sharp, 'Settings'],
+                      [Icons.menu_sharp, 'More'],
+                    ],
+                    onTap: (index, value, context) {
+                      Logger.d('👉👉👉>>>>> u tap $index, value: $value, toString(): ${value.toString()}');
+                      OverlayWrapper.dismissAppearingLayers();
+                    },
+                  ),
+                ),
+              )
+                ..alignment = Alignment.center
+                ..onTapCallback = (shower) => shower.dismiss();
             }),
           ],
         ),
