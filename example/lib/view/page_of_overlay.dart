@@ -145,6 +145,16 @@ class PageOfOverlay extends StatelessWidget {
                 'Here is mogelia, please click button again and again ${DateTime.now()} ...',
                 increaseOffset: const EdgeInsets.only(bottom: 45),
                 slideBegin: const Offset(0, -1000),
+                dismissAnimatedBuilder: (shower, controller, child) {
+                  Animation<Offset>? slide = Tween<Offset>(begin: Offset.zero, end: const Offset(0, 1000)).animate(controller);
+                  Widget? widgetSlide;
+                  widgetSlide = AnimatedBuilder(
+                    animation: slide,
+                    builder: (context, child) => Transform.translate(offset: slide.value, child: child),
+                    child: child,
+                  );
+                  return widgetSlide;
+                },
               )
                 ..alignment = Alignment.bottomCenter
                 ..margin = const EdgeInsets.only(bottom: 80);

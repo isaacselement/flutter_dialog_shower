@@ -27,6 +27,8 @@ class OverlayWidgets {
     // animation settings
     Offset? slideBegin,
     double? opacityBegin,
+    Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? appearAnimatedBuilder,
+    Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? dismissAnimatedBuilder,
     // queue increment offset
     required EdgeInsets increaseOffset,
   }) {
@@ -44,6 +46,8 @@ class OverlayWidgets {
       onScreenDuration: onScreenDuration,
       slideBegin: slideBegin,
       opacityBegin: opacityBegin,
+      appearAnimatedBuilder: appearAnimatedBuilder,
+      dismissAnimatedBuilder: dismissAnimatedBuilder,
     );
 
     int index = -1;
@@ -112,6 +116,8 @@ class OverlayWidgets {
     // animation settings
     Offset? slideBegin,
     double? opacityBegin,
+    Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? appearAnimatedBuilder,
+    Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? dismissAnimatedBuilder,
   }) {
     return show(
       curves: curves,
@@ -120,6 +126,8 @@ class OverlayWidgets {
       onScreenDuration: onScreenDuration,
       slideBegin: slideBegin,
       opacityBegin: opacityBegin,
+      appearAnimatedBuilder: appearAnimatedBuilder,
+      dismissAnimatedBuilder: dismissAnimatedBuilder,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: decoration ??
@@ -158,40 +166,45 @@ class OverlayWidgets {
     // animation settings: only support slide & opacity now // default is opcity animation
     Offset? slideBegin,
     double? opacityBegin,
+    Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? appearAnimatedBuilder,
+    Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? dismissAnimatedBuilder,
   }) {
-    opacityBegin = opacityBegin == null && slideBegin == null ? 0.0 : opacityBegin;
+    opacityBegin ??= (slideBegin == null ? 0.0 : opacityBegin);
+    appearAnimatedBuilder ??= (shower, controller, widget) {
+      Curve curve = Interval(0.0, 1.0, curve: (curves ?? Curves.linearToEaseOut) as Curve);
+      Animation<double> animateCurve = CurvedAnimation(curve: curve, parent: controller);
+      Animation<double>? opacity = opacityBegin == null ? null : Tween(begin: opacityBegin, end: 1.0).animate(animateCurve);
+      Animation<Offset>? slide = slideBegin == null ? null : Tween<Offset>(begin: slideBegin, end: Offset.zero).animate(animateCurve);
+      // Animation<Offset> slide = Tween<Offset>(begin: slideBegin, end:  Offset.zero).animate(controller);
+
+      // 1. Using AnimatedWidget
+      Widget? widgetSlide;
+      if (slide != null) {
+        widgetSlide = AnimatedBuilder(
+          animation: slide,
+          builder: (context, child) => Transform.translate(offset: slide.value, child: widget),
+          child: widget,
+        );
+      }
+
+      // 2. Using [__property__]Transition
+      // Widget widgetSlide = SlideTransition(position: slide, child: widget);
+      Widget? widgetFade;
+      if (opacity != null) {
+        widgetFade = FadeTransition(opacity: opacity, child: widgetSlide ?? widget);
+      }
+
+      return widgetFade ?? widgetSlide ?? widget;
+    };
+
     return showWithAnimation(
       child: child,
       curves: curves,
       appearDuraion: appearDuraion,
       dismissDuraion: dismissDuraion,
       onScreenDuration: onScreenDuration,
-      appearAnimatedBuilder: (shower, controller) {
-        Curve curve = Interval(0.0, 1.0, curve: (curves ?? Curves.linearToEaseOut) as Curve);
-        Animation<double> animateCurve = CurvedAnimation(curve: curve, parent: controller);
-        Animation<double>? opacity = opacityBegin == null ? null : Tween(begin: opacityBegin, end: 1.0).animate(animateCurve);
-        // Animation<Offset> slide = Tween<Offset>(begin: slideBegin, end:  Offset.zero).animate(controller);
-        Animation<Offset>? slide = slideBegin == null ? null : Tween<Offset>(begin: slideBegin, end: Offset.zero).animate(animateCurve);
-
-        // 1. Using AnimatedWidget
-        // Widget widgetSlide = SlideTransition(position: slide, child: child);
-        Widget? widgetSlide;
-        if (slide != null) {
-          widgetSlide = AnimatedBuilder(
-            animation: slide,
-            builder: (context, child) => Transform.translate(offset: slide.value, child: child),
-            child: child,
-          );
-        }
-
-        // 2. Using [__property__]Transition
-        Widget? widgetFade;
-        if (opacity != null) {
-          widgetFade = FadeTransition(opacity: opacity, child: widgetSlide ?? child);
-        }
-
-        return widgetFade ?? widgetSlide ?? child;
-      },
+      appearAnimatedBuilder: appearAnimatedBuilder,
+      dismissAnimatedBuilder: dismissAnimatedBuilder,
     );
   }
 
@@ -201,49 +214,54 @@ class OverlayWidgets {
     Duration? appearDuraion,
     Duration? dismissDuraion,
     Duration? onScreenDuration,
-    required Widget Function(OverlayShower shower, AnimationController controller) appearAnimatedBuilder,
-    // Widget Function(OverlayShower shower, AnimationController controller)? dimissAnimatedBuilder,
+    Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? appearAnimatedBuilder,
+    Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? dismissAnimatedBuilder,
   }) {
     const Duration defDuration = Duration(milliseconds: 500);
     return showWithTicker(tickerBuilder: (shower, vsync) {
-      AnimationController controller = AnimationController(
+      AnimationController appearController = AnimationController(
         vsync: vsync,
         duration: appearDuraion ?? defDuration,
         reverseDuration: dismissDuraion ?? defDuration,
       );
 
-      controller.forward();
+      appearController.forward();
       if (onScreenDuration == Duration.zero) {
         // if onScreenDuration == Duration.zero, put the controller to caller
-        shower.obj = controller;
+        shower.obj = appearController;
       } else {
         // default dimiss in 2 seconds
         Future.delayed(onScreenDuration ?? const Duration(milliseconds: 2000), () {
-          controller.reverse().then((value) {
-            shower.dismiss();
-          });
-
-          // AnimationController dimissController = AnimationController(
-          //   vsync: vsync,
-          //   duration: dismissDuraion ?? defDuration,
-          // );
-
+          if (dismissAnimatedBuilder != null) {
+            AnimationController dimissController = AnimationController(vsync: vsync, duration: dismissDuraion ?? defDuration);
+            shower.setNewChild(dismissAnimatedBuilder(shower, dimissController, child));
+            dimissController.forward().then((value) {
+              shower.dismiss();
+            });
+          } else {
+            appearController.reverse().then((value) {
+              shower.dismiss();
+            });
+          }
         });
       }
       shower.addDismissCallBack((shower) {
-        controller.dispose();
+        appearController.dispose();
       });
 
-      // 1. Using Opacity & Shower's builder
-      // controller.addListener(() {
-      //   shower.setState(() {});
-      // });
-      // shower.builder = (shower) {
-      //   return Opacity(opacity: opacityAnimation.value, child: child);
-      // };
-
-      // 2. Using animation widget
-      shower.setNewChild(appearAnimatedBuilder(shower, controller));
+      if (appearAnimatedBuilder == null) {
+        // 1. Using Opacity & Shower's builder
+        appearController.addListener(() {
+          shower.setState(() {});
+        });
+        Animation<double> opacity = Tween(begin: 0.0, end: 1.0).animate(appearController);
+        shower.builder = (shower) {
+          return Opacity(opacity: opacity.value, child: child);
+        };
+      } else {
+        // 2. Using animation widget
+        shower.setNewChild(appearAnimatedBuilder(shower, appearController, child));
+      }
     });
   }
 
