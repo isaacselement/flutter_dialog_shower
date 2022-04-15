@@ -11,9 +11,6 @@ class OverlayShower {
 
   bool isSyncShow = false; // should assign value before show method
   bool isWithTicker = false; // should assign value before show method
-  bool isSyncDismiss = false;
-  bool isSyncInvokeShowCallback = false;
-  bool isSyncInvokeDismissCallback = false;
 
   bool isUseRootOverlay = false;
 
@@ -91,9 +88,7 @@ class OverlayShower {
     _isShowing = true;
     _entry = OverlayEntry(builder: (context) => _getBody(child));
     Overlay.of(context!, rootOverlay: isUseRootOverlay)!.insert(_entry, below: below, above: above);
-
-    isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
-
+    _invokeShowCallbacks();
     return this;
   }
 
@@ -140,14 +135,13 @@ class OverlayShower {
   Future<void> dismiss() async {
     if (_isShowing) {
       _isShowing = false;
-      isSyncDismiss ? _dissmiss() : Future.microtask(() => _dissmiss());
+      _dissmiss();
     }
   }
 
   void _dissmiss() {
     _entry.remove();
-
-    isSyncInvokeDismissCallback ? _invokeDismissCallbacks() : Future.microtask(() => _invokeDismissCallbacks());
+    _invokeDismissCallbacks();
   }
 
   // setState ----------------------------------------

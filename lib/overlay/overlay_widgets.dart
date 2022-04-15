@@ -60,9 +60,8 @@ class OverlayWidgets {
     Duration? appearDuraion,
     Duration? dismissDuraion,
     Duration? onScreenDuration,
-    bool? isRecycleWhenShowed,
   }) {
-    return showWithAnimation(animationBuilder: (shower, vsync) {
+    return showerTicker(animationBuilder: (shower, vsync) {
       AnimationController controller = AnimationController(
         vsync: vsync,
         duration: appearDuraion ?? const Duration(milliseconds: 500),
@@ -75,36 +74,32 @@ class OverlayWidgets {
         shower.setState(() {}); // will rebuild with builder belowed
       });
 
-      TickerFuture forwardFuture = controller.forward();
-      if (isRecycleWhenShowed ?? false) {
-        forwardFuture.then((value) {
-          controller.dispose();
-        });
+      controller.forward();
+      if (onScreenDuration == Duration.zero) {
+        // if onScreenDuration == Duration.zero, put the controller to caller
+        shower.obj = controller;
       } else {
-        if (onScreenDuration == Duration.zero) {
-          // if onScreenDuration == Duration.zero, put the controller to caller
-          shower.obj = controller;
-        } else {
-          // default dimiss in 2 seconds
-          Future.delayed(onScreenDuration ?? const Duration(milliseconds: 2000), () {
-            controller.reverse().then((value) {
-              controller.dispose();
-              shower.dismiss();
-            });
+        // default dimiss in 2 seconds
+        Future.delayed(onScreenDuration ?? const Duration(milliseconds: 2000), () {
+          controller.reverse().then((value) {
+            shower.dismiss();
           });
-        }
+        });
       }
+
+      shower.addDismissCallBack((shower) {
+        controller.dispose();
+      });
 
       shower.builder = (shower) {
         return Opacity(opacity: animation.value, child: child);
       };
 
       // Animation animation = Tween<Offset>(begin: const Offset(0.0, 1.0), end: const Offset(0.0, 0.0)).animate(controller);
-
     });
   }
 
-  static OverlayShower showWithAnimation({
+  static OverlayShower showerTicker({
     required void Function(OverlayShower shower, TickerProviderStateMixin vsync) animationBuilder,
   }) {
     OverlayShower shower = OverlayWrapper.showTop(const Offstage(offstage: true));
