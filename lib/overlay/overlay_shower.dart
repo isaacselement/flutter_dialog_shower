@@ -126,7 +126,7 @@ class OverlayShower {
   Widget _wrapperChild(Widget? child) {
     return GestureDetector(
       onTap: () => onTapCallback?.call(this),
-      child: builder?.call(this) ?? child,
+      child: builder?.call(this) ?? _newChild ?? child,
     );
   }
 
@@ -145,6 +145,13 @@ class OverlayShower {
   }
 
   // setState ----------------------------------------
+
+  Widget? _newChild;
+
+  void setNewChild(Widget? newChild) {
+    _newChild = newChild;
+    setState(() {});
+  }
 
   void setState(VoidCallback fn) {
     _statefulKey.currentState?.setState(fn);

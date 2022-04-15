@@ -115,22 +115,26 @@ class PageOfOverlay extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show Toast on Top', onPressed: () {
-              OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!').margin =
+              OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...').margin =
                   const EdgeInsets.only(top: 80);
             }),
             WidgetsUtil.newXpelTextButton('Show Toast on Bottom', onPressed: () {
-              OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!')
+              OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...')
                 ..alignment = Alignment.bottomCenter
                 ..margin = const EdgeInsets.only(bottom: 80);
             }),
             WidgetsUtil.newXpelTextButton('Show Toast on Center', onPressed: () {
-              OverlayWidgets.showToast('You are heading to mogelia city, please take the books on board!')
+              OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...')
                 ..alignment = Alignment.center
                 ..margin = EdgeInsets.zero;
             }),
+          ],
+        ),
+        Wrap(
+          children: [
             WidgetsUtil.newXpelTextButton('Show Toast on Top Queue', onPressed: () {
               OverlayWidgets.showToastInQueue(
-                'You are heading to mogelia city, please click button again and again!',
+                'Here is mogelia, please click button again and again ${DateTime.now()} ...',
                 increaseOffset: const EdgeInsets.only(top: 45),
               )
                 ..alignment = Alignment.topCenter
@@ -138,24 +142,27 @@ class PageOfOverlay extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('Show Toast on Bottom Queue', onPressed: () {
               OverlayWidgets.showToastInQueue(
-                'You are heading to mogelia city, please click button again and again!',
+                'Here is mogelia, please click button again and again ${DateTime.now()} ...',
                 increaseOffset: const EdgeInsets.only(bottom: 45),
+                slideBegin: const Offset(0, -1000),
               )
                 ..alignment = Alignment.bottomCenter
                 ..margin = const EdgeInsets.only(bottom: 80);
             }),
             WidgetsUtil.newXpelTextButton('Show Toast on Left Queue', onPressed: () {
               OverlayWidgets.showToastInQueue(
-                'You are heading to mogelia city, please click button again and again!',
+                'Here is mogelia, please click button again and again ${DateTime.now()} ...',
                 increaseOffset: const EdgeInsets.only(top: 45, left: 18),
+                slideBegin: const Offset(-1000, 0),
               )
                 ..alignment = Alignment.topLeft
                 ..margin = const EdgeInsets.only(top: 220, left: 20);
             }),
             WidgetsUtil.newXpelTextButton('Show Toast on Right Queue', onPressed: () {
               OverlayWidgets.showToastInQueue(
-                'You are heading to mogelia city, please click button again and again!',
+                'Here is mogelia, please click button again and again ${DateTime.now()} ...',
                 increaseOffset: const EdgeInsets.only(top: 45, right: 18),
+                slideBegin: const Offset(1000, 0),
               )
                 ..alignment = Alignment.topRight
                 ..margin = const EdgeInsets.only(top: 220, right: 20);

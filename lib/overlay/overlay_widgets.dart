@@ -1,119 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 import "../dialog/dialog_shower.dart";
 import 'overlay_shower.dart';
 import 'overlay_wrapper.dart';
 
 class OverlayWidgets {
-  static OverlayShower showToast(
-    String text, {
-    TextStyle? textStyle,
-    // text in padding
-    EdgeInsets? padding,
-    // container decoration;
-    Decoration? decoration,
-    Color? backgroundColor,
-    BorderRadius? radius,
-    BoxShadow? shadow,
-    // animation
-    Curves? curves,
-    Duration? appearDuraion,
-    Duration? dismissDuraion,
-    Duration? onScreenDuration,
-  }) {
-    return showOpacity(
-      curves: curves,
-      appearDuraion: appearDuraion,
-      dismissDuraion: dismissDuraion,
-      onScreenDuration: onScreenDuration,
-      child: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: decoration ??
-            BoxDecoration(
-              color: backgroundColor ?? Colors.black,
-              borderRadius: radius ?? const BorderRadius.all(Radius.circular(6)),
-              boxShadow: [shadow ?? const BoxShadow(color: Colors.grey, blurRadius: 25.0 /*, offset: Offset(4.0, 4.0)*/)],
-            ),
-        child: Material(
-          type: MaterialType.transparency,
-          // elevation: 1.0,
-          // borderOnForeground: false,
-          // color: Colors.black,
-          // shadowColor: Colors.black,
-          // clipBehavior: Clip.antiAlias,
-          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
-          child: Padding(
-            padding: padding ?? const EdgeInsets.all(8.0),
-            child: Text(
-              text,
-              style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 15),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  static OverlayShower showOpacity({
-    required Widget child,
-    Curves? curves,
-    Duration? appearDuraion,
-    Duration? dismissDuraion,
-    Duration? onScreenDuration,
-  }) {
-    return showerTicker(animationBuilder: (shower, vsync) {
-      AnimationController controller = AnimationController(
-        vsync: vsync,
-        duration: appearDuraion ?? const Duration(milliseconds: 500),
-        reverseDuration: dismissDuraion ?? const Duration(milliseconds: 500),
-      );
-      Animation animation = Tween(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(curve: Interval(0.0, 1.0, curve: (curves ?? Curves.linearToEaseOut) as Curve), parent: controller),
-      );
-      controller.addListener(() {
-        shower.setState(() {}); // will rebuild with builder belowed
-      });
-
-      controller.forward();
-      if (onScreenDuration == Duration.zero) {
-        // if onScreenDuration == Duration.zero, put the controller to caller
-        shower.obj = controller;
-      } else {
-        // default dimiss in 2 seconds
-        Future.delayed(onScreenDuration ?? const Duration(milliseconds: 2000), () {
-          controller.reverse().then((value) {
-            shower.dismiss();
-          });
-        });
-      }
-
-      shower.addDismissCallBack((shower) {
-        controller.dispose();
-      });
-
-      shower.builder = (shower) {
-        return Opacity(opacity: animation.value, child: child);
-      };
-
-      // Animation animation = Tween<Offset>(begin: const Offset(0.0, 1.0), end: const Offset(0.0, 0.0)).animate(controller);
-    });
-  }
-
-  static OverlayShower showerTicker({
-    required void Function(OverlayShower shower, TickerProviderStateMixin vsync) animationBuilder,
-  }) {
-    OverlayShower shower = OverlayWrapper.showTop(const Offstage(offstage: true));
-    shower.isWithTicker = true;
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      StatefulBuilderExState tickerState = shower.statefulKey.currentState as StatefulBuilderExState;
-      animationBuilder(shower, tickerState);
-    });
-    return shower;
-  }
-
-  /*
-   * Toast in Queue
-   */
+  /// Toast in Queue
   static List<OverlayShower?> toastQueue = [];
 
   static OverlayShower showToastInQueue(
@@ -131,6 +24,9 @@ class OverlayWidgets {
     Duration? appearDuraion,
     Duration? dismissDuraion,
     Duration? onScreenDuration,
+    // animation settings
+    Offset? slideBegin,
+    double? opacityBegin,
     // queue increment offset
     required EdgeInsets increaseOffset,
   }) {
@@ -146,6 +42,8 @@ class OverlayWidgets {
       appearDuraion: appearDuraion,
       dismissDuraion: dismissDuraion,
       onScreenDuration: onScreenDuration,
+      slideBegin: slideBegin,
+      opacityBegin: opacityBegin,
     );
 
     int index = -1;
@@ -192,6 +90,172 @@ class OverlayWidgets {
       }
     });
 
+    return shower;
+  }
+
+  /// Toast
+  static OverlayShower showToast(
+    String text, {
+    TextStyle? textStyle,
+    // text in padding
+    EdgeInsets? padding,
+    // container decoration
+    Decoration? decoration,
+    Color? backgroundColor,
+    BorderRadius? radius,
+    BoxShadow? shadow,
+    // animation
+    Curves? curves,
+    Duration? appearDuraion,
+    Duration? dismissDuraion,
+    Duration? onScreenDuration, // if == Duration.zero, please dimiss manually ~~~
+    // animation settings
+    Offset? slideBegin,
+    double? opacityBegin,
+  }) {
+    return show(
+      curves: curves,
+      appearDuraion: appearDuraion,
+      dismissDuraion: dismissDuraion,
+      onScreenDuration: onScreenDuration,
+      slideBegin: slideBegin,
+      opacityBegin: opacityBegin,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: decoration ??
+            BoxDecoration(
+              color: backgroundColor ?? Colors.black,
+              borderRadius: radius ?? const BorderRadius.all(Radius.circular(6)),
+              boxShadow: [shadow ?? const BoxShadow(color: Colors.grey, blurRadius: 25.0 /*, offset: Offset(4.0, 4.0)*/)],
+            ),
+        child: Material(
+          type: MaterialType.transparency,
+          // elevation: 1.0,
+          // borderOnForeground: false,
+          // color: Colors.black,
+          // shadowColor: Colors.black,
+          // clipBehavior: Clip.antiAlias,
+          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
+          child: Padding(
+            padding: padding ?? const EdgeInsets.all(8.0),
+            child: Text(
+              text,
+              style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 15),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Basic
+  static OverlayShower show({
+    required Widget child,
+    Curves? curves,
+    Duration? appearDuraion,
+    Duration? dismissDuraion,
+    Duration? onScreenDuration,
+    // animation settings: only support slide & opacity now // default is opcity animation
+    Offset? slideBegin,
+    double? opacityBegin,
+  }) {
+    opacityBegin = opacityBegin == null && slideBegin == null ? 0.0 : opacityBegin;
+    return showWithAnimation(
+      child: child,
+      curves: curves,
+      appearDuraion: appearDuraion,
+      dismissDuraion: dismissDuraion,
+      onScreenDuration: onScreenDuration,
+      appearAnimatedBuilder: (shower, controller) {
+        Curve curve = Interval(0.0, 1.0, curve: (curves ?? Curves.linearToEaseOut) as Curve);
+        Animation<double> animateCurve = CurvedAnimation(curve: curve, parent: controller);
+        Animation<double>? opacity = opacityBegin == null ? null : Tween(begin: opacityBegin, end: 1.0).animate(animateCurve);
+        // Animation<Offset> slide = Tween<Offset>(begin: slideBegin, end:  Offset.zero).animate(controller);
+        Animation<Offset>? slide = slideBegin == null ? null : Tween<Offset>(begin: slideBegin, end: Offset.zero).animate(animateCurve);
+
+        // 1. Using AnimatedWidget
+        // Widget widgetSlide = SlideTransition(position: slide, child: child);
+        Widget? widgetSlide;
+        if (slide != null) {
+          widgetSlide = AnimatedBuilder(
+            animation: slide,
+            builder: (context, child) => Transform.translate(offset: slide.value, child: child),
+            child: child,
+          );
+        }
+
+        // 2. Using [__property__]Transition
+        Widget? widgetFade;
+        if (opacity != null) {
+          widgetFade = FadeTransition(opacity: opacity, child: widgetSlide ?? child);
+        }
+
+        return widgetFade ?? widgetSlide ?? child;
+      },
+    );
+  }
+
+  static OverlayShower showWithAnimation({
+    required Widget child,
+    Curves? curves,
+    Duration? appearDuraion,
+    Duration? dismissDuraion,
+    Duration? onScreenDuration,
+    required Widget Function(OverlayShower shower, AnimationController controller) appearAnimatedBuilder,
+    // Widget Function(OverlayShower shower, AnimationController controller)? dimissAnimatedBuilder,
+  }) {
+    const Duration defDuration = Duration(milliseconds: 500);
+    return showWithTicker(tickerBuilder: (shower, vsync) {
+      AnimationController controller = AnimationController(
+        vsync: vsync,
+        duration: appearDuraion ?? defDuration,
+        reverseDuration: dismissDuraion ?? defDuration,
+      );
+
+      controller.forward();
+      if (onScreenDuration == Duration.zero) {
+        // if onScreenDuration == Duration.zero, put the controller to caller
+        shower.obj = controller;
+      } else {
+        // default dimiss in 2 seconds
+        Future.delayed(onScreenDuration ?? const Duration(milliseconds: 2000), () {
+          controller.reverse().then((value) {
+            shower.dismiss();
+          });
+
+          // AnimationController dimissController = AnimationController(
+          //   vsync: vsync,
+          //   duration: dismissDuraion ?? defDuration,
+          // );
+
+        });
+      }
+      shower.addDismissCallBack((shower) {
+        controller.dispose();
+      });
+
+      // 1. Using Opacity & Shower's builder
+      // controller.addListener(() {
+      //   shower.setState(() {});
+      // });
+      // shower.builder = (shower) {
+      //   return Opacity(opacity: opacityAnimation.value, child: child);
+      // };
+
+      // 2. Using animation widget
+      shower.setNewChild(appearAnimatedBuilder(shower, controller));
+    });
+  }
+
+  static OverlayShower showWithTicker({
+    required void Function(OverlayShower shower, TickerProviderStateMixin vsync) tickerBuilder,
+  }) {
+    OverlayShower shower = OverlayWrapper.showTop(const Offstage(offstage: true));
+    shower.isWithTicker = true;
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      StatefulBuilderExState tickerState = shower.statefulKey.currentState as StatefulBuilderExState;
+      tickerBuilder(shower, tickerState);
+    });
     return shower;
   }
 }
