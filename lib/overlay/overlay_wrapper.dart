@@ -5,22 +5,21 @@ import 'package:flutter/material.dart';
 import 'overlay_shower.dart';
 
 class OverlayWrapper {
-  static OverlayShower showTop(Widget child, {double? width, double? height, String? key}) {
-    OverlayShower shower = show(child, width: width, height: height, direction: const Offset(0.0, 1.0), key: key);
+  static OverlayShower showTop(Widget child, {String? key}) {
+    OverlayShower shower = show(child, key: key);
     shower.alignment = Alignment.topCenter;
-    shower.padding = const EdgeInsets.only(top: 50);
+    shower.padding = const EdgeInsets.only(top: 64);
     return shower;
   }
 
-  static OverlayShower showBottom(Widget child, {double? width, double? height, String? key}) {
-    OverlayShower shower = show(child, width: width, height: height, direction: const Offset(0.0, 1.0), key: key);
+  static OverlayShower showBottom(Widget child, {String? key}) {
+    OverlayShower shower = show(child, key: key);
     shower.alignment = Alignment.bottomCenter;
-    shower.padding = const EdgeInsets.only(bottom: 50);
+    shower.padding = const EdgeInsets.only(bottom: 64);
     return shower;
   }
 
-  static OverlayShower show(Widget child,
-      {bool isFixed = false, double? x, double? y, double? width, double? height, Offset? direction, String? key}) {
+  static OverlayShower show(Widget child, {double? x, double? y, String? key}) {
     return showWith(OverlayShower(), child, x: x, y: y, key: key);
   }
 

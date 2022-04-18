@@ -259,7 +259,7 @@ class OverlayWidgets {
   static OverlayShower showWithTicker({
     required void Function(OverlayShower shower, TickerProviderStateMixin vsync) tickerBuilder,
   }) {
-    OverlayShower shower = OverlayWrapper.showTop(const Offstage(offstage: true));
+    OverlayShower shower = OverlayWrapper.show(const Offstage(offstage: true));
     shower.isWithTicker = true;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       StatefulBuilderExState tickerState = shower.statefulKey.currentState as StatefulBuilderExState;

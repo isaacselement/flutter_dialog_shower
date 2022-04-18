@@ -143,8 +143,9 @@ class PageOfOverlay extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show Toast on Top', onPressed: () {
-              OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...').margin =
-                  const EdgeInsets.only(top: 80);
+              OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...')
+                ..alignment = Alignment.topCenter
+                ..margin = const EdgeInsets.only(top: 80);
             }),
             WidgetsUtil.newXpelTextButton('Show Toast on Bottom', onPressed: () {
               OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...')
