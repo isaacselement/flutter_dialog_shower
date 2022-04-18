@@ -201,6 +201,30 @@ class PageOfKeyboard extends StatelessWidget {
                 width: 500,
               );
             }),
+            WidgetsUtil.newXpelTextButton('Visibility Builder', onPressed: () {
+              DialogWrapper.show(
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      WidgetsUtil.newEditBox(width: 500, height: 100),
+                      KeyboardVisibilityBuilder(
+                        builder: (BuildContext context, bool isKeyboardVisible) {
+                          return Container(
+                            color: Colors.yellow,
+                            height: 100,
+                            alignment: Alignment.center,
+                            child: Text(!isKeyboardVisible
+                                ? '>>>>>Text will rebuild according by keyboard visibility<<<<<'
+                                : '***isKeyboardVisible is $isKeyboardVisible :)***'),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                width: 500,
+              );
+            }),
           ],
         ),
       ],

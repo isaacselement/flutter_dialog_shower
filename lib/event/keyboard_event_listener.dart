@@ -14,7 +14,10 @@ class KeyboardEventListener {
   static bool get isVisible => _isVisible;
 
   static final StreamController<bool> _onChangeController = StreamController<bool>();
+
   static late final Stream<bool> _onChangeStream = _onChangeController.stream.asBroadcastStream();
+
+  static Stream<bool> get stream => _onChangeStream;
 
   static void _onChangeValue(bool newValue) {
     if (newValue == _isVisible) {

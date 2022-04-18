@@ -83,3 +83,27 @@ class _KeyboardRebuildWidgetState extends State<KeyboardRebuildWidget> {
     return widget.builder(context, _isKeyboardVisible);
   }
 }
+
+// KeyboardVisibilityBuilder
+
+/// A convenience builder that exposes if the native keyboard is visible.
+class KeyboardVisibilityBuilder extends StatelessWidget {
+  const KeyboardVisibilityBuilder({Key? key, required this.builder}) : super(key: key);
+
+  final Widget Function(BuildContext context, bool isKeyboardVisible) builder;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<bool>(
+      stream: KeyboardEventListener.stream,
+      initialData: KeyboardEventListener.isVisible,
+      builder: (context, snapshot) {
+        if (snapshot.data is bool) {
+          return builder(context, snapshot.data!);
+        } else {
+          return builder(context, false);
+        }
+      },
+    );
+  }
+}
