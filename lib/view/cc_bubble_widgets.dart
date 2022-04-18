@@ -23,7 +23,7 @@ class CcBubbleWidget extends StatelessWidget {
     this.height,
     this.child,
     this.bubbleColor = Colors.white,
-    this.bubbleRadius = 12.0,
+    this.bubbleRadius = 8.0,
     this.bubbleShadowColor = Colors.grey,
     this.bubbleShadowRadius = 32.0,
     this.bubbleTriangleWidth,

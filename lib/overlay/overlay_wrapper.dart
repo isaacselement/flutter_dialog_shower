@@ -34,9 +34,9 @@ class OverlayWrapper {
     centralOfShower?.call(shower);
 
     shower.show(child);
-    _addLayer(shower, key: key);
+    add(shower, key: key);
     shower.addDismissCallBack((d) {
-      _remove(d);
+      remove(d);
     });
     return shower;
   }
@@ -110,7 +110,7 @@ class OverlayWrapper {
       List<OverlayShower> tmp = [..._list()];
       for (int i = tmp.length - 1; i >= 0; i--) {
         OverlayShower d = tmp.elementAt(i);
-        _remove(d);
+        remove(d);
         await _dismiss(d);
         if (d == shower) {
           break;
@@ -121,7 +121,7 @@ class OverlayWrapper {
       List<OverlayShower> tmp = [..._list()];
       for (int i = tmp.length - 1; i >= 0; i--) {
         OverlayShower d = tmp.elementAt(i);
-        _remove(d);
+        remove(d);
         await _dismiss(d);
         if (d == shower) {
           break;
@@ -138,12 +138,12 @@ class OverlayWrapper {
   }
 
   // shower management: add/remove/iterate in ordinal
-  static void _remove(OverlayShower? shower) {
+  static void remove(OverlayShower? shower) {
     _list().remove(shower);
     _map().removeWhere((key, value) => value == shower);
   }
 
-  static void _addLayer(OverlayShower shower, {String? key}) {
+  static void add(OverlayShower shower, {String? key}) {
     if (key != null) {
       _map()[key] = shower;
     }

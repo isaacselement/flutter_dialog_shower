@@ -80,9 +80,9 @@ class DialogWrapper {
     centralOfShower?.call(shower);
 
     shower.show(child, width: width, height: height);
-    _addDialog(shower, key: key);
+    add(shower, key: key);
     shower.addDismissCallBack((d) {
-      _remove(d);
+      remove(d);
     });
     return shower;
   }
@@ -222,7 +222,7 @@ class DialogWrapper {
       List<DialogShower> tmp = [..._list()];
       for (int i = tmp.length - 1; i >= 0; i--) {
         DialogShower d = tmp.elementAt(i);
-        _remove(d);
+        remove(d);
         await _dismiss(d);
         if (d == dialog) {
           break;
@@ -233,7 +233,7 @@ class DialogWrapper {
       List<DialogShower> tmp = [..._list()];
       for (int i = tmp.length - 1; i >= 0; i--) {
         DialogShower d = tmp.elementAt(i);
-        _remove(d);
+        remove(d);
         await _dismiss(d);
         if (d == dialog) {
           break;
@@ -242,20 +242,20 @@ class DialogWrapper {
     }
   }
 
-  // important!!! do not use this method unless you take management of your own dialog
+  // important!!! do not use this method unless you take management of your own shower
   static Future<void> _dismiss(DialogShower? dialog) async {
     if (dialog != null) {
       await dialog.dismiss();
     }
   }
 
-  // dialog management: add/remove/iterate in ordinal
-  static void _remove(DialogShower? dialog) {
+  // shower management: add/remove/iterate in ordinal
+  static void remove(DialogShower? dialog) {
     _list().remove(dialog);
     _map().removeWhere((key, value) => value == dialog);
   }
 
-  static void _addDialog(DialogShower dialog, {String? key}) {
+  static void add(DialogShower dialog, {String? key}) {
     if (key != null) {
       _map()[key] = dialog;
     }
