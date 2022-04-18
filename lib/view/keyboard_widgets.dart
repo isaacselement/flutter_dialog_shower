@@ -98,7 +98,7 @@ class KeyboardVisibilityBuilder extends StatelessWidget {
       stream: KeyboardEventListener.stream,
       initialData: KeyboardEventListener.isVisible,
       builder: (context, snapshot) {
-        if (snapshot.data is bool) {
+        if (snapshot.data != null) {
           return builder(context, snapshot.data!);
         } else {
           return builder(context, false);
