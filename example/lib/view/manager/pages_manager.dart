@@ -19,21 +19,13 @@ class PagesManager {
     if (tabsPages.isNotEmpty) {
       return;
     }
-    addTabPage(
-      false,
-      'Overlay',
-      const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
-      const Icon(Icons.auto_awesome_motion_sharp, size: 32, color: Colors.orange),
-      PageOfOverlay(),
-    );
-
-    addTabPage(
-      true,
-      'Home',
-      const Icon(Icons.home_outlined, size: 32, color: Colors.black26),
-      const Icon(Icons.home, size: 32, color: Colors.orange),
-      PageOfHome(),
-    );
+    // addTabPage(
+    //   true,
+    //   'Home',
+    //   const Icon(Icons.home_outlined, size: 32, color: Colors.black26),
+    //   const Icon(Icons.home, size: 32, color: Colors.orange),
+    //   PageOfHome(),
+    // );
     addTabPage(
       true,
       'Basic',
@@ -71,12 +63,18 @@ class PagesManager {
     );
     addTabPage(
       false,
+      'Overlay',
+      const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
+      const Icon(Icons.auto_awesome_motion_sharp, size: 32, color: Colors.orange),
+      PageOfOverlay(),
+    );
+    addTabPage(
+      false,
       'Brother',
       const Icon(Icons.refresh, size: 32, color: Colors.black26),
       const Icon(Icons.refresh_sharp, size: 32, color: Colors.orange),
       PageOfBrother(),
     );
-
     addTabPage(
       false,
       'Homeless',

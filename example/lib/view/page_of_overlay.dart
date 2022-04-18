@@ -9,13 +9,11 @@ import 'package:flutter_dialog_shower/overlay/overlay_wrapper.dart';
 import 'package:flutter_dialog_shower/view/cc_bubble_widgets.dart';
 
 class PageOfOverlay extends StatelessWidget {
-  static late BuildContext context;
 
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBasic] ----------->>>>>>>>>>>> build/rebuild!!!");
 
-    PageOfOverlay.context = context;
     return Navigator(
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(
@@ -28,8 +26,20 @@ class PageOfOverlay extends StatelessWidget {
   }
 
   Widget buildContainer() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          WidgetsUtil.newHeaderWithGradient('Overlay shower'),
+          const SizedBox(height: 16),
+          buildButtonsAboutOverlayShower(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildButtonsAboutOverlayShower() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 12),
         WidgetsUtil.newHeaderWithLine('Overlay'),

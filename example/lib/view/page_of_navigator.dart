@@ -10,9 +10,11 @@ import '../util/logger.dart';
 import 'page_of_keyboard.dart';
 
 class PageOfNavigator extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfNavigator] ----------->>>>>>>>>>>> build/rebuild!!!");
+
     return Navigator(
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(
