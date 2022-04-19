@@ -383,73 +383,94 @@ class PageOfOverlay extends StatelessWidget {
     List<BuildContext?> itemContexts = List.filled(__itemCount__, null);
     List<LayerLink> itemLayerLinks = List.generate(__itemCount__, (index) => LayerLink());
     return Container(
-      width: 380,
-      height: 520,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        width: 380,
+        height: 520,
+        margin: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.orangeAccent),
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          boxShadow: const [BoxShadow(color: Colors.orange, blurRadius: 16.0)]),
-      child: ListView.builder(
-        // clipBehavior: Clip.none,
-        itemCount: __itemCount__,
-        itemBuilder: (context, index) {
-          return CcTapWidget(
-            builder: () {
-              return CompositedTransformTarget(
-                link: itemLayerLinks[index],
-                child: LayoutBuilder(builder: (context, constraints) {
-                  itemContexts[index] = context;
-                  return Container(
-                      height: 50,
-                      clipBehavior: Clip.antiAlias,
-                      margin: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                          color: Colors.grey,
-                          border: Border.all(color: Colors.black, width: 1),
-                          borderRadius: const BorderRadius.all(Radius.circular(8)),
-                          boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
-                      child: Center(child: Text('$index')));
-                }),
-              );
-            },
-            onTap: () {
-              // OverlayWrapper.dismissAppearingLayers();
-
-              BuildContext? context = itemContexts[index];
-              RenderBox? box = context?.findRenderObject() as RenderBox?;
-              Size size = box?.size ?? Size.zero;
-
-              OverlayWidgets.show(
-                onScreenDuration: Duration.zero,
-                child: CompositedTransformFollower(
+          boxShadow: const [BoxShadow(color: Colors.orange, blurRadius: 16.0)],
+        ),
+        child: ListView.builder(
+          // clipBehavior: Clip.none,
+          itemCount: __itemCount__,
+          itemBuilder: (context, index) {
+            return CcTapWidget(
+              builder: () {
+                return CompositedTransformTarget(
                   link: itemLayerLinks[index],
-                  showWhenUnlinked: false,
-                  offset: Offset(0.0, size.height + 1.0),
-                  child: Container(
-                    clipBehavior: Clip.antiAlias,
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                      boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 25.0)],
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: SizedBox(
-                        width: 400,
-                        child: Text(
-                          'do you know it is very serious!!!\nPeople regard it as a matter of normality if a man takes the initiative in courtship, but if a...',
-                          style: TextStyle(color: Colors.white, fontSize: 15),
-                        ),
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    itemContexts[index] = context;
+                    return Container(
+                        height: 50,
+                        clipBehavior: Clip.antiAlias,
+                        margin: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            border: Border.all(color: Colors.black, width: 1),
+                            borderRadius: const BorderRadius.all(Radius.circular(8)),
+                            boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
+                        child: Center(child: Text('$index')));
+                  }),
+                );
+              },
+              onTap: () {
+                BuildContext? context = itemContexts[index];
+                RenderBox? box = context?.findRenderObject() as RenderBox?;
+                Size size = box?.size ?? Size.zero;
+
+                int randomIr = Random().nextInt(3);
+                int zRadius = (OverlayWrapper.appearingShowers?.length ?? 0) == 0 || randomIr == 0 ? 0 : (randomIr == 1 ? 15 : -15);
+
+                OverlayWidgets.show(
+                  onScreenDuration: Duration.zero,
+                  child: CompositedTransformFollower(
+                    link: itemLayerLinks[index],
+                    // showWhenUnlinked: false,
+                    // offset: Offset(0.0, size.height + 1.0),
+                    child: Transform(
+                      transform: Matrix4.rotationZ(zRadius / 180 * pi),
+                      alignment: Alignment.center,
+                      child: WidgetsUtil.getMenuPicker(
+                        direction: TriangleArrowDirection.bottom,
+                        onTap: (index, value, context) {
+                          OverlayWrapper.dismissAppearingLayers();
+                        },
                       ),
+
+                      // InkWell(
+                      //   onTap: (){
+                      //     print('>>>>>>> event in CompositedTransformFollower ~~~~~');
+                      //   },
+                      //   child: Container(
+                      //     clipBehavior: Clip.antiAlias,
+                      //     decoration: const BoxDecoration(
+                      //       color: Colors.black,
+                      //       borderRadius: BorderRadius.all(Radius.circular(6)),
+                      //       boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 25.0)],
+                      //     ),
+                      //     child: const Padding(
+                      //       padding: EdgeInsets.all(10.0),
+                      //       child: SizedBox(
+                      //         width: 400,
+                      //         child: Text(
+                      //           'do you know it is very serious!!!\nPeople regard it as a matter of normality if a man takes the initiative in courtship, but if a...',
+                      //           style: TextStyle(color: Colors.white, fontSize: 15),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
