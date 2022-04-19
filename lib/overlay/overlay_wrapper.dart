@@ -23,7 +23,7 @@ class OverlayWrapper {
     return showWith(OverlayShower(), child, dx: dx, dy: dy, key: key);
   }
 
-  static OverlayShower showWith(OverlayShower shower, Widget child, {double? dx, double? dy, String? key}) {
+  static OverlayShower showWith(OverlayShower shower, Widget? child, {double? dx, double? dy, String? key}) {
     shower.alignment = Alignment.center;
     if (dx != null && dy != null) {
       shower.dx = dx;

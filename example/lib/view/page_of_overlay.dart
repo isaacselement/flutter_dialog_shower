@@ -1,10 +1,11 @@
+import 'dart:math';
+
 import 'package:example/util/logger.dart';
 import 'package:example/util/offset_util.dart';
 import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
-import 'package:example/view/widgets/cc_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter_dialog_shower/core/brother.dart';
 import 'package:flutter_dialog_shower/dialog/dialog_shower.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_shower.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_widgets.dart';
@@ -138,7 +139,73 @@ class PageOfOverlay extends StatelessWidget {
       children: [
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show menu', onPressed: (state) {
+            WidgetsUtil.newXpelTextButton('Show menu using Builder', onPressed: (state) {
+              bool isRight = Random().nextBool();
+              Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+              Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
+              bool isGotSize = false;
+              OverlayShower shower = OverlayShower();
+              shower.builder = (context) {
+                return Offstage(
+                  offstage: !isGotSize,
+                  child: GetSizeWidget(
+                    onLayoutChanged: (box, legacy, size) {
+                      Logger.d('👉👉👉>>>>> widget size is determined: $size');
+                      shower.setState(() {
+                        isGotSize = true;
+                        shower.dx = offsetS.dx - (isRight ? size.width : -size.width);
+                        shower.dy = offsetS.dy - (size.height - sizeS.height) / 2;
+                      });
+                    },
+                    child: WidgetsUtil.getMenuPicker(
+                      direction: isRight ? TriangleArrowDirection.right : TriangleArrowDirection.left,
+                      onTap: (index, value, context) {
+                        shower.dismiss();
+                      },
+                    ),
+                  ),
+                );
+              };
+              shower.show();
+            }),
+            WidgetsUtil.newXpelTextButton('Show menu using Btw', onPressed: (state) {
+              bool isTop = Random().nextBool();
+              Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+              Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
+              Btv<bool> isGotSize = false.btv;
+              OverlayShower shower = OverlayShower();
+              OverlayWrapper.showWith(
+                shower,
+                Btw(builder: (context) {
+                  return Offstage(
+                    offstage: !isGotSize.value,
+                    child: GetSizeWidget(
+                      onLayoutChanged: (box, legacy, size) {
+                        Logger.d('👉👉👉>>>>> widget size is determined: $size');
+                        shower.setState(() {
+                          isGotSize.value = true;
+                          shower.dx = offsetS.dx - (size.width - sizeS.width) / 2;
+                          shower.dy = isTop ? offsetS.dy + sizeS.height : offsetS.dy - size.height;
+                        });
+                      },
+                      child: WidgetsUtil.getMenuPicker(
+                        direction: isTop ? TriangleArrowDirection.top : TriangleArrowDirection.bottom,
+                        onTap: (index, value, context) {
+                          OverlayWrapper.dismissAppearingLayers();
+                        },
+                      ),
+                    ),
+                  );
+                }),
+                dx: offsetS.dx,
+                dy: offsetS.dy + sizeS.height,
+              );
+            }),
+          ],
+        ),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Show menu why Offstage first', onPressed: (state) {
               Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
               OverlayShower shower = OverlayShower();
@@ -146,33 +213,83 @@ class PageOfOverlay extends StatelessWidget {
                 shower,
                 GetSizeWidget(
                   onLayoutChanged: (box, legacy, size) {
-                      Logger.d('👉👉👉>>>>> onLayoutChanged: $size');
-                      shower.setState(() {
-                        shower.dx = offsetS.dx - (size.width - sizeS.width) / 2;
-                      });
+                    Logger.d('👉👉👉>>>>> widget size is determined: $size');
+                    shower.setState(() {
+                      shower.dx = offsetS.dx - (size.width - sizeS.width) / 2;
+                    });
                   },
-                  child: CcBubbleWidget(
-                    bubbleColor: Colors.black, // triangle color
-                    triangleDirection: TriangleArrowDirection.top,
-                    child: CcMenuPopup(
-                      popupBackGroundColor: Colors.green, // spacing line color
-                      values: const [
-                        [Icons.local_print_shop_sharp, 'Print'],
-                        [Icons.home_sharp, 'Home'],
-                        [Icons.mail_sharp, 'Mail'],
-                        [Icons.qr_code_sharp, 'QRCode'],
-                        [Icons.settings_sharp, 'Settings'],
-                        [Icons.menu_sharp, 'More'],
-                      ],
-                      onTap: (index, value, context) {
-                        Logger.d('👉👉👉>>>>> u tap $index, value: $value, toString(): ${value.toString()}');
-                        OverlayWrapper.dismissAppearingLayers();
-                      },
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      WidgetsUtil.getMenuPicker(
+                        direction: TriangleArrowDirection.top,
+                        onTap: (index, value, context) {
+                          OverlayWrapper.dismissAppearingLayers();
+                        },
+                      ),
+                      ColoredBox(
+                        color: Colors.yellow,
+                        child: Text(
+                          'Cause after size determined shower.setState will have a flash/blink issue.',
+                          style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 16),
+                        ),
+                      ),
+                      ColoredBox(
+                        color: Colors.yellow,
+                        child: Text(
+                          'So we need show Offstage true first.',
+                          style: WidgetsUtil.getTextStyleWithPacifico(fontSize: 14),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                dx: offsetS.dx - (100 - sizeS.width) / 2,
+                dx: offsetS.dx,
                 dy: offsetS.dy + sizeS.height,
+              );
+            }),
+            WidgetsUtil.newXpelTextButton('Show menu why Offstage first', onPressed: (state) {
+              Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+              Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
+              OverlayShower shower = OverlayShower();
+              OverlayWrapper.showWith(
+                shower,
+                GetSizeWidget(
+                  onLayoutChanged: (box, legacy, size) {
+                    Logger.d('👉👉👉>>>>> widget size is determined: $size, $offsetS');
+                    shower.setState(() {
+                      shower.dx = offsetS.dx - (size.width - sizeS.width) / 2;
+                      shower.dy = offsetS.dy - size.height;
+                    });
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ColoredBox(
+                        color: Colors.yellow,
+                        child: Text(
+                          'So we need show Offstage true first.',
+                          style: WidgetsUtil.getTextStyleWithPacifico(fontSize: 14),
+                        ),
+                      ),
+                      ColoredBox(
+                        color: Colors.yellow,
+                        child: Text(
+                          'Cause after size determined shower.setState will have a flash/blink issue.',
+                          style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 16),
+                        ),
+                      ),
+                      WidgetsUtil.getMenuPicker(
+                        direction: TriangleArrowDirection.bottom,
+                        onTap: (index, value, context) {
+                          OverlayWrapper.dismissAppearingLayers();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                dx: offsetS.dx,
+                dy: offsetS.dy,
               );
             }),
           ],

@@ -25,13 +25,19 @@ class SizeUtil {
   }
 
   static Size? getSizeB(BuildContext context) {
-    return getSize(context.findRenderObject());
+    return getSize(getRenderBox(context));
   }
 
-  static Size? getSize(RenderObject? box) {
-    if (box is RenderBox) {
-      return box.size;
+  static Size? getSize(RenderBox? box) {
+    return box?.size;
+  }
+
+  static RenderBox? getRenderBox(BuildContext context) {
+    RenderObject? renderObject = context.findRenderObject();
+    if (renderObject is RenderBox) {
+      return renderObject;
     }
     return null;
   }
+
 }

@@ -197,16 +197,19 @@ class WidgetsUtil {
       }),
     );
 
-    List<Widget> clickMeWidgets = clickMeFunctions.map((key, value) {
-      return MapEntry(key, LayoutBuilder(builder: (context, constraints) {
-        return CupertinoButton(
-          child: Text(key),
-          onPressed: () {
-            value.call(context);
-          },
-        );
-      }));
-    }).values.toList();
+    List<Widget> clickMeWidgets = clickMeFunctions
+        .map((key, value) {
+          return MapEntry(key, LayoutBuilder(builder: (context, constraints) {
+            return CupertinoButton(
+              child: Text(key),
+              onPressed: () {
+                value.call(context);
+              },
+            );
+          }));
+        })
+        .values
+        .toList();
     children.addAll(clickMeWidgets);
 
     children.add(const SizedBox(width: 400, height: 400, child: Center(child: Text('Placeholder'))));
@@ -219,6 +222,31 @@ class WidgetsUtil {
   }
 
   /// Bubble Menus
+  static Widget getMenuPicker({
+    TriangleArrowDirection direction = TriangleArrowDirection.top,
+    Function(int index, Object value, BuildContext context)? onTap,
+  }) {
+    return CcBubbleWidget(
+      bubbleColor: Colors.black, // triangle color
+      triangleDirection: direction,
+      child: CcMenuPopup(
+        popupBackGroundColor: Colors.green, // spacing line color
+        values: const [
+          [Icons.local_print_shop_sharp, 'Print'],
+          [Icons.home_sharp, 'Home'],
+          [Icons.mail_sharp, 'Mail'],
+          [Icons.qr_code_sharp, 'QRCode'],
+          [Icons.settings_sharp, 'Settings'],
+          [Icons.menu_sharp, 'More'],
+        ],
+        onTap: (index, value, context) {
+          Logger.d('👉👉👉>>>>> u tap index: $index, value: $value, toString(): ${value.toString()}');
+          onTap?.call(index, value, context);
+        },
+      ),
+    );
+  }
+
   static Widget getMenuBubble({TriangleArrowDirection direction = TriangleArrowDirection.left, double? triangleOffset}) {
     return CcBubbleWidget(
       bubbleColor: Colors.black, // triangle color

@@ -230,9 +230,11 @@ class OverlayWidgets {
               shower.dismiss();
             });
           } else {
-            appearController.reverse().then((value) {
-              shower.dismiss();
-            });
+            if (shower.isShowing) {
+              appearController.reverse().then((value) {
+                shower.dismiss();
+              });
+            }
           }
         });
       }
