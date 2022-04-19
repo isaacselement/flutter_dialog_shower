@@ -26,9 +26,9 @@ class OverlayWrapper {
   static OverlayShower showWith(OverlayShower shower, Widget child, {double? dx, double? dy, String? key}) {
     shower.alignment = Alignment.center;
     if (dx != null && dy != null) {
-      shower
-        ..alignment = Alignment.topLeft
-        ..padding = EdgeInsets.only(left: dx, top: dy);
+      shower.dx = dx;
+      shower.dy = dy;
+      shower.alignment = Alignment.topLeft;
     }
 
     centralOfShower?.call(shower);

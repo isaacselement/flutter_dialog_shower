@@ -173,8 +173,8 @@ class CcActionHeaderWidget extends StatelessWidget {
                 child: _container(),
                 onLayoutChanged: (box, legacy, size) {
                   setState(() {
-                    leftButtonWidth = leftButtonWidth == ccAutoSizeWith ? (size?.width ?? 0) / 5 : leftButtonWidth;
-                    rightButtonWidth = rightButtonWidth == ccAutoSizeWith ? (size?.width ?? 0) / 5 : rightButtonWidth;
+                    leftButtonWidth = leftButtonWidth == ccAutoSizeWith ? size.width / 5 : leftButtonWidth;
+                    rightButtonWidth = rightButtonWidth == ccAutoSizeWith ? size.width / 5 : rightButtonWidth;
                   });
                 },
               );

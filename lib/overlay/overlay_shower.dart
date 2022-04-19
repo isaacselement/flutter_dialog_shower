@@ -25,6 +25,8 @@ class OverlayShower {
   bool get isShowing => _isShowing;
 
   /// for Container
+  double? dx;
+  double? dy;
   EdgeInsets? margin;
   EdgeInsets? padding;
   AlignmentGeometry? alignment = Alignment.topLeft;
@@ -102,18 +104,24 @@ class OverlayShower {
   }
 
   Widget _getRebuildableWidget(Widget? child) {
-    bool isPositioned =
-        x != null || y != null || top != null || left != null || right != null || bottom != null || width != null || height != null;
+    // 1. locating with Positioned
+    top ??= y;
+    left ??= x;
+    bool isPositioned = top != null || left != null || right != null || bottom != null || width != null || height != null;
     if (isPositioned) {
       return Positioned(
-        top: x ?? top,
-        left: y ?? left,
+        top: top,
+        left: left,
         right: right,
         bottom: bottom,
         width: width,
         height: height,
         child: _wrapperChild(child),
       );
+    }
+    // 2. locating by padding with Container, please set 'alignment = Alignment.topLeft;' if u want base on top left
+    if (dx != null || dy != null) {
+      padding = EdgeInsets.only(left: dx ?? padding?.left ?? 0, top: dy ?? padding?.top ?? 0);
     }
     return Container(
       margin: margin,

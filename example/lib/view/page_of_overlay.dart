@@ -4,6 +4,7 @@ import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:example/view/widgets/cc_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_dialog_shower/dialog/dialog_shower.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_shower.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_widgets.dart';
@@ -64,6 +65,12 @@ class PageOfOverlay extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Show center', onPressed: (state) {
               OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
                 ..alignment = Alignment.center
+                ..onTapCallback = (shower) => shower.dismiss();
+            }),
+            WidgetsUtil.newXpelTextButton('Show dx dy', onPressed: (state) {
+              OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
+                ..dx = 200
+                ..dy = 200
                 ..onTapCallback = (shower) => shower.dismiss();
             }),
             WidgetsUtil.newXpelTextButton('Show x y positioned', onPressed: (state) {
@@ -134,27 +141,37 @@ class PageOfOverlay extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Show menu', onPressed: (state) {
               Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
-              OverlayShower shower = OverlayWrapper.show(
-                CcBubbleWidget(
-                  bubbleColor: Colors.black, // triangle color
-                  triangleDirection: TriangleArrowDirection.top,
-                  child: CcMenuPopup(
-                    popupBackGroundColor: Colors.green, // spacing line color
-                    values: const [
-                      [Icons.local_print_shop_sharp, 'Print'],
-                      [Icons.home_sharp, 'Home'],
-                      [Icons.mail_sharp, 'Mail'],
-                      [Icons.qr_code_sharp, 'QRCode'],
-                      [Icons.settings_sharp, 'Settings'],
-                      [Icons.menu_sharp, 'More'],
-                    ],
-                    onTap: (index, value, context) {
-                      Logger.d('👉👉👉>>>>> u tap $index, value: $value, toString(): ${value.toString()}');
-                      OverlayWrapper.dismissAppearingLayers();
-                    },
+              OverlayShower shower = OverlayShower();
+              OverlayWrapper.showWith(
+                shower,
+                GetSizeWidget(
+                  onLayoutChanged: (box, legacy, size) {
+                      Logger.d('👉👉👉>>>>> onLayoutChanged: $size');
+                      shower.setState(() {
+                        shower.dx = offsetS.dx - (size.width - sizeS.width) / 2;
+                      });
+                  },
+                  child: CcBubbleWidget(
+                    bubbleColor: Colors.black, // triangle color
+                    triangleDirection: TriangleArrowDirection.top,
+                    child: CcMenuPopup(
+                      popupBackGroundColor: Colors.green, // spacing line color
+                      values: const [
+                        [Icons.local_print_shop_sharp, 'Print'],
+                        [Icons.home_sharp, 'Home'],
+                        [Icons.mail_sharp, 'Mail'],
+                        [Icons.qr_code_sharp, 'QRCode'],
+                        [Icons.settings_sharp, 'Settings'],
+                        [Icons.menu_sharp, 'More'],
+                      ],
+                      onTap: (index, value, context) {
+                        Logger.d('👉👉👉>>>>> u tap $index, value: $value, toString(): ${value.toString()}');
+                        OverlayWrapper.dismissAppearingLayers();
+                      },
+                    ),
                   ),
                 ),
-                dx: offsetS.dx - (250 - sizeS.width) / 2,
+                dx: offsetS.dx - (100 - sizeS.width) / 2,
                 dy: offsetS.dy + sizeS.height,
               );
             }),
