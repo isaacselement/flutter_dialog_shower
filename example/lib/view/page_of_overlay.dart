@@ -421,7 +421,6 @@ class PageOfOverlay extends StatelessWidget {
                 BuildContext? context = itemContexts[index];
                 RenderBox? box = context?.findRenderObject() as RenderBox?;
                 Size size = box?.size ?? Size.zero;
-
                 int randomIr = Random().nextInt(3);
                 int zRadius = (OverlayWrapper.appearingShowers?.length ?? 0) == 0 || randomIr == 0 ? 0 : (randomIr == 1 ? 15 : -15);
 
@@ -429,41 +428,40 @@ class PageOfOverlay extends StatelessWidget {
                   onScreenDuration: Duration.zero,
                   child: CompositedTransformFollower(
                     link: itemLayerLinks[index],
-                    // showWhenUnlinked: false,
-                    // offset: Offset(0.0, size.height + 1.0),
+                    showWhenUnlinked: false,
+                    offset: Offset((size.width - 250) / 2, size.height + 1.0),
                     child: Transform(
                       transform: Matrix4.rotationZ(zRadius / 180 * pi),
                       alignment: Alignment.center,
-                      child: WidgetsUtil.getMenuPicker(
-                        direction: TriangleArrowDirection.bottom,
-                        onTap: (index, value, context) {
+                      child:
+                      // WidgetsUtil.getMenuPicker(
+                      //   direction: TriangleArrowDirection.top,
+                      //   onTap: (index, value, context) => OverlayWrapper.dismissAppearingLayers(),
+                      // ),
+                      InkWell(
+                        onTap: (){
+                          print('//TODO??://>>>>>>> event in CompositedTransformFollower in List item~~~~~');
                           OverlayWrapper.dismissAppearingLayers();
                         },
+                        child: Container(
+                          clipBehavior: Clip.antiAlias,
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.all(Radius.circular(6)),
+                            boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 25.0)],
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: SizedBox(
+                              width: 400,
+                              child: Text(
+                                'do you know it is very serious!!!\nPeople regard it as a matter of normality if a man takes the initiative in courtship, but if a...',
+                                style: TextStyle(color: Colors.white, fontSize: 15),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-
-                      // InkWell(
-                      //   onTap: (){
-                      //     print('>>>>>>> event in CompositedTransformFollower ~~~~~');
-                      //   },
-                      //   child: Container(
-                      //     clipBehavior: Clip.antiAlias,
-                      //     decoration: const BoxDecoration(
-                      //       color: Colors.black,
-                      //       borderRadius: BorderRadius.all(Radius.circular(6)),
-                      //       boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 25.0)],
-                      //     ),
-                      //     child: const Padding(
-                      //       padding: EdgeInsets.all(10.0),
-                      //       child: SizedBox(
-                      //         width: 400,
-                      //         child: Text(
-                      //           'do you know it is very serious!!!\nPeople regard it as a matter of normality if a man takes the initiative in courtship, but if a...',
-                      //           style: TextStyle(color: Colors.white, fontSize: 15),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                     ),
                   ),
                 );
