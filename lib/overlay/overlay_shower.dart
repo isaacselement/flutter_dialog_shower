@@ -127,6 +127,7 @@ class OverlayShower {
       margin: margin,
       padding: padding,
       alignment: alignment,
+      // color: Colors.black.withAlpha(128),
       child: _wrapperChild(child),
     );
   }

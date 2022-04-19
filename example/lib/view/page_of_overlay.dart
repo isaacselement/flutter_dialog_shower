@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:example/util/logger.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_dialog_shower/overlay/overlay_shower.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_widgets.dart';
 import 'package:flutter_dialog_shower/overlay/overlay_wrapper.dart';
 import 'package:flutter_dialog_shower/view/cc_bubble_widgets.dart';
+import 'package:flutter_dialog_shower/view/cc_select_list_widgets.dart';
 
 class PageOfOverlay extends StatelessWidget {
   @override
@@ -54,6 +56,10 @@ class PageOfOverlay extends StatelessWidget {
         const SizedBox(height: 32),
         WidgetsUtil.newHeaderWithLine('Toast'),
         demoUsageOfToasts(),
+        const SizedBox(height: 32),
+        WidgetsUtil.newHeaderWithLine('LayerLink'),
+        const SizedBox(height: 2),
+        demoUsageOfLayerLink(),
       ],
     );
   }
@@ -89,7 +95,7 @@ class PageOfOverlay extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Show with opacity animation', onPressed: (state) {
               OverlayShower shower = OverlayShower()
                 ..alignment = Alignment.bottomCenter
-                ..margin = const EdgeInsets.only(bottom: 50)
+                ..padding = const EdgeInsets.only(bottom: 50)
                 ..isWithTicker = true; // key point !!!
               shower.show(const Offstage(offstage: true)); // tricky, generate the StatefulBuilderExState instance first
 
@@ -174,8 +180,7 @@ class PageOfOverlay extends StatelessWidget {
               Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
               Btv<bool> isGotSize = false.btv;
               OverlayShower shower = OverlayShower();
-              OverlayWrapper.showWith(
-                shower,
+              shower.show(
                 Btw(builder: (context) {
                   return Offstage(
                     offstage: !isGotSize.value,
@@ -191,18 +196,18 @@ class PageOfOverlay extends StatelessWidget {
                       child: WidgetsUtil.getMenuPicker(
                         direction: isTop ? TriangleArrowDirection.top : TriangleArrowDirection.bottom,
                         onTap: (index, value, context) {
-                          OverlayWrapper.dismissAppearingLayers();
+                          shower.dismiss();
                         },
                       ),
                     ),
                   );
                 }),
-                dx: offsetS.dx,
-                dy: offsetS.dy + sizeS.height,
               );
             }),
           ],
         ),
+
+        // Also a demo usage of OverlayWrapper ...
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show menu why Offstage first', onPressed: (state) {
@@ -370,6 +375,82 @@ class PageOfOverlay extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  Widget demoUsageOfLayerLink() {
+    int __itemCount__ = 50;
+    List<BuildContext?> itemContexts = List.filled(__itemCount__, null);
+    List<LayerLink> itemLayerLinks = List.generate(__itemCount__, (index) => LayerLink());
+    return Container(
+      width: 380,
+      height: 520,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.orangeAccent),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          boxShadow: const [BoxShadow(color: Colors.orange, blurRadius: 16.0)]),
+      child: ListView.builder(
+        // clipBehavior: Clip.none,
+        itemCount: __itemCount__,
+        itemBuilder: (context, index) {
+          return CcTapWidget(
+            builder: () {
+              return CompositedTransformTarget(
+                link: itemLayerLinks[index],
+                child: LayoutBuilder(builder: (context, constraints) {
+                  itemContexts[index] = context;
+                  return Container(
+                      height: 50,
+                      clipBehavior: Clip.antiAlias,
+                      margin: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          border: Border.all(color: Colors.black, width: 1),
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                          boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
+                      child: Center(child: Text('$index')));
+                }),
+              );
+            },
+            onTap: () {
+              // OverlayWrapper.dismissAppearingLayers();
+
+              BuildContext? context = itemContexts[index];
+              RenderBox? box = context?.findRenderObject() as RenderBox?;
+              Size size = box?.size ?? Size.zero;
+
+              OverlayWidgets.show(
+                onScreenDuration: Duration.zero,
+                child: CompositedTransformFollower(
+                  link: itemLayerLinks[index],
+                  showWhenUnlinked: false,
+                  offset: Offset(0.0, size.height + 1.0),
+                  child: Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.all(Radius.circular(6)),
+                      boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 25.0)],
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: SizedBox(
+                        width: 400,
+                        child: Text(
+                          'do you know it is very serious!!!\nPeople regard it as a matter of normality if a man takes the initiative in courtship, but if a...',
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
