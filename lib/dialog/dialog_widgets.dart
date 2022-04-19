@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../core/broker.dart';
-import '../view/rotate_widgets.dart';
+import '../view/cc_animate_widgets.dart';
 
 import 'dialog_shower.dart';
 import 'dialog_wrapper.dart';

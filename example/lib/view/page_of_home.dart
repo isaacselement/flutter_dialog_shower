@@ -7,6 +7,7 @@ class PageOfHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfHome] ----------->>>>>>>>>>>> build/rebuild!!!");
+
     return Navigator(
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(

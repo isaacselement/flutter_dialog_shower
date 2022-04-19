@@ -19,16 +19,16 @@ class OverlayWrapper {
     return shower;
   }
 
-  static OverlayShower show(Widget child, {double? x, double? y, String? key}) {
-    return showWith(OverlayShower(), child, x: x, y: y, key: key);
+  static OverlayShower show(Widget child, {double? dx, double? dy, String? key}) {
+    return showWith(OverlayShower(), child, dx: dx, dy: dy, key: key);
   }
 
-  static OverlayShower showWith(OverlayShower shower, Widget child, {double? x, double? y, String? key}) {
+  static OverlayShower showWith(OverlayShower shower, Widget child, {double? dx, double? dy, String? key}) {
     shower.alignment = Alignment.center;
-    if (x != null && y != null) {
+    if (dx != null && dy != null) {
       shower
         ..alignment = Alignment.topLeft
-        ..padding = EdgeInsets.only(left: x, top: y);
+        ..padding = EdgeInsets.only(left: dx, top: dy);
     }
 
     centralOfShower?.call(shower);

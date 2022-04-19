@@ -155,10 +155,10 @@ class CcMenuPopup extends StatelessWidget {
   }
 
   static double currentMenuItemCountPerRow = 3;
+  static double currentMenuPopupHeight = 0;
   static double currentMenuItemWidth = 80.0;
   static double currentMenuItemHeight = 80.0;
-  static double currentMenuPopupWidth = currentMenuItemWidth * currentMenuItemCountPerRow + (currentMenuItemCountPerRow - 1);
-  static double currentMenuPopupHeight = 0;
+  static double currentMenuPopupWidth = currentMenuItemWidth * currentMenuItemCountPerRow + (currentMenuItemCountPerRow - 1.0);
 
   Widget defMenuItemBuilder(int index, Object value, bool isHighlighted) {
     if (value is! List || value.length < 2) {

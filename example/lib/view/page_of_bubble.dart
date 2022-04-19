@@ -14,6 +14,7 @@ class PageOfBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBubble] ----------->>>>>>>>>>>> build/rebuild!!!");
+
     return Navigator(
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(
@@ -44,7 +45,7 @@ class PageOfBubble extends StatelessWidget {
         const SizedBox(height: 100),
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show on My Bottom', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show on My Bottom', onPressed: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
@@ -56,7 +57,7 @@ class PageOfBubble extends StatelessWidget {
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
-            WidgetsUtil.newXpelTextButton('Show on My Top', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show on My Top', onPressed: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
@@ -69,7 +70,7 @@ class PageOfBubble extends StatelessWidget {
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
-            WidgetsUtil.newXpelTextButton('Show on My Left', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show on My Left', onPressed: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
@@ -82,7 +83,7 @@ class PageOfBubble extends StatelessWidget {
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
-            WidgetsUtil.newXpelTextButton('Show on My Right', onPressedState: (state) {
+            WidgetsUtil.newXpelTextButton('Show on My Right', onPressed: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
@@ -95,7 +96,7 @@ class PageOfBubble extends StatelessWidget {
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
-            WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: (state) {
               DialogWrapper.show(WidgetsUtil.newClickMeWidget(clickMeFunctions: {
                 'Click me': (context) {
                   Offset position = OffsetUtil.getOffsetB(context) ?? Offset.zero;

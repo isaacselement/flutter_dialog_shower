@@ -8,6 +8,7 @@ class PageOfHomeless extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfHomeless] ----------->>>>>>>>>>>> build/rebuild!!!");
+
     return Navigator(
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(
@@ -38,7 +39,7 @@ class PageOfHomeless extends StatelessWidget {
         children: [
           Wrap(
             children: [
-              WidgetsUtil.newXpelTextButton('Event Truck Fire', onPressedState: (state) {
+              WidgetsUtil.newXpelTextButton('Event Truck Fire', onPressed: (state) {
                 print('>>>>>>>>>>>>>>>>>> fire');
                 EventTruck.fire('object value');
               }),

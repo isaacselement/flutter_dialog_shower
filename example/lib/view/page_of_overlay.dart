@@ -1,4 +1,6 @@
 import 'package:example/util/logger.dart';
+import 'package:example/util/offset_util.dart';
+import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:example/view/widgets/cc_widgets.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,6 @@ import 'package:flutter_dialog_shower/overlay/overlay_wrapper.dart';
 import 'package:flutter_dialog_shower/view/cc_bubble_widgets.dart';
 
 class PageOfOverlay extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBasic] ----------->>>>>>>>>>>> build/rebuild!!!");
@@ -44,7 +45,10 @@ class PageOfOverlay extends StatelessWidget {
         const SizedBox(height: 12),
         WidgetsUtil.newHeaderWithLine('Overlay'),
         const SizedBox(height: 12),
-        demoUsageOfOverlayShower(),
+        demoUsageOfBasic(),
+        const SizedBox(height: 32),
+        WidgetsUtil.newHeaderWithLine('Menu'),
+        demoUsageOfMenu(),
         const SizedBox(height: 32),
         WidgetsUtil.newHeaderWithLine('Toast'),
         demoUsageOfToasts(),
@@ -52,29 +56,29 @@ class PageOfOverlay extends StatelessWidget {
     );
   }
 
-  Column demoUsageOfOverlayShower() {
+  Column demoUsageOfBasic() {
     return Column(
       children: [
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show center', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show center', onPressed: (state) {
               OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
                 ..alignment = Alignment.center
                 ..onTapCallback = (shower) => shower.dismiss();
             }),
-            WidgetsUtil.newXpelTextButton('Show x y positioned', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show x y positioned', onPressed: (state) {
               OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
                 ..x = 200
                 ..y = 100
                 ..onTapCallback = (shower) => shower.dismiss();
             }),
-            WidgetsUtil.newXpelTextButton('Show padding aligment', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show padding aligment', onPressed: (state) {
               OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
                 ..padding = const EdgeInsets.only(top: 20)
                 ..alignment = Alignment.topCenter
                 ..onTapCallback = (shower) => shower.dismiss();
             }),
-            WidgetsUtil.newXpelTextButton('Show with opacity animation', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show with opacity animation', onPressed: (state) {
               OverlayShower shower = OverlayShower()
                 ..alignment = Alignment.bottomCenter
                 ..margin = const EdgeInsets.only(bottom: 50)
@@ -116,8 +120,21 @@ class PageOfOverlay extends StatelessWidget {
                 };
               });
             }),
-            WidgetsUtil.newXpelTextButton('Show menu', onPressed: () {
-              OverlayWrapper.show(
+          ],
+        ),
+      ],
+    );
+  }
+
+  Column demoUsageOfMenu() {
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Show menu', onPressed: (state) {
+              Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+              Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
+              OverlayShower shower = OverlayWrapper.show(
                 CcBubbleWidget(
                   bubbleColor: Colors.black, // triangle color
                   triangleDirection: TriangleArrowDirection.top,
@@ -137,9 +154,9 @@ class PageOfOverlay extends StatelessWidget {
                     },
                   ),
                 ),
-              )
-                ..alignment = Alignment.center
-                ..onTapCallback = (shower) => shower.dismiss();
+                dx: offsetS.dx - (250 - sizeS.width) / 2,
+                dy: offsetS.dy + sizeS.height,
+              );
             }),
           ],
         ),
@@ -152,17 +169,17 @@ class PageOfOverlay extends StatelessWidget {
       children: [
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show Toast on Top', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show Toast on Top', onPressed: (state) {
               OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...')
                 ..alignment = Alignment.topCenter
                 ..margin = const EdgeInsets.only(top: 80);
             }),
-            WidgetsUtil.newXpelTextButton('Show Toast on Bottom', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show Toast on Bottom', onPressed: (state) {
               OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...')
                 ..alignment = Alignment.bottomCenter
                 ..margin = const EdgeInsets.only(bottom: 80);
             }),
-            WidgetsUtil.newXpelTextButton('Show Toast on Center', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show Toast on Center', onPressed: (state) {
               OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...')
                 ..alignment = Alignment.center
                 ..margin = EdgeInsets.zero;
@@ -171,7 +188,7 @@ class PageOfOverlay extends StatelessWidget {
         ),
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show Toast on Top Queue', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show Toast on Top Queue', onPressed: (state) {
               OverlayWidgets.showToastInQueue(
                 'Here is mogelia, please click button again and again ${DateTime.now()} ...',
                 increaseOffset: const EdgeInsets.only(top: 45),
@@ -179,7 +196,7 @@ class PageOfOverlay extends StatelessWidget {
                 ..alignment = Alignment.topCenter
                 ..margin = const EdgeInsets.only(top: 80);
             }),
-            WidgetsUtil.newXpelTextButton('Show Toast on Bottom Queue', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show Toast on Bottom Queue', onPressed: (state) {
               OverlayWidgets.showToastInQueue(
                 'Here is mogelia, please click button again and again ${DateTime.now()} ...',
                 increaseOffset: const EdgeInsets.only(bottom: 45),
@@ -198,7 +215,7 @@ class PageOfOverlay extends StatelessWidget {
                 ..alignment = Alignment.bottomCenter
                 ..margin = const EdgeInsets.only(bottom: 80);
             }),
-            WidgetsUtil.newXpelTextButton('Show Toast on Left Queue', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show Toast on Left Queue', onPressed: (state) {
               OverlayWidgets.showToastInQueue(
                 'Here is mogelia, please click button again and again ${DateTime.now()} ...',
                 increaseOffset: const EdgeInsets.only(top: 45, left: 18),
@@ -207,7 +224,7 @@ class PageOfOverlay extends StatelessWidget {
                 ..alignment = Alignment.topLeft
                 ..margin = const EdgeInsets.only(top: 220, left: 20);
             }),
-            WidgetsUtil.newXpelTextButton('Show Toast on Right Queue', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show Toast on Right Queue', onPressed: (state) {
               OverlayWidgets.showToastInQueue(
                 'Here is mogelia, please click button again and again ${DateTime.now()} ...',
                 increaseOffset: const EdgeInsets.only(top: 45, right: 18),

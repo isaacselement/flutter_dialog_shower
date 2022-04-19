@@ -10,6 +10,7 @@ class PageOfBasic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBasic] ----------->>>>>>>>>>>> build/rebuild!!!");
+
     return Navigator(
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(
@@ -46,41 +47,41 @@ class PageOfBasic extends StatelessWidget {
       children: [
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show from bottom', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show from bottom', onPressed: (state) {
               doBasicShow();
             }),
-            WidgetsUtil.newXpelTextButton('Show from left', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show from left', onPressed: (state) {
               doBasicShow().animationBeginOffset = const Offset(-1.0, 0.0);
             }),
-            WidgetsUtil.newXpelTextButton('Show from right', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show from right', onPressed: (state) {
               doBasicShow().animationBeginOffset = const Offset(1.0, 0.0);
             }),
-            WidgetsUtil.newXpelTextButton('Show from top', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show from top', onPressed: (state) {
               doBasicShow().animationBeginOffset = const Offset(0.0, -1.0);
             }),
-            WidgetsUtil.newXpelTextButton('Show from top left', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show from top left', onPressed: (state) {
               doBasicShow().animationBeginOffset = const Offset(-1.0, -1.0);
             }),
-            WidgetsUtil.newXpelTextButton('Show from top right', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show from top right', onPressed: (state) {
               doBasicShow().animationBeginOffset = const Offset(1.0, -1.0);
             }),
           ],
         ),
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show in left', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show in left', onPressed: (state) {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(-1.0, 0.0);
               shower.alignment = Alignment.centerLeft;
               shower.padding = const EdgeInsets.only(left: 5);
             }),
-            WidgetsUtil.newXpelTextButton('Show in right', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show in right', onPressed: (state) {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(1.0, 0.0);
               shower.alignment = Alignment.centerRight;
               shower.padding = const EdgeInsets.only(right: 5);
             }),
-            WidgetsUtil.newXpelTextButton('Show in bottom', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show in bottom', onPressed: (state) {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(0.0, 1.0);
               shower.alignment = Alignment.bottomCenter;
@@ -88,7 +89,7 @@ class PageOfBasic extends StatelessWidget {
               // barrier color
               shower.barrierColor = const Color(0x4D1C1D21);
             }),
-            WidgetsUtil.newXpelTextButton('Show in top', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show in top', onPressed: (state) {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(0.0, -1.0);
               shower.alignment = Alignment.topCenter;
@@ -96,7 +97,7 @@ class PageOfBasic extends StatelessWidget {
               // background color
               shower.scaffoldBackgroundColor = const Color(0x4D1C1D21);
             }),
-            WidgetsUtil.newXpelTextButton('Show with position x y', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show with position x y', onPressed: (state) {
               double x = 20;
               double y = 40;
               DialogShower shower = doBasicShow();
@@ -108,7 +109,7 @@ class PageOfBasic extends StatelessWidget {
         ),
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Shower dismiss manually', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Shower dismiss manually', onPressed: (state) {
               DialogShower shower = DialogShower();
               shower
                 ..build()
@@ -121,7 +122,7 @@ class PageOfBasic extends StatelessWidget {
                 height: _showerHeight,
                 color: Colors.lightGreen,
                 padding: const EdgeInsets.only(top: 50, bottom: 50),
-                child: WidgetsUtil.newXpelTextButton('Click to Dismiss', onPressed: () {
+                child: WidgetsUtil.newXpelTextButton('Click to Dismiss', onPressed: (state) {
                   shower.dismiss();
                 }),
               ));
@@ -130,7 +131,7 @@ class PageOfBasic extends StatelessWidget {
         ),
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using wholeOnTapCallback', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using wholeOnTapCallback', onPressed: (state) {
               DialogShower shower = DialogShower();
               shower
                 ..build()
@@ -149,7 +150,7 @@ class PageOfBasic extends StatelessWidget {
                 };
               shower.show(WidgetsUtil.newEditBotxWithBottomTips(hint: 'Focus edit box first, then [Click Me]'));
             }),
-            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using barrierOnTapCallback', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using barrierOnTapCallback', onPressed: (state) {
               DialogShower shower = DialogShower();
               shower
                 ..build()
@@ -167,7 +168,7 @@ class PageOfBasic extends StatelessWidget {
                 };
               shower.show(WidgetsUtil.newEditBotxWithBottomTips(hint: 'Focus edit box first, then [Click Me] / [Click Barrier]'));
             }),
-            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first with setting barrierDismissible to null', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first with setting barrierDismissible to null', onPressed: (state) {
               DialogShower shower = DialogShower();
               shower
                 ..build()
@@ -190,7 +191,7 @@ class PageOfBasic extends StatelessWidget {
       children: [
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('DialogWrapper Show Cupertino Indicator', onPressed: () {
+            WidgetsUtil.newXpelTextButton('DialogWrapper Show Cupertino Indicator', onPressed: (state) {
               DialogShower dialog = DialogWrapper.show(const CupertinoActivityIndicator());
               // rewrite properties
               dialog
@@ -207,7 +208,7 @@ class PageOfBasic extends StatelessWidget {
                   );
                 };
             }),
-            WidgetsUtil.newXpelTextButton('Show with DialogWrapper', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show with DialogWrapper', onPressed: (state) {
               DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
                 DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
                   DialogWrapper.showRight(_container(text: '3')).futurePushed.then((value) {
@@ -221,7 +222,7 @@ class PageOfBasic extends StatelessWidget {
                 });
               });
             }),
-            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss all dialogs', onPressed: () {
+            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss all dialogs', onPressed: (state) {
               DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
                 DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
                   DialogWrapper.showRight(_container(text: '3')).futurePushed.then((value) {
@@ -236,7 +237,7 @@ class PageOfBasic extends StatelessWidget {
                 });
               });
             }),
-            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog on top', onPressed: () {
+            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog on top', onPressed: (state) {
               DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
                 DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
                   DialogWrapper.showRight(_container(text: 'Will auto dismiss after 2 seconds'))
@@ -250,7 +251,7 @@ class PageOfBasic extends StatelessWidget {
                 });
               });
             }),
-            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: () {
+            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: (state) {
               DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).futurePushed.then((value) {
                 DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').futurePushed.then((value) {
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
@@ -264,7 +265,7 @@ class PageOfBasic extends StatelessWidget {
                 });
               });
             }),
-            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: () {
+            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: (state) {
               DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).futurePushed.then((value) {
                 DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').futurePushed.then((value) {
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')

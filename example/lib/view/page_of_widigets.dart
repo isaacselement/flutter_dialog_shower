@@ -10,6 +10,7 @@ class PageOfWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfWidgets] ----------->>>>>>>>>>>> build/rebuild!!!");
+
     return Navigator(
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(
@@ -28,16 +29,16 @@ class PageOfWidgets extends StatelessWidget {
         WidgetsUtil.newHeaderWithLine('Tips'),
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('show loading', onPressed: () {
+            WidgetsUtil.newXpelTextButton('show loading', onPressed: (state) {
               DialogShower shower = DialogWidgets.showLoading(dismissible: true);
               Future.delayed(const Duration(milliseconds: 3000), (){
                 Logger.d('shower: ${shower.routeName}, is active: ${shower.route.isActive}');
               });
             }),
-            WidgetsUtil.newXpelTextButton('show success', onPressed: () {
+            WidgetsUtil.newXpelTextButton('show success', onPressed: (state) {
               DialogWidgets.showSuccess(dismissible: true);
             }),
-            WidgetsUtil.newXpelTextButton('show failed', onPressed: () {
+            WidgetsUtil.newXpelTextButton('show failed', onPressed: (state) {
               DialogWidgets.showFailed(dismissible: true);
             }),
           ],
@@ -46,10 +47,10 @@ class PageOfWidgets extends StatelessWidget {
         WidgetsUtil.newHeaderWithLine('Alerts'),
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('show message', onPressed: () {
+            WidgetsUtil.newXpelTextButton('show message', onPressed: (state) {
               DialogWidgets.showAlert(width: 360, height: 50, text: 'Hey, you are here!');
             }),
-            WidgetsUtil.newXpelTextButton('show title message', onPressed: () {
+            WidgetsUtil.newXpelTextButton('show title message', onPressed: (state) {
               DialogWidgets.showAlert(
                   width: 360,
                   height: 200,
@@ -58,7 +59,7 @@ class PageOfWidgets extends StatelessWidget {
                   titleBottomGap: 50,
                   text: 'A view of the sea when the author was a child made the author invisibly.');
             }),
-            WidgetsUtil.newXpelTextButton('show title icon message', onPressed: () {
+            WidgetsUtil.newXpelTextButton('show title icon message', onPressed: (state) {
               DialogWidgets.showAlert(
                 width: 360,
                 height: 240,
@@ -68,7 +69,7 @@ class PageOfWidgets extends StatelessWidget {
                 text: 'A view of the sea when the author was a child made the author invisibly.',
               ).barrierColor = const Color(0x4D1C1D21);
             }),
-            WidgetsUtil.newXpelTextButton('show title icon message with button', onPressed: () {
+            WidgetsUtil.newXpelTextButton('show title icon message with button', onPressed: (state) {
               DialogWidgets.showAlert(
                 width: 360,
                 height: 270,
@@ -80,7 +81,7 @@ class PageOfWidgets extends StatelessWidget {
                 button1Event: (D) => DialogWrapper.dismissTopDialog(),
               );
             }),
-            WidgetsUtil.newXpelTextButton('show notification', onPressed: () {
+            WidgetsUtil.newXpelTextButton('show notification', onPressed: (state) {
               DialogWidgets.showAlert(
                 width: 360,
                 height: 240,

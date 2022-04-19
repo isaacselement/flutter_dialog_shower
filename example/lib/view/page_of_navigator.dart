@@ -44,7 +44,7 @@ class PageOfNavigator extends StatelessWidget {
       children: [
         Wrap(
           children: [
-            WidgetsUtil.newXpelTextButton('Show with navigator with Width & Height', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show with navigator with Width & Height', onPressed: (state) {
               DialogWrapper.pushRoot(
                 WidgetsUtil.newClickMeWidget(clickMeFunctions: {
                   'Click me': (context) {
@@ -59,7 +59,7 @@ class PageOfNavigator extends StatelessWidget {
                 height: 600,
               );
             }),
-            WidgetsUtil.newXpelTextButton('Show with navigator without W&H (Auto size)', onPressed: () {
+            WidgetsUtil.newXpelTextButton('Show with navigator without W&H (Auto size)', onPressed: (state) {
               DialogWrapper.pushRoot(WidgetsUtil.newClickMeWidget(clickMeFunctions: {
                 'Click me to push': (context) {
                   rootBundle.loadString('assets/json/CN.json').then((string) {

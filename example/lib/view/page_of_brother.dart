@@ -7,6 +7,7 @@ class PageOfBrother extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBrother] ----------->>>>>>>>>>>> build/rebuild!!!");
+
     return Navigator(
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(

@@ -23,12 +23,11 @@ class WidgetsUtil {
     return TextStyle(fontSize: fontSize, color: fontColor, fontFamily: 'Pacifico-Regular');
   }
 
-  static CcTextButton newXpelTextButton(String text, {void Function()? onPressed, void Function(State state)? onPressedState}) {
+  static CcTextButton newXpelTextButton(String text, {void Function(State state)? onPressed}) {
     return CcTextButton(
       text,
       onPressed: (state) {
-        onPressed?.call();
-        onPressedState?.call(state);
+        onPressed?.call(state);
       },
       decorationBuilder: ThemesManager.builderXpButtonDecoration,
     );
@@ -193,7 +192,7 @@ class WidgetsUtil {
   }) {
     List<Widget> children = [];
     children.add(
-      WidgetsUtil.newXpelTextButton('Dismiss', onPressed: () {
+      WidgetsUtil.newXpelTextButton('Dismiss', onPressed: (state) {
         DialogWrapper.dismissTopDialog();
       }),
     );
