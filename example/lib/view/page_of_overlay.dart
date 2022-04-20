@@ -159,13 +159,14 @@ class PageOfOverlay extends StatelessWidget {
                       Logger.d('👉👉👉>>>>> widget size is determined: $size');
                       shower.setState(() {
                         isGotSize = true;
-                        shower.dx = offsetS.dx - (isRight ? size.width : -size.width);
-                        shower.dy = offsetS.dy - (size.height - sizeS.height) / 2;
+                        shower.dx = max(0, offsetS.dx - (isRight ? size.width : -size.width));
+                        shower.dy = max(0, offsetS.dy - (size.height - sizeS.height) / 2);
                       });
                     },
-                    child: WidgetsUtil.getMenuPicker(
+                    child: WidgetsUtil.getBubbleMenuPicker(
+                      row: 2,
                       direction: isRight ? TriangleArrowDirection.right : TriangleArrowDirection.left,
-                      onTap: (index, value, context) {
+                      itemOnTap: (index, value, context) {
                         shower.dismiss();
                       },
                     ),
@@ -189,13 +190,13 @@ class PageOfOverlay extends StatelessWidget {
                         Logger.d('👉👉👉>>>>> widget size is determined: $size');
                         shower.setState(() {
                           isGotSize.value = true;
-                          shower.dx = offsetS.dx - (size.width - sizeS.width) / 2;
-                          shower.dy = isTop ? offsetS.dy + sizeS.height : offsetS.dy - size.height;
+                          shower.dx = max(0, offsetS.dx - (size.width - sizeS.width) / 2);
+                          shower.dy = max(0, isTop ? offsetS.dy + sizeS.height : offsetS.dy - size.height);
                         });
                       },
-                      child: WidgetsUtil.getMenuPicker(
+                      child: WidgetsUtil.getBubbleMenuPicker(
                         direction: isTop ? TriangleArrowDirection.top : TriangleArrowDirection.bottom,
-                        onTap: (index, value, context) {
+                        itemOnTap: (index, value, context) {
                           shower.dismiss();
                         },
                       ),
@@ -220,15 +221,15 @@ class PageOfOverlay extends StatelessWidget {
                   onLayoutChanged: (box, legacy, size) {
                     Logger.d('👉👉👉>>>>> widget size is determined: $size');
                     shower.setState(() {
-                      shower.dx = offsetS.dx - (size.width - sizeS.width) / 2;
+                      shower.dx = max(0, offsetS.dx - (size.width - sizeS.width) / 2);
                     });
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      WidgetsUtil.getMenuPicker(
+                      WidgetsUtil.getBubbleMenuPicker(
                         direction: TriangleArrowDirection.top,
-                        onTap: (index, value, context) {
+                        itemOnTap: (index, value, context) {
                           OverlayWrapper.dismissAppearingLayers();
                         },
                       ),
@@ -263,8 +264,8 @@ class PageOfOverlay extends StatelessWidget {
                   onLayoutChanged: (box, legacy, size) {
                     Logger.d('👉👉👉>>>>> widget size is determined: $size, $offsetS');
                     shower.setState(() {
-                      shower.dx = offsetS.dx - (size.width - sizeS.width) / 2;
-                      shower.dy = offsetS.dy - size.height;
+                      shower.dx = max(0, offsetS.dx - (size.width - sizeS.width) / 2);
+                      shower.dy = max(0, offsetS.dy - size.height);
                     });
                   },
                   child: Column(
@@ -284,9 +285,9 @@ class PageOfOverlay extends StatelessWidget {
                           style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 16),
                         ),
                       ),
-                      WidgetsUtil.getMenuPicker(
+                      WidgetsUtil.getBubbleMenuPicker(
                         direction: TriangleArrowDirection.bottom,
-                        onTap: (index, value, context) {
+                        itemOnTap: (index, value, context) {
                           OverlayWrapper.dismissAppearingLayers();
                         },
                       ),
@@ -379,6 +380,19 @@ class PageOfOverlay extends StatelessWidget {
   }
 
   Widget demoUsageOfLayerLink() {
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            layerLinkInShower(),
+            layerLinkOfPure(),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget layerLinkInShower() {
     int __itemCount__ = 50;
     List<BuildContext?> itemContexts = List.filled(__itemCount__, null);
     List<LayerLink> itemLayerLinks = List.generate(__itemCount__, (index) => LayerLink());
@@ -434,12 +448,12 @@ class PageOfOverlay extends StatelessWidget {
                       transform: Matrix4.rotationZ(zRadius / 180 * pi),
                       alignment: Alignment.center,
                       child:
-                      // WidgetsUtil.getMenuPicker(
-                      //   direction: TriangleArrowDirection.top,
-                      //   onTap: (index, value, context) => OverlayWrapper.dismissAppearingLayers(),
-                      // ),
-                      InkWell(
-                        onTap: (){
+                          // WidgetsUtil.getBubbleMenuPicker(
+                          //   direction: TriangleArrowDirection.top,
+                          //   onTap: (index, value, context) => OverlayWrapper.dismissAppearingLayers(),
+                          // ),
+                          InkWell(
+                        onTap: () {
                           print('//TODO??://>>>>>>> event in CompositedTransformFollower in List item~~~~~');
                           OverlayWrapper.dismissAppearingLayers();
                         },
@@ -465,6 +479,107 @@ class PageOfOverlay extends StatelessWidget {
                     ),
                   ),
                 );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget layerLinkOfPure() {
+    int __itemCount__ = 50;
+    List<BuildContext?> itemContexts = List.filled(__itemCount__, null);
+    List<LayerLink> itemLayerLinks = List.generate(__itemCount__, (index) => LayerLink());
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        width: 380,
+        height: 520,
+        margin: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.orangeAccent),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          boxShadow: const [BoxShadow(color: Colors.orange, blurRadius: 16.0)],
+        ),
+        child: ListView.builder(
+          // clipBehavior: Clip.none,
+          itemCount: __itemCount__,
+          itemBuilder: (context, index) {
+            return CcTapWidget(
+              builder: () {
+                return CompositedTransformTarget(
+                  link: itemLayerLinks[index],
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    itemContexts[index] = context;
+                    return Container(
+                        height: 50,
+                        clipBehavior: Clip.antiAlias,
+                        margin: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            border: Border.all(color: Colors.black, width: 1),
+                            borderRadius: const BorderRadius.all(Radius.circular(8)),
+                            boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
+                        child: Center(child: Text('$index')));
+                  }),
+                );
+              },
+              onTap: () {
+                BuildContext? context = itemContexts[index];
+                RenderBox? box = context?.findRenderObject() as RenderBox?;
+                Size size = box?.size ?? Size.zero;
+                int randomIr = Random().nextInt(3);
+                int zRadius = (OverlayWrapper.appearingShowers?.length ?? 0) == 0 || randomIr == 0 ? 0 : (randomIr == 1 ? 15 : -15);
+
+                OverlayEntry _entry = OverlayEntry(builder: (context) {
+                  return CompositedTransformFollower(
+                    link: itemLayerLinks[index],
+                    showWhenUnlinked: false,
+                    offset: Offset((size.width - 250) / 2, size.height + 1.0),
+                    child: Transform(
+                      transform: Matrix4.rotationZ(zRadius / 180 * pi),
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: 300,
+                        height: 400,
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Container(
+                            width: 300,
+                            height: 400,
+                            child: WidgetsUtil.getBubbleMenuPicker(
+                              direction: TriangleArrowDirection.top,
+                              itemOnTap: (index, value, context) {
+                                print('>>>>>Menu>>>>> TODO .... CLIKC>>>>>>> Valid Pure!!!<<<<<<<<<<');
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                });
+                Overlay.of(context!, rootOverlay: true)!.insert(_entry, below: null, above: null);
+
+                // OverlayWidgets.show(
+                //   onScreenDuration: Duration.zero,
+                //   child: CompositedTransformFollower(
+                //     link: itemLayerLinks[index],
+                //     showWhenUnlinked: false,
+                //     offset: Offset((size.width - 250) / 2, size.height + 1.0),
+                //     child: Transform(
+                //       transform: Matrix4.rotationZ(zRadius / 180 * pi),
+                //       alignment: Alignment.center,
+                //       child:
+                //       WidgetsUtil.getBubbleMenuPicker(
+                //         direction: TriangleArrowDirection.top,
+                //         onTap: (index, value, context) => OverlayWrapper.dismissAppearingLayers(),
+                //       ),
+                //     ),
+                //   ),
+                // );
               },
             );
           },

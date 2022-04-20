@@ -222,73 +222,53 @@ class WidgetsUtil {
   }
 
   /// Bubble Menus
-  static Widget getMenuPicker({
+  static Widget getBubbleMenuPicker({
+    double? triangleOffset,
     TriangleArrowDirection direction = TriangleArrowDirection.top,
-    Function(int index, Object value, BuildContext context)? onTap,
+    Function(int index, Object value, BuildContext context)? itemOnTap,
+    int? row,
   }) {
-    return CcBubbleWidget(
-      bubbleColor: Colors.black, // triangle color
-      triangleDirection: direction,
-      child: CcMenuPopup(
-        popupBackGroundColor: Colors.green, // spacing line color
-        values: const [
-          [Icons.local_print_shop_sharp, 'Print'],
-          [Icons.home_sharp, 'Home'],
-          [Icons.mail_sharp, 'Mail'],
-          [Icons.qr_code_sharp, 'QRCode'],
-          [Icons.settings_sharp, 'Settings'],
-          [Icons.menu_sharp, 'More'],
-        ],
-        onTap: (index, value, context) {
-          Logger.d('👉👉👉>>>>> u tap index: $index, value: $value, toString(): ${value.toString()}');
-          onTap?.call(index, value, context);
-        },
-      ),
-    );
-  }
+    List<Map> values = const [
+      {'title': 'Print', 'icon': Icons.local_print_shop_sharp},
+      {'title': 'Home', 'icon': Icons.home_sharp},
+      {'title': 'Mail', 'icon': Icons.mail_sharp},
+      {'title': 'QRCode', 'icon': Icons.qr_code_sharp},
+      {'title': 'Settings', 'icon': Icons.settings_sharp},
+      {'title': 'More', 'icon': Icons.menu_sharp},
+    ];
 
-  static Widget getMenuBubble({TriangleArrowDirection direction = TriangleArrowDirection.left, double? triangleOffset}) {
+    double itemWidth = 80;
+    double itemHeight = 80;
+
+    int rowCount = row ?? 3;
+    int columnCount = (values.length / rowCount).toInt();
+
+    double width = itemWidth * rowCount + (rowCount - 1);
+    double height = itemHeight * columnCount + (columnCount - 1);
+
     return CcBubbleWidget(
       bubbleColor: Colors.black, // triangle color
       triangleDirection: direction,
       bubbleTriangleOffset: triangleOffset,
       child: CcMenuPopup(
-        popupBackGroundColor: Colors.green, // spacing line color
-        values: const [
-          [Icons.local_print_shop_sharp, 'Print'],
-          [Icons.home_sharp, 'Home'],
-          [Icons.mail_sharp, 'Mail'],
-          [Icons.qr_code_sharp, 'QRCode'],
-          [Icons.settings_sharp, 'Settings'],
-          [Icons.menu_sharp, 'More'],
-        ],
-        onTap: (index, value, context) {
-          Logger.d('👉👉👉>>>>> u tap $index, value: $value, toString(): ${value.toString()}');
-          if (value.toString().contains('More')) {
-            Offset offset = OffsetUtil.getOffsetB(context) ?? Offset.zero;
-            Size size = SizeUtil.getSizeB(context) ?? Size.zero;
-
-            double x = 0;
-            double y = 0;
-            if (direction == TriangleArrowDirection.left) {
-              x = offset.dx + size.width;
-              y = offset.dy - (CcMenuPopup.currentMenuPopupHeight / 2 - size.height / 2);
-            } else if (direction == TriangleArrowDirection.right) {
-              x = offset.dx - size.width;
-              y = offset.dy - (CcMenuPopup.currentMenuPopupHeight / 2 - size.height / 2);
-            } else if (direction == TriangleArrowDirection.top) {
-              x = offset.dx - (CcMenuPopup.currentMenuPopupWidth / 2 - size.width / 2);
-              y = offset.dy + size.height;
-            } else if (direction == TriangleArrowDirection.bottom) {
-              x = offset.dx - (CcMenuPopup.currentMenuPopupWidth / 2 - size.width / 2);
-              y = offset.dy - size.height;
-            }
-            DialogShower shower = DialogWrapper.show(WidgetsUtil.getMenuBubble(direction: direction), x: x, y: y);
-            shower.transitionBuilder = null;
-            shower.containerDecoration = null;
-          }
+        width: width,
+        height: height,
+        itemWidth: itemWidth,
+        itemHeight: itemHeight,
+        values: values,
+        backgroundColor: Colors.green,
+        functionOfName: (index, value) {
+          return (value is Map) ? value['title'] : null;
+        },
+        functionOfIcon: (index, value) {
+          return (value is Map) ? SizedBox(width: 40.0, height: 40.0, child: Icon(value['icon'], color: Colors.white, size: 30.0)) : null;
+        },
+        itemOnTap: (index, value, context) {
+          Logger.d('👉👉👉>>>>> u tap index: $index, value: $value, toString(): ${value.toString()}');
+          itemOnTap?.call(index, value, context);
         },
       ),
     );
   }
+
 }

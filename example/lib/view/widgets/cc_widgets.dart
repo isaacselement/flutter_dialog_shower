@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/brother.dart';
 
+// Widget wrapped without Btw
+
 class CcTextButton extends StatefulWidget {
   String text;
 
@@ -105,23 +107,42 @@ class _CcTextButtonState extends State<CcTextButton> {
   }
 }
 
+// Widget wrapped with Btw
+
 class CcMenuPopup extends StatelessWidget {
   List<Object> values;
-  Function(int index, Object value, BuildContext context)? onTap;
+  String? Function(int index, Object value)? functionOfName;
+  Widget? Function(int index, Object value)? functionOfIcon;
+
+  TextStyle? titleStyle;
+  Color? backgroundColor;
+  double? width;
+  double? height;
+  double? verticalSpacing;
+  double? horizontalSpacing;
+  double? itemWidth;
+  double? itemHeight;
+  Alignment? itemAlignment;
+  Function(int index, Object value, BuildContext context)? itemOnTap;
   Function(int index, Object value, bool isHighlighted)? itemBuilder;
-  Color? popupBackGroundColor;
-  double? popupWidth;
 
   CcMenuPopup({
     Key? key,
     required this.values,
-    this.onTap,
+    this.functionOfName,
+    this.functionOfIcon,
+    this.titleStyle = const TextStyle(color: Colors.white, fontSize: 12),
+    this.backgroundColor = Colors.grey,
+    this.width,
+    this.height,
+    this.verticalSpacing,
+    this.horizontalSpacing,
+    this.itemWidth,
+    this.itemHeight,
+    this.itemAlignment,
+    this.itemOnTap,
     this.itemBuilder,
-    this.popupBackGroundColor = Colors.grey,
-    this.popupWidth = -0.123456,
-  }) : super(key: key) {
-    popupWidth = popupWidth == -0.123456 ? CcMenuPopup.currentMenuPopupWidth : popupWidth;
-  }
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -135,46 +156,37 @@ class CcMenuPopup extends StatelessWidget {
         return Listener(
           onPointerUp: (event) => isHighlightedBtv.value = false,
           onPointerDown: (event) => isHighlightedBtv.value = true,
-          child: InkWell(
-            onTap: () => onTap?.call(index, value, context),
-            child: (itemBuilder ?? defMenuItemBuilder).call(index, value, isHighlightedBtv.value),
+          child: GestureDetector(
+            onTap: () => itemOnTap?.call(index, value, context),
+            child: (itemBuilder ?? defItemBuilder).call(index, value, isHighlightedBtv.value),
           ),
         );
       });
 
       children.add(item);
     }
-    CcMenuPopup.currentMenuPopupHeight = size / CcMenuPopup.currentMenuItemCountPerRow * CcMenuPopup.currentMenuItemHeight;
     return SingleChildScrollView(
       child: Container(
-        width: popupWidth,
-        decoration: BoxDecoration(color: popupBackGroundColor),
-        child: Wrap(spacing: 1.0, runSpacing: 1.0, children: children),
+        width: width,
+        height: height,
+        decoration: BoxDecoration(color: backgroundColor),
+        child: Wrap(spacing: horizontalSpacing ?? 1.0, runSpacing: verticalSpacing ?? 1.0, children: children),
       ),
     );
   }
 
-  static double currentMenuItemCountPerRow = 3;
-  static double currentMenuPopupHeight = 0;
-  static double currentMenuItemWidth = 80.0;
-  static double currentMenuItemHeight = 80.0;
-  static double currentMenuPopupWidth = currentMenuItemWidth * currentMenuItemCountPerRow + (currentMenuItemCountPerRow - 1.0);
-
-  Widget defMenuItemBuilder(int index, Object value, bool isHighlighted) {
-    if (value is! List || value.length < 2) {
-      return const SizedBox();
-    }
+  Widget defItemBuilder(int index, Object value, bool isHighlighted) {
+    Widget? icon = functionOfIcon?.call(index, value);
+    String title = functionOfName?.call(index, value) ?? value.toString();
+    List<Widget> children = [];
+    icon != null ? children.add(icon) : null;
+    children.add(Text(title, style: titleStyle));
     return Container(
-      width: currentMenuItemWidth,
-      height: currentMenuItemHeight,
+      width: itemWidth,
+      height: itemHeight,
+      alignment: itemAlignment,
       decoration: BoxDecoration(color: isHighlighted ? Colors.grey : Colors.black),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(width: 40.0, height: 40.0, child: Icon(value[0], color: Colors.white, size: 30.0)),
-          SizedBox(height: 22.0, child: Text(value[1], style: const TextStyle(color: Colors.white, fontSize: 12))),
-        ],
-      ),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: children),
     );
   }
 }

@@ -8,7 +8,6 @@ import 'package:flutter_dialog_shower/view/cc_bubble_widgets.dart';
 import 'package:flutter_dialog_shower/view/cc_select_list_widgets.dart';
 
 import '../util/logger.dart';
-import 'widgets/cc_widgets.dart';
 
 class PageOfBubble extends StatelessWidget {
   @override
@@ -49,10 +48,10 @@ class PageOfBubble extends StatelessWidget {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.getMenuBubble(
+                  WidgetsUtil.getBubbleMenuPicker(
                     direction: TriangleArrowDirection.top,
                   ),
-                  x: offset.dx,
+                  x: offset.dx - (242 - size.width) / 2,
                   y: offset.dy + size.height);
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
@@ -61,7 +60,7 @@ class PageOfBubble extends StatelessWidget {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.getMenuBubble(
+                  WidgetsUtil.getBubbleMenuPicker(
                     direction: TriangleArrowDirection.bottom,
                   ),
                   x: offset.dx - (242 - size.width) / 2,
@@ -74,11 +73,11 @@ class PageOfBubble extends StatelessWidget {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.getMenuBubble(
+                  WidgetsUtil.getBubbleMenuPicker(
                     direction: TriangleArrowDirection.right,
-                    triangleOffset: 30.0,
+                    triangleOffset: 35.0,
                   ),
-                  x: offset.dx - CcMenuPopup.currentMenuPopupWidth,
+                  x: offset.dx - 242,
                   y: offset.dy - 20);
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
@@ -87,15 +86,17 @@ class PageOfBubble extends StatelessWidget {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.getMenuBubble(
+                  WidgetsUtil.getBubbleMenuPicker(
                     direction: TriangleArrowDirection.left,
-                    triangleOffset: 30.0,
+                    triangleOffset: 35.0,
                   ),
                   x: offset.dx + size.width,
                   y: offset.dy - 20);
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
+
+            /// TODO ........
             WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: (state) {
               DialogWrapper.show(WidgetsUtil.newClickMeWidget(clickMeFunctions: {
                 'Click me': (context) {
