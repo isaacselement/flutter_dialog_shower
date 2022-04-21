@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
-import "../dialog/dialog_shower.dart";
+import '../core/boxes.dart';
 import 'overlay_shower.dart';
 import 'overlay_wrapper.dart';
 

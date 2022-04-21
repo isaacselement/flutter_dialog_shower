@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../dialog/dialog_shower.dart';
+import '../core/boxes.dart';
 
 class OverlayShower {
   static BuildContext? gContext;

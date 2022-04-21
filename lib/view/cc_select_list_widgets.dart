@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../dialog/dialog_shower.dart';
+
+import '../core/boxes.dart';
 
 /// Widget with tap effect
 class CcTapWidget extends StatelessWidget {
