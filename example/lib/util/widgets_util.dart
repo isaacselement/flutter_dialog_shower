@@ -241,16 +241,20 @@ class WidgetsUtil {
     double itemHeight = 80;
 
     int rowCount = row ?? 3;
-    int columnCount = (values.length / rowCount).toInt();
+    int columnCount = values.length ~/ rowCount;
 
     double width = itemWidth * rowCount + (rowCount - 1);
     double height = itemHeight * columnCount + (columnCount - 1);
 
     return CcBubbleWidget(
+      width: width,
+      height: height,
       bubbleColor: Colors.black, // triangle color
       triangleDirection: direction,
       bubbleTriangleOffset: triangleOffset,
-      child: CcMenuPopup(
+      bubbleShadowColor: Colors.pink,
+      // child: CcMenuPopup(
+      child: CcMenuPopupUsingRowColumn(
         width: width,
         height: height,
         itemWidth: itemWidth,

@@ -146,11 +146,10 @@ class CcMenuPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = <Widget>[];
     int size = values.length;
+    List<Widget> children = <Widget>[];
     for (int index = 0; index < size; index++) {
       Object value = values[index];
-
       Btv<bool> isHighlightedBtv = false.btv;
       Widget item = Btw(builder: (context) {
         return Listener(
@@ -170,8 +169,129 @@ class CcMenuPopup extends StatelessWidget {
         width: width,
         height: height,
         decoration: BoxDecoration(color: backgroundColor),
-        child: Wrap(spacing: horizontalSpacing ?? 1.0, runSpacing: verticalSpacing ?? 1.0, children: children),
+        child: Wrap(
+          spacing: horizontalSpacing ?? 1.0,
+          runSpacing: verticalSpacing ?? 1.0,
+          children: children,
+        ),
       ),
+    );
+  }
+
+  Widget defItemBuilder(int index, Object value, bool isHighlighted) {
+    Widget? icon = functionOfIcon?.call(index, value);
+    String title = functionOfName?.call(index, value) ?? value.toString();
+    List<Widget> children = [];
+    icon != null ? children.add(icon) : null;
+    children.add(Text(title, style: titleStyle));
+    return Container(
+      width: itemWidth,
+      height: itemHeight,
+      alignment: itemAlignment,
+      decoration: BoxDecoration(color: isHighlighted ? Colors.grey : Colors.black),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: children),
+    );
+  }
+}
+
+class CcMenuPopupUsingRowColumn extends StatelessWidget {
+  List<Object> values;
+  String? Function(int index, Object value)? functionOfName;
+  Widget? Function(int index, Object value)? functionOfIcon;
+
+  TextStyle? titleStyle;
+  Color? backgroundColor;
+  double? width;
+  double? height;
+  double? verticalSpacing;
+  double? horizontalSpacing;
+  double? itemWidth;
+  double? itemHeight;
+
+  int? rowCount;
+  int? columnCount;
+
+  Alignment? itemAlignment;
+  Function(int index, Object value, BuildContext context)? itemOnTap;
+  Function(int index, Object value, bool isHighlighted)? itemBuilder;
+
+  CcMenuPopupUsingRowColumn({
+    Key? key,
+    required this.values,
+    this.functionOfName,
+    this.functionOfIcon,
+    this.titleStyle = const TextStyle(color: Colors.white, fontSize: 12),
+    this.backgroundColor = Colors.grey,
+    this.width,
+    this.height,
+    this.verticalSpacing,
+    this.horizontalSpacing,
+    this.itemWidth,
+    this.itemHeight,
+    this.rowCount,
+    this.columnCount,
+    this.itemAlignment,
+    this.itemOnTap,
+    this.itemBuilder,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    rowCount ??= (width != null && itemWidth != null) ? width! ~/ itemWidth! : null;
+    columnCount ??= (height != null && itemHeight != null) ? height! ~/ itemHeight! : null;
+    int _rowCount_ = rowCount ?? (columnCount != null ? values.length ~/ columnCount! : 1);
+    int _columnCount_ = columnCount ?? values.length ~/ _rowCount_;
+
+    assert(() {
+      print('[Cc] >>>>>>>>> _rowCount_: $_rowCount_, _columnCount_: $_columnCount_');
+      return true;
+    }());
+
+    List<Widget> children = <Widget>[];
+    for (int i = 0; i < _columnCount_; i++) {
+      List<Widget> child = <Widget>[];
+      for (int j = 0; j < _rowCount_; j++) {
+        int index = i * _rowCount_ + j;
+        assert(() {
+          print('[Cc] >>>>>>>>> handling index: $index');
+          return true;
+        }());
+        if (index >= values.length) {
+          break;
+        }
+
+        Object value = values[index];
+        Btv<bool> isHighlightedBtv = false.btv;
+        Widget item = Btw(builder: (context) {
+          return Listener(
+            onPointerUp: (event) => isHighlightedBtv.value = false,
+            onPointerDown: (event) => isHighlightedBtv.value = true,
+            child: GestureDetector(
+              onTap: () => itemOnTap?.call(index, value, context),
+              child: (itemBuilder ?? defItemBuilder).call(index, value, isHighlightedBtv.value),
+            ),
+          );
+        });
+
+        child.add(item);
+        child.add(SizedBox(width: verticalSpacing ?? 1.0));
+      }
+      if (child.isEmpty) {
+        break;
+      }
+
+      child.removeLast();
+
+      children.add(Row(children: child));
+      children.add(SizedBox(height: horizontalSpacing ?? 1.0));
+    }
+    children.removeLast();
+
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(color: backgroundColor),
+      child: Column(children: children),
     );
   }
 

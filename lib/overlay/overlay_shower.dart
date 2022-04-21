@@ -12,6 +12,7 @@ class OverlayShower {
   bool isWithTicker = false; // should assign value before show method
 
   bool isUseRootOverlay = true;
+  bool isWrappedNothing = false;
   bool isWrappedMaterial = true;
 
   OverlayEntry? showBelow, showAbove; // insert below or above entry
@@ -88,7 +89,7 @@ class OverlayShower {
 
   OverlayShower showImmediately(Widget? child, {OverlayEntry? below, OverlayEntry? above}) {
     _isShowing = true;
-    _entry = OverlayEntry(builder: (context) => _getBody(child));
+    _entry = OverlayEntry(builder: (context) => isWrappedNothing ? _rawChild(child) : _getBody(child));
     Overlay.of(context!, rootOverlay: isUseRootOverlay)!.insert(_entry, below: below, above: above);
     _invokeShowCallbacks();
     return this;
@@ -135,9 +136,13 @@ class OverlayShower {
   Widget _wrapperChild(Widget? child) {
     GestureDetector gesture = GestureDetector(
       onTap: () => onTapCallback?.call(this),
-      child: builder?.call(this) ?? _newChild ?? child,
+      child: _rawChild(child),
     );
     return isWrappedMaterial ? Material(type: MaterialType.transparency, child: gesture) : gesture;
+  }
+
+  Widget _rawChild(Widget? child) {
+    return builder?.call(this) ?? _newChild ?? child ?? const Offstage(offstage: true);
   }
 
   // dismiss ----------------------------------------

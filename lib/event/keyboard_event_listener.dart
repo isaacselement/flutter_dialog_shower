@@ -6,7 +6,7 @@ class KeyboardEventListener {
   // only the last instance EventChannel will take effect
   static const EventChannel eventChannel = EventChannel('shower_keyboard_visibility');
 
-  static late final Stream<bool> eventStream = eventChannel.receiveBroadcastStream().map((dynamic event) => (event as int) == 1);
+  static late final Stream<bool> eventChannelStream = eventChannel.receiveBroadcastStream().map((dynamic event) => (event as int) == 1);
 
   /// Returns true if the keyboard is currently visible, false if not.
   static bool _isVisible = false;
@@ -35,7 +35,7 @@ class KeyboardEventListener {
       {Function? onError, void Function()? onDone, bool? cancelOnError, String? key}) {
     if (!isInitialized) {
       isInitialized = true;
-      eventStream.listen(_onChangeValue);
+      eventChannelStream.listen(_onChangeValue);
     }
     StreamSubscription<bool> subscription =
         _onChangeStream.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError ?? true);

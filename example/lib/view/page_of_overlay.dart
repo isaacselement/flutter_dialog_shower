@@ -384,18 +384,16 @@ class PageOfOverlay extends StatelessWidget {
       children: [
         Wrap(
           children: [
-            layerLinkInShower(),
             layerLinkOfPure(),
+            layerLinkOfShower(),
           ],
         ),
       ],
     );
   }
 
-  Widget layerLinkInShower() {
+  Widget layerLinkOfPure() {
     int __itemCount__ = 50;
-    List<BuildContext?> itemContexts = List.filled(__itemCount__, null);
-    List<LayerLink> itemLayerLinks = List.generate(__itemCount__, (index) => LayerLink());
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -409,88 +407,17 @@ class PageOfOverlay extends StatelessWidget {
           boxShadow: const [BoxShadow(color: Colors.orange, blurRadius: 16.0)],
         ),
         child: ListView.builder(
-          // clipBehavior: Clip.none,
           itemCount: __itemCount__,
           itemBuilder: (context, index) {
-            return CcTapWidget(
-              builder: () {
-                return CompositedTransformTarget(
-                  link: itemLayerLinks[index],
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    itemContexts[index] = context;
-                    return Container(
-                        height: 50,
-                        clipBehavior: Clip.antiAlias,
-                        margin: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                            color: Colors.grey,
-                            border: Border.all(color: Colors.black, width: 1),
-                            borderRadius: const BorderRadius.all(Radius.circular(8)),
-                            boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
-                        child: Center(child: Text('$index')));
-                  }),
-                );
-              },
-              onTap: () {
-                BuildContext? context = itemContexts[index];
-                RenderBox? box = context?.findRenderObject() as RenderBox?;
-                Size size = box?.size ?? Size.zero;
-                int randomIr = Random().nextInt(3);
-                int zRadius = (OverlayWrapper.appearingShowers?.length ?? 0) == 0 || randomIr == 0 ? 0 : (randomIr == 1 ? 15 : -15);
-
-                OverlayWidgets.show(
-                  onScreenDuration: Duration.zero,
-                  child: CompositedTransformFollower(
-                    link: itemLayerLinks[index],
-                    showWhenUnlinked: false,
-                    offset: Offset((size.width - 250) / 2, size.height + 1.0),
-                    child: Transform(
-                      transform: Matrix4.rotationZ(zRadius / 180 * pi),
-                      alignment: Alignment.center,
-                      child:
-                          // WidgetsUtil.getBubbleMenuPicker(
-                          //   direction: TriangleArrowDirection.top,
-                          //   onTap: (index, value, context) => OverlayWrapper.dismissAppearingLayers(),
-                          // ),
-                          InkWell(
-                        onTap: () {
-                          print('//TODO??://>>>>>>> event in CompositedTransformFollower in List item~~~~~');
-                          OverlayWrapper.dismissAppearingLayers();
-                        },
-                        child: Container(
-                          clipBehavior: Clip.antiAlias,
-                          decoration: const BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.all(Radius.circular(6)),
-                            boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 25.0)],
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: SizedBox(
-                              width: 400,
-                              child: Text(
-                                'do you know it is very serious!!!\nPeople regard it as a matter of normality if a man takes the initiative in courtship, but if a...',
-                                style: TextStyle(color: Colors.white, fontSize: 15),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
+            return LayerLinkEntryWidget(index: index);
           },
         ),
       ),
     );
   }
 
-  Widget layerLinkOfPure() {
+  Widget layerLinkOfShower() {
     int __itemCount__ = 50;
-    List<BuildContext?> itemContexts = List.filled(__itemCount__, null);
-    List<LayerLink> itemLayerLinks = List.generate(__itemCount__, (index) => LayerLink());
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -504,15 +431,14 @@ class PageOfOverlay extends StatelessWidget {
           boxShadow: const [BoxShadow(color: Colors.orange, blurRadius: 16.0)],
         ),
         child: ListView.builder(
-          // clipBehavior: Clip.none,
           itemCount: __itemCount__,
           itemBuilder: (context, index) {
-            return CcTapWidget(
-              builder: () {
-                return CompositedTransformTarget(
-                  link: itemLayerLinks[index],
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    itemContexts[index] = context;
+            LayerLink _layerLink = LayerLink();
+            return StatefulBuilder(builder: (context, constraints) {
+              return CompositedTransformTarget(
+                link: _layerLink,
+                child: CcTapWidget(
+                  builder: () {
                     return Container(
                         height: 50,
                         clipBehavior: Clip.antiAlias,
@@ -522,68 +448,135 @@ class PageOfOverlay extends StatelessWidget {
                             border: Border.all(color: Colors.black, width: 1),
                             borderRadius: const BorderRadius.all(Radius.circular(8)),
                             boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
-                        child: Center(child: Text('$index')));
-                  }),
-                );
-              },
-              onTap: () {
-                BuildContext? context = itemContexts[index];
-                RenderBox? box = context?.findRenderObject() as RenderBox?;
-                Size size = box?.size ?? Size.zero;
-                int randomIr = Random().nextInt(3);
-                int zRadius = (OverlayWrapper.appearingShowers?.length ?? 0) == 0 || randomIr == 0 ? 0 : (randomIr == 1 ? 15 : -15);
-
-                OverlayEntry _entry = OverlayEntry(builder: (context) {
-                  return CompositedTransformFollower(
-                    link: itemLayerLinks[index],
-                    showWhenUnlinked: false,
-                    offset: Offset((size.width - 250) / 2, size.height + 1.0),
-                    child: Transform(
-                      transform: Matrix4.rotationZ(zRadius / 180 * pi),
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 300,
-                        height: 400,
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: Container(
-                            width: 300,
-                            height: 400,
-                            child: WidgetsUtil.getBubbleMenuPicker(
-                              direction: TriangleArrowDirection.top,
-                              itemOnTap: (index, value, context) {
-                                print('>>>>>Menu>>>>> TODO .... CLIKC>>>>>>> Valid Pure!!!<<<<<<<<<<');
-                              },
+                        child: Center(child: Text('$index', style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 15))));
+                  },
+                  onTap: () {
+                    Container showedContainer = Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.all(Radius.circular(6)),
+                        boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 25.0)],
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          print('$index you click the popup ~~~~~~');
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: SizedBox(
+                            width: 400,
+                            child: Text(
+                              'do you know it is very serious!!!\nPeople regard it as a matter of normality if a man takes the initiative in courtship, but if a...',
+                              style: TextStyle(color: Colors.white, fontSize: 15),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                });
-                Overlay.of(context!, rootOverlay: true)!.insert(_entry, below: null, above: null);
+                    );
 
-                // OverlayWidgets.show(
-                //   onScreenDuration: Duration.zero,
-                //   child: CompositedTransformFollower(
-                //     link: itemLayerLinks[index],
-                //     showWhenUnlinked: false,
-                //     offset: Offset((size.width - 250) / 2, size.height + 1.0),
-                //     child: Transform(
-                //       transform: Matrix4.rotationZ(zRadius / 180 * pi),
-                //       alignment: Alignment.center,
-                //       child:
-                //       WidgetsUtil.getBubbleMenuPicker(
-                //         direction: TriangleArrowDirection.top,
-                //         onTap: (index, value, context) => OverlayWrapper.dismissAppearingLayers(),
-                //       ),
-                //     ),
-                //   ),
-                // );
-              },
-            );
+                    // 1. Insert directly
+                    // OverlayEntry _entry = OverlayEntry(builder: (context) {
+                    //   return Positioned(
+                    //     width: 400,
+                    //     child: CompositedTransformFollower(
+                    //       link: _layerLink,
+                    //       showWhenUnlinked: false,
+                    //       offset: const Offset(0, 60),
+                    //       child: Material(child: showedContainer),
+                    //     ),
+                    //   );
+                    // });
+                    // Overlay.of(context, rootOverlay: true)!.insert(_entry);
+                    // return;
+
+                    // 2. Use OverlayShower
+                    RenderBox? box = context.findRenderObject() as RenderBox?;
+                    Size size = box?.size ?? Size.zero;
+                    int randomIr = Random().nextInt(3);
+                    int zRadius = (OverlayWrapper.appearingShowers?.length ?? 0) == 0 || randomIr == 0 ? 0 : (randomIr == 1 ? 15 : -15);
+
+                    // TODO ... Wrapper OverlayWrapper.showWithLayerLink method ...
+                    OverlayWrapper.show(
+                      Positioned(
+                        width: 400,
+                        child: CompositedTransformFollower(
+                          link: _layerLink,
+                          showWhenUnlinked: false,
+                          offset: Offset(0, size.height),
+                          // child: Material(child: showedContainer),
+                          child: Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.rotationZ(zRadius / 180 * pi),
+                            child: Material(child: showedContainer),
+                          ),
+                        ),
+                      ),
+                    ).isWrappedNothing = true;
+                  },
+                ),
+              );
+            });
           },
         ),
+      ),
+    );
+  }
+}
+
+/// LayerLink Entry
+class LayerLinkEntryWidget extends StatefulWidget {
+  final int index;
+
+  const LayerLinkEntryWidget({Key? key, required this.index}) : super(key: key);
+
+  @override
+  State<LayerLinkEntryWidget> createState() => _LayerLinkEntryState();
+}
+
+class _LayerLinkEntryState extends State<LayerLinkEntryWidget> {
+  final LayerLink _layerLink = LayerLink();
+
+  OverlayEntry? overlayEntry;
+
+  @override
+  Widget build(BuildContext context) {
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: InkWell(
+        child: Container(
+          height: 50,
+          clipBehavior: Clip.antiAlias,
+          margin: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+              color: Colors.grey,
+              border: Border.all(color: Colors.black, width: 1),
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
+          child: Center(child: Text('${widget.index}', style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 15))),
+        ),
+        onTap: () {
+          overlayEntry?.remove();
+          overlayEntry = null;
+          overlayEntry = OverlayEntry(builder: (context) {
+            return Positioned(
+              width: 242,
+              child: CompositedTransformFollower(
+                link: _layerLink,
+                showWhenUnlinked: false,
+                offset: const Offset(0, 60),
+                child: WidgetsUtil.getBubbleMenuPicker(
+                  direction: TriangleArrowDirection.top,
+                  itemOnTap: (index, value, context) {
+                    overlayEntry?.remove();
+                    overlayEntry = null;
+                  },
+                ),
+              ),
+            );
+          });
+          Overlay.of(context)!.insert(overlayEntry!);
+        },
       ),
     );
   }
