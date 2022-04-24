@@ -7,7 +7,7 @@ import '../core/boxes.dart';
 class CcTapWidget extends StatelessWidget {
   void Function() onTap;
   Widget? child;
-  Widget Function()? builder;
+  Widget Function(bool isTapping)? builder;
 
   CcTapWidget({Key? key, required this.onTap, this.builder, this.child}) : super(key: key);
 
@@ -27,7 +27,7 @@ class CcTapWidget extends StatelessWidget {
             onPointerCancel: (e) => setState(() {
               isTapping = false;
             }),
-            child: Opacity(opacity: isTapping ? 0.5 : 1, child: builder?.call() ?? child ?? const Offstage(offstage: true)),
+            child: builder?.call(isTapping) ?? Opacity(opacity: isTapping ? 0.5 : 1, child: child ?? const Offstage(offstage: true)),
           ),
           onTap: () {
             onTap();
@@ -97,16 +97,14 @@ class CcActionHeaderWidget extends StatelessWidget {
       return null;
     }
     return CcTapWidget(
-      builder: () {
-        return Container(
-          // color: Colors.red,
-          width: leftButtonWidth,
-          height: leftButtonHeight,
-          padding: leftButtonPadding,
-          alignment: leftButtonAlignment,
-          child: leftButtonBuilder?.call() ?? Text(leftButtonTitle ?? '', style: leftButtonStyle),
-        );
-      },
+      child: Container(
+        // color: Colors.red,
+        width: leftButtonWidth,
+        height: leftButtonHeight,
+        padding: leftButtonPadding,
+        alignment: leftButtonAlignment,
+        child: leftButtonBuilder?.call() ?? Text(leftButtonTitle ?? '', style: leftButtonStyle),
+      ),
       onTap: () {
         leftButtonEvent?.call();
       },
@@ -118,16 +116,14 @@ class CcActionHeaderWidget extends StatelessWidget {
       return null;
     }
     return CcTapWidget(
-      builder: () {
-        return Container(
-          // color: Colors.red,
-          width: rightButtonWidth,
-          height: rightButtonHeight,
-          padding: rightButtonPadding,
-          alignment: rightButtonAlignment,
-          child: rightButtonBuilder?.call() ?? Text(rightButtonTitle ?? '', style: rightButtonStyle),
-        );
-      },
+      child: Container(
+        // color: Colors.red,
+        width: rightButtonWidth,
+        height: rightButtonHeight,
+        padding: rightButtonPadding,
+        alignment: rightButtonAlignment,
+        child: rightButtonBuilder?.call() ?? Text(rightButtonTitle ?? '', style: rightButtonStyle),
+      ),
       onTap: () {
         rightButtonEvent?.call();
       },
@@ -372,10 +368,10 @@ class CcSelectListState extends State<CcSelectListWidget> {
         controller: _textEditController,
         suffixMode: OverlayVisibilityMode.editing,
         suffix: CcTapWidget(
-            builder: () => const Padding(
-                  padding: EdgeInsets.only(right: 8.0),
-                  child: Icon(Icons.highlight_remove_rounded, color: Colors.grey, size: 20),
-                ),
+            child: const Padding(
+              padding: EdgeInsets.only(right: 8.0),
+              child: Icon(Icons.highlight_remove_rounded, color: Colors.grey, size: 20),
+            ),
             onTap: () {
               _textEditController?.clear();
               defaultSearchTextOnChanged(_textEditController?.text ?? '');
