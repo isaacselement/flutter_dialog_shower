@@ -432,13 +432,13 @@ class PageOfOverlay extends StatelessWidget {
               return CompositedTransformTarget(
                 link: _layerLink,
                 child: CcTapWidget(
-                  builder: () {
+                  builder: (isTappingDown) {
                     return Container(
                         height: 50,
                         clipBehavior: Clip.antiAlias,
                         margin: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                            color: Colors.grey,
+                            color: isTappingDown ? Colors.grey.withAlpha(128) : Colors.grey,
                             border: Border.all(color: Colors.black, width: 1),
                             borderRadius: const BorderRadius.all(Radius.circular(8)),
                             boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),

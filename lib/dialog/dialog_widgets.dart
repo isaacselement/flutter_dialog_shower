@@ -241,37 +241,47 @@ class LoadingIconPainter extends CustomPainter {
   // ARC
   Color? colorBig, colorSmall;
   double? startAngleBig, sweepAngleBig;
-  double? startAngleSmall, sweepAngleBigSmall;
+  double? startAngleSmall, sweepAngleSmall;
 
-  LoadingIconPainter(
-      {required this.radius,
-      required this.strokeWidth,
-      this.colorBig,
-      this.colorSmall,
-      this.startAngleBig,
-      this.sweepAngleBig,
-      this.startAngleSmall,
-      this.sweepAngleBigSmall});
+  LoadingIconPainter({
+    required this.radius,
+    required this.strokeWidth,
+    this.colorBig,
+    this.colorSmall,
+    this.startAngleBig,
+    this.sweepAngleBig,
+    this.startAngleSmall,
+    this.sweepAngleSmall,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    double side = radius * 2 - strokeWidth;
-    var paintOne = Paint()
+    double side = radius * 2;
+    double width = size.width;
+    width = width == 0 ? side : width;
+    double height = size.height;
+    height = height == 0 ? side : height;
+
+    var paintBig = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..color = colorBig ?? Colors.white;
-    var paintTow = Paint()
+    var paintSmall = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..color = colorSmall ?? Colors.grey.withAlpha(128);
-    canvas.drawArc(Rect.fromCenter(center: Offset.zero, width: side, height: side), startAngleBig ?? 0, sweepAngleBig ?? 2 * pi / 5 * 4,
-        false, paintOne);
-    canvas.drawArc(Rect.fromCenter(center: Offset.zero, width: side, height: side), startAngleSmall ?? 2 * pi / 5 * 4,
-        sweepAngleBigSmall ?? 2 * pi / 5 * 1, false, paintTow);
+
+    double startAngleB = startAngleBig ?? 0;
+    double sweepAngleB = sweepAngleBig ?? 2 * pi / 5 * 4;
+    canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleB, sweepAngleB, false, paintBig);
+
+    double startAngleS = startAngleSmall ?? 2 * pi / 5 * 4;
+    double sweepAngleS = sweepAngleSmall ?? 2 * pi / 5 * 1;
+    canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleS, sweepAngleS, false, paintSmall);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => this != oldDelegate;
 }
 
 abstract class ProgressIconPainter extends CustomPainter {
@@ -354,11 +364,12 @@ class CcWidgetUtils {
   static Widget getOneGappyCircle({double? side, double? stroke}) {
     side ??= 64.0;
     stroke ??= 4.0;
-    return Container(
-      width: side,
-      height: side,
-      alignment: Alignment.center,
-      child: CustomPaint(painter: LoadingIconPainter(radius: side / 2, strokeWidth: stroke)),
+    return CustomPaint(
+      painter: LoadingIconPainter(radius: side / 2, strokeWidth: stroke),
+      child: SizedBox(
+        width: side,
+        height: side,
+      ),
     );
   }
 
