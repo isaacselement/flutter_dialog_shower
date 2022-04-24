@@ -6,6 +6,7 @@ import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
+import 'package:flutter_dialog_shower/overlay/overlay_widgets.dart';
 
 class PageOfOverlay extends StatelessWidget {
   @override
@@ -490,22 +491,7 @@ class PageOfOverlay extends StatelessWidget {
                     int zRadius = (OverlayWrapper.appearingShowers?.length ?? 0) == 0 || randomIr == 0 ? 0 : (randomIr == 1 ? 15 : -15);
 
                     // TODO ... Wrapper OverlayWrapper.showWithLayerLink method ...
-                    OverlayWrapper.show(
-                      Positioned(
-                        width: 400,
-                        child: CompositedTransformFollower(
-                          link: _layerLink,
-                          showWhenUnlinked: false,
-                          offset: Offset(0, size.height),
-                          // child: Material(child: showedContainer),
-                          child: Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.rotationZ(zRadius / 180 * pi),
-                            child: Material(child: showedContainer),
-                          ),
-                        ),
-                      ),
-                    ).isWrappedNothing = true;
+                    OverlayWidgets.showWithLayerLink(child: showedContainer, width: 400, layerLink: _layerLink);
                   },
                 ),
               );

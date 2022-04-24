@@ -6,9 +6,10 @@ import '../core/boxes.dart';
 /// Widget with tap effect
 class CcTapWidget extends StatelessWidget {
   void Function() onTap;
-  Widget Function() builder;
+  Widget? child;
+  Widget Function()? builder;
 
-  CcTapWidget({Key? key, required this.builder, required this.onTap}) : super(key: key);
+  CcTapWidget({Key? key, required this.onTap, this.builder, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class CcTapWidget extends StatelessWidget {
             onPointerCancel: (e) => setState(() {
               isTapping = false;
             }),
-            child: Opacity(opacity: isTapping ? 0.5 : 1, child: builder()),
+            child: Opacity(opacity: isTapping ? 0.5 : 1, child: builder?.call() ?? child ?? const Offstage(offstage: true)),
           ),
           onTap: () {
             onTap();

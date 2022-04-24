@@ -146,7 +146,7 @@ class OverlayWidgets {
     );
   }
 
-  /// Basic
+  /// Basic show with animation
   static OverlayShower show({
     required Widget child,
     Curves? curves,
@@ -267,5 +267,26 @@ class OverlayWidgets {
       tickerBuilder(shower, tickerState);
     });
     return shower;
+  }
+
+  /// Show with LayerLinker
+  static OverlayShower showWithLayerLink({
+    required Widget child,
+    required double width,
+    required LayerLink layerLink,
+    bool? showWhenUnlinked,
+    Offset? offset,
+  }) {
+    return OverlayWrapper.show(
+      Positioned(
+        width: width,
+        child: CompositedTransformFollower(
+          link: layerLink,
+          offset: offset ?? Offset.zero,
+          showWhenUnlinked: showWhenUnlinked ?? false,
+          child: Material(child: child),
+        ),
+      ),
+    )..isWrappedNothing = true;
   }
 }
