@@ -81,7 +81,7 @@ class StatefulBuilderExState extends State<StatefulBuilderEx> with TickerProvide
 
 /// For get Size immediately
 class GetSizeWidget extends SingleChildRenderObjectWidget {
-  final void Function(RenderProxyBox box, Size? legacy, Size size) onLayoutChanged;
+  final void Function(RenderBox box, Size? legacy, Size size) onLayoutChanged;
 
   const GetSizeWidget({Key? key, required Widget child, required this.onLayoutChanged}) : super(key: key, child: child);
 
@@ -94,7 +94,7 @@ class GetSizeWidget extends SingleChildRenderObjectWidget {
 
 class _GetSizeRenderObject extends RenderProxyBox {
   Size? _size;
-  late void Function(RenderProxyBox box, Size? legacy, Size size) onLayoutChanged;
+  late void Function(RenderBox box, Size? legacy, Size size) onLayoutChanged;
 
   @override
   void performLayout() {

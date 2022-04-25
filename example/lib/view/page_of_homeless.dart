@@ -49,7 +49,7 @@ class PageOfHomeless extends StatelessWidget {
                   OverlayWrapper.show(
                     GetSizeWidget(
                       child: const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)),
-                      onLayoutChanged: (RenderProxyBox box, Size? legacy, Size size) {
+                      onLayoutChanged: (RenderBox box, Size? legacy, Size size) {
                         _showToastOnTop('I got your size: $size');
                       },
                     ),

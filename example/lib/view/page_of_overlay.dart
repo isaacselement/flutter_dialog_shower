@@ -6,7 +6,6 @@ import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
-import 'package:flutter_dialog_shower/overlay/overlay_widgets.dart';
 
 class PageOfOverlay extends StatelessWidget {
   @override

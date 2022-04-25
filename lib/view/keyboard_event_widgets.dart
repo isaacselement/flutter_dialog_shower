@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import '../event/keyboard_event_listener.dart';
 
-// KeyboardInvisibleWidget
 
+// KeyboardInvisibleWidget
 class KeyboardInvisibleWidget extends StatefulWidget {
   Widget child;
 
@@ -46,8 +46,8 @@ class _KeyboardInvisibleWidgetState extends State<KeyboardInvisibleWidget> {
   }
 }
 
-// KeyboardRebuildWidget
 
+// KeyboardRebuildWidget
 class KeyboardRebuildWidget extends StatefulWidget {
   Function(BuildContext context, bool isKeyboardVisible) builder;
 
@@ -84,8 +84,8 @@ class _KeyboardRebuildWidgetState extends State<KeyboardRebuildWidget> {
   }
 }
 
-// KeyboardVisibilityBuilder
 
+// KeyboardVisibilityBuilder
 /// A convenience builder that exposes if the native keyboard is visible.
 class KeyboardVisibilityBuilder extends StatelessWidget {
   const KeyboardVisibilityBuilder({Key? key, required this.builder}) : super(key: key);

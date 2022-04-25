@@ -1,4 +1,4 @@
-import 'dart:math' as Math;
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -217,7 +217,7 @@ class CcBubblePainter extends CustomPainter {
     if (radius != 0) {
       // top right arc
       rect = Rect.fromCircle(center: Offset(rightCircleCenterX, topCircleCenterY), radius: _radius);
-      pointsPath.arcTo(rect, Math.pi * -0.5, Math.pi * 0.5, false);
+      pointsPath.arcTo(rect, math.pi * -0.5, math.pi * 0.5, false);
     }
 
     // right line
@@ -228,7 +228,7 @@ class CcBubblePainter extends CustomPainter {
     if (radius != 0) {
       // bottom right arc
       rect = Rect.fromCircle(center: Offset(rightCircleCenterX, bottomCircleCenterY), radius: _radius);
-      pointsPath.arcTo(rect, Math.pi * 0, Math.pi * 0.5, false);
+      pointsPath.arcTo(rect, math.pi * 0, math.pi * 0.5, false);
     }
 
     // bottom line
@@ -239,7 +239,7 @@ class CcBubblePainter extends CustomPainter {
     if (radius != 0) {
       // bottom left arc
       rect = Rect.fromCircle(center: Offset(leftCircleCenterX, bottomCircleCenterY), radius: _radius);
-      pointsPath.arcTo(rect, Math.pi * 0.5, Math.pi * 0.5, false);
+      pointsPath.arcTo(rect, math.pi * 0.5, math.pi * 0.5, false);
     }
 
     // left line
@@ -250,7 +250,7 @@ class CcBubblePainter extends CustomPainter {
     if (radius != 0) {
       // top left arc
       rect = Rect.fromCircle(center: Offset(leftCircleCenterX, topCircleCenterY), radius: _radius);
-      pointsPath.arcTo(rect, Math.pi * -1, Math.pi * 0.5, false);
+      pointsPath.arcTo(rect, math.pi * -1, math.pi * 0.5, false);
     }
 
     // end to original point

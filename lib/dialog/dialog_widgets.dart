@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -272,11 +272,11 @@ class LoadingIconPainter extends CustomPainter {
       ..color = colorSmall ?? Colors.grey.withAlpha(128);
 
     double startAngleB = startAngleBig ?? 0;
-    double sweepAngleB = sweepAngleBig ?? 2 * pi / 5 * 4;
+    double sweepAngleB = sweepAngleBig ?? 2 * math.pi / 5 * 4;
     canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleB, sweepAngleB, false, paintBig);
 
-    double startAngleS = startAngleSmall ?? 2 * pi / 5 * 4;
-    double sweepAngleS = sweepAngleSmall ?? 2 * pi / 5 * 1;
+    double startAngleS = startAngleSmall ?? 2 * math.pi / 5 * 4;
+    double sweepAngleS = sweepAngleSmall ?? 2 * math.pi / 5 * 1;
     canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleS, sweepAngleS, false, paintSmall);
   }
 
