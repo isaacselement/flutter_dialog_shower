@@ -79,7 +79,7 @@ class StatefulBuilderExState extends State<StatefulBuilderEx> with TickerProvide
 }
 
 
-/// For get size immediately
+/// For get Size immediately
 class GetSizeWidget extends SingleChildRenderObjectWidget {
   final void Function(RenderProxyBox box, Size? legacy, Size size) onLayoutChanged;
 
@@ -119,7 +119,57 @@ class _GetSizeRenderObject extends RenderProxyBox {
 }
 
 
-bool boxes_log_enable = true;
+/// For get Offset immediately
+class GetLayoutWidget extends StatefulWidget {
+  final Widget child;
+  final void Function(RenderBox box, Offset offset, Size size) onLayoutChanged;
+
+  const GetLayoutWidget({Key? key, required this.child, required this.onLayoutChanged}) : super(key: key);
+
+  @override
+  State<GetLayoutWidget> createState() => _GetLayoutState();
+}
+
+class _GetLayoutState extends State<GetLayoutWidget> with WidgetsBindingObserver {
+
+  late BuildContext _context;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance?.addPostFrameCallback(_rameCallback);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _context = context;
+    return widget.child;
+  }
+
+  @override
+  void didChangeMetrics() {
+    final RenderBox box = _context.findRenderObject() as RenderBox;
+    final Size size = box.size;
+    final Offset offset = box.localToGlobal(Offset.zero);
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      widget.onLayoutChanged.call(box, offset, size);
+    });
+  }
+
+  void _rameCallback(Duration timeStamp) {
+    didChangeMetrics();
+  }
+
+}
+
+bool boxes_log_enable = false;
 
 __boxes_log__(String log) {
   assert(() {

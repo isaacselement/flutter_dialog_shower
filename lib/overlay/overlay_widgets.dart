@@ -6,7 +6,7 @@ import 'overlay_wrapper.dart';
 
 class OverlayWidgets {
   /// Toast in Queue
-  static List<OverlayShower?> toastQueue = [];
+  static Map<String, List<OverlayShower?>> sharedToastQueue = {};
 
   static OverlayShower showToastInQueue(
     String text, {
@@ -29,7 +29,8 @@ class OverlayWidgets {
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? appearAnimatedBuilder,
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? dismissAnimatedBuilder,
     // queue increment offset
-    required EdgeInsets increaseOffset,
+    EdgeInsets increaseOffset = const EdgeInsets.only(top: 45),
+    // List? queue,
   }) {
     OverlayShower shower = showToast(
       text,
@@ -48,23 +49,28 @@ class OverlayWidgets {
       appearAnimatedBuilder: appearAnimatedBuilder,
       dismissAnimatedBuilder: dismissAnimatedBuilder,
     );
-
-    int index = -1;
-    for (int i = 0; i < toastQueue.length; i++) {
-      OverlayShower? obj = toastQueue[i];
-      if (obj == null) {
-        index = i;
-        toastQueue[i] = shower;
-        break;
-      }
-    }
-
-    if (index == -1) {
-      index = toastQueue.length;
-      toastQueue.add(shower);
-    }
-
+    // Use micro, for the caller will modified properties(i.e margin, aligment) outside
+    // The appear animation controller will setState, don't worry
     Future.microtask(() {
+      String key = shower.alignment?.toString()??'__Shared_Key__';
+      List<OverlayShower?> queue = (sharedToastQueue[key] ?? (sharedToastQueue[key] = []));
+
+      // 1. get the empty index
+      int index = -1;
+      for (int i = 0; i < queue.length; i++) {
+        OverlayShower? obj = queue[i];
+        if (obj == null) {
+          index = i;
+          queue[i] = shower;
+          break;
+        }
+      }
+      if (index == -1) {
+        index = queue.length;
+        queue.add(shower);
+      }
+
+      // 2. caculate the position
       EdgeInsets n = increaseOffset;
       EdgeInsets? m = shower.margin;
       shower.margin = EdgeInsets.only(
@@ -73,24 +79,25 @@ class OverlayWidgets {
         right: n.right * index + (m?.right ?? 0),
         bottom: n.bottom * index + (m?.bottom ?? 0),
       );
-    });
 
-    shower.addDismissCallBack((shower) {
-      var index = toastQueue.indexOf(shower);
-      if (index != -1) {
-        toastQueue[index] = null;
-      }
-      // if all null
-      bool isNullALL = true;
-      for (OverlayShower? s in toastQueue) {
-        if (s != null) {
-          isNullALL = false;
-          break;
+      // 3. clear the queue when dismissed
+      shower.addDismissCallBack((shower) {
+        var index = queue.indexOf(shower);
+        if (index != -1) {
+          queue[index] = null;
         }
-      }
-      if (isNullALL) {
-        toastQueue.clear();
-      }
+        // if all null
+        bool isNullALL = true;
+        for (OverlayShower? s in queue) {
+          if (s != null) {
+            isNullALL = false;
+            break;
+          }
+        }
+        if (isNullALL) {
+          queue.clear();
+        }
+      });
     });
 
     return shower;
@@ -242,7 +249,7 @@ class OverlayWidgets {
       });
 
       if (appearAnimatedBuilder == null) {
-        // 1. Using Opacity & Shower's builder
+        // 1. Using Opacity & Shower's builder default
         appearController.addListener(() {
           shower.setState(() {});
         });
@@ -276,6 +283,7 @@ class OverlayWidgets {
     required LayerLink layerLink,
     bool? showWhenUnlinked,
     Offset? offset,
+    bool isWrappedMaterial = true,
   }) {
     return OverlayWrapper.show(
       Positioned(
@@ -284,7 +292,7 @@ class OverlayWidgets {
           link: layerLink,
           offset: offset ?? Offset.zero,
           showWhenUnlinked: showWhenUnlinked ?? false,
-          child: Material(child: child),
+          child: isWrappedMaterial ? Material(child: child) : child,
         ),
       ),
     )..isWrappedNothing = true;

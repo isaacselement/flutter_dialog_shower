@@ -63,6 +63,10 @@ class PageOfOverlay extends StatelessWidget {
       children: [
         Wrap(
           children: [
+            WidgetsUtil.newXpelTextButton('Just Show', onPressed: (state) {
+              OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
+                .onTapCallback = (shower) => shower.dismiss();
+            }),
             WidgetsUtil.newXpelTextButton('Show center', onPressed: (state) {
               OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
                 ..alignment = Alignment.center
@@ -76,7 +80,7 @@ class PageOfOverlay extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('Show x y positioned', onPressed: (state) {
               OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
-                ..x = 200
+                ..x = 100
                 ..y = 100
                 ..onTapCallback = (shower) => shower.dismiss();
             }),
@@ -303,6 +307,9 @@ class PageOfOverlay extends StatelessWidget {
       children: [
         Wrap(
           children: [
+            WidgetsUtil.newXpelTextButton('Show Toast', onPressed: (state) {
+              OverlayWidgets.showToast('You are so handsome do you know?? ${DateTime.now()} ...');
+            }),
             WidgetsUtil.newXpelTextButton('Show Toast on Top', onPressed: (state) {
               OverlayWidgets.showToast('You are heading to mogelia city, please on board at ${DateTime.now()} ...')
                 ..alignment = Alignment.topCenter
@@ -322,6 +329,11 @@ class PageOfOverlay extends StatelessWidget {
         ),
         Wrap(
           children: [
+            WidgetsUtil.newXpelTextButton('Show Toast In Queue', onPressed: (state) {
+              OverlayWidgets.showToastInQueue(
+                'Here is mogelia, please click button again and again ${DateTime.now()} ...',
+              );
+            }),
             WidgetsUtil.newXpelTextButton('Show Toast on Top Queue', onPressed: (state) {
               OverlayWidgets.showToastInQueue(
                 'Here is mogelia, please click button again and again ${DateTime.now()} ...',
@@ -445,7 +457,7 @@ class PageOfOverlay extends StatelessWidget {
                         child: Center(child: Text('$index', style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 15))));
                   },
                   onTap: () {
-                    Container showedContainer = Container(
+                    Widget showedContainer = Container(
                       clipBehavior: Clip.antiAlias,
                       decoration: const BoxDecoration(
                         color: Colors.black,
@@ -454,7 +466,7 @@ class PageOfOverlay extends StatelessWidget {
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          print('$index you click the popup ~~~~~~');
+                          OverlayWidgets.showToastInQueue('you are so handsome so handsome!!! $index times so handsome~~~');
                         },
                         child: const Padding(
                           padding: EdgeInsets.all(10.0),
@@ -490,8 +502,16 @@ class PageOfOverlay extends StatelessWidget {
                     int randomIr = Random().nextInt(3);
                     int zRadius = (OverlayWrapper.appearingShowers?.length ?? 0) == 0 || randomIr == 0 ? 0 : (randomIr == 1 ? 15 : -15);
 
-                    // TODO ... Wrapper OverlayWrapper.showWithLayerLink method ...
-                    OverlayWidgets.showWithLayerLink(child: showedContainer, width: 400, layerLink: _layerLink);
+                    bool isAlreadyMaterial = Random().nextBool();
+                    if (isAlreadyMaterial) {
+                      showedContainer = Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationZ(zRadius / 180 * pi),
+                        child: Material(child: showedContainer),
+                      );
+                    }
+
+                    OverlayWidgets.showWithLayerLink(child: showedContainer, width: 400, layerLink: _layerLink, isWrappedMaterial: !isAlreadyMaterial);
                   },
                 ),
               );
