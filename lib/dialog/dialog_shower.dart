@@ -47,6 +47,10 @@ class DialogShower {
 
   set y(double v) => padding = EdgeInsets.only(left: padding?.left ?? 0, top: v);
 
+  double get x => padding?.left ?? 0;
+
+  double get y => padding?.top ?? 0;
+
   Clip containerClipBehavior = Clip.antiAlias;
   Decoration? containerDecoration = _notInitializedDecoration;
   double containerBorderRadius = 0.0;
@@ -540,6 +544,7 @@ class DialogShower {
   Widget _rawChild(Widget? child) {
     return builder?.call(this) ?? newChild ?? child ?? const Offstage(offstage: true);
   }
+
   // ----------- 2022-04-21 feature: for setState a new ui -----------
 
   Future<void> dismiss() async {
@@ -768,7 +773,6 @@ class NavigatorObserverEx extends NavigatorObserver {
 
 typedef ShowerVisibilityCallBack = void Function(DialogShower shower);
 typedef KeyboardVisibilityCallBack = void Function(DialogShower shower, bool isKeyboardShow);
-
 
 bool shower_log_enable = true;
 

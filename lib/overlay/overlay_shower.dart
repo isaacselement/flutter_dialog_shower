@@ -33,8 +33,14 @@ class OverlayShower {
   AlignmentGeometry? alignment = Alignment.topLeft;
 
   /// for Positioned
-  double? x;
-  double? y;
+  set x(double? v) => left = v;
+
+  set y(double? v) => top = v;
+
+  double? get x => left;
+
+  double? get y => top;
+
   double? top;
   double? left;
   double? right;
@@ -105,8 +111,6 @@ class OverlayShower {
 
   Widget _getRebuildableWidget(Widget? child) {
     // 1. locating with Positioned
-    top ??= y;
-    left ??= x;
     bool isPositioned = top != null || left != null || right != null || bottom != null || width != null || height != null;
     if (isPositioned) {
       return Positioned(
