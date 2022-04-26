@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/core/brother.dart';
+import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 // Widget wrapped without Btw
 

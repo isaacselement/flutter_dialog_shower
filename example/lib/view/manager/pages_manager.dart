@@ -1,13 +1,11 @@
 import 'package:example/view/page_of_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/core/broker.dart';
-import 'package:flutter_dialog_shower/core/brother.dart';
+import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 import '../../util/logger.dart';
 import '../page_of_basic.dart';
 import '../page_of_brother.dart';
-import '../page_of_home.dart';
 import '../page_of_homeless.dart';
 import '../page_of_keyboard.dart';
 import '../page_of_navigator.dart';

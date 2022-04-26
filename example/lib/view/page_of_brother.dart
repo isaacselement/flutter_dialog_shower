@@ -1,7 +1,7 @@
 import 'package:example/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/core/brother.dart';
+import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class PageOfBrother extends StatelessWidget {
   @override

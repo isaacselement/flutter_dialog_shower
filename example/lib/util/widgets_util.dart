@@ -4,11 +4,7 @@ import 'package:example/view/manager/themes_manager.dart';
 import 'package:example/view/widgets/cc_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/dialog/dialog_shower.dart';
-import 'package:flutter_dialog_shower/dialog/dialog_wrapper.dart';
-import 'package:flutter_dialog_shower/view/cc_bubble_widgets.dart';
-
-import 'offset_util.dart';
+import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class WidgetsUtil {
   static get _editorBoxWidth => 400 >= SizeUtil.screenWidth ? SizeUtil.screenWidth - 100 : 400.toDouble();
