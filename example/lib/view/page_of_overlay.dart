@@ -162,7 +162,7 @@ class PageOfOverlay extends StatelessWidget {
                     },
                     child: WidgetsUtil.getBubbleMenuPicker(
                       row: 2,
-                      direction: isRight ? TriangleArrowDirection.right : TriangleArrowDirection.left,
+                      direction: isRight ? CcBubbleArrowDirection.right : CcBubbleArrowDirection.left,
                       itemOnTap: (index, value, context) {
                         shower.dismiss();
                       },
@@ -192,7 +192,7 @@ class PageOfOverlay extends StatelessWidget {
                         });
                       },
                       child: WidgetsUtil.getBubbleMenuPicker(
-                        direction: isTop ? TriangleArrowDirection.top : TriangleArrowDirection.bottom,
+                        direction: isTop ? CcBubbleArrowDirection.top : CcBubbleArrowDirection.bottom,
                         itemOnTap: (index, value, context) {
                           shower.dismiss();
                         },
@@ -225,7 +225,7 @@ class PageOfOverlay extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       WidgetsUtil.getBubbleMenuPicker(
-                        direction: TriangleArrowDirection.top,
+                        direction: CcBubbleArrowDirection.top,
                         itemOnTap: (index, value, context) {
                           OverlayWrapper.dismissAppearingLayers();
                         },
@@ -283,7 +283,7 @@ class PageOfOverlay extends StatelessWidget {
                         ),
                       ),
                       WidgetsUtil.getBubbleMenuPicker(
-                        direction: TriangleArrowDirection.bottom,
+                        direction: CcBubbleArrowDirection.bottom,
                         itemOnTap: (index, value, context) {
                           OverlayWrapper.dismissAppearingLayers();
                         },
@@ -564,7 +564,7 @@ class _LayerLinkEntryState extends State<LayerLinkEntryWidget> {
                 showWhenUnlinked: false,
                 offset: const Offset(0, 60),
                 child: WidgetsUtil.getBubbleMenuPicker(
-                  direction: TriangleArrowDirection.top,
+                  direction: CcBubbleArrowDirection.top,
                   itemOnTap: (index, value, context) {
                     overlayEntry?.remove();
                     overlayEntry = null;

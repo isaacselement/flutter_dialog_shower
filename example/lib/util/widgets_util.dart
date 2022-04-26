@@ -224,7 +224,7 @@ class WidgetsUtil {
   /// Bubble Menus
   static Widget getBubbleMenuPicker({
     double? triangleOffset,
-    TriangleArrowDirection direction = TriangleArrowDirection.top,
+    CcBubbleArrowDirection direction = CcBubbleArrowDirection.top,
     Function(int index, Object value, BuildContext context)? itemOnTap,
     int? row,
   }) {

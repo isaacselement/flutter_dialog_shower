@@ -49,7 +49,7 @@ class PageOfBubble extends StatelessWidget {
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubbleMenuPicker(
-                    direction: TriangleArrowDirection.top,
+                    direction: CcBubbleArrowDirection.top,
                   ),
                   x: offset.dx - (242 - size.width) / 2,
                   y: offset.dy + size.height);
@@ -61,7 +61,7 @@ class PageOfBubble extends StatelessWidget {
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubbleMenuPicker(
-                    direction: TriangleArrowDirection.bottom,
+                    direction: CcBubbleArrowDirection.bottom,
                   ),
                   x: offset.dx - (242 - size.width) / 2,
                   y: offset.dy - 161);
@@ -74,7 +74,7 @@ class PageOfBubble extends StatelessWidget {
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubbleMenuPicker(
-                    direction: TriangleArrowDirection.right,
+                    direction: CcBubbleArrowDirection.right,
                     triangleOffset: 35.0,
                   ),
                   x: offset.dx - 242,
@@ -87,7 +87,7 @@ class PageOfBubble extends StatelessWidget {
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubbleMenuPicker(
-                    direction: TriangleArrowDirection.left,
+                    direction: CcBubbleArrowDirection.left,
                     triangleOffset: 35.0,
                   ),
                   x: offset.dx + size.width,
@@ -107,7 +107,7 @@ class PageOfBubble extends StatelessWidget {
                       width: 200,
                       height: 200,
                       bubbleTriangleOffset: 20.0,
-                      triangleDirection: TriangleArrowDirection.top,
+                      triangleDirection: CcBubbleArrowDirection.top,
                       child: CcSelectListWidget(
                         values: const ['1', '2', '3', '4', '5'],
                       ),
