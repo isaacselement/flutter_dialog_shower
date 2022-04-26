@@ -43,9 +43,9 @@ class DialogShower {
   double? renderedHeight;
 
   // should set aligment to Alignment.topLeft if u want base is top left for the x y. Then call setState of shower if set x y later .
-  set x(v) => padding = EdgeInsets.only(left: v, top: padding?.top ?? 0);
+  set x(double v) => padding = EdgeInsets.only(left: v, top: padding?.top ?? 0);
 
-  set y(v) => padding = EdgeInsets.only(left: padding?.left ?? 0, top: v);
+  set y(double v) => padding = EdgeInsets.only(left: padding?.left ?? 0, top: v);
 
   Clip containerClipBehavior = Clip.antiAlias;
   Decoration? containerDecoration = _notInitializedDecoration;
@@ -523,17 +523,22 @@ class DialogShower {
   }
 
   // ----------- 2022-04-21 feature: for setState a new ui -----------
+  Widget? newChild;
+
   Widget Function(DialogShower shower)? builder;
 
-  Widget? _newChild;
+  void setNewChild(Widget? child) {
+    newChild = child;
+    setState(() {});
+  }
 
-  void setNewChild(Widget? newChild) {
-    _newChild = newChild;
+  void setBuilder(Widget Function(DialogShower shower)? _builder) {
+    builder = _builder;
     setState(() {});
   }
 
   Widget _rawChild(Widget? child) {
-    return builder?.call(this) ?? _newChild ?? child ?? const Offstage(offstage: true);
+    return builder?.call(this) ?? newChild ?? child ?? const Offstage(offstage: true);
   }
   // ----------- 2022-04-21 feature: for setState a new ui -----------
 

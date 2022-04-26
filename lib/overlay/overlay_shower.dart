@@ -47,7 +47,6 @@ class OverlayShower {
   final GlobalKey _statefulKey = GlobalKey();
 
   /// for Events
-  Widget Function(OverlayShower shower)? builder;
   void Function(OverlayShower shower)? onTapCallback;
   void Function(OverlayShower shower)? onShowCallBack;
   void Function(OverlayShower shower)? onDismissCallBack;
@@ -141,10 +140,6 @@ class OverlayShower {
     return isWrappedMaterial ? Material(type: MaterialType.transparency, child: gesture) : gesture;
   }
 
-  Widget _rawChild(Widget? child) {
-    return builder?.call(this) ?? _newChild ?? child ?? const Offstage(offstage: true);
-  }
-
   // dismiss ----------------------------------------
 
   Future<void> dismiss() async {
@@ -161,11 +156,22 @@ class OverlayShower {
 
   // setState ----------------------------------------
 
-  Widget? _newChild;
+  Widget? newChild;
 
-  void setNewChild(Widget? newChild) {
-    _newChild = newChild;
+  Widget Function(OverlayShower shower)? builder;
+
+  void setNewChild(Widget? child) {
+    newChild = child;
     setState(() {});
+  }
+
+  void setBuilder(Widget Function(OverlayShower shower)? _builder) {
+    builder = _builder;
+    setState(() {});
+  }
+
+  Widget _rawChild(Widget? child) {
+    return builder?.call(this) ?? newChild ?? child ?? const Offstage(offstage: true);
   }
 
   void setState(VoidCallback fn) {
