@@ -36,9 +36,70 @@ class PageOfBubble extends StatelessWidget {
   }
 
   Widget buildButtonsAboutBubble() {
+    void showBubble(State state, {required Widget child}) {
+      Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+      Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+      double x = offset.dx;
+      double y = offset.dy + size.height;
+      DialogShower shower = DialogWrapper.show(child, x: x, y: y);
+      shower.transitionBuilder = null;
+      shower.containerDecoration = null;
+    }
+
     return Column(
       children: [
         const SizedBox(height: 100),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Arrow on Top', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.orange,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.top,
+                  ));
+            }),
+            WidgetsUtil.newXpelTextButton('Arrow on Top with translation', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.orange,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.top,
+                    bubbleTriangleTranslation: 12,
+                  ));
+            }),
+            WidgetsUtil.newXpelTextButton('Arrow on Top with arrow point', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.red,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.top,
+                    bubbleTriangleLength: 20,
+                    bubbleTrianglePoint: const Offset(10, -50),
+                  ));
+            }),
+            WidgetsUtil.newXpelTextButton('Arrow on Left with arrow point', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.transparent, child: SizedBox(width: 200, height: 200)),
+                    bubbleTriangleDirection: CcBubbleArrowDirection.left,
+                    bubbleTriangleLength: 50,
+                    bubbleTrianglePoint: const Offset(-50, 30),
+                  ));
+            }),
+            WidgetsUtil.newXpelTextButton('Arrow on Left reverse direction', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.transparent, child: SizedBox(width: 200, height: 200)),
+                    bubbleTriangleDirection: CcBubbleArrowDirection.left,
+                    bubbleTriangleLength: 50,
+                    bubbleTrianglePoint: const Offset(100, -25),
+                    isTriangleOccupiedSpace: false,
+                  ));
+            }),
+          ],
+        ),
+        const SizedBox(height: 50),
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show on My Bottom', onPressed: (state) {
@@ -72,7 +133,7 @@ class PageOfBubble extends StatelessWidget {
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubbleMenuPicker(
                     direction: CcBubbleArrowDirection.right,
-                    triangleOffset: 35.0,
+                    bubbleTriangleTranslation: 35.0,
                   ),
                   x: offset.dx - 242,
                   y: offset.dy - 20);
@@ -85,7 +146,7 @@ class PageOfBubble extends StatelessWidget {
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubbleMenuPicker(
                     direction: CcBubbleArrowDirection.left,
-                    triangleOffset: 35.0,
+                    bubbleTriangleTranslation: 35.0,
                   ),
                   x: offset.dx + size.width,
                   y: offset.dy - 20);
@@ -103,8 +164,8 @@ class PageOfBubble extends StatelessWidget {
                     CcBubbleWidget(
                       width: 200,
                       height: 200,
-                      bubbleTriangleOffset: 20.0,
-                      triangleDirection: CcBubbleArrowDirection.top,
+                      bubbleTriangleTranslation: 20.0,
+                      bubbleTriangleDirection: CcBubbleArrowDirection.top,
                       child: CcSelectListWidget(
                         values: const ['1', '2', '3', '4', '5'],
                       ),

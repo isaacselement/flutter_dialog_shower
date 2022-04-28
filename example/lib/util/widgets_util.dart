@@ -219,7 +219,7 @@ class WidgetsUtil {
 
   /// Bubble Menus
   static Widget getBubbleMenuPicker({
-    double? triangleOffset,
+    double? bubbleTriangleTranslation,
     CcBubbleArrowDirection direction = CcBubbleArrowDirection.top,
     Function(int index, Object value, BuildContext context)? itemOnTap,
     int? row,
@@ -246,8 +246,8 @@ class WidgetsUtil {
       width: width,
       height: height,
       bubbleColor: Colors.black, // triangle color
-      triangleDirection: direction,
-      bubbleTriangleOffset: triangleOffset,
+      bubbleTriangleDirection: direction,
+      bubbleTriangleTranslation: bubbleTriangleTranslation,
       bubbleShadowColor: Colors.pink,
       // child: CcMenuPopup(
       child: CcMenuPopupUsingRowColumn(

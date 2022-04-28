@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:core';
 
 import 'package:flutter/material.dart';
 
@@ -11,10 +12,10 @@ class CcBubbleWidget extends StatelessWidget {
   double bubbleRadius;
   Color? bubbleShadowColor;
   double bubbleShadowRadius;
-  double? bubbleTriangleWidth;
-  double? bubbleTriangleHeight;
-  double? bubbleTriangleOffset;
-  CcBubbleArrowDirection triangleDirection;
+  Offset? bubbleTrianglePoint;
+  double? bubbleTriangleLength;
+  double? bubbleTriangleTranslation;
+  CcBubbleArrowDirection bubbleTriangleDirection;
   bool isTriangleOccupiedSpace;
 
   CcBubbleWidget({
@@ -26,38 +27,52 @@ class CcBubbleWidget extends StatelessWidget {
     this.bubbleRadius = 8.0,
     this.bubbleShadowColor = Colors.grey,
     this.bubbleShadowRadius = 32.0,
-    this.bubbleTriangleWidth,
-    this.bubbleTriangleHeight,
-    this.bubbleTriangleOffset,
-    this.triangleDirection = CcBubbleArrowDirection.left,
-    this.isTriangleOccupiedSpace = true,
-  }) : super(key: key) {
-    _bubbleTriangleWidth = bubbleTriangleWidth ?? 12.0;
-    _bubbleTriangleHeight = bubbleTriangleHeight ?? 8.0;
-  }
-
-  double _bubbleTriangleWidth = 12.0;
-  double _bubbleTriangleHeight = 8.0;
+    this.bubbleTriangleLength = 12.0,
+    this.bubbleTrianglePoint, // null we will caculate a Offset value base on the length, here is Offset(-12.0, -6.0) for arrow left,
+    this.bubbleTriangleTranslation,
+    this.bubbleTriangleDirection = CcBubbleArrowDirection.left,
+    this.isTriangleOccupiedSpace = true, // if true we ask for more space using margin
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // triangleOffset is based on clockwise direction
+    double _triangleWidth = bubbleTriangleLength ?? 0;
+    if (_triangleWidth != 0 && bubbleTrianglePoint == null) {
+      if (bubbleTriangleDirection == CcBubbleArrowDirection.left) {
+        bubbleTrianglePoint = Offset(-_triangleWidth, -_triangleWidth / 2);
+      } else if (bubbleTriangleDirection == CcBubbleArrowDirection.right) {
+        bubbleTrianglePoint = Offset(_triangleWidth, _triangleWidth / 2);
+      } else if (bubbleTriangleDirection == CcBubbleArrowDirection.top) {
+        bubbleTrianglePoint = Offset(_triangleWidth / 2, -_triangleWidth);
+      } else if (bubbleTriangleDirection == CcBubbleArrowDirection.bottom) {
+        bubbleTrianglePoint = Offset(-_triangleWidth / 2, _triangleWidth);
+      }
+    }
+
     double px = 0;
     double py = 0;
     EdgeInsets margin = EdgeInsets.zero;
     // default triangle is on stage, that means it take position/occupy space
     if (isTriangleOccupiedSpace) {
-      if (triangleDirection == CcBubbleArrowDirection.left) {
-        px = _bubbleTriangleHeight;
-        margin = EdgeInsets.only(left: _bubbleTriangleHeight);
-      } else if (triangleDirection == CcBubbleArrowDirection.top) {
-        py = _bubbleTriangleHeight;
-        margin = EdgeInsets.only(top: _bubbleTriangleHeight);
-      } else if (triangleDirection == CcBubbleArrowDirection.right) {
-        margin = EdgeInsets.only(right: _bubbleTriangleHeight);
-      } else if (triangleDirection == CcBubbleArrowDirection.bottom) {
-        margin = EdgeInsets.only(bottom: _bubbleTriangleHeight);
+      double sx = (bubbleTrianglePoint?.dx ?? 0).abs();
+      double sy = (bubbleTrianglePoint?.dy ?? 0).abs();
+      if (bubbleTriangleDirection == CcBubbleArrowDirection.left) {
+        px = sx;
+        margin = EdgeInsets.only(left: sx);
+      } else if (bubbleTriangleDirection == CcBubbleArrowDirection.top) {
+        py = sy;
+        margin = EdgeInsets.only(top: sy);
+      } else if (bubbleTriangleDirection == CcBubbleArrowDirection.right) {
+        margin = EdgeInsets.only(right: sx);
+      } else if (bubbleTriangleDirection == CcBubbleArrowDirection.bottom) {
+        margin = EdgeInsets.only(bottom: sy);
       }
     }
+    assert(() {
+      print('[CcBubbleWidget] >>>>>>>>>>> margin: $margin');
+      return true;
+    }());
 
     // CustomPaint as parent
     return CustomPaint(
@@ -66,14 +81,14 @@ class CcBubbleWidget extends StatelessWidget {
         y: py,
         w: width,
         h: height,
+        color: bubbleColor,
         radius: bubbleRadius,
-        paintColor: bubbleColor,
         shadowColor: bubbleShadowColor,
         shadowBlurRadius: bubbleShadowRadius,
-        triangleWidth: _bubbleTriangleWidth,
-        triangleHeight: _bubbleTriangleHeight,
-        triangleDirection: triangleDirection,
-        triangleOffset: bubbleTriangleOffset,
+        triangleLength: bubbleTriangleLength,
+        trianglePoint: bubbleTrianglePoint,
+        triangleDirection: bubbleTriangleDirection,
+        triangleTranslation: bubbleTriangleTranslation,
         isTriangleOccupiedSpace: isTriangleOccupiedSpace,
       ),
       child: Container(
@@ -94,7 +109,10 @@ class CcBubbleWidget extends StatelessWidget {
 
 /// Painter Below
 
-enum CcBubbleArrowDirection { top, right, bottom, left, topRight, topLeft, bottomLeft, bottomRight }  /// TODO ....
+enum CcBubbleArrowDirection { none, top, right, bottom, left, topRight, topLeft, bottomLeft, bottomRight }
+
+/// TODO ....
+
 enum _PaintingBorder { top, right, bottom, left }
 
 class CcBubblePainter extends CustomPainter {
@@ -102,11 +120,13 @@ class CcBubblePainter extends CustomPainter {
   double y;
   double? w;
   double? h;
+  Color? color;
   double? radius;
 
-  double triangleWidth = 0;
-  double triangleHeight = 0;
-  double? triangleOffset; // null for in the center
+  Offset? trianglePoint;
+  double? triangleLength;
+
+  double? triangleTranslation; // bottom side in the center for null
   CcBubbleArrowDirection triangleDirection = CcBubbleArrowDirection.top;
   bool isTriangleOccupiedSpace;
 
@@ -115,74 +135,59 @@ class CcBubblePainter extends CustomPainter {
   double? shadowBlurRadius;
   double? shadowSpreadRadius;
 
-  Color? paintColor;
-
   CcBubblePainter({
     required this.x,
     required this.y,
     this.w,
     this.h,
-    this.radius = 0,
-    this.triangleWidth = 0,
-    this.triangleHeight = 0,
-    this.triangleOffset,
+    this.radius,
+    this.trianglePoint,
+    this.triangleLength,
+    this.triangleTranslation,
     this.triangleDirection = CcBubbleArrowDirection.top,
     this.isTriangleOccupiedSpace = true,
     this.shadowColor = Colors.grey,
     this.shadowOffset = Offset.zero,
     this.shadowBlurRadius = 10,
     this.shadowSpreadRadius = 0,
-    this.paintColor = Colors.white,
-  }) {
-    triangleWidth = triangleWidth == 0 && triangleHeight != 0 ? triangleHeight : triangleWidth;
-    triangleHeight = triangleHeight == 0 && triangleWidth != 0 ? triangleWidth : triangleHeight;
-  }
+    this.color = Colors.white,
+  });
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return this != oldDelegate;
   }
 
-  // triangleOffset is based on clockwise direction
-  // draw a small equilateral triangle pointing to a certain direction  // 绘制指向某个方向的等边小三角
-  void _applyTriangleArrow(Path path, _PaintingBorder pathPosition, double startX, double startY, double endX, double endY,
-      CcBubbleArrowDirection triangleDirection, double triangleWidth, double triangleHeight, double triangleOffset) {
-    if (triangleWidth <= 0 || triangleHeight <= 0) {
-      return;
-    }
-    // double triangleEqSide = sqrt(pow(triangleWidth, 2) + pow(triangleHeight, 2));
-    if (pathPosition == _PaintingBorder.top && triangleDirection == CcBubbleArrowDirection.top) {
-      path.lineTo(startX + triangleOffset, startY);
-      path.lineTo(startX + (triangleOffset + triangleWidth / 2), startY - triangleHeight);
-      path.lineTo(startX + (triangleOffset + triangleWidth), startY);
-    } else if (pathPosition == _PaintingBorder.right && triangleDirection == CcBubbleArrowDirection.right) {
-      path.lineTo(startX, startY + triangleOffset);
-      path.lineTo(startX + triangleHeight, startY + (triangleOffset + triangleWidth / 2));
-      path.lineTo(startX, startY + (triangleOffset + triangleWidth));
-    } else if (pathPosition == _PaintingBorder.bottom && triangleDirection == CcBubbleArrowDirection.bottom) {
-      path.lineTo(endX + (triangleOffset + triangleWidth), endY);
-      path.lineTo(endX + (triangleOffset + triangleWidth / 2), endY + triangleHeight);
-      path.lineTo(endX + triangleOffset, endY);
-    } else if (pathPosition == _PaintingBorder.left && triangleDirection == CcBubbleArrowDirection.left) {
-      path.lineTo(endX, endY + (triangleOffset + triangleWidth));
-      path.lineTo(endX - triangleHeight, endY + (triangleOffset + triangleWidth / 2));
-      path.lineTo(endX, endY + triangleOffset);
-    }
-  }
-
   @override
   void paint(Canvas canvas, Size size) {
-    // triangleHeight indeed, we defind the triangleHeight is the middle line to the arrow
     double _w = w ?? size.width;
     double _h = h ?? size.height;
+    double _triangleWidth = triangleLength ?? 0;
+
+    assert(() {
+      print('[CcBubblePainter] paint point offset: $trianglePoint');
+      print('[CcBubblePainter] paint size.width: ${size.width}, size.height: ${size.height}, w: $w, h: $h, _w:$_w, _h:$_h');
+      return true;
+    }());
+
     if (isTriangleOccupiedSpace) {
-      if (w == null && (triangleDirection == CcBubbleArrowDirection.left || triangleDirection == CcBubbleArrowDirection.right)) {
-        _w = size.width - triangleHeight;
+      // isTriangleOccupiedSpace = true, we need to decrease the length we setted in margin ~~~
+      if (w == null) {
+        if (triangleDirection == CcBubbleArrowDirection.left || triangleDirection == CcBubbleArrowDirection.right) {
+          _w = size.width - (trianglePoint?.dx ?? 0).abs();
+        }
       }
-      if (h == null && (triangleDirection == CcBubbleArrowDirection.top || triangleDirection == CcBubbleArrowDirection.bottom)) {
-        _h = size.height - triangleHeight;
+      if (h == null) {
+        if (triangleDirection == CcBubbleArrowDirection.top || triangleDirection == CcBubbleArrowDirection.bottom) {
+          _h = size.height - (trianglePoint?.dy ?? 0).abs();
+        }
       }
     }
+
+    assert(() {
+      print('[CcBubblePainter] paint size.width: ${size.width}, size.height: ${size.height}, w: $w, h: $h, _w:$_w, _h:$_h');
+      return true;
+    }());
 
     double _radius = radius ?? 0;
 
@@ -194,23 +199,23 @@ class CcBubblePainter extends CustomPainter {
     double bottomCircleCenterY = y + _h - _radius;
 
     // make triangle is in center or by custom
-    double _triangleOffset = 0;
-    if (triangleOffset == null) {
+    double _triangleTranslation = 0;
+    if (triangleTranslation == null) {
       if (triangleDirection == CcBubbleArrowDirection.left || triangleDirection == CcBubbleArrowDirection.right) {
-        _triangleOffset = _h / 2 - triangleWidth / 2 - _radius;
+        _triangleTranslation = _h / 2 - _triangleWidth / 2 - _radius;
       } else if (triangleDirection == CcBubbleArrowDirection.top || triangleDirection == CcBubbleArrowDirection.bottom) {
-        _triangleOffset = _w / 2 - triangleWidth / 2 - _radius;
+        _triangleTranslation = _w / 2 - _triangleWidth / 2 - _radius;
       }
     } else {
-      _triangleOffset = triangleOffset!;
+      _triangleTranslation = triangleTranslation!;
     }
 
     // start from original point
     pointsPath.moveTo(leftCircleCenterX, y);
 
     // top line
-    _applyTriangleArrow(pointsPath, _PaintingBorder.top, leftCircleCenterX, y, rightCircleCenterX, y, triangleDirection, triangleWidth,
-        triangleHeight, _triangleOffset);
+    _applyTriangleArrow(pointsPath, _PaintingBorder.top, leftCircleCenterX, y, rightCircleCenterX, y, triangleDirection, _triangleWidth,
+        trianglePoint, _triangleTranslation);
     pointsPath.lineTo(rightCircleCenterX, y);
 
     Rect rect;
@@ -222,7 +227,7 @@ class CcBubblePainter extends CustomPainter {
 
     // right line
     _applyTriangleArrow(pointsPath, _PaintingBorder.right, x + _w, topCircleCenterY, x + _w, bottomCircleCenterY, triangleDirection,
-        triangleWidth, triangleHeight, _triangleOffset);
+        _triangleWidth, trianglePoint, _triangleTranslation);
     pointsPath.lineTo(x + _w, bottomCircleCenterY);
 
     if (radius != 0) {
@@ -233,7 +238,7 @@ class CcBubblePainter extends CustomPainter {
 
     // bottom line
     _applyTriangleArrow(pointsPath, _PaintingBorder.bottom, rightCircleCenterX, y + _h, leftCircleCenterX, y + _h, triangleDirection,
-        triangleWidth, triangleHeight, _triangleOffset);
+        _triangleWidth, trianglePoint, _triangleTranslation);
     pointsPath.lineTo(leftCircleCenterX, y + _h);
 
     if (radius != 0) {
@@ -243,8 +248,8 @@ class CcBubblePainter extends CustomPainter {
     }
 
     // left line
-    _applyTriangleArrow(pointsPath, _PaintingBorder.left, x, bottomCircleCenterY, x, topCircleCenterY, triangleDirection, triangleWidth,
-        triangleHeight, _triangleOffset);
+    _applyTriangleArrow(pointsPath, _PaintingBorder.left, x, bottomCircleCenterY, x, topCircleCenterY, triangleDirection, _triangleWidth,
+        trianglePoint, _triangleTranslation);
     pointsPath.lineTo(x, topCircleCenterY);
 
     if (radius != 0) {
@@ -282,10 +287,51 @@ class CcBubblePainter extends CustomPainter {
     canvas.drawPath(
       pointsPath,
       Paint()
-        ..color = paintColor!
+        ..color = color!
         ..style = PaintingStyle.fill
         ..strokeCap = StrokeCap.round
         ..strokeWidth = 1,
     );
+  }
+
+  // triangleTranslation is based on clockwise direction
+  // draw a small equilateral triangle pointing to a certain direction  // 绘制指向某个方向的等边小三角
+  void _applyTriangleArrow(Path path, _PaintingBorder pathPosition, double startX, double startY, double endX, double endY,
+      CcBubbleArrowDirection triangleDirection, double _triangleWidth, Offset? _trianglePointOffset, double _triangleTranslation) {
+    if (_triangleWidth <= 0 || _trianglePointOffset == null) {
+      return;
+    }
+    assert(() {
+      print('[CcBubblePainter] _applyArrow ${triangleDirection.toString()}: startX $startX, startY $startY, endX $endX, endY $endY,');
+      return true;
+    }());
+    double pointDx = _trianglePointOffset.dx;
+    double pointDy = _trianglePointOffset.dy;
+    // double triangleEqSide = sqrt(pow(_triangleWidth, 2) + pow(triangleHeight, 2));
+    if (pathPosition == _PaintingBorder.top && triangleDirection == CcBubbleArrowDirection.top) {
+      // startY == endY
+      double beginX = startX + _triangleTranslation;
+      path.lineTo(beginX, startY);
+      path.lineTo(beginX + pointDx, startY + pointDy);
+      path.lineTo(beginX + _triangleWidth, startY);
+    } else if (pathPosition == _PaintingBorder.bottom && triangleDirection == CcBubbleArrowDirection.bottom) {
+      // startY == endY
+      double beginX = startX - _triangleTranslation;
+      path.lineTo(beginX, startY);
+      path.lineTo(beginX + pointDx, startY + pointDy);
+      path.lineTo(beginX - _triangleWidth, startY);
+    } else if (pathPosition == _PaintingBorder.left && triangleDirection == CcBubbleArrowDirection.left) {
+      // startX == endX
+      double bY = startY - _triangleTranslation;
+      path.lineTo(startX, bY);
+      path.lineTo(startX + pointDx, bY + pointDy);
+      path.lineTo(startX, bY - _triangleWidth);
+    } else if (pathPosition == _PaintingBorder.right && triangleDirection == CcBubbleArrowDirection.right) {
+      // startX == endX
+      double bY = startY + _triangleTranslation;
+      path.lineTo(startX, bY);
+      path.lineTo(startX + pointDx, bY + pointDy);
+      path.lineTo(startX, bY + _triangleWidth);
+    }
   }
 }

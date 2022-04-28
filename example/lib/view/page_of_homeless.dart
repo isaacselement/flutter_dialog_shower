@@ -47,7 +47,7 @@ class PageOfHomeless extends StatelessWidget {
                 WidgetsUtil.newXpelTextButton('Get Size Widget', onPressed: (state) {
                   OverlayWrapper.show(
                     GetSizeWidget(
-                      child: const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)),
+                      child: const SizedBox(width: 200, height: 300, child: ColoredBox(color: Colors.purple)),
                       onLayoutChanged: (RenderBox box, Size? legacy, Size size) {
                         _showToastOnTop('I got your size: $size');
                       },
@@ -60,11 +60,37 @@ class PageOfHomeless extends StatelessWidget {
                 WidgetsUtil.newXpelTextButton('Get Position Widget', onPressed: (state) {
                   OverlayWrapper.show(
                     GetLayoutWidget(
-                      child: const SizedBox(width: 303, height: 188, child: ColoredBox(color: Colors.red)),
                       onLayoutChanged: (RenderBox box, Offset offset, Size size) {
-                        _showToastOnTop('I got your position: $offset');
-                        _showToastOnTop('I got your size: $size');
+                        _showToastOnTop('I got parent position: $offset');
+                        _showToastOnTop('I got parent size: $size');
                       },
+                      child: Container(
+                        width: 400,
+                        height: 400,
+                        margin: const EdgeInsets.only(left: 10, top: 10),
+                        padding: const EdgeInsets.only(left: 20, top: 20),
+                        color: Colors.orange,
+                        child: GetLayoutWidget(
+                          onLayoutChanged: (RenderBox box, Offset offset, Size size) {
+                            _showToastOnTop('I got your position: $offset');
+                            _showToastOnTop('I got your size: $size');
+                          },
+                          child: SizedBox(
+                            width: 288,     /// TODO ... NOT take effect ???
+                            height: 188,    /// TODO ... NOT take effect ???
+                            child: GetLayoutWidget(
+                              onLayoutChanged: (RenderBox box, Offset offset, Size size) {
+                                _showToastOnTop('I got son position: $offset');
+                                _showToastOnTop('I got son size: $size');
+                              },
+                              child: const ColoredBox(
+                                color: Colors.red,
+                                child: Center(child: Text('see the logs')),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   )
                     ..dx = 202
@@ -97,8 +123,12 @@ class PageOfHomeless extends StatelessWidget {
     );
   }
 
-  void _showToastOnTop(String message) {
-    OverlayWidgets.showToastInQueue(message)
+  OverlayShower _showToastOnTop(String message) {
+    assert(() {
+      print('[Homeless] --------->>>>>> $message');
+      return true;
+    }());
+    return OverlayWidgets.showToastInQueue(message, onScreenDuration: const Duration(milliseconds: 3000))
       ..alignment = Alignment.topCenter
       ..margin = const EdgeInsets.only(top: 80);
   }
