@@ -48,9 +48,17 @@ class PageOfBubble extends StatelessWidget {
 
     return Column(
       children: [
-        const SizedBox(height: 100),
+        const SizedBox(height: 50),
         Wrap(
           children: [
+            WidgetsUtil.newXpelTextButton('Arrow None', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orangeAccent, child: SizedBox(width: 200, height: 200)),
+                    bubbleShadowColor: Colors.purpleAccent,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.none,
+                  ));
+            }),
             WidgetsUtil.newXpelTextButton('Arrow on Top', onPressed: (state) {
               showBubble(state,
                   child: CcBubbleWidget(
@@ -59,6 +67,72 @@ class PageOfBubble extends StatelessWidget {
                     bubbleTriangleDirection: CcBubbleArrowDirection.top,
                   ));
             }),
+            WidgetsUtil.newXpelTextButton('Arrow on Right', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.black,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.right,
+                  ));
+            }),
+            WidgetsUtil.newXpelTextButton('Arrow on Bottom', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.orange,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.bottom,
+                  ));
+            }),
+            WidgetsUtil.newXpelTextButton('Arrow on Left', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.orange,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.left,
+                  ));
+            }),
+          ],
+        ),
+        const SizedBox(height: 50),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Arrow on topRight', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.orange,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.topRight,
+                  ));
+            }),
+            WidgetsUtil.newXpelTextButton('Arrow on bottomRight', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.orange,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.bottomRight,
+                  ));
+            }),
+            WidgetsUtil.newXpelTextButton('Arrow on bottomLeft', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.orange,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.bottomLeft,
+                  ));
+            }),
+            WidgetsUtil.newXpelTextButton('Arrow on topLeft', onPressed: (state) {
+              showBubble(state,
+                  child: CcBubbleWidget(
+                    child: const ColoredBox(color: Colors.orange, child: SizedBox(width: 200, height: 200)),
+                    bubbleColor: Colors.orange,
+                    bubbleTriangleDirection: CcBubbleArrowDirection.topLeft,
+                  ));
+            }),
+          ],
+        ),
+        const SizedBox(height: 50),
+        Wrap(
+          children: [
             WidgetsUtil.newXpelTextButton('Arrow on Top with translation', onPressed: (state) {
               showBubble(state,
                   child: CcBubbleWidget(
