@@ -12,8 +12,8 @@ class CcBubbleWidget extends StatelessWidget {
   double bubbleRadius;
   Color? bubbleShadowColor;
   double bubbleShadowRadius;
-  Offset? bubbleTrianglePoint;
   double? bubbleTriangleLength;
+  Offset? bubbleTrianglePointOffset;
   double? bubbleTriangleTranslation;
   CcBubbleArrowDirection bubbleTriangleDirection;
   bool isTriangleOccupiedSpace;
@@ -28,7 +28,7 @@ class CcBubbleWidget extends StatelessWidget {
     this.bubbleShadowColor = Colors.grey,
     this.bubbleShadowRadius = 32.0,
     this.bubbleTriangleLength = 12.0,
-    this.bubbleTrianglePoint, // null we will caculate a Offset value base on the length, here is Offset(-12.0, -6.0) for arrow left,
+    this.bubbleTrianglePointOffset, // null we will caculate a Offset value base on the length, here is Offset(-12.0, -6.0) for arrow left,
     this.bubbleTriangleTranslation,
     this.bubbleTriangleDirection = CcBubbleArrowDirection.left,
     this.isTriangleOccupiedSpace = true, // if true we ask for more space using margin
@@ -41,36 +41,36 @@ class CcBubbleWidget extends StatelessWidget {
 
     // triangleOffset is based on clockwise direction
     double _triangleLength = bubbleTriangleLength ?? 0;
-    if (_triangleLength != 0 && bubbleTrianglePoint == null) {
+    if (_triangleLength != 0 && bubbleTrianglePointOffset == null) {
       switch (bubbleTriangleDirection) {
         case CcBubbleArrowDirection.none:
           break;
         case CcBubbleArrowDirection.top:
-          bubbleTrianglePoint = Offset(_triangleLength / 2, -_triangleLength);
+          bubbleTrianglePointOffset = Offset(_triangleLength / 2, -_triangleLength);
           break;
         case CcBubbleArrowDirection.right:
-          bubbleTrianglePoint = Offset(_triangleLength, _triangleLength / 2);
+          bubbleTrianglePointOffset = Offset(_triangleLength, _triangleLength / 2);
           break;
         case CcBubbleArrowDirection.bottom:
-          bubbleTrianglePoint = Offset(-_triangleLength / 2, _triangleLength);
+          bubbleTrianglePointOffset = Offset(-_triangleLength / 2, _triangleLength);
           break;
         case CcBubbleArrowDirection.left:
-          bubbleTrianglePoint = Offset(-_triangleLength, -_triangleLength / 2);
+          bubbleTrianglePointOffset = Offset(-_triangleLength, -_triangleLength / 2);
           break;
         case CcBubbleArrowDirection.topLeft:
-          bubbleTrianglePoint = Offset(-_triangleLength, -_triangleLength);
+          bubbleTrianglePointOffset = Offset(-_triangleLength, -_triangleLength);
           // borderRadius = BorderRadius.only(topRight: radius, bottomRight: radius, bottomLeft: radius);
           break;
         case CcBubbleArrowDirection.topRight:
-          bubbleTrianglePoint = Offset(_triangleLength, -_triangleLength);
+          bubbleTrianglePointOffset = Offset(_triangleLength, -_triangleLength);
           // borderRadius = BorderRadius.only(topLeft: radius, bottomRight: radius, bottomLeft: radius);
           break;
         case CcBubbleArrowDirection.bottomRight:
-          bubbleTrianglePoint = Offset(_triangleLength, _triangleLength);
+          bubbleTrianglePointOffset = Offset(_triangleLength, _triangleLength);
           // borderRadius = BorderRadius.only(topLeft: radius, topRight: radius, bottomLeft: radius);
           break;
         case CcBubbleArrowDirection.bottomLeft:
-          bubbleTrianglePoint = Offset(-_triangleLength, _triangleLength);
+          bubbleTrianglePointOffset = Offset(-_triangleLength, _triangleLength);
           // borderRadius = BorderRadius.only(topLeft: radius, topRight: radius, bottomRight: radius);
           break;
       }
@@ -81,8 +81,8 @@ class CcBubbleWidget extends StatelessWidget {
     EdgeInsets margin = EdgeInsets.zero;
     // default triangle is on stage, that means it take position/occupy space
     if (isTriangleOccupiedSpace) {
-      double sx = (bubbleTrianglePoint?.dx ?? 0).abs();
-      double sy = (bubbleTrianglePoint?.dy ?? 0).abs();
+      double sx = (bubbleTrianglePointOffset?.dx ?? 0).abs();
+      double sy = (bubbleTrianglePointOffset?.dy ?? 0).abs();
       if (bubbleTriangleDirection == CcBubbleArrowDirection.left) {
         px = sx;
         margin = EdgeInsets.only(left: sx);
@@ -97,7 +97,7 @@ class CcBubbleWidget extends StatelessWidget {
       /// TODO ... need the painter inform us the width & height for the topLeft/topRight/bottomRight/bottomLeft
     }
     assert(() {
-      print('[CcBubblePainter] margin: $margin, bubbleTriangleLength: $bubbleTriangleLength, bubbleTrianglePoint: $bubbleTrianglePoint');
+      print('[CcBubblePainter] margin: $margin, triangleLength: $bubbleTriangleLength, pointOffset: $bubbleTrianglePointOffset');
       return true;
     }());
 
@@ -113,7 +113,7 @@ class CcBubbleWidget extends StatelessWidget {
         shadowColor: bubbleShadowColor,
         shadowBlurRadius: bubbleShadowRadius,
         triangleLength: bubbleTriangleLength,
-        trianglePoint: bubbleTrianglePoint,
+        trianglePointOffset: bubbleTrianglePointOffset,
         triangleDirection: bubbleTriangleDirection,
         triangleTranslation: bubbleTriangleTranslation,
         isTriangleOccupiedSpace: isTriangleOccupiedSpace,
@@ -148,8 +148,8 @@ class CcBubblePainter extends CustomPainter {
   Color? color;
   double? radius;
 
-  Offset? trianglePoint; // the Offset based on start point, for determined the Peek point
   double? triangleLength;
+  Offset? trianglePointOffset; // the Offset based on start point, for determined the Peek point
 
   double? triangleTranslation; // bottom side in the center for null
   CcBubbleArrowDirection triangleDirection = CcBubbleArrowDirection.top;
@@ -166,7 +166,7 @@ class CcBubblePainter extends CustomPainter {
     this.w,
     this.h,
     this.radius,
-    this.trianglePoint,
+    this.trianglePointOffset,
     this.triangleLength,
     this.triangleTranslation,
     this.triangleDirection = CcBubbleArrowDirection.top,
@@ -190,7 +190,7 @@ class CcBubblePainter extends CustomPainter {
     double _triangleLength = triangleLength ?? 0;
 
     assert(() {
-      print('[CcBubblePainter] paint point offset: $trianglePoint');
+      print('[CcBubblePainter] paint point offset: $trianglePointOffset');
       print('[CcBubblePainter] paint size.width: ${size.width}, size.height: ${size.height}, w: $w, h: $h, _w:$_w, _h:$_h');
       return true;
     }());
@@ -199,12 +199,12 @@ class CcBubblePainter extends CustomPainter {
       // isTriangleOccupiedSpace = true, we need to decrease the length we setted in margin ~~~
       if (w == null) {
         if (triangleDirection == CcBubbleArrowDirection.left || triangleDirection == CcBubbleArrowDirection.right) {
-          _w = size.width - (trianglePoint?.dx ?? 0).abs();
+          _w = size.width - (trianglePointOffset?.dx ?? 0).abs();
         }
       }
       if (h == null) {
         if (triangleDirection == CcBubbleArrowDirection.top || triangleDirection == CcBubbleArrowDirection.bottom) {
-          _h = size.height - (trianglePoint?.dy ?? 0).abs();
+          _h = size.height - (trianglePointOffset?.dy ?? 0).abs();
         }
       }
     }
@@ -237,7 +237,7 @@ class CcBubblePainter extends CustomPainter {
 
     void _drawTriangle(_PaintingBorder whichSide, Offset startPoint, Offset overPoint) {
       _applyTriangleArrow(
-          pointsPath, whichSide, triangleDirection, startPoint, overPoint, _triangleTranslation, trianglePoint, _triangleLength);
+          pointsPath, whichSide, triangleDirection, startPoint, overPoint, _triangleTranslation, trianglePointOffset, _triangleLength);
     }
 
     // start from original point

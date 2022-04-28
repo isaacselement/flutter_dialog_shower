@@ -149,7 +149,7 @@ class PageOfBubble extends StatelessWidget {
                     bubbleColor: Colors.red,
                     bubbleTriangleDirection: CcBubbleArrowDirection.top,
                     bubbleTriangleLength: 20,
-                    bubbleTrianglePoint: const Offset(10, -50),
+                    bubbleTrianglePointOffset: const Offset(10, -50),
                   ));
             }),
             WidgetsUtil.newXpelTextButton('Arrow on Left with arrow point', onPressed: (state) {
@@ -158,7 +158,7 @@ class PageOfBubble extends StatelessWidget {
                     child: const ColoredBox(color: Colors.transparent, child: SizedBox(width: 200, height: 200)),
                     bubbleTriangleDirection: CcBubbleArrowDirection.left,
                     bubbleTriangleLength: 50,
-                    bubbleTrianglePoint: const Offset(-50, 30),
+                    bubbleTrianglePointOffset: const Offset(-50, 30),
                   ));
             }),
             WidgetsUtil.newXpelTextButton('Arrow on Left reverse direction', onPressed: (state) {
@@ -167,7 +167,7 @@ class PageOfBubble extends StatelessWidget {
                     child: const ColoredBox(color: Colors.transparent, child: SizedBox(width: 200, height: 200)),
                     bubbleTriangleDirection: CcBubbleArrowDirection.left,
                     bubbleTriangleLength: 50,
-                    bubbleTrianglePoint: const Offset(100, -25),
+                    bubbleTrianglePointOffset: const Offset(100, -25),
                     isTriangleOccupiedSpace: false,
                   ));
             }),
