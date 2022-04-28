@@ -42,20 +42,22 @@ class CcBubbleWidget extends StatelessWidget {
     // triangleOffset is based on clockwise direction
     double _triangleLength = bubbleTriangleLength ?? 0;
     if (_triangleLength != 0 && bubbleTrianglePointOffset == null) {
+      double offsetAlong = _triangleLength / 2;
+      double offsetIntersect = _triangleLength / 3 * 2;
       switch (bubbleTriangleDirection) {
         case CcBubbleArrowDirection.none:
           break;
         case CcBubbleArrowDirection.top:
-          bubbleTrianglePointOffset = Offset(_triangleLength / 2, -_triangleLength);
+          bubbleTrianglePointOffset = Offset(offsetAlong, -offsetIntersect);
           break;
         case CcBubbleArrowDirection.right:
-          bubbleTrianglePointOffset = Offset(_triangleLength, _triangleLength / 2);
+          bubbleTrianglePointOffset = Offset(offsetIntersect, offsetAlong);
           break;
         case CcBubbleArrowDirection.bottom:
-          bubbleTrianglePointOffset = Offset(-_triangleLength / 2, _triangleLength);
+          bubbleTrianglePointOffset = Offset(-offsetAlong, offsetIntersect);
           break;
         case CcBubbleArrowDirection.left:
-          bubbleTrianglePointOffset = Offset(-_triangleLength, -_triangleLength / 2);
+          bubbleTrianglePointOffset = Offset(-offsetIntersect, -offsetAlong);
           break;
         case CcBubbleArrowDirection.topLeft:
           bubbleTrianglePointOffset = Offset(-_triangleLength, -_triangleLength);
@@ -94,6 +96,7 @@ class CcBubbleWidget extends StatelessWidget {
       } else if (bubbleTriangleDirection == CcBubbleArrowDirection.bottom) {
         margin = EdgeInsets.only(bottom: sy);
       }
+
       /// TODO ... need the painter inform us the width & height for the topLeft/topRight/bottomRight/bottomLeft
     }
     assert(() {
