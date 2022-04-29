@@ -20,9 +20,9 @@ class CcBubbleWidget extends StatelessWidget {
 
   CcBubbleWidget({
     Key? key,
+    this.child,
     this.width,
     this.height,
-    this.child,
     this.bubbleColor = Colors.white,
     this.bubbleRadius = 8.0,
     this.bubbleShadowColor = Colors.grey,
@@ -116,9 +116,9 @@ class CcBubbleWidget extends StatelessWidget {
         shadowColor: bubbleShadowColor,
         shadowBlurRadius: bubbleShadowRadius,
         triangleLength: bubbleTriangleLength,
-        trianglePointOffset: bubbleTrianglePointOffset,
         triangleDirection: bubbleTriangleDirection,
         triangleTranslation: bubbleTriangleTranslation,
+        trianglePointOffset: bubbleTrianglePointOffset,
         isTriangleOccupiedSpace: isTriangleOccupiedSpace,
       ),
       child: Container(
@@ -127,8 +127,6 @@ class CcBubbleWidget extends StatelessWidget {
         margin: margin,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          // color: Colors.red,
-          // border: Border.all(color: Colors.greenAccent),
           borderRadius: borderRadius,
         ),
         child: child,
@@ -141,7 +139,7 @@ class CcBubbleWidget extends StatelessWidget {
 
 enum CcBubbleArrowDirection { none, top, right, bottom, left, topRight, bottomRight, bottomLeft, topLeft }
 
-enum _PaintingBorder { top, right, bottom, left, topRight, bottomRight, bottomLeft, topLeft }
+enum _CcBubblePaintingBorder { top, right, bottom, left, topRight, bottomRight, bottomLeft, topLeft }
 
 class CcBubblePainter extends CustomPainter {
   double x;
@@ -155,8 +153,8 @@ class CcBubblePainter extends CustomPainter {
   Offset? trianglePointOffset; // the Offset based on start point, for determined the Peek point
 
   double? triangleTranslation; // bottom side in the center for null
-  CcBubbleArrowDirection triangleDirection = CcBubbleArrowDirection.top;
   bool isTriangleOccupiedSpace;
+  CcBubbleArrowDirection triangleDirection = CcBubbleArrowDirection.top;
 
   Color? shadowColor;
   Offset? shadowOffset;
@@ -169,15 +167,15 @@ class CcBubblePainter extends CustomPainter {
     this.w,
     this.h,
     this.radius,
-    this.trianglePointOffset,
     this.triangleLength,
+    this.trianglePointOffset,
     this.triangleTranslation,
     this.triangleDirection = CcBubbleArrowDirection.top,
     this.isTriangleOccupiedSpace = true,
-    this.shadowColor = Colors.grey,
-    this.shadowOffset = Offset.zero,
     this.shadowBlurRadius = 10,
     this.shadowSpreadRadius = 0,
+    this.shadowColor = Colors.grey,
+    this.shadowOffset = Offset.zero,
     this.color = Colors.white,
   });
 
@@ -238,7 +236,7 @@ class CcBubblePainter extends CustomPainter {
       _triangleTranslation = triangleTranslation!;
     }
 
-    void _drawTriangle(_PaintingBorder whichSide, Offset startPoint, Offset overPoint) {
+    void _drawTriangle(_CcBubblePaintingBorder whichSide, Offset startPoint, Offset overPoint) {
       _applyTriangleArrow(
           pointsPath, whichSide, triangleDirection, startPoint, overPoint, _triangleTranslation, trianglePointOffset, _triangleLength);
     }
@@ -254,7 +252,7 @@ class CcBubblePainter extends CustomPainter {
     fromPoint = Offset(leftCircleCenterX, y);
     toPoint = Offset(rightCircleCenterX, y);
 
-    _drawTriangle(_PaintingBorder.top, fromPoint, toPoint);
+    _drawTriangle(_CcBubblePaintingBorder.top, fromPoint, toPoint);
     pointsPath.lineTo(toPoint.dx, toPoint.dy);
 
     fromPoint = toPoint;
@@ -262,7 +260,7 @@ class CcBubblePainter extends CustomPainter {
 
     if (triangleDirection == CcBubbleArrowDirection.topRight) {
       // top right triangle
-      _drawTriangle(_PaintingBorder.topRight, fromPoint, toPoint);
+      _drawTriangle(_CcBubblePaintingBorder.topRight, fromPoint, toPoint);
       pointsPath.lineTo(toPoint.dx, toPoint.dy);
     } else if (radius != 0) {
       // top right arc
@@ -274,7 +272,7 @@ class CcBubblePainter extends CustomPainter {
     fromPoint = toPoint;
     toPoint = Offset(x + _w, bottomCircleCenterY);
 
-    _drawTriangle(_PaintingBorder.right, fromPoint, toPoint);
+    _drawTriangle(_CcBubblePaintingBorder.right, fromPoint, toPoint);
     pointsPath.lineTo(toPoint.dx, toPoint.dy);
 
     fromPoint = toPoint;
@@ -282,7 +280,7 @@ class CcBubblePainter extends CustomPainter {
 
     if (triangleDirection == CcBubbleArrowDirection.bottomRight) {
       // bottom right triangle
-      _drawTriangle(_PaintingBorder.bottomRight, fromPoint, toPoint);
+      _drawTriangle(_CcBubblePaintingBorder.bottomRight, fromPoint, toPoint);
       pointsPath.lineTo(toPoint.dx, toPoint.dy);
     } else if (radius != 0) {
       // bottom right arc
@@ -294,7 +292,7 @@ class CcBubblePainter extends CustomPainter {
     fromPoint = toPoint;
     toPoint = Offset(leftCircleCenterX, y + _h);
 
-    _drawTriangle(_PaintingBorder.bottom, fromPoint, toPoint);
+    _drawTriangle(_CcBubblePaintingBorder.bottom, fromPoint, toPoint);
     pointsPath.lineTo(toPoint.dx, toPoint.dy);
 
     fromPoint = toPoint;
@@ -302,7 +300,7 @@ class CcBubblePainter extends CustomPainter {
 
     if (triangleDirection == CcBubbleArrowDirection.bottomLeft) {
       // bottom left triangle
-      _drawTriangle(_PaintingBorder.bottomLeft, fromPoint, toPoint);
+      _drawTriangle(_CcBubblePaintingBorder.bottomLeft, fromPoint, toPoint);
       pointsPath.lineTo(toPoint.dx, toPoint.dy);
     } else if (radius != 0) {
       // bottom left arc
@@ -314,7 +312,7 @@ class CcBubblePainter extends CustomPainter {
     fromPoint = toPoint;
     toPoint = Offset(x, topCircleCenterY);
 
-    _drawTriangle(_PaintingBorder.left, fromPoint, toPoint);
+    _drawTriangle(_CcBubblePaintingBorder.left, fromPoint, toPoint);
     pointsPath.lineTo(toPoint.dx, toPoint.dy);
 
     fromPoint = toPoint;
@@ -322,24 +320,20 @@ class CcBubblePainter extends CustomPainter {
 
     if (triangleDirection == CcBubbleArrowDirection.topLeft) {
       // top left triangle
-      _drawTriangle(_PaintingBorder.topLeft, fromPoint, toPoint);
+      _drawTriangle(_CcBubblePaintingBorder.topLeft, fromPoint, toPoint);
       pointsPath.lineTo(toPoint.dx, toPoint.dy);
-      print('??????????0000000=======>>>>>>>>>> triangle top left');
     } else if (radius != 0) {
       // top left arc
       rectRadius = Rect.fromCircle(center: Offset(leftCircleCenterX, topCircleCenterY), radius: _radius);
       pointsPath.arcTo(rectRadius, math.pi * -1, math.pi * 0.5, false);
-      print('??????????0000000=======>>>>>>>>>> arc top left');
     }
 
     // end to original point
     pointsPath.moveTo(toPoint.dx, toPoint.dy);
-
     pointsPath.close();
 
-    // draw phase
+    // draw
     // canvas.drawShadow(pointsPath, Colors.black, 10.0, true);
-
     // canvas.drawRRect(
     //   const BorderRadius.all(Radius.circular(10)).resolve(TextDirection.ltr).toRRect(const Rect.fromLTRB(30, 30, 50, 50)),
     //   const BoxShadow(color: Colors.black, offset: Offset.zero, blurRadius: 10, spreadRadius: 20,).toPaint(),
@@ -373,7 +367,7 @@ class CcBubblePainter extends CustomPainter {
   // _triangleLength:
   // 1. in the line(top, bottom, left, right) is the triangle bottom side length
   // 2. in the corner(topRight, bottomRight, bottomLeft, topLeft) is the offset of overX/overY
-  void _applyTriangleArrow(Path path, _PaintingBorder pathPosition, CcBubbleArrowDirection triangleDirection, Offset startPoint,
+  void _applyTriangleArrow(Path path, _CcBubblePaintingBorder paintPosition, CcBubbleArrowDirection triangleDirection, Offset startPoint,
       Offset overPoint, double _triangleTranslation, Offset? _trianglePointOffset, double _triangleLength) {
     if (_trianglePointOffset == null) {
       return;
@@ -392,47 +386,53 @@ class CcBubblePainter extends CustomPainter {
       return true;
     }());
 
+    bool isTop = paintPosition == _CcBubblePaintingBorder.top && triangleDirection == CcBubbleArrowDirection.top;
+    bool isBottom = paintPosition == _CcBubblePaintingBorder.bottom && triangleDirection == CcBubbleArrowDirection.bottom;
+    bool isLeft = paintPosition == _CcBubblePaintingBorder.left && triangleDirection == CcBubbleArrowDirection.left;
+    bool isRight = paintPosition == _CcBubblePaintingBorder.right && triangleDirection == CcBubbleArrowDirection.right;
+
+    bool isTopRight = paintPosition == _CcBubblePaintingBorder.topRight && triangleDirection == CcBubbleArrowDirection.topRight;
+    bool isBottomRight = paintPosition == _CcBubblePaintingBorder.bottomRight && triangleDirection == CcBubbleArrowDirection.bottomRight;
+    bool isBottomLeft = paintPosition == _CcBubblePaintingBorder.bottomLeft && triangleDirection == CcBubbleArrowDirection.bottomLeft;
+    bool isTopLeft = paintPosition == _CcBubblePaintingBorder.topLeft && triangleDirection == CcBubbleArrowDirection.topLeft;
+
     // double triangleEqSide = sqrt(pow(_triangleLength, 2) + pow(triangleHeight, 2));
-    if (pathPosition == _PaintingBorder.top && triangleDirection == CcBubbleArrowDirection.top) {
+    if (isTop || isTopRight) {
       double beginX = startX + _triangleTranslation;
       path.lineTo(beginX, startY);
       path.lineTo(beginX + peekOffsetDx, startY + peekOffsetDy);
-      path.lineTo(beginX + _triangleLength, startY);
-    } else if (pathPosition == _PaintingBorder.bottom && triangleDirection == CcBubbleArrowDirection.bottom) {
-      double beginX = startX - _triangleTranslation;
-      path.lineTo(beginX, startY);
-      path.lineTo(beginX + peekOffsetDx, startY + peekOffsetDy);
-      path.lineTo(beginX - _triangleLength, startY);
-    } else if (pathPosition == _PaintingBorder.left && triangleDirection == CcBubbleArrowDirection.left) {
-      double beginY = startY - _triangleTranslation;
-      path.lineTo(startX, beginY);
-      path.lineTo(startX + peekOffsetDx, beginY + peekOffsetDy);
-      path.lineTo(startX, beginY - _triangleLength);
-    } else if (pathPosition == _PaintingBorder.right && triangleDirection == CcBubbleArrowDirection.right) {
+      if (isTop) {
+        path.lineTo(beginX + _triangleLength, startY);
+      } else if (isTopRight) {
+        path.lineTo(overX, overY + _triangleLength);
+      }
+    } else if (isRight || isBottomRight) {
       double beginY = startY + _triangleTranslation;
       path.lineTo(startX, beginY);
       path.lineTo(startX + peekOffsetDx, beginY + peekOffsetDy);
-      path.lineTo(startX, beginY + _triangleLength);
-    } else if (pathPosition == _PaintingBorder.topRight && triangleDirection == CcBubbleArrowDirection.topRight) {
-      double beginX = startX + _triangleTranslation;
-      path.lineTo(beginX, startY);
-      path.lineTo(beginX + peekOffsetDx, startY + peekOffsetDy);
-      path.lineTo(overX, overY + _triangleLength);
-    } else if (pathPosition == _PaintingBorder.bottomRight && triangleDirection == CcBubbleArrowDirection.bottomRight) {
-      double beginY = startY + _triangleTranslation;
-      path.lineTo(startX, beginY);
-      path.lineTo(startX + peekOffsetDx, beginY + peekOffsetDy);
-      path.lineTo(overX - _triangleLength, overY);
-    } else if (pathPosition == _PaintingBorder.bottomLeft && triangleDirection == CcBubbleArrowDirection.bottomLeft) {
+      if (isRight) {
+        path.lineTo(startX, beginY + _triangleLength);
+      } else if (isBottomRight) {
+        path.lineTo(overX - _triangleLength, overY);
+      }
+    } else if (isBottom || isBottomLeft) {
       double beginX = startX - _triangleTranslation;
       path.lineTo(beginX, startY);
       path.lineTo(beginX + peekOffsetDx, startY + peekOffsetDy);
-      path.lineTo(overX, overY - _triangleLength);
-    } else if (pathPosition == _PaintingBorder.topLeft && triangleDirection == CcBubbleArrowDirection.topLeft) {
+      if (isBottom) {
+        path.lineTo(beginX - _triangleLength, startY);
+      } else if (isBottomLeft) {
+        path.lineTo(overX, overY - _triangleLength);
+      }
+    } else if (isLeft || isTopLeft) {
       double beginY = startY - _triangleTranslation;
       path.lineTo(startX, beginY);
       path.lineTo(startX + peekOffsetDx, beginY + peekOffsetDy);
-      path.lineTo(overX + _triangleLength, overY);
+      if (isLeft) {
+        path.lineTo(startX, beginY - _triangleLength);
+      } else if (isTopLeft) {
+        path.lineTo(overX + _triangleLength, overY);
+      }
     }
   }
 }

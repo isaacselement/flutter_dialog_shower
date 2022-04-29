@@ -220,7 +220,7 @@ class PageOfBubble extends StatelessWidget {
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubbleMenuPicker(
                     direction: CcBubbleArrowDirection.left,
-                    bubbleTriangleTranslation: 35.0,
+                    bubbleTriangleTranslation: 100.0,
                   ),
                   x: offset.dx + size.width,
                   y: offset.dy - 20);
