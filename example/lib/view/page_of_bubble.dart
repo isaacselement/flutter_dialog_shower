@@ -180,7 +180,7 @@ class PageOfBubble extends StatelessWidget {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.getBubbleMenuPicker(
+                  WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.top,
                   ),
                   x: offset.dx - (242 - size.width) / 2,
@@ -192,7 +192,7 @@ class PageOfBubble extends StatelessWidget {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.getBubbleMenuPicker(
+                  WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.bottom,
                   ),
                   x: offset.dx - (242 - size.width) / 2,
@@ -205,7 +205,7 @@ class PageOfBubble extends StatelessWidget {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.getBubbleMenuPicker(
+                  WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.right,
                     bubbleTriangleTranslation: 35.0,
                   ),
@@ -218,7 +218,7 @@ class PageOfBubble extends StatelessWidget {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
               Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
-                  WidgetsUtil.getBubbleMenuPicker(
+                  WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.left,
                     bubbleTriangleTranslation: 100.0,
                   ),

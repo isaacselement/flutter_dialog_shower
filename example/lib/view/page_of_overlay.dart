@@ -160,7 +160,7 @@ class PageOfOverlay extends StatelessWidget {
                         shower.dy = max(0, offsetS.dy - (size.height - sizeS.height) / 2);
                       });
                     },
-                    child: WidgetsUtil.getBubbleMenuPicker(
+                    child: WidgetsUtil.getBubblePicker(
                       row: 2,
                       direction: isRight ? CcBubbleArrowDirection.right : CcBubbleArrowDirection.left,
                       itemOnTap: (index, value, context) {
@@ -191,7 +191,7 @@ class PageOfOverlay extends StatelessWidget {
                           shower.dy = max(0, isTop ? offsetS.dy + sizeS.height : offsetS.dy - size.height);
                         });
                       },
-                      child: WidgetsUtil.getBubbleMenuPicker(
+                      child: WidgetsUtil.getBubblePicker(
                         direction: isTop ? CcBubbleArrowDirection.top : CcBubbleArrowDirection.bottom,
                         itemOnTap: (index, value, context) {
                           shower.dismiss();
@@ -224,7 +224,7 @@ class PageOfOverlay extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      WidgetsUtil.getBubbleMenuPicker(
+                      WidgetsUtil.getBubblePicker(
                         direction: CcBubbleArrowDirection.top,
                         itemOnTap: (index, value, context) {
                           OverlayWrapper.dismissAppearingLayers();
@@ -282,7 +282,7 @@ class PageOfOverlay extends StatelessWidget {
                           style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 16),
                         ),
                       ),
-                      WidgetsUtil.getBubbleMenuPicker(
+                      WidgetsUtil.getBubblePicker(
                         direction: CcBubbleArrowDirection.bottom,
                         itemOnTap: (index, value, context) {
                           OverlayWrapper.dismissAppearingLayers();
@@ -563,7 +563,7 @@ class _LayerLinkEntryState extends State<LayerLinkEntryWidget> {
                 link: _layerLink,
                 showWhenUnlinked: false,
                 offset: const Offset(0, 60),
-                child: WidgetsUtil.getBubbleMenuPicker(
+                child: WidgetsUtil.getBubblePicker(
                   direction: CcBubbleArrowDirection.top,
                   itemOnTap: (index, value, context) {
                     overlayEntry?.remove();
