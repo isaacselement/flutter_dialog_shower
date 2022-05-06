@@ -1,93 +1,123 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
-// Widget wrapped without Btw
+/// Widget wrapped without Btw
 
-class CcTextButton extends StatefulWidget {
+class XpTextButton extends StatefulWidget {
   String text;
-
   double? width;
   double? height;
-
   Color? textColor;
   Color? borderColor;
   Color? backgroundColor;
-
+  Color? borderColorDisable;
+  Color? backgroundColorDisable;
   EdgeInsets? margin;
   EdgeInsets? padding;
   Alignment? alignment;
-
-  void Function(State state)? onPressed;
-
+  bool isAsSmallAsPossible = false;
+  bool isDisable = false;
   TextStyle? Function(String text, bool isTapingDown)? textStyleBuilder;
   BoxDecoration? Function(String text, bool isTapingDown)? decorationBuilder;
+  void Function(XpTextButtonState state)? onPressed;
 
-  CcTextButton(
+  XpTextButton(
     this.text, {
     Key? key,
     this.width,
     this.height,
-    this.borderColor,
     this.textColor = Colors.white,
+    this.borderColor,
     this.backgroundColor = const Color(0xFF4275FF),
+    this.borderColorDisable,
+    this.backgroundColorDisable = const Color(0xFFF5F5FA),
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
+    this.alignment = Alignment.center,
     this.onPressed,
+    this.isAsSmallAsPossible = false,
+    this.isDisable = false,
     this.textStyleBuilder,
     this.decorationBuilder,
   }) : super(key: key);
 
-  CcTextButton.smallest(
+  XpTextButton.smallest(
     this.text, {
     Key? key,
     this.width,
     this.height,
+    this.textColor = Colors.white,
+    this.borderColor,
+    this.backgroundColor = const Color(0xFF4275FF),
+    this.borderColorDisable,
+    this.backgroundColorDisable = const Color(0xFFF5F5FA),
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
+    this.alignment = Alignment.center,
     this.onPressed,
+    this.isAsSmallAsPossible = true,
+    this.isDisable = false,
     this.textStyleBuilder,
     this.decorationBuilder,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CcTextButtonState();
+  State<StatefulWidget> createState() => XpTextButtonState();
 }
 
-class _CcTextButtonState extends State<CcTextButton> {
+class XpTextButtonState extends State<XpTextButton> {
   bool _isTapingDown = false;
 
   get isTapingDown => _isTapingDown;
 
   set isTapingDown(v) {
-    setState(() {
-      _isTapingDown = v;
-    });
+    setState(() => _isTapingDown = v);
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget view = InkWell(
-      child: Container(
-        width: widget.width,
-        height: widget.height,
-        margin: widget.margin,
-        padding: widget.padding,
-        decoration: widget.decorationBuilder?.call(widget.text, isTapingDown) ?? _defBoxDecoration(widget.text, isTapingDown),
-        child: Text(widget.text,
-            style: widget.textStyleBuilder?.call(widget.text, isTapingDown) ?? _defTextStyle(widget.text, isTapingDown)),
+    Widget view = Container(
+      padding: widget.margin,
+      width: widget.width,
+      height: widget.height,
+      child: Listener(
+        onPointerUp: (event) => isTapingDown = false,
+        onPointerDown: (event) => isTapingDown = true,
+        child: GestureDetector(
+          child: Container(
+            padding: widget.padding,
+            alignment: widget.alignment,
+            decoration: widget.decorationBuilder?.call(widget.text, isTapingDown) ??
+                (widget.isDisable ? _defBoxDecorationDisable(widget.text) : _defBoxDecoration(widget.text, isTapingDown)),
+            child: Text(widget.text,
+                style: widget.textStyleBuilder?.call(widget.text, isTapingDown) ??
+                    (widget.isDisable ? _defTextStyleDisable(widget.text) : _defTextStyle(widget.text, isTapingDown))),
+          ),
+          onTap: () {
+            isTapingDown = false;
+            if (!widget.isDisable) {
+              widget.onPressed?.call(this);
+            }
+          },
+        ),
       ),
-      onTap: () {
-        isTapingDown = false;
-        widget.onPressed?.call(this);
-      },
-      onTapDown: (details) {
-        isTapingDown = true;
-      },
-      onTapCancel: () {
-        isTapingDown = false;
-      },
     );
-    return view;
+    // as small as possible
+    return widget.isAsSmallAsPossible ? Row(mainAxisSize: MainAxisSize.min, children: [view]) : view;
+  }
+
+  BoxDecoration _defBoxDecorationDisable(String text) {
+    Color? borderColor = widget.borderColorDisable;
+    Color? backgroundColor = widget.backgroundColorDisable;
+    return BoxDecoration(
+      color: backgroundColor,
+      borderRadius: const BorderRadius.all(Radius.circular(5)),
+      border: borderColor == null ? null : Border.all(color: borderColor),
+    );
+  }
+
+  TextStyle _defTextStyleDisable(String text) {
+    return const TextStyle(color: Color(0xFFBFBFD2), fontSize: 16);
   }
 
   BoxDecoration _defBoxDecoration(String text, bool isTapingDown) {
@@ -107,7 +137,7 @@ class _CcTextButtonState extends State<CcTextButton> {
   }
 }
 
-// Widget wrapped with Btw
+/// Widget wrapped with Btw
 
 class CcMenuPopup extends StatelessWidget {
   List<Object> values;

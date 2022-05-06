@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 import '../util/logger.dart';
+import 'widgets/cc_widgets.dart';
 
 class PageOfBubble extends StatelessWidget {
   @override
@@ -227,35 +228,100 @@ class PageOfBubble extends StatelessWidget {
               shower.transitionBuilder = null;
               shower.containerDecoration = null;
             }),
-
-            /// TODO ........
+          ],
+        ),
+        const SizedBox(height: 50),
+        Wrap(
+          children: [
             WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: (state) {
-              DialogWrapper.show(WidgetsUtil.newClickMeWidget(clickMeFunctions: {
-                'Click me': (context) {
-                  Offset position = OffsetUtil.getOffsetB(context) ?? Offset.zero;
-                  Size size = SizeUtil.getSizeB(context) ?? Size.zero;
-                  DialogWrapper.show(
-                    CcBubbleWidget(
-                      width: 200,
-                      height: 200,
-                      bubbleTriangleTranslation: 20.0,
-                      bubbleTriangleDirection: CcBubbleArrowDirection.top,
-                      child: CcSelectListWidget(
-                        values: const ['1', '2', '3', '4', '5'],
+              Btv<bool> isDisable = true.btv;
+              Widget container = Container(
+                padding: const EdgeInsets.only(bottom: 16, top: 32, left: 32, right: 32),
+                child: Column(children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [],
                       ),
                     ),
-                    x: position.dx,
-                    y: position.dy + size.height,
-                  )
-                    ..containerDecoration = null // BubbleWidget already has the shadow
-                    // ..containerClipBehavior = Clip.none;  // will set null internal whern containerDecoration is null
-                    ..transitionBuilder = null
-                    ..barrierDismissible = true;
-                }
-              }));
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      Btw(builder: (context) {
+                        return XpTextButton(
+                          'Reset',
+                          width: 200,
+                          height: 40,
+                          margin: EdgeInsets.zero,
+                          padding: EdgeInsets.zero,
+                          borderColor: const Color(0xFFDADAE8),
+                          isDisable: isDisable.value,
+                          backgroundColor: null,
+                          backgroundColorDisable: const Color(0xFFF5F5FA),
+                          textStyleBuilder: (text, isTappingDown) {
+                            if (isDisable.value) {
+                              return const TextStyle(color: Color(0xFFBFBFD2), fontSize: 16);
+                            }
+                            Color color = const Color(0xFF1C1D21);
+                            return TextStyle(color: isTappingDown ? color.withAlpha(128) : color, fontSize: 16);
+                          },
+                          onPressed: (state) {},
+                        );
+                      }),
+                      const SizedBox(width: 14),
+                      XpTextButton(
+                        'Save',
+                        width: 200,
+                        height: 40,
+                        margin: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
+                        borderColor: const Color(0xFFDADAE8),
+                        textStyleBuilder: (text, isTappingDown) {
+                          Color color = Colors.white;
+                          color = isTappingDown ? color.withAlpha(128) : color;
+                          return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
+                        },
+                        onPressed: (state) {
+                          isDisable.value = !isDisable.value;
+
+                          Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+                          Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+                          DialogWrapper.show(
+                            CcBubbleWidget(
+                              width: 200,
+                              height: 200,
+                              bubbleTriangleTranslation: 20.0,
+                              bubbleTriangleDirection: CcBubbleArrowDirection.top,
+                              child: CcSelectListWidget(
+                                values: const ['1', '2', '3', '4', '5'],
+                              ),
+                            ),
+                            x: position.dx,
+                            y: position.dy - size.height,
+                          )
+                            // ..containerClipBehavior = Clip.none;  // will set null internal whern containerDecoration is null
+                            ..containerDecoration = null // BubbleWidget already has the shadow
+                            ..transitionBuilder = null
+                            ..barrierDismissible = true;
+                        },
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                ]),
+              );
+              DialogShower shower = DialogWrapper.showRight(container, width: 604);
+              shower.padding = const EdgeInsets.only(right: 0);
+              shower
+                ..containerBoxShadow = []
+                ..containerBorderRadius = 8.0
+                ..barrierColor = const Color(0x4D1C1D21)
+                ..dismissCallBack = (shower) {};
             }),
           ],
-        )
+        ),
       ],
     );
   }

@@ -19,8 +19,8 @@ class WidgetsUtil {
     return TextStyle(fontSize: fontSize, color: fontColor, fontFamily: 'Pacifico-Regular');
   }
 
-  static CcTextButton newXpelTextButton(String text, {void Function(State state)? onPressed}) {
-    return CcTextButton(
+  static XpTextButton newXpelTextButton(String text, {void Function(State state)? onPressed}) {
+    return XpTextButton.smallest(
       text,
       onPressed: (state) {
         onPressed?.call(state);
