@@ -63,8 +63,8 @@ class PageOfOverlay extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Just Show', onPressed: (state) {
-              OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
-                .onTapCallback = (shower) => shower.dismiss();
+              OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red))).onTapCallback =
+                  (shower) => shower.dismiss();
             }),
             WidgetsUtil.newXpelTextButton('Show center', onPressed: (state) {
               OverlayShower().show(const SizedBox(width: 200, height: 200, child: ColoredBox(color: Colors.red)))
@@ -449,13 +449,13 @@ class PageOfOverlay extends StatelessWidget {
                         clipBehavior: Clip.antiAlias,
                         margin: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                            color: isTappingDown ? Colors.grey.withAlpha(128) : Colors.grey,
+                            color: isTappingDown ? Colors.greenAccent.withAlpha(128) : Colors.grey,
                             border: Border.all(color: Colors.black, width: 1),
                             borderRadius: const BorderRadius.all(Radius.circular(8)),
                             boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
                         child: Center(child: Text('$index', style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 15))));
                   },
-                  onTap: () {
+                  onTap: (state) {
                     Widget showedContainer = Container(
                       clipBehavior: Clip.antiAlias,
                       decoration: const BoxDecoration(
@@ -510,7 +510,9 @@ class PageOfOverlay extends StatelessWidget {
                       );
                     }
 
-                    OverlayWidgets.showWithLayerLink(child: showedContainer, width: 400, layerLink: _layerLink, isWrappedMaterial: !isAlreadyMaterial);
+                    OverlayWidgets.showWithLayerLink(
+                        child: showedContainer, width: 400, layerLink: _layerLink, isWrappedMaterial: !isAlreadyMaterial);
+                    return null;
                   },
                 ),
               );
@@ -541,19 +543,20 @@ class _LayerLinkEntryState extends State<LayerLinkEntryWidget> {
   Widget build(BuildContext context) {
     return CompositedTransformTarget(
       link: _layerLink,
-      child: InkWell(
-        child: Container(
+      child: CcTapWidget(
+        builder: (isTapping) => Container(
           height: 50,
           clipBehavior: Clip.antiAlias,
           margin: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-              color: Colors.grey,
-              border: Border.all(color: Colors.black, width: 1),
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
-          child: Center(child: Text('${widget.index}', style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 15))),
+            color: isTapping ? Colors.transparent : Colors.grey,
+            border: Border.all(color: isTapping ? Colors.transparent : Colors.black, width: 1),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            boxShadow: [BoxShadow(color: isTapping ? Colors.transparent : Colors.red, blurRadius: 20.0)],
+          ),
+          child: Center(child: Text('${widget.index} Click Me', style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 15))),
         ),
-        onTap: () {
+        onTap: (state) {
           overlayEntry?.remove();
           overlayEntry = null;
           overlayEntry = OverlayEntry(builder: (context) {

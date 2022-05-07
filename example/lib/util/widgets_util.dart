@@ -1,7 +1,7 @@
 import 'package:example/util/logger.dart';
 import 'package:example/util/size_util.dart';
 import 'package:example/view/manager/themes_manager.dart';
-import 'package:example/view/widgets/cc_widgets.dart';
+import 'package:example/view/widgets/xp_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
@@ -250,7 +250,7 @@ class WidgetsUtil {
       bubbleTriangleTranslation: bubbleTriangleTranslation,
       bubbleShadowColor: Colors.pink,
       // child: CcMenuPopup(
-      child: CcMenuPopupUsingRowColumn(
+      child: XpPopupMenuUsingRowColumn(
         width: width,
         height: height,
         itemWidth: itemWidth,

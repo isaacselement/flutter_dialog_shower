@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
+import 'package:flutter_dialog_shower/core/brother.dart';
 
 /// Widget wrapped without Btw
 
@@ -139,7 +139,7 @@ class XpTextButtonState extends State<XpTextButton> {
 
 /// Widget wrapped with Btw
 
-class CcMenuPopup extends StatelessWidget {
+class XpPopupMenu extends StatelessWidget {
   List<Object> values;
   String? Function(int index, Object value)? functionOfName;
   Widget? Function(int index, Object value)? functionOfIcon;
@@ -156,7 +156,7 @@ class CcMenuPopup extends StatelessWidget {
   Function(int index, Object value, BuildContext context)? itemOnTap;
   Function(int index, Object value, bool isHighlighted)? itemBuilder;
 
-  CcMenuPopup({
+  XpPopupMenu({
     Key? key,
     required this.values,
     this.functionOfName,
@@ -224,7 +224,7 @@ class CcMenuPopup extends StatelessWidget {
   }
 }
 
-class CcMenuPopupUsingRowColumn extends StatelessWidget {
+class XpPopupMenuUsingRowColumn extends StatelessWidget {
   List<Object> values;
   String? Function(int index, Object value)? functionOfName;
   Widget? Function(int index, Object value)? functionOfIcon;
@@ -245,7 +245,7 @@ class CcMenuPopupUsingRowColumn extends StatelessWidget {
   Function(int index, Object value, BuildContext context)? itemOnTap;
   Function(int index, Object value, bool isHighlighted)? itemBuilder;
 
-  CcMenuPopupUsingRowColumn({
+  XpPopupMenuUsingRowColumn({
     Key? key,
     required this.values,
     this.functionOfName,

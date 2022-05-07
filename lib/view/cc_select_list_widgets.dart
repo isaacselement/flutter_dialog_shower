@@ -4,37 +4,47 @@ import 'package:flutter/material.dart';
 import '../core/boxes.dart';
 
 /// Widget with tap effect
-class CcTapWidget extends StatelessWidget {
-  void Function() onTap;
-  Widget? child;
-  Widget Function(bool isTapping)? builder;
+class CcTapWidget extends StatefulWidget {
+  final Widget? child;
+  final Widget Function(bool isTapping)? builder;
+  final bool? Function(CcTapWidgetState state) onTap;
 
-  CcTapWidget({Key? key, required this.onTap, this.builder, this.child}) : super(key: key);
+  const CcTapWidget({Key? key, this.builder, this.child, required this.onTap}) : super(key: key);
+
+  @override
+  State<CcTapWidget> createState() => CcTapWidgetState();
+}
+
+class CcTapWidgetState extends State<CcTapWidget> {
+  bool _isTapingDown = false;
+
+  get isTapingDown => _isTapingDown;
+
+  set isTapingDown(v) {
+    setState(() => _isTapingDown = v);
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool isTapping = false;
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return InkWell(
-          child: Listener(
-            onPointerDown: (e) => setState(() {
-              isTapping = true;
-            }),
-            onPointerUp: (e) => setState(() {
-              isTapping = false;
-            }),
-            onPointerCancel: (e) => setState(() {
-              isTapping = false;
-            }),
-            child: builder?.call(isTapping) ?? Opacity(opacity: isTapping ? 0.5 : 1, child: child ?? const Offstage(offstage: true)),
-          ),
-          onTap: () {
-            onTap();
+    return Listener(
+      onPointerDown: (e) => isTapingDown = true,
+      onPointerUp: (e) => isTapingDown = false,
+      onPointerCancel: (e) => isTapingDown = false,
+      child: GestureDetector(
+        child: widget.builder?.call(isTapingDown) ??
+            Opacity(
+              opacity: isTapingDown ? 0.5 : 1,
+              child: widget.child,
+            ),
+        onTap: () {
+          if (widget.onTap(this) ?? false) {
+            // return true do nothing ...
+          } else {
+            // return false/null do setState ...
             setState(() {});
-          },
-        );
-      },
+          }
+        },
+      ),
     );
   }
 }
@@ -105,7 +115,7 @@ class CcActionHeaderWidget extends StatelessWidget {
         alignment: leftButtonAlignment,
         child: leftButtonBuilder?.call() ?? Text(leftButtonTitle ?? '', style: leftButtonStyle),
       ),
-      onTap: () {
+      onTap: (state) {
         leftButtonEvent?.call();
       },
     );
@@ -124,7 +134,7 @@ class CcActionHeaderWidget extends StatelessWidget {
         alignment: rightButtonAlignment,
         child: rightButtonBuilder?.call() ?? Text(rightButtonTitle ?? '', style: rightButtonStyle),
       ),
-      onTap: () {
+      onTap: (state) {
         rightButtonEvent?.call();
       },
     );
@@ -372,7 +382,7 @@ class CcSelectListState extends State<CcSelectListWidget> {
               padding: EdgeInsets.only(right: 8.0),
               child: Icon(Icons.highlight_remove_rounded, color: Colors.grey, size: 20),
             ),
-            onTap: () {
+            onTap: (state) {
               _textEditController?.clear();
               defaultSearchTextOnChanged(_textEditController?.text ?? '');
             }),

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 import '../util/logger.dart';
-import 'widgets/cc_widgets.dart';
+import 'widgets/xp_widgets.dart';
 
 class PageOfBubble extends StatelessWidget {
   @override
@@ -241,7 +241,13 @@ class PageOfBubble extends StatelessWidget {
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
-                        children: [],
+                        children: [
+
+                          CcTapWidget(onTap: (state){
+
+                          })
+
+                        ],
                       ),
                     ),
                   ),
