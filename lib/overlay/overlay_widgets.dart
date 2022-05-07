@@ -292,7 +292,7 @@ class OverlayWidgets {
           link: layerLink,
           offset: offset ?? Offset.zero,
           showWhenUnlinked: showWhenUnlinked ?? false,
-          child: isWrappedMaterial ? Material(child: child) : child,
+          child: isWrappedMaterial ? Material(child: child, type: MaterialType.transparency) : child,
         ),
       ),
     )..isWrappedNothing = true;

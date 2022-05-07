@@ -512,7 +512,6 @@ class PageOfOverlay extends StatelessWidget {
 
                     OverlayWidgets.showWithLayerLink(
                         child: showedContainer, width: 400, layerLink: _layerLink, isWrappedMaterial: !isAlreadyMaterial);
-                    return null;
                   },
                 ),
               );
