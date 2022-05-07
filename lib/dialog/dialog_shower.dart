@@ -54,7 +54,7 @@ class DialogShower {
   Clip containerClipBehavior = Clip.antiAlias;
   Decoration? containerDecoration = _notInitializedDecoration;
   double containerBorderRadius = 0.0;
-  Color containerBackgroundColor = Colors.white;
+  Color? containerBackgroundColor = Colors.white;
   List<BoxShadow>? containerBoxShadow;
   double containerShadowBlurRadius = 0.0;
   Color containerShadowColor = Colors.transparent;
@@ -654,8 +654,8 @@ class DialogShower {
 
   Decoration _defContainerDecoration() {
     return BoxDecoration(
-      borderRadius: BorderRadius.circular(containerBorderRadius),
       color: containerBackgroundColor,
+      borderRadius: BorderRadius.circular(containerBorderRadius),
       boxShadow: containerBoxShadow ??
           [
             BoxShadow(
