@@ -7,7 +7,7 @@ import '../core/boxes.dart';
 class CcTapWidget extends StatefulWidget {
   final Widget? child;
   final Widget Function(bool isTapping)? builder;
-  final bool? Function(CcTapWidgetState state) onTap;
+  final void Function(CcTapWidgetState state) onTap;
 
   const CcTapWidget({Key? key, this.builder, this.child, required this.onTap}) : super(key: key);
 
@@ -37,12 +37,7 @@ class CcTapWidgetState extends State<CcTapWidget> {
               child: widget.child,
             ),
         onTap: () {
-          if (widget.onTap(this) ?? false) {
-            // return true do nothing ...
-          } else {
-            // return false/null do setState ...
-            setState(() {});
-          }
+          widget.onTap(this);
         },
       ),
     );

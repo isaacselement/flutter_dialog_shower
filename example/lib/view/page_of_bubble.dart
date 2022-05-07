@@ -234,91 +234,7 @@ class PageOfBubble extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: (state) {
-              Btv<bool> isDisable = true.btv;
-              Widget container = Container(
-                padding: const EdgeInsets.only(bottom: 16, top: 32, left: 32, right: 32),
-                child: Column(children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-
-                          CcTapWidget(onTap: (state){
-
-                          })
-
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      const Spacer(),
-                      Btw(builder: (context) {
-                        return XpTextButton(
-                          'Reset',
-                          width: 200,
-                          height: 40,
-                          margin: EdgeInsets.zero,
-                          padding: EdgeInsets.zero,
-                          borderColor: const Color(0xFFDADAE8),
-                          isDisable: isDisable.value,
-                          backgroundColor: null,
-                          backgroundColorDisable: const Color(0xFFF5F5FA),
-                          textStyleBuilder: (text, isTappingDown) {
-                            if (isDisable.value) {
-                              return const TextStyle(color: Color(0xFFBFBFD2), fontSize: 16);
-                            }
-                            Color color = const Color(0xFF1C1D21);
-                            return TextStyle(color: isTappingDown ? color.withAlpha(128) : color, fontSize: 16);
-                          },
-                          onPressed: (state) {},
-                        );
-                      }),
-                      const SizedBox(width: 14),
-                      XpTextButton(
-                        'Save',
-                        width: 200,
-                        height: 40,
-                        margin: EdgeInsets.zero,
-                        padding: EdgeInsets.zero,
-                        borderColor: const Color(0xFFDADAE8),
-                        textStyleBuilder: (text, isTappingDown) {
-                          Color color = Colors.white;
-                          color = isTappingDown ? color.withAlpha(128) : color;
-                          return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
-                        },
-                        onPressed: (state) {
-                          isDisable.value = !isDisable.value;
-
-                          Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-                          Size size = SizeUtil.getSizeS(state) ?? Size.zero;
-                          DialogWrapper.show(
-                            CcBubbleWidget(
-                              width: 200,
-                              height: 200,
-                              bubbleTriangleTranslation: 20.0,
-                              bubbleTriangleDirection: CcBubbleArrowDirection.top,
-                              child: CcSelectListWidget(
-                                values: const ['1', '2', '3', '4', '5'],
-                              ),
-                            ),
-                            x: position.dx,
-                            y: position.dy - size.height,
-                          )
-                            // ..containerClipBehavior = Clip.none;  // will set null internal whern containerDecoration is null
-                            ..containerDecoration = null // BubbleWidget already has the shadow
-                            ..transitionBuilder = null
-                            ..barrierDismissible = true;
-                        },
-                      ),
-                      const Spacer(),
-                    ],
-                  ),
-                ]),
-              );
-              DialogShower shower = DialogWrapper.showRight(container, width: 604);
+              DialogShower shower = DialogWrapper.showRight(BubbleSiderWidget(), width: 604);
               shower.padding = const EdgeInsets.only(right: 0);
               shower
                 ..containerBoxShadow = []
@@ -329,6 +245,193 @@ class PageOfBubble extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class BubbleSiderWidget extends StatelessWidget {
+  Btv<bool> isResetButtonDisable = true.btv;
+  Btv<String> selectCountryValue = ''.btv;
+
+  BubbleSiderWidget({Key? key}) : super(key: key);
+
+  Widget getOneSelectWidget({required String title, required Btv<String> btValue, required void Function(State state) onTap}) {
+    return Row(
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16, color: Colors.black),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: CcTapWidget(
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(width: 1, color: Colors.grey)),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Btw(
+                      builder: (context) => Text(
+                        btValue.value.isEmpty ? 'Select' : btValue.value,
+                        style: const TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                  const Icon(Icons.select_all)
+                ],
+              ),
+            ),
+            onTap: onTap,
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 16, top: 32, left: 32, right: 32),
+      child: Column(children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 200),
+                getOneSelectWidget(
+                  title: 'Country: ',
+                  btValue: selectCountryValue,
+                  onTap: (state) {
+                    Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+                    Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+                    DialogWrapper.show(
+                      CcBubbleWidget(
+                        bubbleTriangleTranslation: 20.0,
+                        bubbleTriangleDirection: CcBubbleArrowDirection.top,
+                        child: CcSelectListWidget(
+                          values: const [
+                            'India',
+                            'UK',
+                            'USA',
+                            'Russia',
+                            'Korea',
+                            'Mexico',
+                            'Italy',
+                            'Japan',
+                            'Ukraine',
+                            'Germany',
+                          ],
+                          onSelectedEvent: (state, index, value, values) {
+                            selectCountryValue.value = value as String;
+                            DialogWrapper.dismissTopDialog();
+                          },
+                        ),
+                      ),
+                      x: position.dx,
+                      y: position.dy + size.height + 5,
+                      width: size.width,
+                      height: size.width,
+                    )
+                      // ..containerClipBehavior = Clip.none;  // will set null internal whern containerDecoration is null
+                      ..containerDecoration = null // BubbleWidget already has the shadow
+                      ..transitionBuilder = null
+                      ..barrierDismissible = true;
+                  },
+                ),
+                const SizedBox(height: 400),
+                getOneSelectWidget(
+                  title: 'Country: ',
+                  btValue: selectCountryValue,
+                  onTap: (state) {
+                    Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+                    Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+                    DialogWrapper.show(
+                      CcBubbleWidget(
+                        bubbleTriangleTranslation: size.width - 40,
+                        bubbleTriangleDirection: CcBubbleArrowDirection.bottom,
+                        child: CcSelectListWidget(
+                          values: const [
+                            'India',
+                            'UK',
+                            'USA',
+                            'Russia',
+                            'Korea',
+                            'Mexico',
+                            'Italy',
+                            'Japan',
+                            'Ukraine',
+                            'Germany',
+                          ],
+                          onSelectedEvent: (state, index, value, values) {
+                            selectCountryValue.value = value as String;
+                            DialogWrapper.dismissTopDialog();
+                          },
+                        ),
+                      ),
+                      x: position.dx,
+                      y: position.dy - size.width - 5,
+                      width: size.width,
+                      height: size.width,
+                    )
+                      // ..containerClipBehavior = Clip.none;  // will set null internal whern containerDecoration is null
+                      ..containerDecoration = null // BubbleWidget already has the shadow
+                      ..transitionBuilder = null
+                      ..barrierDismissible = true;
+                  },
+                ),
+                const SizedBox(height: 200),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            const Spacer(),
+            Btw(builder: (context) {
+              return XpTextButton(
+                'Reset',
+                width: 200,
+                height: 40,
+                margin: EdgeInsets.zero,
+                padding: EdgeInsets.zero,
+                borderColor: const Color(0xFFDADAE8),
+                isDisable: isResetButtonDisable.value,
+                backgroundColor: null,
+                backgroundColorDisable: const Color(0xFFF5F5FA),
+                textStyleBuilder: (text, isTappingDown) {
+                  if (isResetButtonDisable.value) {
+                    return const TextStyle(color: Color(0xFFBFBFD2), fontSize: 16);
+                  }
+                  Color color = const Color(0xFF1C1D21);
+                  return TextStyle(color: isTappingDown ? color.withAlpha(128) : color, fontSize: 16);
+                },
+                onPressed: (state) {},
+              );
+            }),
+            const SizedBox(width: 14),
+            XpTextButton(
+              'Save',
+              width: 200,
+              height: 40,
+              margin: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
+              borderColor: const Color(0xFFDADAE8),
+              textStyleBuilder: (text, isTappingDown) {
+                Color color = Colors.white;
+                color = isTappingDown ? color.withAlpha(128) : color;
+                return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
+              },
+              onPressed: (state) {
+                isResetButtonDisable.value = !isResetButtonDisable.value;
+              },
+            ),
+            const Spacer(),
+          ],
+        ),
+      ]),
     );
   }
 }
