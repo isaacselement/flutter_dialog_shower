@@ -100,7 +100,7 @@ class CcBubbleWidget extends StatelessWidget {
       /// TODO ... need the painter inform us the width & height for the topLeft/topRight/bottomRight/bottomLeft
     }
     assert(() {
-      print('[CcBubblePainter] margin: $margin, triangleLength: $bubbleTriangleLength, pointOffset: $bubbleTrianglePointOffset');
+      CcBubblePainter.log('margin: $margin, triangleLength: $bubbleTriangleLength, pointOffset: $bubbleTrianglePointOffset');
       return true;
     }());
 
@@ -181,7 +181,7 @@ class CcBubblePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return this != oldDelegate;
+    return false;
   }
 
   @override
@@ -191,8 +191,8 @@ class CcBubblePainter extends CustomPainter {
     double _triangleLength = triangleLength ?? 0;
 
     assert(() {
-      print('[CcBubblePainter] paint point offset: $trianglePointOffset');
-      print('[CcBubblePainter] paint size.width: ${size.width}, size.height: ${size.height}, w: $w, h: $h, _w:$_w, _h:$_h');
+      CcBubblePainter.log('paint point offset: $trianglePointOffset');
+      CcBubblePainter.log('paint size.width: ${size.width}, size.height: ${size.height}, w: $w, h: $h, _w:$_w, _h:$_h');
       return true;
     }());
 
@@ -211,7 +211,7 @@ class CcBubblePainter extends CustomPainter {
     }
 
     assert(() {
-      print('[CcBubblePainter] paint size.width: ${size.width}, size.height: ${size.height}, w: $w, h: $h, _w:$_w, _h:$_h');
+      CcBubblePainter.log('paint size.width: ${size.width}, size.height: ${size.height}, w: $w, h: $h, _w:$_w, _h:$_h');
       return true;
     }());
 
@@ -381,8 +381,8 @@ class CcBubblePainter extends CustomPainter {
     double peekOffsetDy = _trianglePointOffset.dy;
 
     assert(() {
-      print('[CcBubblePainter] _applyArrow ${triangleDirection.toString()}');
-      print('[CcBubblePainter] _applyArrow startPoint $startPoint, overPoint $overPoint, peekOffset: $_trianglePointOffset');
+      CcBubblePainter.log('_applyArrow ${triangleDirection.toString()}');
+      CcBubblePainter.log('_applyArrow startPoint $startPoint, overPoint $overPoint, peekOffset: $_trianglePointOffset');
       return true;
     }());
 
@@ -435,4 +435,16 @@ class CcBubblePainter extends CustomPainter {
       }
     }
   }
+
+  static bool log_enable = false;
+
+  static log(String log) {
+    assert(() {
+      if (log_enable) {
+        print('[CcBubblePainter] $log');
+      }
+      return true;
+    }());
+  }
+
 }
