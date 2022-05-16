@@ -77,7 +77,7 @@ class DialogWrapper {
         ..padding = EdgeInsets.only(left: x, top: y);
     }
 
-    centralOfShower?.call(shower);
+    centralOfShower?.call(shower, child: child);
 
     shower.show(child, width: width, height: height);
     add(shower, key: key);
@@ -88,7 +88,7 @@ class DialogWrapper {
   }
 
   // control center for shower that showed by this wrapper
-  static Function(DialogShower shower)? centralOfShower;
+  static Function(DialogShower shower, {Widget? child})? centralOfShower;
 
   /// Navigator push and pop
   static DialogShower? getTopNavigatorDialog() {
@@ -200,7 +200,7 @@ class DialogWrapper {
     }
 
     // Map<String, DialogShower> map = {}..addAll(_map());
-    _map().clear();   // just clear, cause _addDialog entry method: _map element already in _list
+    _map().clear(); // just clear, cause _addDialog entry method: _map element already in _list
     // map.forEach((key, dialog) async {
     //   await _dismiss(dialog);
     // });
