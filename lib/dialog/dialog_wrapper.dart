@@ -77,9 +77,9 @@ class DialogWrapper {
         ..padding = EdgeInsets.only(left: x, top: y);
     }
 
-    centralOfShower?.call(shower, child: child);
+    Widget? widget = centralOfShower?.call(shower, child: child) ?? child;
 
-    shower.show(child, width: width, height: height);
+    shower.show(widget, width: width, height: height);
     add(shower, key: key);
     shower.addDismissCallBack((d) {
       remove(d);
@@ -88,7 +88,7 @@ class DialogWrapper {
   }
 
   // control center for shower that showed by this wrapper
-  static Function(DialogShower shower, {Widget? child})? centralOfShower;
+  static Widget? Function(DialogShower shower, {Widget? child})? centralOfShower;
 
   /// Navigator push and pop
   static DialogShower? getTopNavigatorDialog() {
