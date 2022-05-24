@@ -204,11 +204,15 @@ class CcSelectListWidget extends StatefulWidget {
     this.selectedValue,
     this.selectedValues,
     this.isSearchEnable = false,
-    this.functionOfName,
-    this.onSelectedEvent,
+    this.searchValues,
     this.itemBuilder,
     this.itemPrefixBuilder,
     this.itemSuffixBuilder,
+    this.functionOfName,
+    this.onSelectedEvent,
+    this.headerBuilder,
+    this.searchBoxBuilder,
+    this.wholeItemBuilder,
   }) : super(key: key) {
     if (isSearchEnable) {
       (searchValues ??= []).addAll(values);
