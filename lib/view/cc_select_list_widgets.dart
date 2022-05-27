@@ -402,8 +402,11 @@ class CcSelectListState extends State<CcSelectListWidget> {
         List<Object> _tmp = [];
         for (int i = 0; i < widget.values.length; i++) {
           Object value = widget.values[i];
-          if (widget.isShowOnSearchResult?.call(text, i, value) ?? false) {
-            _tmp.add(value);
+
+          if (widget.isShowOnSearchResult != null) {
+            if (widget.isShowOnSearchResult?.call(text, i, value) ?? false) {
+              _tmp.add(value);
+            }
           } else {
             String title = widget.functionOfName?.call(this, i, value) ?? value.toString();
             if (title.contains(text)) {
