@@ -2,47 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../core/boxes.dart';
-
-/// Widget with tap effect
-class CcTapWidget extends StatefulWidget {
-  final Widget? child;
-  final Widget Function(bool isTapping)? builder;
-  final void Function(CcTapWidgetState state) onTap;
-
-  const CcTapWidget({Key? key, this.builder, this.child, required this.onTap}) : super(key: key);
-
-  @override
-  State<CcTapWidget> createState() => CcTapWidgetState();
-}
-
-class CcTapWidgetState extends State<CcTapWidget> {
-  bool _isTapingDown = false;
-
-  get isTapingDown => _isTapingDown;
-
-  set isTapingDown(v) {
-    setState(() => _isTapingDown = v);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (e) => isTapingDown = true,
-      onPointerUp: (e) => isTapingDown = false,
-      onPointerCancel: (e) => isTapingDown = false,
-      child: GestureDetector(
-        child: widget.builder?.call(isTapingDown) ??
-            Opacity(
-              opacity: isTapingDown ? 0.5 : 1,
-              child: widget.child,
-            ),
-        onTap: () {
-          widget.onTap(this);
-        },
-      ),
-    );
-  }
-}
+import 'cc_basic_widgets.dart';
 
 /// Usaully use as Navigation action bar, Confirm title action bar
 class CcActionHeaderWidget extends StatelessWidget {
@@ -137,7 +97,7 @@ class CcActionHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget _container() {
+    Widget _headerBuilder() {
       return Container(
         height: height,
         alignment: Alignment.center,
@@ -166,14 +126,14 @@ class CcActionHeaderWidget extends StatelessWidget {
     }
 
     // 1. auto size ~~~
-    // you can comment it if u don't want to us the GetSizeWidget for no need to import shower dependency
+    // you can comment it if u don't want to us the GetSizeWidget for no need to import relevent dependency
     if (leftButtonWidth == ccAutoSizeWith || rightButtonWidth == ccAutoSizeWith) {
       return StatefulBuilder(builder: (context, setState) {
         bool isCaculated = leftButtonWidth != ccAutoSizeWith && rightButtonWidth != ccAutoSizeWith;
         return isCaculated
-            ? _container()
+            ? _headerBuilder()
             : GetSizeWidget(
-                child: _container(),
+                child: _headerBuilder(),
                 onLayoutChanged: (box, legacy, size) {
                   setState(() {
                     leftButtonWidth = leftButtonWidth == ccAutoSizeWith ? size.width / 5 : leftButtonWidth;
@@ -184,7 +144,7 @@ class CcActionHeaderWidget extends StatelessWidget {
       });
     }
     // 2. null size or fixed size
-    return _container();
+    return _headerBuilder();
   }
 }
 
@@ -205,6 +165,7 @@ class CcSelectListWidget extends StatefulWidget {
     this.selectedValues,
     this.isSearchEnable = false,
     this.searchValues,
+    this.onSearchTextChange,
     this.itemBuilder,
     this.itemPrefixBuilder,
     this.itemSuffixBuilder,
@@ -242,6 +203,8 @@ class CcSelectListWidget extends StatefulWidget {
 
   bool isSearchEnable;
   List<Object>? searchValues;
+  void Function(String text)? onSearchTextChange;
+  bool Function(String text, int index, Object value)? isShowOnSearchResult;
 
   // default items builder events
   Widget? Function(CcSelectListState state, int index, Object value)? itemBuilder;
@@ -256,17 +219,17 @@ class CcSelectListWidget extends StatefulWidget {
 }
 
 class CcSelectListState extends State<CcSelectListWidget> {
-  TextEditingController? _textEditController;
+  TextEditingController? searchTextEditController;
 
   @override
   void initState() {
     super.initState();
-    _textEditController = widget.isSearchEnable ? TextEditingController() : null;
+    searchTextEditController = widget.isSearchEnable ? TextEditingController() : null;
   }
 
   @override
   void dispose() {
-    _textEditController?.dispose();
+    searchTextEditController?.dispose();
     super.dispose();
   }
 
@@ -374,7 +337,7 @@ class CcSelectListState extends State<CcSelectListWidget> {
       height: widget.defSearchBoxHeight,
       padding: const EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 8),
       child: CupertinoTextField(
-        controller: _textEditController,
+        controller: searchTextEditController,
         suffixMode: OverlayVisibilityMode.editing,
         suffix: CcTapWidget(
             child: const Padding(
@@ -382,13 +345,13 @@ class CcSelectListState extends State<CcSelectListWidget> {
               child: Icon(Icons.highlight_remove_rounded, color: Colors.grey, size: 20),
             ),
             onTap: (state) {
-              _textEditController?.clear();
-              defaultSearchTextOnChanged(_textEditController?.text ?? '');
+              searchTextEditController?.clear();
+              onEventSearchTextChanged(searchTextEditController?.text ?? '');
             }),
         prefix: const Padding(padding: EdgeInsets.only(left: 12), child: Icon(Icons.search, color: Colors.grey, size: 25)),
         placeholder: 'Enter',
         onChanged: (text) {
-          defaultSearchTextOnChanged(text);
+          onEventSearchTextChanged(text);
         },
       ),
     );
@@ -425,6 +388,11 @@ class CcSelectListState extends State<CcSelectListWidget> {
     );
   }
 
+  void onEventSearchTextChanged(String text) {
+    void Function(String text) searchChanged = widget.onSearchTextChange ?? defaultSearchTextOnChanged;
+    searchChanged(text);
+  }
+
   void defaultSearchTextOnChanged(String text) {
     setState(() {
       if (text.isEmpty) {
@@ -434,9 +402,13 @@ class CcSelectListState extends State<CcSelectListWidget> {
         List<Object> _tmp = [];
         for (int i = 0; i < widget.values.length; i++) {
           Object value = widget.values[i];
-          String title = widget.functionOfName?.call(this, i, value) ?? value.toString();
-          if (title.contains(text)) {
+          if (widget.isShowOnSearchResult?.call(text, i, value) ?? false) {
             _tmp.add(value);
+          } else {
+            String title = widget.functionOfName?.call(this, i, value) ?? value.toString();
+            if (title.contains(text)) {
+              _tmp.add(value);
+            }
           }
         }
         widget.searchValues!.clear();

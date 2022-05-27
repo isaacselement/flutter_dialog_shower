@@ -102,9 +102,18 @@ class DialogWrapper {
   }
 
   static DialogShower pushRoot(Widget widget,
-      {bool isFixed = false, double? x, double? y, double? width, double? height, Offset? direction, String? key}) {
+      {RouteSettings? settings,
+      bool isFixed = false,
+      double? x,
+      double? y,
+      double? width,
+      double? height,
+      Offset? direction,
+      String? key}) {
     return DialogWrapper.show(widget, isFixed: isFixed, x: x, y: y, width: width, height: height, direction: direction, key: key)
-      ..isWrappedByNavigator = true;
+      ..isWrappedByNavigator = true
+      ..wrappedNavigatorInitialName = settings?.name
+    ;
   }
 
   // should use 'pushRoot' first or that there is a shower with 'isWrappedByNavigator = true' on showing

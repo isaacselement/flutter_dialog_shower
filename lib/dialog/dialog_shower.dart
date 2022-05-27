@@ -135,6 +135,7 @@ class DialogShower {
   /// extension for navigate inner dialog
   bool isWrappedByNavigator = false;
   bool isAutoSizeForNavigator = true;
+  String? wrappedNavigatorInitialName;
   GlobalKey<NavigatorState>? _navigatorKey;
 
   /// holder object for various uses if you need ...
@@ -500,6 +501,7 @@ class DialogShower {
       _navigatorKey = GlobalKey<NavigatorState>();
       widget = Navigator(
         key: _navigatorKey,
+        initialRoute: wrappedNavigatorInitialName,
         onGenerateRoute: (RouteSettings settings) {
           return PageRouteBuilder(
             pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {

@@ -10,7 +10,6 @@ import '../util/logger.dart';
 import 'page_of_keyboard.dart';
 
 class PageOfNavigator extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfNavigator] ----------->>>>>>>>>>>> build/rebuild!!!");
@@ -34,6 +33,8 @@ class PageOfNavigator extends StatelessWidget {
           WidgetsUtil.newHeaderWithGradient('Navigator inner shower'),
           const SizedBox(height: 16),
           buildButtonsAboutNavigator(),
+          const SizedBox(height: 16),
+          buildButtonsAboutPickerList(),
         ],
       ),
     );
@@ -50,7 +51,7 @@ class PageOfNavigator extends StatelessWidget {
                   'Click me': (context) {
                     rootBundle.loadString('assets/json/CN.json').then((string) {
                       List<dynamic> value = json.decode(string);
-                      DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
+                      DialogWrapper.push(PageOfNavigator.getSelectableListWidget(value: value),
                           settings: const RouteSettings(name: '__root_route__'));
                     });
                   }
@@ -64,7 +65,7 @@ class PageOfNavigator extends StatelessWidget {
                 'Click me to push': (context) {
                   rootBundle.loadString('assets/json/CN.json').then((string) {
                     List<dynamic> value = json.decode(string);
-                    DialogWrapper.push(PageOfKeyboard.getSelectableListWidget(value),
+                    DialogWrapper.push(PageOfNavigator.getSelectableListWidget(value: value),
                         settings: const RouteSettings(name: '__root_route__'));
                   });
                 },
@@ -72,6 +73,30 @@ class PageOfNavigator extends StatelessWidget {
                   DialogWrapper.getTopDialog()?.setState(() {});
                 }
               }));
+            }),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget buildButtonsAboutPickerList() {
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Show selectabl list', onPressed: (state) {
+              rootBundle.loadString('assets/json/CN.json').then((string) {
+                List<dynamic> value = json.decode(string);
+                DialogWrapper.pushRoot(
+                  PageOfNavigator.getSelectableListWidget(value: value, doneSelectEvent: (depth, object) {
+
+                    return true;
+                  }),
+                  settings: const RouteSettings(name: '__root_route__'),
+                  width: 500,
+                );
+              });
             }),
           ],
         )
@@ -102,8 +127,45 @@ class PageOfNavigator extends StatelessWidget {
 //   });
 //   _controller.forward().then((value) {
 //     print('>>>>>>>>>>>>>>>>> done!!!!!!');
-//
 //   });
 //
 // }
+
+  /// Static Methods
+  static CcSelectListWidget getSelectableListWidget({
+    required Object value,
+    int depth = 0,
+    bool Function(int depth, Object value)? doneSelectEvent,
+  }) {
+    return CcSelectListWidget(
+      title: 'Select The City',
+      values: ((value is Map ? value['children'] : value) as List<dynamic>).cast(),
+      functionOfName: (s, i, e) => e is Map ? e['areaName'] : '',
+      isSearchEnable: true,
+      leftButtonEvent: (state) {
+        DialogWrapper.pop();
+      },
+      itemSuffixBuilder: (state, index, value) {
+        if (value is Map && value['children'] != null && value['children']!.isNotEmpty) {
+          return const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey);
+        }
+        return null;
+      },
+      onSelectedEvent: (CcSelectListState state, int index, Object value, List<Object>? selectedValues) {
+        if (value is! Map) {
+          return;
+        }
+        if (value['children'] == null || value['children']!.isEmpty) {
+          if (doneSelectEvent?.call(depth, value) ?? false) {
+            return;
+          }
+          DialogWrapper.getTopNavigatorDialog()!.getNavigator()!.popUntil((route) => route.settings.name == '__root_route__');
+          DialogWrapper.pop();
+          return;
+        }
+        DialogWrapper.push(getSelectableListWidget(value: value, depth: depth++), settings: RouteSettings(name: 'depth+$depth'));
+      },
+    );
+  }
+
 }

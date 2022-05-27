@@ -1,5 +1,7 @@
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
+import 'package:example/view/page_of_basic.dart';
+import 'package:example/view/page_of_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
@@ -28,6 +30,8 @@ class PageOfHomeless extends StatelessWidget {
           WidgetsUtil.newHeaderWithGradient('Homeless'),
           const SizedBox(height: 16),
           _buildBoxesWidgets(),
+          const SizedBox(height: 16),
+          _buildBrokerTest(),
         ],
       ),
     );
@@ -96,6 +100,39 @@ class PageOfHomeless extends StatelessWidget {
                     ..dx = 202
                     ..dy = 208
                     ..onTapCallback = (shower) => shower.dismiss();
+                }),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBrokerTest() {
+    PageOfHome home = PageOfHome();
+    return Column(
+      children: [
+        Row(
+          children: [
+            Wrap(
+              children: [
+                WidgetsUtil.newXpelTextButton('Push', onPressed: (state) {
+                  Stacker.push<PageOfHome>(PageOfHome());
+                  Stacker.push<PageOfHome>(PageOfHome());
+                  Stacker.push<PageOfHome>(PageOfHome());
+                  Stacker.push<PageOfHome>(PageOfHome());
+                  Stacker.push<PageOfHome>(PageOfHome());
+                  Stacker.push<PageOfHome>(home);
+                }),
+                WidgetsUtil.newXpelTextButton('Pop', onPressed: (state) {
+                  bool containsInList = Stacker.contains<PageOfHome>();
+                  print('=======>>>>>>>>>>>> containsInList: $containsInList');
+                  int count =  Stacker.remove<PageOfHome>();
+                  // int count =  Stacker.remove(value: home);
+                  print('=======>>>>>>>>>>>> removeInList: $count');
+                  containsInList = Stacker.contains<PageOfHome>();
+                  print('=======>>>>>>>>>>>> after containsInList: $containsInList');
                 }),
               ],
             ),

@@ -229,38 +229,6 @@ class PageOfKeyboard extends StatelessWidget {
   }
 
   /// Static Methods
-
-  static void showCitiesOnClick(CcSelectListState state, int index, Object value, List<Object>? selectedValues) {
-    if (value is! Map) {
-      return;
-    }
-    if (value['children'] == null || value['children']!.isEmpty) {
-      DialogWrapper.getTopNavigatorDialog()!.getNavigator()!.popUntil((route) => route.settings.name == '__root_route__');
-      DialogWrapper.pop();
-      return;
-    }
-    DialogWrapper.push(getSelectableListWidget(value));
-  }
-
-  static CcSelectListWidget getSelectableListWidget(Object value) {
-    return CcSelectListWidget(
-      title: 'Select The City',
-      values: ((value is Map ? value['children'] : value) as List<dynamic>).cast(),
-      functionOfName: (s, i, e) => e is Map ? e['areaName'] : '',
-      isSearchEnable: true,
-      leftButtonEvent: (state) {
-        DialogWrapper.pop();
-      },
-      itemSuffixBuilder: (state, index, value) {
-        if (value is Map && value['children'] != null && value['children']!.isNotEmpty) {
-          return const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey);
-        }
-        return null;
-      },
-      onSelectedEvent: showCitiesOnClick,
-    );
-  }
-
   static double getMaxWidth4Texts(List<String> texts, TextStyle style) {
     double max = 0;
     for (String text in texts) {
