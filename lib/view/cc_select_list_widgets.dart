@@ -166,6 +166,7 @@ class CcSelectListWidget extends StatefulWidget {
     this.isSearchEnable = false,
     this.searchValues,
     this.onSearchTextChange,
+    this.isShowOnSearchResult,
     this.itemBuilder,
     this.itemPrefixBuilder,
     this.itemSuffixBuilder,
