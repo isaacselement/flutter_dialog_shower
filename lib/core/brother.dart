@@ -127,8 +127,6 @@ class BtWidgetState extends State<BtWidget> {
 
 /// Brother Key is a Notifier
 class BtKey extends BtNotifier {
-  get eye => BtObserver.proxy?.addListener(this);
-
   @override
   void update() {
     _stream.add(null);
@@ -136,8 +134,10 @@ class BtKey extends BtNotifier {
 }
 
 /// Brother Notifier
-class BtNotifier<T> {
+abstract class BtNotifier<T> {
   final BtStream<T> _stream = BtStream();
+
+  get eye => BtObserver.proxy?.addListener(this);
 
   late T _value;
 

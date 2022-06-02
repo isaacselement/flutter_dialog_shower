@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:example/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -97,15 +99,17 @@ class PageOfBrother extends StatelessWidget {
   }
 
   Widget _buildBtwBtKey() {
-    Color color = Colors.black26;
     BtKey btKey = BtKey();
+    List<Color> colors = [Colors.black26, Colors.red, Colors.purpleAccent, Colors.orange, Colors.deepOrange];
+    Color color = colors[0];
     return Btw(
       builder: (context) {
         btKey.eye; // Put an eye here. Just like ... Dota/LOL online game 插个眼.
         return CupertinoButton(
             child: Icon(Icons.fingerprint, size: 50, color: color),
             onPressed: () {
-              color = color == Colors.red ? Colors.purpleAccent : Colors.red;
+              List<Color> tmp = [...colors]..remove(color);
+              color = tmp.elementAt(Random().nextInt(tmp.length));
               btKey.update();
             });
       },
