@@ -595,14 +595,14 @@ class DialogShower {
 
     // copy from PageRouteBuilder constructor
     RouteSettings? settings,
-    duration = const Duration(milliseconds: 300),
-    reverseDuration = const Duration(milliseconds: 300),
-    opaque = true,
-    barrierDismissible = false,
-    barrierColor,
-    barrierLabel,
-    maintainState = true,
-    fullscreenDialog = false,
+    Duration? duration = const Duration(milliseconds: 300),
+    Duration? reverseDuration = const Duration(milliseconds: 300),
+    bool? opaque = true,
+    bool? barrierDismissible = false,
+    Color? barrierColor,
+    String? barrierLabel,
+    bool? maintainState = true,
+    bool? fullscreenDialog = false,
   }) {
     transition = transition ?? _defTransition;
     pageBuilder = pageBuilder ?? (ctx, animOne, animTwo) => widget;

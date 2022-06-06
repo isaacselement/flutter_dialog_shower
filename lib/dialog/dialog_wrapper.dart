@@ -112,8 +112,7 @@ class DialogWrapper {
       String? key}) {
     return DialogWrapper.show(widget, isFixed: isFixed, x: x, y: y, width: width, height: height, direction: direction, key: key)
       ..isWrappedByNavigator = true
-      ..wrappedNavigatorInitialName = settings?.name
-    ;
+      ..wrappedNavigatorInitialName = settings?.name;
   }
 
   // should use 'pushRoot' first or that there is a shower with 'isWrappedByNavigator = true' on showing
@@ -125,10 +124,10 @@ class DialogWrapper {
 
     // copy from PageRouteBuilder constructor
     RouteSettings? settings,
-    double? duration,
-    double? reverseDuration,
+    Duration? duration,
+    Duration? reverseDuration,
     bool? opaque,
-    double? barrierDismissible,
+    bool? barrierDismissible,
     Color? barrierColor,
     String? barrierLabel,
     bool? maintainState,
