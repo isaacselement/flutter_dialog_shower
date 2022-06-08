@@ -33,7 +33,7 @@ class PageOfBasic extends StatelessWidget {
         WidgetsUtil.newHeaderWithLine('DialogWrapper'),
         WidgetsUtil.newDescriptions('DialogWrapper is a wrapper for DialogShower. '),
         WidgetsUtil.newDescriptions(
-            'Using DialogWrapper, you can very easy to show a dialog and modify it\'s properties, and take the management of Your ALL Showing Dialogs'),
+            'Using DialogWrapper, you can very easy to show a dialog and modify it\'s properties, and take the management of YOUR ALL showing dialogs'),
         const SizedBox(height: 12),
         demoUsageOfDialogWrapper(),
         const SizedBox(height: 12),
