@@ -4,10 +4,10 @@ import 'package:flutter/rendering.dart';
 import 'app.dart';
 
 void main() {
-  debugPaintSizeEnabled = true;
-  debugPaintPointersEnabled = true;
-  debugRepaintRainbowEnabled = true;
-  debugPaintLayerBordersEnabled = true;
+  // debugPaintSizeEnabled = true;
+  // debugPaintPointersEnabled = true;
+  // debugRepaintRainbowEnabled = true;
+  // debugPaintLayerBordersEnabled = true;
 
   runApp(const App());
 }
