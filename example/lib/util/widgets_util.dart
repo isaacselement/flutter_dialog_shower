@@ -20,7 +20,7 @@ class WidgetsUtil {
   }
 
   static XpTextButton newXpelTextButton(String text, {void Function(State state)? onPressed}) {
-    return XpTextButton.smallest(
+    return XpTextButton(
       text,
       onPressed: (state) {
         onPressed?.call(state);

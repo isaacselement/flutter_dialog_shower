@@ -40,69 +40,65 @@ class PageOfHomeless extends StatelessWidget {
   Widget _buildBoxesWidgets() {
     return Column(
       children: [
-        Row(
+        Wrap(
           children: [
-            Wrap(
-              children: [
-                WidgetsUtil.newXpelTextButton('Event Truck Fire', onPressed: (state) {
-                  EventTruck.fire('object or anything :)');
-                  _showToastOnTop('fire!!!');
-                }),
-                WidgetsUtil.newXpelTextButton('Get Size Widget', onPressed: (state) {
-                  OverlayWrapper.show(
-                    GetSizeWidget(
-                      child: const SizedBox(width: 200, height: 300, child: ColoredBox(color: Colors.purple)),
-                      onLayoutChanged: (RenderBox box, Size? legacy, Size size) {
+            WidgetsUtil.newXpelTextButton('Event Truck Fire', onPressed: (state) {
+              EventTruck.fire('object or anything :)');
+              _showToastOnTop('fire!!!');
+            }),
+            WidgetsUtil.newXpelTextButton('Get Size Widget', onPressed: (state) {
+              OverlayWrapper.show(
+                GetSizeWidget(
+                  child: const SizedBox(width: 200, height: 300, child: ColoredBox(color: Colors.purple)),
+                  onLayoutChanged: (RenderBox box, Size? legacy, Size size) {
+                    _showToastOnTop('I got your size: $size');
+                  },
+                ),
+              )
+                ..dx = 202
+                ..dy = 208
+                ..onTapCallback = (shower) => shower.dismiss();
+            }),
+            WidgetsUtil.newXpelTextButton('Get Position Widget', onPressed: (state) {
+              OverlayWrapper.show(
+                GetLayoutWidget(
+                  onLayoutChanged: (RenderBox box, Offset offset, Size size) {
+                    _showToastOnTop('I got parent position: $offset');
+                    _showToastOnTop('I got parent size: $size');
+                  },
+                  child: Container(
+                    width: 400,
+                    height: 400,
+                    margin: const EdgeInsets.only(left: 10, top: 10),
+                    padding: const EdgeInsets.only(left: 20, top: 20),
+                    color: Colors.orange,
+                    child: GetLayoutWidget(
+                      onLayoutChanged: (RenderBox box, Offset offset, Size size) {
+                        _showToastOnTop('I got your position: $offset');
                         _showToastOnTop('I got your size: $size');
                       },
-                    ),
-                  )
-                    ..dx = 202
-                    ..dy = 208
-                    ..onTapCallback = (shower) => shower.dismiss();
-                }),
-                WidgetsUtil.newXpelTextButton('Get Position Widget', onPressed: (state) {
-                  OverlayWrapper.show(
-                    GetLayoutWidget(
-                      onLayoutChanged: (RenderBox box, Offset offset, Size size) {
-                        _showToastOnTop('I got parent position: $offset');
-                        _showToastOnTop('I got parent size: $size');
-                      },
-                      child: Container(
-                        width: 400,
-                        height: 400,
-                        margin: const EdgeInsets.only(left: 10, top: 10),
-                        padding: const EdgeInsets.only(left: 20, top: 20),
-                        color: Colors.orange,
+                      child: SizedBox(
+                        width: 288,     /// TODO ... NOT take effect ???
+                        height: 188,    /// TODO ... NOT take effect ???
                         child: GetLayoutWidget(
                           onLayoutChanged: (RenderBox box, Offset offset, Size size) {
-                            _showToastOnTop('I got your position: $offset');
-                            _showToastOnTop('I got your size: $size');
+                            _showToastOnTop('I got son position: $offset');
+                            _showToastOnTop('I got son size: $size');
                           },
-                          child: SizedBox(
-                            width: 288,     /// TODO ... NOT take effect ???
-                            height: 188,    /// TODO ... NOT take effect ???
-                            child: GetLayoutWidget(
-                              onLayoutChanged: (RenderBox box, Offset offset, Size size) {
-                                _showToastOnTop('I got son position: $offset');
-                                _showToastOnTop('I got son size: $size');
-                              },
-                              child: const ColoredBox(
-                                color: Colors.red,
-                                child: Center(child: Text('see the logs')),
-                              ),
-                            ),
+                          child: const ColoredBox(
+                            color: Colors.red,
+                            child: Center(child: Text('see the logs')),
                           ),
                         ),
                       ),
                     ),
-                  )
-                    ..dx = 202
-                    ..dy = 208
-                    ..onTapCallback = (shower) => shower.dismiss();
-                }),
-              ],
-            ),
+                  ),
+                ),
+              )
+                ..dx = 202
+                ..dy = 208
+                ..onTapCallback = (shower) => shower.dismiss();
+            }),
           ],
         ),
       ],
@@ -113,29 +109,25 @@ class PageOfHomeless extends StatelessWidget {
     PageOfHome home = PageOfHome();
     return Column(
       children: [
-        Row(
+        Wrap(
           children: [
-            Wrap(
-              children: [
-                WidgetsUtil.newXpelTextButton('Push', onPressed: (state) {
-                  Stacker.push<PageOfHome>(PageOfHome());
-                  Stacker.push<PageOfHome>(PageOfHome());
-                  Stacker.push<PageOfHome>(PageOfHome());
-                  Stacker.push<PageOfHome>(PageOfHome());
-                  Stacker.push<PageOfHome>(PageOfHome());
-                  Stacker.push<PageOfHome>(home);
-                }),
-                WidgetsUtil.newXpelTextButton('Pop', onPressed: (state) {
-                  bool containsInList = Stacker.contains<PageOfHome>();
-                  print('=======>>>>>>>>>>>> containsInList: $containsInList');
-                  int count =  Stacker.remove<PageOfHome>();
-                  // int count =  Stacker.remove(value: home);
-                  print('=======>>>>>>>>>>>> removeInList: $count');
-                  containsInList = Stacker.contains<PageOfHome>();
-                  print('=======>>>>>>>>>>>> after containsInList: $containsInList');
-                }),
-              ],
-            ),
+            WidgetsUtil.newXpelTextButton('Push', onPressed: (state) {
+              Stacker.push<PageOfHome>(PageOfHome());
+              Stacker.push<PageOfHome>(PageOfHome());
+              Stacker.push<PageOfHome>(PageOfHome());
+              Stacker.push<PageOfHome>(PageOfHome());
+              Stacker.push<PageOfHome>(PageOfHome());
+              Stacker.push<PageOfHome>(home);
+            }),
+            WidgetsUtil.newXpelTextButton('Pop', onPressed: (state) {
+              bool containsInList = Stacker.contains<PageOfHome>();
+              print('=======>>>>>>>>>>>> containsInList: $containsInList');
+              int count =  Stacker.remove<PageOfHome>();
+              // int count =  Stacker.remove(value: home);
+              print('=======>>>>>>>>>>>> removeInList: $count');
+              containsInList = Stacker.contains<PageOfHome>();
+              print('=======>>>>>>>>>>>> after containsInList: $containsInList');
+            }),
           ],
         ),
       ],

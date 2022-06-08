@@ -14,8 +14,6 @@ class XpTextButton extends StatefulWidget {
   Color? backgroundColorDisable;
   EdgeInsets? margin;
   EdgeInsets? padding;
-  Alignment? alignment;
-  bool isAsSmallAsPossible = false;
   bool isDisable = false;
   TextStyle? Function(String text, bool isTapingDown)? textStyleBuilder;
   BoxDecoration? Function(String text, bool isTapingDown)? decorationBuilder;
@@ -33,29 +31,7 @@ class XpTextButton extends StatefulWidget {
     this.backgroundColorDisable = const Color(0xFFF5F5FA),
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
-    this.alignment = Alignment.center,
     this.onPressed,
-    this.isAsSmallAsPossible = false,
-    this.isDisable = false,
-    this.textStyleBuilder,
-    this.decorationBuilder,
-  }) : super(key: key);
-
-  XpTextButton.smallest(
-    this.text, {
-    Key? key,
-    this.width,
-    this.height,
-    this.textColor = Colors.white,
-    this.borderColor,
-    this.backgroundColor = const Color(0xFF4275FF),
-    this.borderColorDisable,
-    this.backgroundColorDisable = const Color(0xFFF5F5FA),
-    this.margin = const EdgeInsets.all(10),
-    this.padding = const EdgeInsets.all(10),
-    this.alignment = Alignment.center,
-    this.onPressed,
-    this.isAsSmallAsPossible = true,
     this.isDisable = false,
     this.textStyleBuilder,
     this.decorationBuilder,
@@ -86,12 +62,15 @@ class XpTextButtonState extends State<XpTextButton> {
         child: GestureDetector(
           child: Container(
             padding: widget.padding,
-            alignment: widget.alignment,
+            // alignment: widget.alignment,
             decoration: widget.decorationBuilder?.call(widget.text, isTapingDown) ??
                 (widget.isDisable ? _defBoxDecorationDisable(widget.text) : _defBoxDecoration(widget.text, isTapingDown)),
-            child: Text(widget.text,
-                style: widget.textStyleBuilder?.call(widget.text, isTapingDown) ??
-                    (widget.isDisable ? _defTextStyleDisable(widget.text) : _defTextStyle(widget.text, isTapingDown))),
+            child: Text(
+              widget.text,
+              style: widget.textStyleBuilder?.call(widget.text, isTapingDown) ??
+                  (widget.isDisable ? _defTextStyleDisable(widget.text) : _defTextStyle(widget.text, isTapingDown)),
+              overflow: TextOverflow.ellipsis, maxLines: 1,
+            ),
           ),
           onTap: () {
             isTapingDown = false;
@@ -103,7 +82,7 @@ class XpTextButtonState extends State<XpTextButton> {
       ),
     );
     // as small as possible
-    return widget.isAsSmallAsPossible ? Row(mainAxisSize: MainAxisSize.min, children: [view]) : view;
+    return  view;
   }
 
   BoxDecoration _defBoxDecorationDisable(String text) {
