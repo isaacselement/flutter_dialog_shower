@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:example/view/page_of_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,63 +24,63 @@ class PagesManager {
     //   'Home',
     //   const Icon(Icons.home_outlined, size: 32, color: Colors.black26),
     //   const Icon(Icons.home, size: 32, color: Colors.orange),
-    //   PageOfHome(),
+    //   const PageOfHome(),
     // );
     addTabPage(
       true,
       'Basic',
       const Icon(Icons.sports_football, size: 32, color: Colors.black26),
       const Icon(Icons.sports_football_sharp, size: 32, color: Colors.orange),
-      PageOfBasic(),
+      const PageOfBasic(),
     );
     addTabPage(
       false,
       'Widgets',
       const Icon(Icons.widgets, size: 32, color: Colors.black26),
       const Icon(Icons.widgets_sharp, size: 32, color: Colors.orange),
-      PageOfWidgets(),
+      const PageOfWidgets(),
     );
     addTabPage(
       false,
       'Keyboard',
       const Icon(Icons.keyboard, size: 32, color: Colors.black26),
       const Icon(Icons.keyboard_sharp, size: 32, color: Colors.orange),
-      PageOfKeyboard(),
+      const PageOfKeyboard(),
     );
     addTabPage(
       false,
       'Bubble',
       const Icon(Icons.bubble_chart, size: 32, color: Colors.black26),
       const Icon(Icons.bubble_chart_sharp, size: 32, color: Colors.orange),
-      PageOfBubble(),
+      const PageOfBubble(),
     );
     addTabPage(
       false,
       'Navigator',
       const Icon(Icons.navigation, size: 32, color: Colors.black26),
       const Icon(Icons.navigation_sharp, size: 32, color: Colors.orange),
-      PageOfNavigator(),
+      const PageOfNavigator(),
     );
     addTabPage(
       false,
       'Overlay',
       const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
       const Icon(Icons.auto_awesome_motion_sharp, size: 32, color: Colors.orange),
-      PageOfOverlay(),
+      const PageOfOverlay(),
     );
     addTabPage(
       false,
       'Brother',
       const Icon(Icons.refresh, size: 32, color: Colors.black26),
       const Icon(Icons.refresh_sharp, size: 32, color: Colors.orange),
-      PageOfBrother(),
+      const PageOfBrother(),
     );
     addTabPage(
       false,
       'Homeless',
       const Icon(Icons.auto_awesome, size: 32, color: Colors.black26),
       const Icon(Icons.auto_awesome_sharp, size: 32, color: Colors.orange),
-      PageOfHomeless(),
+      const PageOfHomeless(),
     );
   }
 

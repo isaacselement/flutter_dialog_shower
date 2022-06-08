@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/cupertino.dart';
 
 // Inspired by GetX[https://github.com/jonataslaw/getx]. Brother is the simplified version for GetX widget/state management.

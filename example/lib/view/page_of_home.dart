@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PageOfHome extends StatelessWidget {
+  const PageOfHome({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfHome] ----------->>>>>>>>>>>> build/rebuild!!!");
@@ -20,16 +22,14 @@ class PageOfHome extends StatelessWidget {
   }
 
   Widget buildContainer() {
-    return Container(
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          WidgetsUtil.newHeaderWithLine('User is God'),
-          WidgetsUtil.newDescriptions('Mor demonstrations are on the way ...'),
-          const SizedBox(height: 200),
-          WidgetsUtil.newHeaderWithLine('Feel free to use DialogShower & Brother :)')
-        ],
-      ),
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        WidgetsUtil.newHeaderWithLine('User is God'),
+        WidgetsUtil.newDescriptions('Mor demonstrations are on the way ...'),
+        const SizedBox(height: 200),
+        WidgetsUtil.newHeaderWithLine('Feel free to use DialogShower & Brother :)')
+      ],
     );
   }
 }

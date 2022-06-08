@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -39,6 +41,8 @@ class CcActionHeaderWidget extends StatelessWidget {
   Function()? rightButtonEvent;
   Widget? Function()? rightButtonBuilder;
   Widget? Function()? rightBuilder;
+
+  CcActionHeaderWidget({Key? key}) : super(key: key);
 
   Widget? _defTitleBuilder() {
     if (title == null) {

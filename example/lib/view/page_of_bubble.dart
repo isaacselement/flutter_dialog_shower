@@ -1,14 +1,17 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:example/util/offset_util.dart';
 import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
-import 'package:flutter_dialog_shower/view/cc_basic_widgets.dart';
 
 import '../util/logger.dart';
 import 'widgets/xp_widgets.dart';
 
 class PageOfBubble extends StatelessWidget {
+  const PageOfBubble({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBubble] ----------->>>>>>>>>>>> build/rebuild!!!");
@@ -205,7 +208,6 @@ class PageOfBubble extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('Show on My Left', onPressed: (state) {
               Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-              Size size = SizeUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.right,

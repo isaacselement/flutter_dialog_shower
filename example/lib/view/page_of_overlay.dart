@@ -6,9 +6,10 @@ import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
-import 'package:flutter_dialog_shower/view/cc_basic_widgets.dart';
 
 class PageOfOverlay extends StatelessWidget {
+  const PageOfOverlay({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBasic] ----------->>>>>>>>>>>> build/rebuild!!!");
@@ -497,8 +498,6 @@ class PageOfOverlay extends StatelessWidget {
                     // return;
 
                     // 2. Use OverlayShower
-                    RenderBox? box = context.findRenderObject() as RenderBox?;
-                    Size size = box?.size ?? Size.zero;
                     int randomIr = Random().nextInt(3);
                     int zRadius = (OverlayWrapper.appearingShowers?.length ?? 0) == 0 || randomIr == 0 ? 0 : (randomIr == 1 ? 15 : -15);
 

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:math';
 
 import 'package:example/util/logger.dart';
@@ -6,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class PageOfBrother extends StatelessWidget {
+  const PageOfBrother({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBrother] ----------->>>>>>>>>>>> build/rebuild!!!");

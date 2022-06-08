@@ -8,6 +8,8 @@ import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 import '../util/logger.dart';
 
 class PageOfKeyboard extends StatelessWidget {
+  const PageOfKeyboard({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfKeyboard] ----------->>>>>>>>>>>> build/rebuild!!!");
@@ -254,7 +256,7 @@ class PageOfKeyboard extends StatelessWidget {
     }
     isInited = !isInited;
     // set up appearence for keyboard showed up in one place
-    StreamSubscription streamSubscription = KeyboardEventListener.listen((isKeyboardShow) {
+    KeyboardEventListener.listen((isKeyboardShow) {
       Logger.d('PageOfInfoView 【keyboard visibility】---> isKeyboardShow: $isKeyboardShow');
       DialogShower? topDialog = DialogWrapper.getTopDialog();
       if (topDialog != null) {

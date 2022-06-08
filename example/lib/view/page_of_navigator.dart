@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:example/util/widgets_util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 import '../util/logger.dart';
-import 'page_of_keyboard.dart';
 
 class PageOfNavigator extends StatelessWidget {
+  const PageOfNavigator({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfNavigator] ----------->>>>>>>>>>>> build/rebuild!!!");

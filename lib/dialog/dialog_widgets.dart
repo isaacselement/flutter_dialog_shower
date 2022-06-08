@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
@@ -177,7 +179,7 @@ class DialogWidgets {
 }
 
 /// Convenient Widget for being easy to use
-class CommonStatefulWidget<T extends CommonStatefulWidgetState> extends StatefulWidget {
+abstract class CommonStatefulWidget<T extends CommonStatefulWidgetState> extends StatefulWidget {
   CommonStatefulWidget({Key? key, this.builder, this.initState, this.dispose}) : super(key: key);
 
   void Function(T state)? initState;
@@ -185,10 +187,10 @@ class CommonStatefulWidget<T extends CommonStatefulWidgetState> extends Stateful
   Widget Function(T state, BuildContext context)? builder;
 
   @override
-  T createState() => CommonStatefulWidgetState() as T;
+  T createState();
 }
 
-class CommonStatefulWidgetState extends State<CommonStatefulWidget> {
+abstract class CommonStatefulWidgetState extends State<CommonStatefulWidget> {
   @override
   void initState() {
     widget.initState?.call(this);
@@ -229,10 +231,10 @@ class CommonStatefulWidgetWithTickers extends CommonStatefulWidget {
 class CommonStatefulWidgetWithTickersState extends CommonStatefulWidgetState with TickerProviderStateMixin {}
 
 /// Painters
-// https://blog.codemagic.io/flutter-custom-painter/
-// https://medium.com/flutter-community/playing-with-paths-in-flutter-97198ba046c8
 // https://github.com/sbis04/custom_painter
+// https://blog.codemagic.io/flutter-custom-painter/
 // https://github.com/divyanshub024/flutter_path_animation
+// https://medium.com/flutter-community/playing-with-paths-in-flutter-97198ba046c8
 
 class LoadingIconPainter extends CustomPainter {
   double radius;

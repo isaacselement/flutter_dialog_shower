@@ -1,11 +1,12 @@
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
-import 'package:example/view/page_of_basic.dart';
 import 'package:example/view/page_of_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class PageOfHomeless extends StatelessWidget {
+  const PageOfHomeless({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfHomeless] ----------->>>>>>>>>>>> build/rebuild!!!");
@@ -106,17 +107,17 @@ class PageOfHomeless extends StatelessWidget {
   }
 
   Widget _buildBrokerTest() {
-    PageOfHome home = PageOfHome();
+    PageOfHome home = const PageOfHome();
     return Column(
       children: [
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Push', onPressed: (state) {
-              Stacker.push<PageOfHome>(PageOfHome());
-              Stacker.push<PageOfHome>(PageOfHome());
-              Stacker.push<PageOfHome>(PageOfHome());
-              Stacker.push<PageOfHome>(PageOfHome());
-              Stacker.push<PageOfHome>(PageOfHome());
+              Stacker.push<PageOfHome>(const PageOfHome());
+              Stacker.push<PageOfHome>(const PageOfHome());
+              Stacker.push<PageOfHome>(const PageOfHome());
+              Stacker.push<PageOfHome>(const PageOfHome());
+              Stacker.push<PageOfHome>(const PageOfHome());
               Stacker.push<PageOfHome>(home);
             }),
             WidgetsUtil.newXpelTextButton('Pop', onPressed: (state) {

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class PageOfBasic extends StatelessWidget {
+  const PageOfBasic({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Logger.d("[PageOfBasic] ----------->>>>>>>>>>>> build/rebuild!!!");

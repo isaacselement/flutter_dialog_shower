@@ -682,18 +682,6 @@ class DialogShower {
     );
   }
 
-  // Try to get container size if width or height when not given by caller
-  void _tryToGetContainerSize({int index = 0}) {
-    final List<int> tryTrickyTimes = [10, 10, 10, 20, 20, 30, 50, 50, 100];
-    if (index < tryTrickyTimes.length) {
-      Future.delayed(Duration(milliseconds: tryTrickyTimes[index]), () {
-        Size? size = (_containerKey.currentContext?.findRenderObject() as RenderBox?)?.size;
-        __shower_log__('_tryToGetContainerSize >>>>>>>>>>>>> $index size: $size');
-        size == null ? _tryToGetContainerSize(index: index++) : _setRenderedSizeWithSetState(size);
-      });
-    }
-  }
-
   void _setRenderedSizeWithSetState(Size? size) {
     renderedWidth = size?.width;
     renderedHeight = size?.height;
