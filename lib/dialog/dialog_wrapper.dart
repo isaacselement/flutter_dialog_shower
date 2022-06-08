@@ -101,15 +101,17 @@ class DialogWrapper {
     return shower;
   }
 
-  static DialogShower pushRoot(Widget widget,
-      {RouteSettings? settings,
-      bool isFixed = false,
-      double? x,
-      double? y,
-      double? width,
-      double? height,
-      Offset? direction,
-      String? key}) {
+  static DialogShower pushRoot(
+    Widget widget, {
+    RouteSettings? settings,
+    bool isFixed = false,
+    double? x,
+    double? y,
+    double? width,
+    double? height,
+    Offset? direction,
+    String? key,
+  }) {
     return DialogWrapper.show(widget, isFixed: isFixed, x: x, y: y, width: width, height: height, direction: direction, key: key)
       ..isWrappedByNavigator = true
       ..wrappedNavigatorInitialName = settings?.name;

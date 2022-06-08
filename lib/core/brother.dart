@@ -36,9 +36,8 @@ typedef BtWidgetShouldRebuild<T> = bool Function(BtWidgetState state);
 
 class Btw extends BtWidget {
   Widget Function(BuildContext context) builder;
-  String? updateKey;
 
-  Btw({Key? key, required this.builder, this.updateKey, BtWidgetShouldRebuild? shouldRebuild})
+  Btw({Key? key, required this.builder, String? updateKey, BtWidgetShouldRebuild? shouldRebuild})
       : super(key: key, updateKey: updateKey, shouldRebuild: shouldRebuild);
 
   @override
