@@ -400,7 +400,7 @@ class PageOfOverlay extends StatelessWidget {
   }
 
   Widget layerLinkOfPure() {
-    int __itemCount__ = 50;
+    int itemCount = 50;
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -414,7 +414,7 @@ class PageOfOverlay extends StatelessWidget {
           boxShadow: const [BoxShadow(color: Colors.orange, blurRadius: 16.0)],
         ),
         child: ListView.builder(
-          itemCount: __itemCount__,
+          itemCount: itemCount,
           itemBuilder: (context, index) {
             return LayerLinkEntryWidget(index: index);
           },
@@ -424,7 +424,7 @@ class PageOfOverlay extends StatelessWidget {
   }
 
   Widget layerLinkOfShower() {
-    int __itemCount__ = 50;
+    int itemCount = 50;
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -438,7 +438,7 @@ class PageOfOverlay extends StatelessWidget {
           boxShadow: const [BoxShadow(color: Colors.orange, blurRadius: 16.0)],
         ),
         child: ListView.builder(
-          itemCount: __itemCount__,
+          itemCount: itemCount,
           itemBuilder: (context, index) {
             LayerLink _layerLink = LayerLink();
             return StatefulBuilder(builder: (context, constraints) {
@@ -511,7 +511,11 @@ class PageOfOverlay extends StatelessWidget {
                     }
 
                     OverlayWidgets.showWithLayerLink(
-                        child: showedContainer, width: 400, layerLink: _layerLink, isWrappedMaterial: !isAlreadyMaterial);
+                      child: showedContainer,
+                      width: 400,
+                      layerLink: _layerLink,
+                      isWrappedMaterial: !isAlreadyMaterial,
+                    );
                   },
                 ),
               );

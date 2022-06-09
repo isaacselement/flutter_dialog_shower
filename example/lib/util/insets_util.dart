@@ -1,13 +1,11 @@
+import 'package:example/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class InsetsUtil {
   static void rebuildShowerPositionTopOnKeyboardEvent(DialogShower shower, bool isKeyboardShow, {double? top}) {
-    assert(() {
-      print('[PositionUtil] -> rebuildShowerPositionTopOnKeyboardEvent $isKeyboardShow');
-      return true;
-    }());
+    Logger.console(() => '[PositionUtil] -> rebuildShowerPositionTopOnKeyboardEvent $isKeyboardShow');
     shower.obj = shower.obj is List ? shower.obj : [shower.alignment, shower.padding];
     Alignment? aliOld = (shower.obj as List)[0];
     Alignment aliNew = Alignment(aliOld?.x ?? 0.0, -1.0); // Alignment topCenter = Alignment(0.0, -1.0);
@@ -25,10 +23,7 @@ class InsetsUtil {
   }
 
   static void rebuildShowerPositionBottomOnKeyboardEvent(DialogShower shower, bool isKeyboardShow, {double? bottom, double? top}) {
-    assert(() {
-      print('[PositionUtil] -> rebuildShowerPositionBottomOnKeyboardEvent $isKeyboardShow');
-      return true;
-    }());
+    Logger.console(() => '[PositionUtil] -> rebuildShowerPositionBottomOnKeyboardEvent $isKeyboardShow');
     shower.obj = shower.obj is List ? shower.obj : [shower.alignment, shower.padding];
     Alignment? aliOld = (shower.obj as List)[0];
     Alignment aliNew = Alignment(aliOld?.x ?? 0.0, 1.0); // Alignment bottomCenter = Alignment(0.0, 1.0);

@@ -237,14 +237,14 @@ class PageOfBubble extends StatelessWidget {
         Wrap(
           children: [
             CcTapWidget(
-              child: const Icon(Icons.info, color: Colors.blue),
+              child: Container(color: Colors.red, width: 30, height: 60, child: const Icon(Icons.info, color: Colors.blue)),
               onTap: (state) {
                 Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
                 Size size = SizeUtil.getSizeS(state) ?? Size.zero;
                 TipsUtil.showTips(
                   'You know that ~~~~~~~~~~~~~~~~~~!!!!!',
                   x: position.dx + size.width,
-                  y: position.dy - 8,
+                  y: position.dy + (size.height - 40) / 2, // 40 is the height of tips
                 );
               },
             ),

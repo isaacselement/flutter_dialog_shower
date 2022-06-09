@@ -1,4 +1,3 @@
-
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +30,7 @@ class PageOfWidgets extends StatelessWidget {
           children: [
             WidgetsUtil.newXpelTextButton('show loading', onPressed: (state) {
               DialogShower shower = DialogWidgets.showLoading(dismissible: true);
-              Future.delayed(const Duration(milliseconds: 3000), (){
+              Future.delayed(const Duration(milliseconds: 3000), () {
                 Logger.d('shower: ${shower.routeName}, is active: ${shower.route.isActive}');
               });
             }),
@@ -96,7 +95,9 @@ class PageOfWidgets extends StatelessWidget {
                 button1TextStyle: const TextStyle(color: Color(0xFF4E7DF7)),
                 button2TextStyle: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF4E7DF7)),
                 button1Event: (d) => DialogWrapper.dismissDialog(d),
-                button2Event: (d) => DialogWrapper.dismissTopDialog().then((value) => print('joking...')),
+                button2Event: (d) => DialogWrapper.dismissTopDialog().then((value) {
+                  Logger.d('joking...');
+                }),
               ).barrierColor = const Color(0x4D1C1D21);
             }),
           ],

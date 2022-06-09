@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:example/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/brother.dart';
 
@@ -253,20 +254,16 @@ class XpPopupMenuUsingRowColumn extends StatelessWidget {
     int _rowCount_ = rowCount ?? (columnCount != null ? values.length ~/ columnCount! : 1);
     int _columnCount_ = columnCount ?? values.length ~/ _rowCount_;
 
-    assert(() {
-      print('[Cc] >>>>>>>>> _rowCount_: $_rowCount_, _columnCount_: $_columnCount_');
-      return true;
-    }());
+    Logger.console(() => '[Cc] >>>>>>>>> _rowCount_: $_rowCount_, _columnCount_: $_columnCount_');
 
     List<Widget> children = <Widget>[];
     for (int i = 0; i < _columnCount_; i++) {
       List<Widget> child = <Widget>[];
       for (int j = 0; j < _rowCount_; j++) {
         int index = i * _rowCount_ + j;
-        assert(() {
-          print('[Cc] >>>>>>>>> handling index: $index');
-          return true;
-        }());
+
+        Logger.console(() => '[Cc] >>>>>>>>> handling index: $index');
+
         if (index >= values.length) {
           break;
         }

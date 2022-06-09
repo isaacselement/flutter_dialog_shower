@@ -1,9 +1,10 @@
 // ignore_for_file: must_be_immutable
 
-import 'dart:math' as math;
 import 'dart:core';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class CcBubbleWidget extends StatelessWidget {
   Widget? child;
@@ -438,15 +439,16 @@ class CcBubblePainter extends CustomPainter {
     }
   }
 
-  static bool log_enable = false;
+  static bool isDebugLogEnable = false;
 
   static log(String log) {
     assert(() {
-      if (log_enable) {
-        print('[CcBubblePainter] $log');
+      if (isDebugLogEnable) {
+        if (kDebugMode) {
+          print('[class $CcBubblePainter] $log');
+        }
       }
       return true;
     }());
   }
-
 }

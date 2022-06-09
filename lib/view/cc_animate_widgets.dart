@@ -30,10 +30,6 @@ class _RotateWidgetState extends State<RotateWidget> with SingleTickerProviderSt
   @override
   void dispose() {
     animationController.dispose();
-    assert(() {
-      print('[RotateWidget] >>>>>>>>>>>>>> dispose');
-      return true;
-    }());
     super.dispose();
   }
 

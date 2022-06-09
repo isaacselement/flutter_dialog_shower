@@ -104,33 +104,6 @@ class PageOfNavigator extends StatelessWidget {
     );
   }
 
-// void animationDemo() {
-//   AnimationController _controller = AnimationController(
-//     vsync: shower.builderExKey.currentState!,
-//     duration: const Duration(milliseconds: 200),
-//   );
-//   shower
-//     ..isAutoSizeForNavigator = false
-//     ..isSyncInvokeDismissCallback = true
-//     ..dismissCallBack = (d) {
-//       _controller.dispose();
-//     };
-//
-//   Animation<double> _animation = Tween<double>(begin: AppConst.dialogViewWidth, end: XpSizeConst.bigDialogWidth)
-//       .chain(CurveTween(curve: Curves.ease))
-//       .animate(_controller);
-//   _animation.addListener(() {
-//     containerWidth = _animation.value;
-//     print('_animation.value >>>>>>>> ${_animation.value}');
-//     shower.width = _animation.value;
-//     shower.setState(() {});
-//   });
-//   _controller.forward().then((value) {
-//     print('>>>>>>>>>>>>>>>>> done!!!!!!');
-//   });
-//
-// }
-
   /// Static Methods
   static CcSelectListWidget getSelectableListWidget({
     required Object value,

@@ -1,7 +1,21 @@
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
+class Boxes {
+  static bool isDebugLogEnable = false;
+
+  static log(String log) {
+    assert(() {
+      if (isDebugLogEnable) {
+        if (kDebugMode) {
+          print('[class $Boxes] $log');
+        }
+      }
+      return true;
+    }());
+  }
+}
 
 /// For setSate & show or dismiss callback
 class BuilderEx extends StatefulWidget {
@@ -21,15 +35,13 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
     super.initState();
     try {
       widget.showCallBack?.call();
-    } catch (e) {
-      assert(() {
-        __boxes_log__('showCallBack exception: ${e.toString()}');
-        e is Error ? __boxes_log__(e.stackTrace?.toString() ?? 'No stackTrace') : null;
-        return true;
-      }());
+    } catch (e, s) {
+      Boxes.log('showCallBack exception: ${e.toString()}');
+      Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
+      Boxes.log(s.toString());
     }
     assert(() {
-      __boxes_log__('[BuilderEx] ${widget.name} >>>>> initState');
+      Boxes.log('[BuilderEx] ${widget.name} >>>>> initState');
       return true;
     }());
   }
@@ -37,7 +49,7 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
   @override
   Widget build(BuildContext context) {
     assert(() {
-      __boxes_log__('[BuilderEx] ${widget.name} >>>>> build');
+      Boxes.log('[BuilderEx] ${widget.name} >>>>> build');
       return true;
     }());
     return widget.builder(context);
@@ -47,21 +59,18 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
   void dispose() {
     try {
       widget.dismissCallBack?.call();
-    } catch (e) {
-      assert(() {
-        __boxes_log__('dismissCallBack exception: ${e.toString()}');
-        e is Error ? __boxes_log__(e.stackTrace?.toString() ?? 'No stackTrace') : null;
-        return true;
-      }());
+    } catch (e, s) {
+      Boxes.log('dismissCallBack exception: ${e.toString()}');
+      Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
+      Boxes.log(s.toString());
     }
     super.dispose();
     assert(() {
-      __boxes_log__('[BuilderEx] ${widget.name} >>>>> dispose');
+      Boxes.log('[BuilderEx] ${widget.name} >>>>> dispose');
       return true;
     }());
   }
 }
-
 
 /// For setSate & ticker animation
 class StatefulBuilderEx extends StatefulWidget {
@@ -78,7 +87,6 @@ class StatefulBuilderExState extends State<StatefulBuilderEx> with TickerProvide
   Widget build(BuildContext context) => widget.builder(context, setState);
 }
 
-
 /// For get Size immediately
 class GetSizeWidget extends SingleChildRenderObjectWidget {
   final void Function(RenderBox box, Size? legacy, Size size) onLayoutChanged;
@@ -87,7 +95,7 @@ class GetSizeWidget extends SingleChildRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    __boxes_log__('[GetSizeWidget] createRenderObject');
+    Boxes.log('[GetSizeWidget] createRenderObject');
     return _GetSizeRenderObject()..onLayoutChanged = onLayoutChanged;
   }
 }
@@ -101,7 +109,7 @@ class _GetSizeRenderObject extends RenderProxyBox {
     super.performLayout();
 
     Size? size = child?.size;
-    __boxes_log__('[GetSizeWidget] performLayout >>>>>>>>> size: $size');
+    Boxes.log('[GetSizeWidget] performLayout >>>>>>>>> size: $size');
     bool isSizeChanged = size != null && size != _size;
     if (isSizeChanged) {
       _invoke(_size, size);
@@ -118,7 +126,6 @@ class _GetSizeRenderObject extends RenderProxyBox {
   }
 }
 
-
 /// For get Offset immediately
 class GetLayoutWidget extends StatefulWidget {
   final Widget child;
@@ -131,7 +138,6 @@ class GetLayoutWidget extends StatefulWidget {
 }
 
 class _GetLayoutState extends State<GetLayoutWidget> with WidgetsBindingObserver {
-
   late BuildContext _context;
 
   @override
@@ -166,16 +172,4 @@ class _GetLayoutState extends State<GetLayoutWidget> with WidgetsBindingObserver
   void _rameCallback(Duration timeStamp) {
     didChangeMetrics();
   }
-
-}
-
-bool boxes_log_enable = false;
-
-__boxes_log__(String log) {
-  assert(() {
-    if (boxes_log_enable) {
-      print('[DialogShower] $log');
-    }
-    return true;
-  }());
 }

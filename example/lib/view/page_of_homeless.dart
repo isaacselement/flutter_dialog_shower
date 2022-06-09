@@ -79,8 +79,12 @@ class PageOfHomeless extends StatelessWidget {
                         _showToastOnTop('I got your size: $size');
                       },
                       child: SizedBox(
-                        width: 288,     /// TODO ... NOT take effect ???
-                        height: 188,    /// TODO ... NOT take effect ???
+                        width: 288,
+
+                        /// TODO ... NOT take effect ???
+                        height: 188,
+
+                        /// TODO ... NOT take effect ???
                         child: GetLayoutWidget(
                           onLayoutChanged: (RenderBox box, Offset offset, Size size) {
                             _showToastOnTop('I got son position: $offset');
@@ -122,12 +126,12 @@ class PageOfHomeless extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('Pop', onPressed: (state) {
               bool containsInList = Stacker.contains<PageOfHome>();
-              print('=======>>>>>>>>>>>> containsInList: $containsInList');
-              int count =  Stacker.remove<PageOfHome>();
+              Logger.console(() => '=======>>>>>>>>>>>> containsInList: $containsInList');
+              int count = Stacker.remove<PageOfHome>();
               // int count =  Stacker.remove(value: home);
-              print('=======>>>>>>>>>>>> removeInList: $count');
+              Logger.console(() => '=======>>>>>>>>>>>> removeInList: $count');
               containsInList = Stacker.contains<PageOfHome>();
-              print('=======>>>>>>>>>>>> after containsInList: $containsInList');
+              Logger.console(() => '=======>>>>>>>>>>>> after containsInList: $containsInList');
             }),
           ],
         ),
@@ -136,7 +140,7 @@ class PageOfHomeless extends StatelessWidget {
   }
 
   void _initSettings() {
-    boxes_log_enable = true;
+    Boxes.isDebugLogEnable = true;
     EventTruck.onWithKey(
       key: 'event_key_1',
       onData: (object) {
@@ -154,10 +158,7 @@ class PageOfHomeless extends StatelessWidget {
   }
 
   OverlayShower _showToastOnTop(String message) {
-    assert(() {
-      print('[Homeless] --------->>>>>> $message');
-      return true;
-    }());
+    Logger.console(() => '[Homeless] --------->>>>>> $message');
     return OverlayWidgets.showToastInQueue(message, onScreenDuration: const Duration(milliseconds: 3000))
       ..alignment = Alignment.topCenter
       ..margin = const EdgeInsets.only(top: 80);
