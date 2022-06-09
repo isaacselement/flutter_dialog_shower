@@ -237,7 +237,7 @@ class PageOfBubble extends StatelessWidget {
         Wrap(
           children: [
             CcTapWidget(
-              child: Container(color: Colors.red, width: 30, height: 60, child: const Icon(Icons.info, color: Colors.blue)),
+              child: Container(color: Colors.white, width: 30, height: 60, child: const Icon(Icons.info, color: Colors.blue)),
               onTap: (state) {
                 Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
                 Size size = SizeUtil.getSizeS(state) ?? Size.zero;
