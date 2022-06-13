@@ -227,8 +227,8 @@ class DialogWrapper {
   }
 
   static Future<void> dismissDialog(DialogShower? dialog, {String? key}) async {
-    // remove & dismiss from top to bottom
-    if (dialog != null) {
+    // remove & dismiss from top to bottom if dialog in list
+    if (dialog != null && (_list().contains(dialog))) {
       List<DialogShower> tmp = [..._list()];
       for (int i = tmp.length - 1; i >= 0; i--) {
         DialogShower d = tmp.elementAt(i);
