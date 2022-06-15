@@ -20,10 +20,10 @@ class Boxes {
 /// For setSate & show or dismiss callback
 class BuilderEx extends StatefulWidget {
   final String? name;
-  final WidgetBuilder builder;
-  final Function()? showCallBack, dismissCallBack;
+  final StatefulWidgetBuilder builder;
+  final Function()? initCallBack, disposeCallBack;
 
-  const BuilderEx({Key? key, required this.builder, this.name, this.showCallBack, this.dismissCallBack}) : super(key: key);
+  const BuilderEx({Key? key, required this.builder, this.name, this.initCallBack, this.disposeCallBack}) : super(key: key);
 
   @override
   State<BuilderEx> createState() => BuilderExState();
@@ -34,9 +34,9 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
   void initState() {
     super.initState();
     try {
-      widget.showCallBack?.call();
+      widget.initCallBack?.call();
     } catch (e, s) {
-      Boxes.log('showCallBack exception: ${e.toString()}');
+      Boxes.log('[BuilderEx] ${widget.name} showCallBack exception: ${e.toString()}');
       Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
       Boxes.log(s.toString());
     }
@@ -52,15 +52,15 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
       Boxes.log('[BuilderEx] ${widget.name} >>>>> build');
       return true;
     }());
-    return widget.builder(context);
+    return widget.builder(context, setState);
   }
 
   @override
   void dispose() {
     try {
-      widget.dismissCallBack?.call();
+      widget.disposeCallBack?.call();
     } catch (e, s) {
-      Boxes.log('dismissCallBack exception: ${e.toString()}');
+      Boxes.log('[BuilderEx] ${widget.name} dismissCallBack exception: ${e.toString()}');
       Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
       Boxes.log(s.toString());
     }
@@ -73,18 +73,31 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
 }
 
 /// For setSate & ticker animation
-class StatefulBuilderEx extends StatefulWidget {
+class BuilderWithTicker extends StatefulWidget {
   final StatefulWidgetBuilder builder;
+  final Function()? initCallBack, disposeCallBack;
 
-  const StatefulBuilderEx({Key? key, required this.builder}) : super(key: key);
+  const BuilderWithTicker({Key? key, required this.builder, this.initCallBack, this.disposeCallBack}) : super(key: key);
 
   @override
-  State<StatefulBuilderEx> createState() => StatefulBuilderExState();
+  State<BuilderWithTicker> createState() => BuilderWithTickerState();
 }
 
-class StatefulBuilderExState extends State<StatefulBuilderEx> with TickerProviderStateMixin {
+class BuilderWithTickerState extends State<BuilderWithTicker> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => widget.builder(context, setState);
+
+  @override
+  void initState() {
+    widget.initCallBack?.call();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.disposeCallBack?.call();
+    super.dispose();
+  }
 }
 
 /// For get Size immediately

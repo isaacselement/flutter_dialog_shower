@@ -271,7 +271,7 @@ class DialogShower {
     return BuilderEx(
       // key: _builderExKey,
       name: routeName,
-      showCallBack: () {
+      initCallBack: () {
         isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
 
         // keyboard visibility
@@ -282,7 +282,7 @@ class DialogShower {
           });
         }
       },
-      dismissCallBack: () {
+      disposeCallBack: () {
         isSyncInvokeDismissCallback ? _invokeDismissCallbacks() : Future.microtask(() => _invokeDismissCallbacks());
 
         // keyboard visibility
@@ -386,7 +386,7 @@ class DialogShower {
   Widget _getScaffoldBody(Widget _child) {
     GlobalKey mKey = _statefulKey;
     if (isWithTicker) {
-      return StatefulBuilderEx(key: mKey, builder: (context, setState) => _getScaffoldContainer(_child));
+      return BuilderWithTicker(key: mKey, builder: (context, setState) => _getScaffoldContainer(_child));
     }
     return StatefulBuilder(key: mKey, builder: (context, setState) => _getScaffoldContainer(_child));
   }

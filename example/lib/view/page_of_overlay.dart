@@ -100,7 +100,7 @@ class PageOfOverlay extends StatelessWidget {
 
               WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
                 AnimationController animationController = AnimationController(
-                  vsync: shower.statefulKey.currentState as StatefulBuilderExState,
+                  vsync: shower.statefulKey.currentState as BuilderWithTickerState,
                   duration: const Duration(milliseconds: 5 * 1000),
                   reverseDuration: const Duration(milliseconds: 1 * 1000),
                 );
