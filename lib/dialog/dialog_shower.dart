@@ -289,7 +289,7 @@ class DialogShower {
         _keyboardStreamSubscription?.cancel();
         _keyboardStreamSubscription = null;
       },
-      builder: (BuildContext context) {
+      builder: (BuildContext context, StateSetter setStat) {
         return GestureDetector(
           onTapDown: (TapDownDetails details) {
             assert(() {
