@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-/// Widget with tap effect
+/// Tapped Widget with tap effect
 class CcTapWidget extends StatefulWidget {
   final Widget? child;
   final Widget Function(bool isTapping)? builder;
@@ -41,6 +41,7 @@ class CcTapWidgetState extends State<CcTapWidget> {
   }
 }
 
+/// Tapped Widget that tap once only
 class CcTapOnceWidget extends StatefulWidget {
   final Widget? child;
   final Widget Function(bool isTapping)? builder;
