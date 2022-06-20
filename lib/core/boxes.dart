@@ -211,7 +211,7 @@ class ThrottleAny {
 
   static ThrottleAny? _instance;
 
-  static get instance => (_instance ??= ThrottleAny());
+  static ThrottleAny get instance => (_instance ??= ThrottleAny());
 }
 
 class DebouncerAny {
@@ -235,5 +235,5 @@ class DebouncerAny {
 
   static DebouncerAny? _instance;
 
-  static get instance => (_instance ??= DebouncerAny());
+  static DebouncerAny get instance => (_instance ??= DebouncerAny());
 }
