@@ -445,13 +445,14 @@ class PageOfOverlay extends StatelessWidget {
               return CompositedTransformTarget(
                 link: _layerLink,
                 child: CcTapWidget(
-                  builder: (isTappingDown) {
+                  builder: (state) {
+                    state as CcTapWidgetState;
                     return Container(
                         height: 50,
                         clipBehavior: Clip.antiAlias,
                         margin: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                            color: isTappingDown ? Colors.greenAccent.withAlpha(128) : Colors.grey,
+                            color: state.isTapingDown ? Colors.greenAccent.withAlpha(128) : Colors.grey,
                             border: Border.all(color: Colors.black, width: 1),
                             borderRadius: const BorderRadius.all(Radius.circular(8)),
                             boxShadow: const [BoxShadow(color: Colors.red, blurRadius: 20.0)]),
@@ -547,18 +548,21 @@ class _LayerLinkEntryState extends State<LayerLinkEntryWidget> {
     return CompositedTransformTarget(
       link: _layerLink,
       child: CcTapWidget(
-        builder: (isTapping) => Container(
-          height: 50,
-          clipBehavior: Clip.antiAlias,
-          margin: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: isTapping ? Colors.transparent : Colors.grey,
-            border: Border.all(color: isTapping ? Colors.transparent : Colors.black, width: 1),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            boxShadow: [BoxShadow(color: isTapping ? Colors.transparent : Colors.red, blurRadius: 20.0)],
-          ),
-          child: Center(child: Text('${widget.index} Click Me', style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 15))),
-        ),
+        builder: (state) {
+          state as CcTapWidgetState;
+          return Container(
+            height: 50,
+            clipBehavior: Clip.antiAlias,
+            margin: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: state.isTapingDown ? Colors.transparent : Colors.grey,
+              border: Border.all(color: state.isTapingDown ? Colors.transparent : Colors.black, width: 1),
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              boxShadow: [BoxShadow(color: state.isTapingDown ? Colors.transparent : Colors.red, blurRadius: 20.0)],
+            ),
+            child: Center(child: Text('${widget.index} Click Me', style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 15))),
+          );
+        },
         onTap: (state) {
           overlayEntry?.remove();
           overlayEntry = null;

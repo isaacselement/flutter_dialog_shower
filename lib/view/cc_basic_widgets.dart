@@ -1,15 +1,17 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dialog_shower/core/boxes.dart';
 
 /// Tapped Widget with tap effect
 class CcTapWidget extends StatefulWidget {
   final Widget? child;
-  final Widget Function(bool isTapping)? builder;
-  final void Function(CcTapWidgetState state) onTap;
+  final double? pressedOpacity;
+  final Widget Function(State state)? builder;
+  final void Function(State state) onTap;
 
-  const CcTapWidget({Key? key, this.builder, this.child, required this.onTap}) : super(key: key);
+  const CcTapWidget({Key? key, this.builder, this.child, required this.onTap, this.pressedOpacity = 0.5}) : super(key: key);
 
   @override
-  State<CcTapWidget> createState() => CcTapWidgetState();
+  State createState() => CcTapWidgetState();
 }
 
 class CcTapWidgetState extends State<CcTapWidget> {
@@ -28,26 +30,31 @@ class CcTapWidgetState extends State<CcTapWidget> {
       onPointerUp: (e) => isTapingDown = false,
       onPointerCancel: (e) => isTapingDown = false,
       child: GestureDetector(
-        child: widget.builder?.call(isTapingDown) ??
+        child: widget.builder?.call(this) ??
             Opacity(
-              opacity: isTapingDown ? 0.5 : 1,
               child: widget.child,
+              opacity: isTapingDown ? widget.pressedOpacity ?? 0.5 : 1,
             ),
         onTap: () {
-          widget.onTap(this);
+          onEventTap();
         },
       ),
     );
+  }
+
+  void onEventTap() {
+    widget.onTap(this);
   }
 }
 
 /// Tapped Widget that tap once only
 class CcTapOnceWidget extends StatefulWidget {
   final Widget? child;
-  final Widget Function(bool isTapping)? builder;
+  final double? pressedOpacity;
+  final Widget Function()? builder;
   final void Function(CcTapOnceWidgetState state) onTap;
 
-  const CcTapOnceWidget({Key? key, this.builder, this.child, required this.onTap}) : super(key: key);
+  const CcTapOnceWidget({Key? key, this.builder, this.child, required this.onTap, this.pressedOpacity = 0.5}) : super(key: key);
 
   @override
   State<CcTapOnceWidget> createState() => CcTapOnceWidgetState();
@@ -71,19 +78,69 @@ class CcTapOnceWidgetState extends State<CcTapOnceWidget> {
       onPointerUp: (e) => isTapingDown = false,
       onPointerCancel: (e) => isTapingDown = false,
       child: GestureDetector(
-        child: widget.builder?.call(isTapingDown) ??
+        child: widget.builder?.call() ??
             Opacity(
-              opacity: isTapingDown ? 0.5 : 1,
               child: widget.child,
+              opacity: isTapingDown ? widget.pressedOpacity ?? 0.5 : 1,
             ),
         onTap: () {
-          if (_isTappedOnce) {
-            return;
-          }
-          _isTappedOnce = true;
-          widget.onTap(this);
+          onEventTap();
         },
       ),
     );
+  }
+
+  void onEventTap() {
+    if (_isTappedOnce) {
+      return;
+    }
+    _isTappedOnce = true;
+    widget.onTap(this);
+  }
+}
+
+/// Tapped Widget with throttle
+class CcTapThrottledWidget extends CcTapWidget {
+  const CcTapThrottledWidget({
+    Key? key,
+    Widget? child,
+    double? pressedOpacity,
+    Widget Function(State state)? builder,
+    required void Function(State state) onTap,
+  }) : super(key: key, child: child, builder: builder, onTap: onTap, pressedOpacity: pressedOpacity);
+
+  @override
+  State createState() => CcTapThrottledState();
+}
+
+class CcTapThrottledState extends CcTapWidgetState {
+  @override
+  void onEventTap() {
+    ThrottleAny.instance.call(() {
+      super.onEventTap();
+    });
+  }
+}
+
+/// Tapped Widget with debounce
+class CcTapDebouncerWidget extends CcTapWidget {
+  const CcTapDebouncerWidget({
+    Key? key,
+    Widget? child,
+    double? pressedOpacity,
+    Widget Function(State state)? builder,
+    required void Function(State state) onTap,
+  }) : super(key: key, child: child, builder: builder, onTap: onTap, pressedOpacity: pressedOpacity);
+
+  @override
+  State createState() => CcTapDebouncerState();
+}
+
+class CcTapDebouncerState extends CcTapWidgetState {
+  @override
+  void onEventTap() {
+    DebouncerAny.instance.call(() {
+      super.onEventTap();
+    });
   }
 }

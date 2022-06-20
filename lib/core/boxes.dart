@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -17,7 +19,9 @@ class Boxes {
   }
 }
 
-/// For setSate & show or dismiss callback
+/// View
+
+/// Widget for setSate & show or dismiss callback
 class BuilderEx extends StatefulWidget {
   final String? name;
   final StatefulWidgetBuilder builder;
@@ -36,12 +40,12 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
     try {
       widget.initCallBack?.call();
     } catch (e, s) {
-      Boxes.log('[BuilderEx] ${widget.name} showCallBack exception: ${e.toString()}');
+      Boxes.log('[$runtimeType] ${widget.name} showCallBack exception: ${e.toString()}');
       Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
       Boxes.log(s.toString());
     }
     assert(() {
-      Boxes.log('[BuilderEx] ${widget.name} >>>>> initState');
+      Boxes.log('[$runtimeType] ${widget.name} >>>>> initState');
       return true;
     }());
   }
@@ -49,7 +53,7 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
   @override
   Widget build(BuildContext context) {
     assert(() {
-      Boxes.log('[BuilderEx] ${widget.name} >>>>> build');
+      Boxes.log('[$runtimeType] ${widget.name} >>>>> build');
       return true;
     }());
     return widget.builder(context, setState);
@@ -60,19 +64,19 @@ class BuilderExState extends State<BuilderEx> /* with TickerProviderStateMixin *
     try {
       widget.disposeCallBack?.call();
     } catch (e, s) {
-      Boxes.log('[BuilderEx] ${widget.name} dismissCallBack exception: ${e.toString()}');
+      Boxes.log('[$runtimeType] ${widget.name} dismissCallBack exception: ${e.toString()}');
       Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
       Boxes.log(s.toString());
     }
     super.dispose();
     assert(() {
-      Boxes.log('[BuilderEx] ${widget.name} >>>>> dispose');
+      Boxes.log('[$runtimeType] ${widget.name} >>>>> dispose');
       return true;
     }());
   }
 }
 
-/// For setSate & ticker animation
+/// Widget for setSate & ticker animation
 class BuilderWithTicker extends StatefulWidget {
   final StatefulWidgetBuilder builder;
   final Function()? initCallBack, disposeCallBack;
@@ -100,7 +104,7 @@ class BuilderWithTickerState extends State<BuilderWithTicker> with TickerProvide
   }
 }
 
-/// For get Size immediately
+/// Widget for get Size immediately
 class GetSizeWidget extends SingleChildRenderObjectWidget {
   final void Function(RenderBox box, Size? legacy, Size size) onLayoutChanged;
 
@@ -108,7 +112,7 @@ class GetSizeWidget extends SingleChildRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    Boxes.log('[GetSizeWidget] createRenderObject');
+    Boxes.log('[$runtimeType] createRenderObject');
     return _GetSizeRenderObject()..onLayoutChanged = onLayoutChanged;
   }
 }
@@ -122,7 +126,7 @@ class _GetSizeRenderObject extends RenderProxyBox {
     super.performLayout();
 
     Size? size = child?.size;
-    Boxes.log('[GetSizeWidget] performLayout >>>>>>>>> size: $size');
+    Boxes.log('[$runtimeType] performLayout >>>>>>>>> size: $size');
     bool isSizeChanged = size != null && size != _size;
     if (isSizeChanged) {
       _invoke(_size, size);
@@ -139,7 +143,7 @@ class _GetSizeRenderObject extends RenderProxyBox {
   }
 }
 
-/// For get Offset immediately
+/// Widget for get Offset immediately
 class GetLayoutWidget extends StatefulWidget {
   final Widget child;
   final void Function(RenderBox box, Offset offset, Size size) onLayoutChanged;
@@ -185,4 +189,51 @@ class _GetLayoutState extends State<GetLayoutWidget> with WidgetsBindingObserver
   void _rameCallback(Duration timeStamp) {
     didChangeMetrics();
   }
+}
+
+/// Util
+
+class ThrottleAny {
+  bool enable = true;
+  Duration delay = const Duration(milliseconds: 1000);
+
+  void call(Function func, {Duration? duration}) {
+    if (enable) {
+      enable = false;
+      func();
+      Future.delayed(duration ?? delay, () {
+        enable = true;
+      });
+    }
+  }
+
+  /// Static instance and methods
+
+  static ThrottleAny? _instance;
+
+  static get instance => (_instance ??= ThrottleAny());
+}
+
+class DebouncerAny {
+  Timer? timer;
+  Duration delay = const Duration(milliseconds: 800);
+
+  DebouncerAny();
+
+  void call(void Function() action, {Duration? duration}) {
+    timer?.cancel();
+    timer = Timer(duration ?? delay, action);
+  }
+
+  /// Notifies if the delayed call is active.
+  bool get isRunning => timer?.isActive ?? false;
+
+  /// Cancel the current delayed call.
+  void cancel() => timer?.cancel();
+
+  /// Static instance and methods
+
+  static DebouncerAny? _instance;
+
+  static get instance => (_instance ??= DebouncerAny());
 }

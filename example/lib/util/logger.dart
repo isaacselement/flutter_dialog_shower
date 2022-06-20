@@ -4,7 +4,7 @@ class Logger {
 
   static void d(String message, {String? tag}) {
     assert(() {
-      print('[${tag ?? Logger}] $message');
+      print('${DateTime.now()}: [${tag ?? Logger}] $message');
       return true;
     }());
   }

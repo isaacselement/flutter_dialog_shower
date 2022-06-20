@@ -33,6 +33,8 @@ class PageOfHomeless extends StatelessWidget {
           _buildBoxesWidgets(),
           const SizedBox(height: 16),
           _buildBrokerTest(),
+          const SizedBox(height: 16),
+          _buildTapWidget(),
         ],
       ),
     );
@@ -138,6 +140,55 @@ class PageOfHomeless extends StatelessWidget {
       ],
     );
   }
+
+  Widget _buildTapWidget() {
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            CcTapWidget(
+              child: const Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Text('CcTapWidget'),
+              ),
+              onTap: (state) {
+                Logger.d('CcTapWidget ~~~~');
+              },
+            ),
+            CcTapOnceWidget(
+              child: const Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Text('CcTapOnceWidget'),
+              ),
+              onTap: (state) {
+                Logger.d('CcTapOnceWidget ~~~~');
+              },
+            ),
+            CcTapThrottledWidget(
+              child: const Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Text('CcTapThrottledWidget'),
+              ),
+              onTap: (state) {
+                Logger.d('CcTapThrottledWidget ~~~~');
+              },
+            ),
+            CcTapDebouncerWidget(
+              child: const Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Text('CcTapDebouncerWidget'),
+              ),
+              onTap: (state) {
+                Logger.d('CcTapDebouncerWidget ~~~~');
+              },
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Private Methods
 
   void _initSettings() {
     Boxes.isDebugLogEnable = true;
