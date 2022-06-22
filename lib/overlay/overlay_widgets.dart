@@ -270,8 +270,10 @@ class OverlayWidgets {
     OverlayShower shower = OverlayWrapper.show(const Offstage(offstage: true));
     shower.isWithTicker = true;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      BuilderWithTickerState tickerState = shower.statefulKey.currentState as BuilderWithTickerState;
-      tickerBuilder(shower, tickerState);
+      Future.microtask(() {
+        BuilderWithTickerState tickerState = shower.statefulKey.currentState as BuilderWithTickerState;
+        tickerBuilder(shower, tickerState);
+      });
     });
     return shower;
   }
