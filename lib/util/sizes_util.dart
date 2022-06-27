@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class SizeUtil {
+class SizesUtil {
   static late MediaQueryData mediaQueryDate;
 
   static late double screenWidth;

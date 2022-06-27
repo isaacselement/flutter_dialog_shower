@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import 'package:example/util/logger.dart';
-import 'package:example/util/offset_util.dart';
-import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
@@ -146,8 +144,8 @@ class PageOfOverlay extends StatelessWidget {
           children: [
             WidgetsUtil.newXpelTextButton('Show menu using Builder', onPressed: (state) {
               bool isRight = Random().nextBool();
-              Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-              Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
+              Offset offsetS = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+              Size sizeS = SizesUtil.getSizeS(state) ?? Size.zero;
               bool isGotSize = false;
               OverlayShower shower = OverlayShower();
               shower.builder = (context) {
@@ -176,8 +174,8 @@ class PageOfOverlay extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('Show menu using Btw', onPressed: (state) {
               bool isTop = Random().nextBool();
-              Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-              Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
+              Offset offsetS = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+              Size sizeS = SizesUtil.getSizeS(state) ?? Size.zero;
               Btv<bool> isGotSize = false.btv;
               OverlayShower shower = OverlayShower();
               shower.show(
@@ -211,8 +209,8 @@ class PageOfOverlay extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show menu why Offstage first', onPressed: (state) {
-              Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-              Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
+              Offset offsetS = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+              Size sizeS = SizesUtil.getSizeS(state) ?? Size.zero;
               OverlayShower shower = OverlayShower();
               OverlayWrapper.showWith(
                 shower,
@@ -254,8 +252,8 @@ class PageOfOverlay extends StatelessWidget {
               );
             }),
             WidgetsUtil.newXpelTextButton('Show menu why Offstage first', onPressed: (state) {
-              Offset offsetS = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-              Size sizeS = SizeUtil.getSizeS(state) ?? Size.zero;
+              Offset offsetS = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+              Size sizeS = SizesUtil.getSizeS(state) ?? Size.zero;
               OverlayShower shower = OverlayShower();
               OverlayWrapper.showWith(
                 shower,

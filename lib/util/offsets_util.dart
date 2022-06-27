@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class OffsetUtil {
+class OffsetsUtil {
   static Offset? getOffsetS(State state) {
     return getOffsetB(state.context);
   }

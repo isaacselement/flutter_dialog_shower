@@ -1,5 +1,4 @@
 import 'package:example/util/logger.dart';
-import 'package:example/util/size_util.dart';
 import 'package:example/view/manager/themes_manager.dart';
 import 'package:example/view/widgets/xp_widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class WidgetsUtil {
-  static get _editorBoxWidth => 400 >= SizeUtil.screenWidth ? SizeUtil.screenWidth - 100 : 400.toDouble();
+  static get _editorBoxWidth => 400 >= SizesUtil.screenWidth ? SizesUtil.screenWidth - 100 : 400.toDouble();
 
-  static get _editorBoxHeight => 300 >= SizeUtil.screenWidth ? SizeUtil.screenWidth - 100 : 300.toDouble();
+  static get _editorBoxHeight => 300 >= SizesUtil.screenWidth ? SizesUtil.screenWidth - 100 : 300.toDouble();
 
   static TextStyle getTextStyleWithPassionOne({required double fontSize, Color fontColor = Colors.black}) {
     return TextStyle(fontSize: fontSize, color: fontColor, fontFamily: 'PassionOne-Regular');

@@ -1,7 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:example/util/offset_util.dart';
-import 'package:example/util/size_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
@@ -42,8 +40,8 @@ class PageOfBubble extends StatelessWidget {
 
   Widget buildButtonsAboutBubble() {
     void showBubble(State state, {required Widget child}) {
-      Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-      Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+      Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+      Size size = SizesUtil.getSizeS(state) ?? Size.zero;
       double x = offset.dx;
       double y = offset.dy + size.height;
       DialogShower shower = DialogWrapper.show(child, x: x, y: y);
@@ -182,8 +180,8 @@ class PageOfBubble extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show on My Bottom', onPressed: (state) {
-              Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-              Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+              Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+              Size size = SizesUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.top,
@@ -194,8 +192,8 @@ class PageOfBubble extends StatelessWidget {
               shower.containerDecoration = null;
             }),
             WidgetsUtil.newXpelTextButton('Show on My Top', onPressed: (state) {
-              Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-              Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+              Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+              Size size = SizesUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.bottom,
@@ -207,7 +205,7 @@ class PageOfBubble extends StatelessWidget {
               shower.containerDecoration = null;
             }),
             WidgetsUtil.newXpelTextButton('Show on My Left', onPressed: (state) {
-              Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
+              Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.right,
@@ -219,8 +217,8 @@ class PageOfBubble extends StatelessWidget {
               shower.containerDecoration = null;
             }),
             WidgetsUtil.newXpelTextButton('Show on My Right', onPressed: (state) {
-              Offset offset = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-              Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+              Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+              Size size = SizesUtil.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.left,
@@ -239,8 +237,8 @@ class PageOfBubble extends StatelessWidget {
             CcTapWidget(
               child: Container(color: Colors.white, width: 30, height: 60, child: const Icon(Icons.info, color: Colors.blue)),
               onTap: (state) {
-                Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-                Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+                Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+                Size size = SizesUtil.getSizeS(state) ?? Size.zero;
                 TipsUtil.showTips(
                   'You know that ~~~~~~~~~~~~~~~~~~!!!!!',
                   x: position.dx + size.width,
@@ -330,8 +328,8 @@ class BubbleSliderWidget extends StatelessWidget {
                       const SizedBox(height: 100),
                       CcTapWidget(
                         onTap: (state) {
-                          Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-                          Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+                          Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+                          Size size = SizesUtil.getSizeS(state) ?? Size.zero;
                           TipsUtil.showTips(
                             'You know that ~~~~~~~~~~~~\n HahuaHuHuaHaHua~~~~~~~ \n I don\'t know that !',
                             x: position.dx + size.width,
@@ -348,8 +346,8 @@ class BubbleSliderWidget extends StatelessWidget {
                         title: 'Country: ',
                         btValue: selectCountryValue,
                         onTap: (state) {
-                          Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-                          Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+                          Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+                          Size size = SizesUtil.getSizeS(state) ?? Size.zero;
                           DialogWrapper.show(
                             CcBubbleWidget(
                               bubbleTriangleTranslation: 20.0,
@@ -389,8 +387,8 @@ class BubbleSliderWidget extends StatelessWidget {
                         title: 'Country: ',
                         btValue: selectCountryValue,
                         onTap: (state) {
-                          Offset position = OffsetUtil.getOffsetS(state) ?? Offset.zero;
-                          Size size = SizeUtil.getSizeS(state) ?? Size.zero;
+                          Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+                          Size size = SizesUtil.getSizeS(state) ?? Size.zero;
                           DialogWrapper.show(
                             CcBubbleWidget(
                               bubbleTriangleTranslation: size.width - 40,

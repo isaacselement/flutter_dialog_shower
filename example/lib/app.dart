@@ -1,4 +1,3 @@
-import 'package:example/util/size_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
@@ -37,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     DialogShower.init(context);
     OverlayShower.init(context);
 
-    SizeUtil.init(context);
+    SizesUtil.init(context);
 
     return Scaffold(
       body: Container(
