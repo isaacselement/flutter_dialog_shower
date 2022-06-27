@@ -137,6 +137,34 @@ class PageOfHomeless extends StatelessWidget {
             }),
           ],
         ),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Throttled New', onPressed: (state) {
+              ThrottleAny.instance.call(() {
+                Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny 1');
+                ThrottleAny().call(() {
+                  Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny new 1');
+                  _callInInternal();
+                });
+              });
+            }),
+            WidgetsUtil.newXpelTextButton('Throttled Sync', onPressed: (state) {
+              ThrottleAny.instance.call(() {
+                Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 1');
+                ThrottleAny.instance.call(() {
+                  Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 2');
+                  ThrottleAny().call(() {
+                    Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny new 1');
+                    ThrottleAny.instance.call(() {
+                      Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 3');
+                      _callInInternal();
+                    });
+                  });
+                });
+              });
+            }),
+          ],
+        ),
       ],
     );
   }
@@ -189,6 +217,10 @@ class PageOfHomeless extends StatelessWidget {
   }
 
   /// Private Methods
+
+  _callInInternal() {
+    Logger.console(() => '>>>>>>>>>>>>>>>>> _callInInternal ~~~~~~');
+  }
 
   void _initSettings() {
     Boxes.isDebugLogEnable = true;

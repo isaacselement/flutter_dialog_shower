@@ -198,6 +198,26 @@ class ThrottleAny {
   Duration delay = const Duration(milliseconds: 1000);
 
   void call(Function func, {Duration? duration}) {
+    String symbol = '$runtimeType.call';
+    bool isSyncCall = StackTrace.current.toString().replaceFirst(symbol, '_').contains(symbol);
+    if (isSyncCall) {
+      if (callers.contains(this)) {
+        Boxes.log('❌❗️ Do not call function ThrottleAny.call in the same stack with the same instance of ThrottleAny! ${callers.length}');
+        func();
+        return;
+      }
+    }
+    try {
+      callers.add(this);
+      _call(func, duration: duration);
+    } catch (e) {
+      rethrow;
+    } finally {
+      callers.remove(this);
+    }
+  }
+
+  void _call(Function func, {Duration? duration}) {
     if (enable) {
       enable = false;
       func();
@@ -208,6 +228,8 @@ class ThrottleAny {
   }
 
   /// Static instance and methods
+
+  static List<ThrottleAny> callers = [];
 
   static ThrottleAny? _instance;
 

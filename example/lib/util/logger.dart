@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 class Logger {
-
   static void d(String message, {String? tag}) {
     assert(() {
       print('${DateTime.now()}: [${tag ?? Logger}] $message');
@@ -13,9 +12,8 @@ class Logger {
   /// Only print and evaluate the expression function on debug mode, will omit in production/profile mode
   static void console(String Function() expr) {
     assert(() {
-      print(expr());
+      print('${DateTime.now()}: ${expr()}');
       return true;
     }());
   }
-
 }
