@@ -141,9 +141,9 @@ class PageOfHomeless extends StatelessWidget {
           children: [
             WidgetsUtil.newXpelTextButton('Throttled New', onPressed: (state) {
               ThrottleAny.instance.call(() {
-                Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny 1');
+                Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 1');
                 ThrottleAny().call(() {
-                  Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny new 1');
+                  Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny New 1');
                   _callInInternal();
                 });
               });
@@ -154,7 +154,7 @@ class PageOfHomeless extends StatelessWidget {
                 ThrottleAny.instance.call(() {
                   Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 2');
                   ThrottleAny().call(() {
-                    Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny new 1');
+                    Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny New 1');
                     ThrottleAny.instance.call(() {
                       Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 3');
                       _callInInternal();

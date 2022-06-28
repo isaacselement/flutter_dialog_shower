@@ -1,7 +1,7 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 
+
+import '../core/boxes.dart';
 import 'dialog_shower.dart';
 
 class DialogWrapper {
@@ -13,7 +13,7 @@ class DialogWrapper {
 
   // same ui effect as function [show] ...
   static DialogShower showCenter(Widget child, {required double width, required double height, String? key}) {
-    MediaQueryData query = MediaQueryData.fromWindow(WidgetsBinding.instance?.window ?? ui.window);
+    MediaQueryData query = MediaQueryData.fromWindow(Boxes.getWindow());
     return show(child, x: (query.size.width - width) / 2, y: (query.size.height - height) / 2, width: width, height: height, key: key);
   }
 

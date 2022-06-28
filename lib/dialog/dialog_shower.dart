@@ -400,7 +400,7 @@ class DialogShower {
     double contextWidth = contextQuery.size.width;
     double contextHeight = contextQuery.size.height;
 
-    ui.SingletonFlutterWindow _window = WidgetsBinding.instance?.window ?? ui.window;
+    ui.SingletonFlutterWindow _window = Boxes.getWindow();
 
     MediaQueryData windowQuery = MediaQueryData.fromWindow(_window);
     double windowWidth = windowQuery.size.width;

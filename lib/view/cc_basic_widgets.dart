@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_dialog_shower/core/boxes.dart';
+
+import '../core/boxes.dart';
 
 /// Tapped Widget with tap effect
 class CcTapWidget extends StatefulWidget {

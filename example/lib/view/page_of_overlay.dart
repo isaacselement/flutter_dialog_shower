@@ -96,7 +96,7 @@ class PageOfOverlay extends StatelessWidget {
                 ..isWithTicker = true; // key point !!!
               shower.show(const Offstage(offstage: true)); // tricky, generate the StatefulBuilderExState instance first
 
-              WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+              Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
                 AnimationController animationController = AnimationController(
                   vsync: shower.statefulKey.currentState as BuilderWithTickerState,
                   duration: const Duration(milliseconds: 5 * 1000),

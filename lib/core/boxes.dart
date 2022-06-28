@@ -1,3 +1,4 @@
+import 'dart:ui' ;
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -17,6 +18,16 @@ class Boxes {
       return true;
     }());
   }
+
+  static SingletonFlutterWindow getWindow() {
+    // return getWidgetsBinding().window;
+    return window;
+  }
+
+  static WidgetsBinding getWidgetsBinding() {
+    return WidgetsBinding.instance!;
+  }
+
 }
 
 /// View
@@ -137,7 +148,7 @@ class _GetSizeRenderObject extends RenderProxyBox {
   }
 
   void _invoke(Size? legacy, Size size) {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
       onLayoutChanged.call(this, legacy, size);
     });
   }
@@ -159,14 +170,14 @@ class _GetLayoutState extends State<GetLayoutWidget> with WidgetsBindingObserver
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addObserver(this);
-    WidgetsBinding.instance?.addPostFrameCallback(_rameCallback);
+    Boxes.getWidgetsBinding().addObserver(this);
+    Boxes.getWidgetsBinding().addPostFrameCallback(_rameCallback);
     super.initState();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    Boxes.getWidgetsBinding().removeObserver(this);
     super.dispose();
   }
 
@@ -181,7 +192,7 @@ class _GetLayoutState extends State<GetLayoutWidget> with WidgetsBindingObserver
     final RenderBox box = _context.findRenderObject() as RenderBox;
     final Size size = box.size;
     final Offset offset = box.localToGlobal(Offset.zero);
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
       widget.onLayoutChanged.call(box, offset, size);
     });
   }
