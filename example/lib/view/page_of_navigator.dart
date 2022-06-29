@@ -105,26 +105,28 @@ class PageOfNavigator extends StatelessWidget {
   }
 
   /// Static Methods
-  static CcSelectListWidget getSelectableListWidget({
+  static AnythingSelector getSelectableListWidget({
     required Object value,
     int depth = 0,
     bool Function(int depth, Object value)? doneSelectEvent,
   }) {
-    return CcSelectListWidget(
+    return AnythingSelector(
       title: 'Select The City',
       values: ((value is Map ? value['children'] : value) as List<dynamic>).cast(),
-      functionOfName: (s, i, e) => e is Map ? e['areaName'] : '',
+      funcOfItemName: (s, i, e) => e is Map ? e['areaName'] : '',
       isSearchEnable: true,
-      leftButtonEvent: (state) {
+      headerOptions: AnythingHeaderOptions()
+      ..leftEvent = (){
         DialogWrapper.pop();
       },
-      itemSuffixBuilder: (state, index, value) {
-        if (value is Map && value['children'] != null && value['children']!.isNotEmpty) {
-          return const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey);
-        }
-        return null;
-      },
-      onSelectedEvent: (CcSelectListState state, int index, Object value, List<Object>? selectedValues) {
+        options: AnythingSelectorOptions()..itemSuffixWidget =  const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+      // itemSuffixBuilder: (state, index, value) {
+      //   if (value is Map && value['children'] != null && value['children']!.isNotEmpty) {
+      //     return const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey);
+      //   }
+      //   return null;
+      // },
+      funcOfItemOnTapped: (state, index, value) {
         if (value is! Map) {
           return;
         }

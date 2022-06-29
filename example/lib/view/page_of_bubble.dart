@@ -273,12 +273,9 @@ class BubbleSliderWidget extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 32),
-        CcActionHeaderWidget()
-          ..title = 'LayerLinker'
-          ..height = 40
-          ..titleStyle = const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
-          ..leftButtonPadding = const EdgeInsets.only(top: 2, bottom: 2, left: 8)
-          ..leftButtonBuilder = () {
+        AnythingHeader(
+          title: 'LayerLinker',
+          options: AnythingHeaderOptions()..leftBuilder = (){
             return XpTextButton(
               'Back',
               width: 200,
@@ -296,9 +293,7 @@ class BubbleSliderWidget extends StatelessWidget {
                 DialogWrapper.dismissTopDialog();
               },
             );
-          }
-          ..rightButtonPadding = const EdgeInsets.only(top: 2, bottom: 2, right: 8)
-          ..rightButtonBuilder = () {
+          }..rightBuilder = () {
             return XpTextButton(
               'Done',
               width: 200,
@@ -317,6 +312,7 @@ class BubbleSliderWidget extends StatelessWidget {
               },
             );
           },
+        ),
         Expanded(
           child: Container(
             padding: const EdgeInsets.only(bottom: 16, left: 32, right: 32),
@@ -352,7 +348,7 @@ class BubbleSliderWidget extends StatelessWidget {
                             CcBubbleWidget(
                               bubbleTriangleTranslation: 20.0,
                               bubbleTriangleDirection: CcBubbleArrowDirection.top,
-                              child: CcSelectListWidget(
+                              child: AnythingSelector(
                                 values: const [
                                   'India',
                                   'UK',
@@ -365,9 +361,9 @@ class BubbleSliderWidget extends StatelessWidget {
                                   'Ukraine',
                                   'Germany',
                                 ],
-                                onSelectedEvent: (state, index, value, values) {
+                                funcOfItemOnTapped: (state, index, value) {
                                   selectCountryValue.value = value as String;
-                                  DialogWrapper.dismissTopDialog();
+                                  return false;
                                 },
                               ),
                             ),
@@ -393,7 +389,7 @@ class BubbleSliderWidget extends StatelessWidget {
                             CcBubbleWidget(
                               bubbleTriangleTranslation: size.width - 40,
                               bubbleTriangleDirection: CcBubbleArrowDirection.bottom,
-                              child: CcSelectListWidget(
+                              child: AnythingSelector(
                                 values: const [
                                   'India',
                                   'UK',
@@ -406,9 +402,9 @@ class BubbleSliderWidget extends StatelessWidget {
                                   'Ukraine',
                                   'Germany',
                                 ],
-                                onSelectedEvent: (state, index, value, values) {
+                                funcOfItemOnTapped: (state, index, value) {
                                   selectCountryValue.value = value as String;
-                                  DialogWrapper.dismissTopDialog();
+                                  return false;
                                 },
                               ),
                             ),
