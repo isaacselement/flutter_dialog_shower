@@ -117,7 +117,7 @@ class DialogShower {
     return _future;
   }
 
-  Future<R>? then<R>(FutureOr<R> Function(void value) onValue, {Function? onError}) => future.then(onValue, onError: onError);
+  Future<R>? then<R>(FutureOr<R> Function(dynamic value) onValue, {Function? onError}) => future.then(onValue, onError: onError);
 
   /// private .....
   TapUpDetails? get tapUpDetails => _tapUpDetails;
