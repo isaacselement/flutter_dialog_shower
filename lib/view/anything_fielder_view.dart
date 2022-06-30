@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
-import 'anything_picker_view.dart';
-
 //ignore: must_be_immutable
 class AnythingFielder extends StatefulWidget {
   String? title;
@@ -141,13 +139,45 @@ class AnythingFielderState extends State<AnythingFielder> {
     /// 2. content
     List<Widget> contentRowInnerChildren = [];
 
+    String? displayedText = widget.funcOfValue?.call(this) ?? widget.value;
+
     /// 2.0 content start view
     Widget? contentStartWidget = widget.builderOfStartWidget?.call(this) ?? options.contentStartWidget;
-    if (contentStartWidget != null) {
-      contentRowInnerChildren.add(contentStartWidget);
+
+    /// 2.1 content end view
+    bool isShouldShowEndClearIcon = false;
+    Widget? contentEndWidget;
+    if (widget.builderOfEndWidget != null) {
+      contentEndWidget = widget.builderOfEndWidget?.call(this);
+    } else {
+      contentEndWidget = options.contentEndWidget;
+
+      if (widget.isEditable ?? true && contentEndWidget == null) {
+        if (widget.isLoading ?? false) {
+          assert(options.contentLoadingIcon != null, 'Loading widget cannot be null when isLoading is true!');
+          contentEndWidget = options.contentLoadingIcon!;
+        } else if (widget.funcOfEndClear != null) {
+          // if funcOfClear supplied, we offered the clear button
+          isShouldShowEndClearIcon = true;
+          if (displayedText != null && displayedText.isNotEmpty) {
+            contentEndWidget = CcTapWidget(
+              onTap: (state) {
+                setState(() {
+                  widget.funcOfEndClear!.call(this);
+                  widget.value = null;
+
+                  previousText = null;
+                  previousTextSelection = null;
+                });
+              },
+              child: options.contentClearIcon,
+            );
+          }
+        }
+      }
     }
 
-    /// 2.1 content display view
+    /// 2.2 content center display view
     _setText(String text) {
       valueController.text = text;
       TextSelection selection = previousTextSelection ?? TextSelection.collapsed(offset: (valueController.text).length);
@@ -156,7 +186,6 @@ class AnythingFielderState extends State<AnythingFielder> {
       }
     }
 
-    String? displayedText = widget.funcOfValue?.call(this) ?? widget.value;
     _setText(displayedText ?? '');
     previousText ??= displayedText;
 
@@ -177,6 +206,16 @@ class AnythingFielderState extends State<AnythingFielder> {
           toolbarOptions: const ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
           onChanged: (String text) {
             // valueController.text already is text now ...
+
+            // ---------- show out the clear icon ----------
+            if (isShouldShowEndClearIcon) {
+              String? pt = previousText;
+              if ((pt == null || pt.isEmpty) && text.isNotEmpty || text.isEmpty && (pt != null && pt.isNotEmpty)) {
+                setState(() {});
+              }
+            }
+            // ---------- show out the clear icon ----------
+
             if (options.onEventTextChangedRaw?.call(this, text) ?? false) {
               previousText = text;
               return;
@@ -201,40 +240,14 @@ class AnythingFielderState extends State<AnythingFielder> {
           overflow: TextOverflow.ellipsis,
         );
       }
+      contentCenterWidget = Container(padding: options.contentPadding, child: displayedValueWidget);
+    }
 
-      contentCenterWidget = Container(
-        padding: options.contentPadding,
-        child: displayedValueWidget,
-      );
+    // add start/center/end widget
+    if (contentStartWidget != null) {
+      contentRowInnerChildren.add(contentStartWidget);
     }
     contentRowInnerChildren.add(Expanded(child: contentCenterWidget));
-
-    /// 2.2 content end view
-    Widget? contentEndWidget;
-    if (widget.builderOfEndWidget != null) {
-      contentEndWidget = widget.builderOfEndWidget?.call(this);
-    } else {
-      contentEndWidget = options.contentEndWidget;
-
-      if (widget.isEditable ?? true && contentEndWidget == null) {
-        if (widget.isLoading ?? false) {
-          assert(options.contentLoadingIcon != null, 'Loading widget cannot be null when isLoading is true!');
-          contentEndWidget = options.contentLoadingIcon!;
-        } else if (displayedText != null && displayedText.isNotEmpty && widget.funcOfEndClear != null) {
-          // if funcOfClear supplied, we offered the clear button
-          contentEndWidget = CcTapWidget(
-            onTap: (state) {
-              setState(() {
-                widget.funcOfEndClear!.call(this);
-                widget.value = null;
-              });
-            },
-            child: options.contentClearIcon,
-          );
-        }
-      }
-    }
-
     if (contentEndWidget != null) {
       contentRowInnerChildren.add(contentEndWidget);
     }
