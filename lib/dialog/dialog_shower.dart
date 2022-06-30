@@ -108,11 +108,11 @@ class DialogShower {
 
   Future<void> get futurePoped => _poppedCompleter.future;
 
-  Future<void>? _future;
+  Future<dynamic>? _future;
 
-  Future<void> get future async {
+  Future<dynamic> get future async {
     if (_future == null) {
-      await futurePushed; // future pushed indeed
+      await futurePushed; // future pushed indeed, wait pushed the return the actually _future
     }
     return _future;
   }
@@ -549,7 +549,7 @@ class DialogShower {
 
   // ----------- 2022-04-21 feature: for setState a new ui -----------
 
-  Future<void> dismiss() async {
+  Future<void> dismiss<T extends Object?>([T? result]) async {
     if (_isShowing) {
       _isShowing = false;
 
@@ -564,7 +564,7 @@ class DialogShower {
           __shower_log__('>>>>>>>>>>>>>> dismiss popping: $routeName');
           return true;
         }());
-        isSyncDismiss ? _dissmiss() : Future.microtask(() => _dissmiss());
+        isSyncDismiss ? _dissmiss<T>(result) : Future.microtask(() => _dissmiss<T>(result));
         if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
           isPopped = true;
         }
@@ -580,7 +580,7 @@ class DialogShower {
 
   // pop will caused NavigatorObserver.didPop method call immediately in the same eventloop
   // so u should put set isPopped into Future.microtask, the same as isPushed, in the same eventloop as push
-  void _dissmiss() => Navigator.of(context!, rootNavigator: isUseRootNavigator).pop();
+  void _dissmiss<T extends Object?>([T? result]) => Navigator.of(context!, rootNavigator: isUseRootNavigator).pop<T>(result);
 
   /// For navigator
   NavigatorState? getNavigator() {

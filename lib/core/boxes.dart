@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
@@ -16,6 +17,15 @@ class Boxes {
       }
       return true;
     }());
+  }
+
+  static SingletonFlutterWindow getWindow() {
+    // return getWidgetsBinding().window;
+    return window;
+  }
+
+  static WidgetsBinding getWidgetsBinding() {
+    return WidgetsBinding.instance!;
   }
 }
 

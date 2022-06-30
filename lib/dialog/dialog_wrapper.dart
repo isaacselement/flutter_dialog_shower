@@ -226,14 +226,14 @@ class DialogWrapper {
     await dismissDialog(_list().isNotEmpty ? _list().last : null);
   }
 
-  static Future<void> dismissDialog(DialogShower? dialog, {String? key}) async {
+  static Future<void> dismissDialog<T extends Object?>(DialogShower? dialog, {String? key, T? result}) async {
     // remove & dismiss from top to bottom if dialog in list
     if (dialog != null && (_list().contains(dialog))) {
       List<DialogShower> tmp = [..._list()];
       for (int i = tmp.length - 1; i >= 0; i--) {
         DialogShower d = tmp.elementAt(i);
         remove(d);
-        await _dismiss(d);
+        await _dismiss<T>(d, result: result);
         if (d == dialog) {
           break;
         }
@@ -244,7 +244,7 @@ class DialogWrapper {
       for (int i = tmp.length - 1; i >= 0; i--) {
         DialogShower d = tmp.elementAt(i);
         remove(d);
-        await _dismiss(d);
+        await _dismiss<T>(d, result: result);
         if (d == dialog) {
           break;
         }
@@ -253,9 +253,9 @@ class DialogWrapper {
   }
 
   // important!!! do not use this method unless you take management of your own shower
-  static Future<void> _dismiss(DialogShower? dialog) async {
+  static Future<void> _dismiss<T extends Object?>(DialogShower? dialog, {T? result}) async {
     if (dialog != null) {
-      await dialog.dismiss();
+      await dialog.dismiss<T>(result);
     }
   }
 
