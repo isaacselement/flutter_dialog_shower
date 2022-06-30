@@ -27,6 +27,8 @@ class DialogShower {
   Duration transitionDuration = const Duration(milliseconds: 250);
   RouteTransitionsBuilder? transitionBuilder;
 
+  NavigatorState get parentNavigator => Navigator.of(context!, rootNavigator: isUseRootNavigator);
+
   /// Animation direction
   Offset? animationBeginOffset = const Offset(0.0, 1.0); // default from Bottom
 
@@ -254,7 +256,7 @@ class DialogShower {
       transitionBuilder: transitionBuilder,
       settings: routeSettings,
     );
-    _future = Navigator.of(context!, rootNavigator: isUseRootNavigator).push(route);
+    _future = parentNavigator.push(route);
 
     if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
       isPushed = true;
@@ -272,6 +274,7 @@ class DialogShower {
       // key: _builderExKey,
       name: routeName,
       initCallBack: () {
+        // callbacks
         isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
 
         // keyboard visibility
@@ -283,6 +286,16 @@ class DialogShower {
         }
       },
       disposeCallBack: () {
+        _isShowing = false;
+        NavigatorObserverEx.statesChangingShowers?.remove(routeName);
+        assert(() {
+          DebouncerAny.get(runtimeType.toString()).call(() {
+            __shower_log__('Now the statistics of showers in cache: ${NavigatorObserverEx.statesChangingShowers}');
+          });
+          return true;
+        }());
+
+        // callbacks
         isSyncInvokeDismissCallback ? _invokeDismissCallbacks() : Future.microtask(() => _invokeDismissCallbacks());
 
         // keyboard visibility
@@ -556,7 +569,7 @@ class DialogShower {
       if (isPopped) {
         // check it out please !!!!
         assert(() {
-          __shower_log__('❗️❗️❗️ $routeName dismissed ??? already popped by using the most primitive pop ???');
+          __shower_log__('❗️❗️❗️ $routeName dismissed ??? already popped by using the most primitive pop/remove ???');
           return true;
         }());
       } else {
@@ -574,13 +587,14 @@ class DialogShower {
           return true;
         }());
       }
-      NavigatorObserverEx.statesChangingShowers?.remove(routeName);
     }
   }
 
-  // pop will caused NavigatorObserver.didPop method call immediately in the same eventloop
-  // so u should put set isPopped into Future.microtask, the same as isPushed, in the same eventloop as push
-  void _dissmiss<T extends Object?>([T? result]) => Navigator.of(context!, rootNavigator: isUseRootNavigator).pop<T>(result);
+  // pop/push/remove will caused NavigatorObserver.didPop/didPus/didRemove method call immediately in the same eventloop
+  // so we should set isPopped/isPushed immediately but call completer later using Future.microtask
+  void _dissmiss<T extends Object?>([T? result]) => parentNavigator.pop<T>(result);
+
+  void remove() => parentNavigator.removeRoute(route);
 
   /// For navigator
   NavigatorState? getNavigator() {
@@ -749,6 +763,9 @@ class NavigatorObserverEx extends NavigatorObserver {
       __shower_log__('[Observer] didRemove: ${route.settings.name}');
       return true;
     }());
+    if (route.settings.name != null) {
+      statesChangingShowers?[route.settings.name]?.isPopped = true;
+    }
   }
 
   @override

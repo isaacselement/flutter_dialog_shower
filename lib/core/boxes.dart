@@ -1,4 +1,4 @@
-import 'dart:ui' ;
+import 'dart:ui';
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -27,7 +27,6 @@ class Boxes {
   static WidgetsBinding getWidgetsBinding() {
     return WidgetsBinding.instance;
   }
-
 }
 
 /// View
@@ -245,6 +244,17 @@ class ThrottleAny {
   static ThrottleAny? _instance;
 
   static ThrottleAny get instance => (_instance ??= ThrottleAny());
+
+  static Map<String, ThrottleAny>? maps;
+
+  static ThrottleAny get(String key) {
+    maps ??= {};
+    return (maps?[key] ??= ThrottleAny())!;
+  }
+
+  static ThrottleAny? remove(String key) {
+    return maps?.remove(key);
+  }
 }
 
 class DebouncerAny {
@@ -269,4 +279,15 @@ class DebouncerAny {
   static DebouncerAny? _instance;
 
   static DebouncerAny get instance => (_instance ??= DebouncerAny());
+
+  static Map<String, DebouncerAny>? maps;
+
+  static DebouncerAny get(String key) {
+    maps ??= {};
+    return (maps?[key] ??= DebouncerAny())!;
+  }
+
+  static DebouncerAny? remove(String key) {
+    return maps?.remove(key);
+  }
 }

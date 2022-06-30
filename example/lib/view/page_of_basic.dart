@@ -278,6 +278,17 @@ class PageOfBasic extends StatelessWidget {
                 });
               });
             }),
+            WidgetsUtil.newXpelTextButton('Remove specified shower', onPressed: (state) {
+              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 700, height: 250).futurePushed.then((value) {
+                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').futurePushed.then((value) {
+                  DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__').futurePushed.then((value) {
+                    Future.delayed(const Duration(seconds: 2), () {
+                      DialogWrapper.getDialogByKey('__key1__')!.remove();
+                    });
+                  });
+                });
+              });
+            }),
           ],
         )
       ],
