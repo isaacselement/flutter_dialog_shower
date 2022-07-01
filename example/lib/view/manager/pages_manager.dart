@@ -123,18 +123,19 @@ class PagesManager {
       bool isSelected = currentPageIndex.value == inst.ordinal;
       Color textColor = isSelected ? (inst.isKeepAlive ? Colors.red : Colors.orangeAccent) : Colors.grey;
       return CupertinoButton(
-          padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
-          child: Column(
-            children: [
-              isSelected ? tabIconSelected : tabIcon,
-              const SizedBox(height: 2.0),
-              Text(name, style: TextStyle(color: textColor, fontSize: 11)),
-            ],
-          ),
-          onPressed: () {
-            currentPageIndex.value = inst.ordinal;
-            Broker.get<PageController>().jumpToPage(inst.ordinal);
-          });
+        padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
+        child: Column(
+          children: [
+            isSelected ? tabIconSelected : tabIcon,
+            const SizedBox(height: 2.0),
+            Text(name, style: TextStyle(color: textColor, fontSize: 11)),
+          ],
+        ),
+        onPressed: () {
+          currentPageIndex.value = inst.ordinal;
+          Broker.get<PageController>().jumpToPage(inst.ordinal);
+        },
+      );
     };
   }
 

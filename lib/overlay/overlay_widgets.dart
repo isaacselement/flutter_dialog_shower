@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dialog_shower/core/boxes.dart';
 
-import '../core/boxes.dart';
 import 'overlay_shower.dart';
 import 'overlay_wrapper.dart';
 

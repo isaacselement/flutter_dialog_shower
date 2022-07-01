@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dialog_shower/core/boxes.dart';
 
-
-import '../core/boxes.dart';
 import 'dialog_shower.dart';
+
+
 
 class DialogWrapper {
   /// Shower basic useage wrapper

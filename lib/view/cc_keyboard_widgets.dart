@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import '../event/keyboard_event_listener.dart';
+import 'package:flutter_dialog_shower/event/keyboard_event_listener.dart';
 
 
 // KeyboardInvisibleWidget

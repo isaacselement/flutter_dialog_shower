@@ -128,17 +128,18 @@ class PageOfNavigator extends StatelessWidget {
       // },
       funcOfItemOnTapped: (state, index, value) {
         if (value is! Map) {
-          return;
+          return false;
         }
         if (value['children'] == null || value['children']!.isEmpty) {
           if (doneSelectEvent?.call(depth, value) ?? false) {
-            return;
+            return false;
           }
           DialogWrapper.getTopNavigatorDialog()!.getNavigator()!.popUntil((route) => route.settings.name == '__root_route__');
           DialogWrapper.pop();
-          return;
+          return false;
         }
         DialogWrapper.push(getSelectableListWidget(value: value, depth: depth++), settings: RouteSettings(name: 'depth+$depth'));
+        return false;
       },
     );
   }

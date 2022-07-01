@@ -1,11 +1,11 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
+import 'package:example/view/widget/xp_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
-import '../util/logger.dart';
-import 'widgets/xp_widgets.dart';
 
 class PageOfBubble extends StatelessWidget {
   const PageOfBubble({Key? key}) : super(key: key);
