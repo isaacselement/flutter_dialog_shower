@@ -25,7 +25,7 @@ class Boxes {
   }
 
   static WidgetsBinding getWidgetsBinding() {
-    return WidgetsBinding.instance!;
+    return WidgetsBinding.instance;
   }
 }
 

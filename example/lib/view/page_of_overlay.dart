@@ -50,9 +50,12 @@ class PageOfOverlay extends StatelessWidget {
         WidgetsUtil.newHeaderWithLine('Toast'),
         demoUsageOfToasts(),
         const SizedBox(height: 32),
-        WidgetsUtil.newHeaderWithLine('LayerLink'),
+        WidgetsUtil.newHeaderWithLine('LayerLink Pure'),
         const SizedBox(height: 2),
-        demoUsageOfLayerLink(),
+        layerLinkOfPure(),
+        WidgetsUtil.newHeaderWithLine('LayerLink Shower'),
+        const SizedBox(height: 2),
+        layerLinkOfShower(),
       ],
     );
   }
@@ -384,25 +387,12 @@ class PageOfOverlay extends StatelessWidget {
     );
   }
 
-  Widget demoUsageOfLayerLink() {
-    return Column(
-      children: [
-        Wrap(
-          children: [
-            layerLinkOfPure(),
-            layerLinkOfShower(),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget layerLinkOfPure() {
     int itemCount = 50;
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        width: 380,
+        width: SizesUtil.screenWidth / 3 * 2,
         height: 520,
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -426,7 +416,7 @@ class PageOfOverlay extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        width: 380,
+        width: SizesUtil.screenWidth / 3 * 2,
         height: 520,
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
