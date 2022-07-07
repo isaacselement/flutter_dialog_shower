@@ -70,7 +70,7 @@ class PageOfNavigator extends StatelessWidget {
                   });
                 },
                 'Click me to setState': (context) {
-                  DialogWrapper.getTopDialog()?.setState(() {});
+                  DialogWrapper.getTopDialog()?.setState();
                 }
               }));
             }),

@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialog_shower/core/boxes.dart';
 import 'package:flutter_dialog_shower/core/broker.dart';
 import 'package:flutter_dialog_shower/view/cc_animate_widgets.dart';
 
@@ -178,58 +179,6 @@ class DialogWidgets {
   }
 }
 
-/// Convenient Widget for being easy to use
-abstract class CommonStatefulWidget<T extends CommonStatefulWidgetState> extends StatefulWidget {
-  CommonStatefulWidget({Key? key, this.builder, this.initState, this.dispose}) : super(key: key);
-
-  void Function(T state)? initState;
-  void Function(T state)? dispose;
-  Widget Function(T state, BuildContext context)? builder;
-
-  @override
-  T createState();
-}
-
-abstract class CommonStatefulWidgetState extends State<CommonStatefulWidget> {
-  @override
-  void initState() {
-    widget.initState?.call(this);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    widget.dispose?.call(this);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    assert(widget.builder != null, 'Cannot provide a null builder !!!');
-    return widget.builder!(this, context);
-  }
-}
-
-class CommonStatefulWidgetWithTicker extends CommonStatefulWidget {
-  CommonStatefulWidgetWithTicker({Key? key, builder, initState, dispose})
-      : super(key: key, builder: builder, initState: initState, dispose: dispose);
-
-  @override
-  CommonStatefulWidgetWithTickerState createState() => CommonStatefulWidgetWithTickerState();
-}
-
-class CommonStatefulWidgetWithTickerState extends CommonStatefulWidgetState with SingleTickerProviderStateMixin {}
-
-class CommonStatefulWidgetWithTickers extends CommonStatefulWidget {
-  CommonStatefulWidgetWithTickers({Key? key, builder, initState, dispose})
-      : super(key: key, builder: builder, initState: initState, dispose: dispose);
-
-  @override
-  CommonStatefulWidgetWithTickersState createState() => CommonStatefulWidgetWithTickersState();
-}
-
-class CommonStatefulWidgetWithTickersState extends CommonStatefulWidgetState with TickerProviderStateMixin {}
-
 /// Painters
 // https://github.com/sbis04/custom_painter
 // https://blog.codemagic.io/flutter-custom-painter/
@@ -367,26 +316,23 @@ class CcWidgetUtils {
     side ??= 64.0;
     stroke ??= 4.0;
     return CustomPaint(
+      child: SizedBox(width: side, height: side),
       painter: LoadingIconPainter(radius: side / 2, strokeWidth: stroke),
-      child: SizedBox(
-        width: side,
-        height: side,
-      ),
     );
   }
 
   static Widget getOnePainterWidget({required CustomPainter Function(double progress) painter}) {
     String controllerKey = 'Painter_${DateTime.now().millisecondsSinceEpoch}_${shortHash(UniqueKey())}';
-    return CommonStatefulWidgetWithTicker(
-      initState: (state) {
-        AnimationController _controller = AnimationController(vsync: state, duration: const Duration(milliseconds: 300));
-        Broker.setIfAbsent<AnimationController>(_controller, key: controllerKey);
-        _controller.forward();
+    return BuilderWithTicker(
+      init: (state) {
+        AnimationController controller = AnimationController(vsync: state as BuilderWithTickerState, duration: const Duration(milliseconds: 300));
+        Broker.setIfAbsent<AnimationController>(controller, key: controllerKey);
+        controller.forward();
       },
       dispose: (state) {
         Broker.remove<AnimationController>(key: controllerKey)?.dispose();
       },
-      builder: (state, context) {
+      builder: (state) {
         AnimationController? _controller = Broker.get(key: controllerKey);
         assert(_controller != null, '_controller cannot be null, should init in initState');
         return _controller == null
@@ -395,7 +341,8 @@ class CcWidgetUtils {
                 animation: _controller,
                 builder: (context, snapshot) {
                   return CustomPaint(painter: painter(_controller.value));
-                });
+                },
+              );
       },
     );
   }

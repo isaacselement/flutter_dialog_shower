@@ -504,12 +504,12 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
 
               console(() => '[AnythingPicker] finally shower height: ${shower.height}, y: ${shower.y}, stickToSide: ${_op.stickToSide}');
 
-              shower.setState(() {});
+              shower.setState();
             },
           ),
         );
       };
-      shower.setState(() {});
+      shower.setState();
     }();
     return shower;
   }

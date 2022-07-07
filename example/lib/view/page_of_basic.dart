@@ -37,6 +37,9 @@ class PageOfBasic extends StatelessWidget {
             'Using DialogWrapper, you can very easy to show a dialog and modify it\'s properties, and take the management of YOUR ALL showing dialogs'),
         const SizedBox(height: 12),
         demoUsageOfDialogWrapper(),
+        const SizedBox(height: 32),
+        WidgetsUtil.newHeaderWithLine('setState & animation'),
+        demoUsageOfTickerAnimation(),
         const SizedBox(height: 12),
       ],
     );
@@ -293,6 +296,190 @@ class PageOfBasic extends StatelessWidget {
         )
       ],
     );
+  }
+
+  Column demoUsageOfTickerAnimation() {
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Expand width animation', onPressed: (state) {
+              Btv<int> counter = 3.btv;
+              DialogShower shower = DialogWrapper.show(Btw(
+                builder: (context) {
+                  String text = 'Will Expand in ${counter.value}s...';
+                  text = counter.value == 0 ? 'Expanding...' : (counter.value < 0 ? 'Expanded' : text);
+                  return Container(color: Colors.redAccent, alignment: Alignment.center, child: Text(text));
+                },
+              ), width: 200, height: 250);
+              shower.isWithTicker = true;
+
+              stopwatchTimer(
+                count: counter.value,
+                tik: () {
+                  counter.value = --counter.value;
+                  if (counter.value == 0) {
+                    expandWidth(shower: shower, begin: 200, end: 750, callback: () => counter.value = -1);
+                  }
+                },
+              );
+            }),
+            WidgetsUtil.newXpelTextButton('Expand width animation with reverse', onPressed: (state) {
+              Btv<int> counter = 2.btv;
+              DialogShower shower = DialogWrapper.show(Btw(
+                builder: (context) {
+                  String text = 'Will Expand in ${counter.value}s...';
+                  text = counter.value == 0 ? 'Expanding...' : (counter.value < 0 ? 'Expanded' : text);
+                  return Container(color: Colors.redAccent, alignment: Alignment.center, child: Text(text));
+                },
+              ), width: 200, height: 250);
+              shower.isWithTicker = true;
+
+              stopwatchTimer(
+                count: counter.value,
+                tik: () {
+                  counter.value = --counter.value;
+                  if (counter.value == 0) {
+                    AnimationController? c = expandWidth(shower: shower, begin: 200, end: 750, callback: () => counter.value = -1);
+                    shower.barrierOnTapCallback = (shower, offset) {
+                      c?.reverse().then((value) {
+                        shower.dismiss();
+                      });
+                      return true;
+                    };
+                  }
+                },
+              );
+            }),
+            WidgetsUtil.newXpelTextButton('Dismiss with custom animation', onPressed: (state) {
+              DialogShower shower = DialogWrapper.show(Btw(
+                builder: (context) {
+                  return Container(color: Colors.redAccent, alignment: Alignment.center, child: const Text('Hola! Tap barrier pls...'));
+                },
+              ), width: 700, height: 250);
+              shower.isWithTicker = true;
+
+              shower.barrierOnTapCallback = (shower, offset) {
+                AnimationController controller = createAnimationController(shower, duration: 200);
+                Animation<double> animate = Tween<double>(begin: 700, end: 0).chain(CurveTween(curve: Curves.ease)).animate(controller);
+                animate.addListener(() {
+                  shower.width = animate.value;
+                  shower.setState();
+                });
+                controller.forward().then((value) {
+                  shower.dismiss(); // shower.remove(); // or just user remove
+                });
+                return true;
+              };
+            }),
+            WidgetsUtil.newXpelTextButton('Animate as you want', onPressed: (state) {
+              DialogShower shower = DialogWrapper.show(
+                Container(color: Colors.redAccent, alignment: Alignment.center, child: const Text('Hola! Tap barrier pls...')),
+                width: 700,
+                height: 250,
+              )..transitionBuilder = null;
+              shower.isWithTicker = true;
+
+              int tapCount = 0;
+              AnimationController? controller;
+              shower.addShowCallBack((shower) {
+                controller = createAnimationController(shower, duration: 300);
+                Animation<double> animate =
+                    Tween<double>(begin: 0, end: 700).chain(CurveTween(curve: Curves.easeInSine)).animate(controller!);
+                animate.addListener(() {
+                  shower.width = animate.value;
+                  shower.setState();
+                });
+                controller!.forward();
+              });
+
+              shower.barrierOnTapCallback = (shower, offset) {
+                tapCount++;
+                tapCount % 2 == 1 ? controller?.reverse() : controller?.forward();
+                return true;
+              };
+              shower.dialogOnTapCallback = (shower, offset) {
+                shower.dismiss();
+                return false;
+              };
+            }),
+            WidgetsUtil.newXpelTextButton('Animate with AnimatedContainer', onPressed: (state) {
+              Btv<double> slideWidth = 150.0.btv;
+              DialogShower shower = DialogWrapper.show(
+                Btw(builder: (context) {
+                  return Container(
+                    color: Colors.redAccent,
+                    alignment: Alignment.center,
+                    child: AnimatedContainer(
+                      height: 200,
+                      width: slideWidth.value,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                        color: Colors.yellow,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        boxShadow: [BoxShadow(color: Colors.green, blurRadius: 15.0)],
+                      ),
+                      duration: const Duration(milliseconds: 150),
+                      child: const Text('Hola! Tap inside pls ...'),
+                    ),
+                  );
+                }),
+                width: 700,
+                height: 250,
+              )..transitionBuilder = null;
+              shower.isWithTicker = true;
+
+              int tapCount = 0;
+              shower.dialogOnTapCallback = (shower, offset) {
+                tapCount++;
+                slideWidth.value = tapCount % 2 == 1 ? 500 : 150;
+                return true;
+              };
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  static void stopwatchTimer({int millis = 1000, required int count, required void Function() tik}) async {
+    while (count-- > 0) {
+      await Future.delayed(Duration(milliseconds: millis), tik);
+    }
+  }
+
+  static AnimationController createAnimationController(DialogShower shower, {int duration = 500}) {
+    assert(shower.isWithTicker, 'Your shower should assign isWithTicker property to true');
+    AnimationController controller = AnimationController(
+      vsync: shower.statefulKey.currentState! as BuilderWithTickerState,
+      duration: Duration(milliseconds: duration),
+    );
+    shower.isAutoSizeForNavigator = false;
+    shower.isSyncInvokeDismissCallback = true;
+    shower.addDismissCallBack(
+      (shower) {
+        controller.dispose();
+      },
+    );
+    return controller;
+  }
+
+  static AnimationController? expandWidth({required DialogShower shower, double? begin, double? end, void Function()? callback}) {
+    if (!shower.isWithTicker) {
+      return null;
+    }
+    AnimationController controller = createAnimationController(shower);
+    Animation<double> animation = Tween<double>(begin: begin, end: end).chain(CurveTween(curve: Curves.ease)).animate(controller);
+    animation.addListener(() {
+      shower.width = animation.value;
+      shower.setState();
+    });
+    controller.forward().then((value) {
+      Future.delayed(const Duration(milliseconds: 100)).then((value) {
+        callback?.call();
+      });
+    });
+    return controller;
   }
 
   DialogShower doBasicShow({Widget? child}) {

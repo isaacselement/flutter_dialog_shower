@@ -274,7 +274,7 @@ class DialogShower {
     return BuilderEx(
       // key: _builderExKey,
       name: routeName,
-      initCallBack: () {
+      init: (state) {
         // callbacks
         isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
 
@@ -286,7 +286,7 @@ class DialogShower {
           });
         }
       },
-      disposeCallBack: () {
+      dispose: (state) {
         _isShowing = false;
         NavigatorObserverEx.statesChangingShowers?.remove(routeName);
         assert(() {
@@ -303,7 +303,7 @@ class DialogShower {
         _keyboardStreamSubscription?.cancel();
         _keyboardStreamSubscription = null;
       },
-      builder: (BuildContext context, StateSetter setStat) {
+      builder: (state) {
         return GestureDetector(
           onTapDown: (TapDownDetails details) {
             assert(() {
@@ -398,9 +398,10 @@ class DialogShower {
   }
 
   Widget _getScaffoldBody(Widget _child) {
+    // will rebuild with statefulKey
     GlobalKey mKey = _statefulKey;
     if (isWithTicker) {
-      return BuilderWithTicker(key: mKey, builder: (context, setState) => _getScaffoldContainer(_child));
+      return BuilderWithTicker(key: mKey, builder: (state) => _getScaffoldContainer(_child));
     }
     return StatefulBuilder(key: mKey, builder: (context, setState) => _getScaffoldContainer(_child));
   }
@@ -542,26 +543,27 @@ class DialogShower {
     );
   }
 
-  // ----------- 2022-04-21 feature: for setState a new ui -----------
+  // setState ----------------------------------------
+
   Widget? newChild;
 
   Widget Function(DialogShower shower)? builder;
 
   void setNewChild(Widget? child) {
     newChild = child;
-    setState(() {});
+    setState();
   }
 
   void setBuilder(Widget Function(DialogShower shower)? _builder) {
     builder = _builder;
-    setState(() {});
+    setState();
   }
 
   Widget _rawChild(Widget? child) {
     return builder?.call(this) ?? newChild ?? child ?? const Offstage(offstage: true);
   }
 
-  // ----------- 2022-04-21 feature: for setState a new ui -----------
+  // dismiss ----------------------------------------
 
   Future<void> dismiss<T extends Object?>([T? result]) async {
     if (_isShowing) {
@@ -644,13 +646,13 @@ class DialogShower {
 
   /// self defined setState
 
-  void setState(VoidCallback fn) {
+  void setState([VoidCallback? fn]) {
     assert(() {
       __shower_log__('[DialogShower] setState was called, rebuilding...');
       return true;
     }());
-    // _builderExKey.currentState?.setState(fn);
-    _statefulKey.currentState?.setState(fn);
+    fn?.call();
+    (_statefulKey.currentContext as StatefulElement).markNeedsBuild();
   }
 
   /// Private methods
@@ -701,7 +703,7 @@ class DialogShower {
     renderedWidth = size?.width;
     renderedHeight = size?.height;
     if (renderedWidth != null && renderedHeight != null) {
-      setState(() {});
+      setState();
     }
   }
 

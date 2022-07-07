@@ -104,7 +104,7 @@ class OverlayShower {
     // will rebuild with statefulKey
     GlobalKey mKey = _statefulKey;
     if (isWithTicker) {
-      return BuilderWithTicker(key: mKey, builder: (context, setState) => _getRebuildableWidget(child));
+      return BuilderWithTicker(key: mKey, builder: (state) => _getRebuildableWidget(child));
     }
     return StatefulBuilder(key: mKey, builder: (context, setState) => _getRebuildableWidget(child));
   }
