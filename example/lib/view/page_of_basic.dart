@@ -304,7 +304,7 @@ class PageOfBasic extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Expand width animation', onPressed: (state) {
-              Btv<int> counter = 3.btv;
+              Btv<int> counter = 2.btv;
               DialogShower shower = DialogWrapper.show(Btw(
                 builder: (context) {
                   String text = 'Will Expand in ${counter.value}s...';
@@ -324,7 +324,7 @@ class PageOfBasic extends StatelessWidget {
                 },
               );
             }),
-            WidgetsUtil.newXpelTextButton('Expand width animation with reverse', onPressed: (state) {
+            WidgetsUtil.newXpelTextButton('Expand width animation with reverse then dismiss', onPressed: (state) {
               Btv<int> counter = 2.btv;
               DialogShower shower = DialogWrapper.show(Btw(
                 builder: (context) {
@@ -334,6 +334,7 @@ class PageOfBasic extends StatelessWidget {
                 },
               ), width: 200, height: 250);
               shower.isWithTicker = true;
+              shower.animationBeginOffset = const Offset(0.0, -1.0);
 
               stopwatchTimer(
                 count: counter.value,
@@ -341,7 +342,7 @@ class PageOfBasic extends StatelessWidget {
                   counter.value = --counter.value;
                   if (counter.value == 0) {
                     AnimationController? c = expandWidth(shower: shower, begin: 200, end: 750, callback: () => counter.value = -1);
-                    shower.barrierOnTapCallback = (shower, offset) {
+                    shower.dialogOnTapCallback = (shower, offset) {
                       c?.reverse().then((value) {
                         shower.dismiss();
                       });
@@ -384,18 +385,25 @@ class PageOfBasic extends StatelessWidget {
               AnimationController? controller;
               shower.addShowCallBack((shower) {
                 controller = createAnimationController(shower, duration: 300);
-                Animation<double> animate =
+                Animation<double> aniH = Tween<double>(begin: 1080, end: 250)
+                    // .chain(CurveTween(curve: const Cubic(0.755, 0.05, 0.855, 0.06)))
+                    .chain(CurveTween(curve: const Cubic(0.18, 1.0, 0.04, 1.0)))
+                    .animate(controller!);
+                Animation<double> aniW =
                     Tween<double>(begin: 0, end: 700).chain(CurveTween(curve: Curves.easeInSine)).animate(controller!);
-                animate.addListener(() {
-                  shower.width = animate.value;
+                aniH.addListener(() {
+                  shower.height = aniH.value;
+                  shower.setState();
+                });
+                aniW.addListener(() {
+                  shower.width = aniW.value;
                   shower.setState();
                 });
                 controller!.forward();
               });
 
               shower.barrierOnTapCallback = (shower, offset) {
-                tapCount++;
-                tapCount % 2 == 1 ? controller?.reverse() : controller?.forward();
+                ++tapCount % 2 == 1 ? controller?.reverse() : controller?.forward();
                 return true;
               };
               shower.dialogOnTapCallback = (shower, offset) {
@@ -431,8 +439,7 @@ class PageOfBasic extends StatelessWidget {
 
               int tapCount = 0;
               shower.dialogOnTapCallback = (shower, offset) {
-                tapCount++;
-                slideWidth.value = tapCount % 2 == 1 ? 500 : 150;
+                slideWidth.value = ++tapCount % 2 == 1 ? 500 : 150;
                 return true;
               };
             }),

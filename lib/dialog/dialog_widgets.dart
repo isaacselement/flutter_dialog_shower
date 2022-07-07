@@ -180,23 +180,24 @@ class DialogWidgets {
 }
 
 /// Painters
+
 // https://github.com/sbis04/custom_painter
 // https://blog.codemagic.io/flutter-custom-painter/
 // https://github.com/divyanshub024/flutter_path_animation
 // https://medium.com/flutter-community/playing-with-paths-in-flutter-97198ba046c8
 
 class LoadingIconPainter extends CustomPainter {
-  double radius;
-  double strokeWidth;
+  double radius, strokeWidth;
 
   // ARC
+  double bigRatio; // [0.0 - 1.0]
   Color? colorBig, colorSmall;
-  double? startAngleBig, sweepAngleBig;
-  double? startAngleSmall, sweepAngleSmall;
+  double? startAngleBig, sweepAngleBig, startAngleSmall, sweepAngleSmall;
 
   LoadingIconPainter({
     required this.radius,
     required this.strokeWidth,
+    this.bigRatio = 4.0 / 5.0,
     this.colorBig,
     this.colorSmall,
     this.startAngleBig,
@@ -213,6 +214,10 @@ class LoadingIconPainter extends CustomPainter {
     double height = size.height;
     height = height == 0 ? side : height;
 
+    int i = bigRatio.toInt();
+    bigRatio = i % 2 == 0 ? bigRatio - i : 1.0 - (bigRatio - i);
+    double smallRatio = 1.0 - bigRatio;
+
     var paintBig = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
@@ -223,11 +228,11 @@ class LoadingIconPainter extends CustomPainter {
       ..color = colorSmall ?? Colors.grey.withAlpha(128);
 
     double startAngleB = startAngleBig ?? 0;
-    double sweepAngleB = sweepAngleBig ?? 2 * math.pi / 5 * 4;
+    double sweepAngleB = sweepAngleBig ?? 2 * math.pi * bigRatio;
     canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleB, sweepAngleB, false, paintBig);
 
-    double startAngleS = startAngleSmall ?? 2 * math.pi / 5 * 4;
-    double sweepAngleS = sweepAngleSmall ?? 2 * math.pi / 5 * 1;
+    double startAngleS = startAngleSmall ?? 2 * math.pi * bigRatio;
+    double sweepAngleS = sweepAngleSmall ?? 2 * math.pi * smallRatio;
     canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleS, sweepAngleS, false, paintSmall);
   }
 
@@ -251,10 +256,8 @@ abstract class ProgressIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = stroke ?? 11
       ..color = color ?? Colors.white;
-
     if (progress != null) {
-      double p = progress!;
-      paintWithProgress(canvas, size, paint, p);
+      paintWithProgress(canvas, size, paint, progress!);
     }
   }
 
@@ -325,22 +328,25 @@ class CcWidgetUtils {
     String controllerKey = 'Painter_${DateTime.now().millisecondsSinceEpoch}_${shortHash(UniqueKey())}';
     return BuilderWithTicker(
       init: (state) {
-        AnimationController controller = AnimationController(vsync: state as BuilderWithTickerState, duration: const Duration(milliseconds: 300));
-        Broker.setIfAbsent<AnimationController>(controller, key: controllerKey);
-        controller.forward();
+        BuilderWithTickerState vsync = state as BuilderWithTickerState;
+        AnimationController ctrl = AnimationController(vsync: vsync, duration: const Duration(milliseconds: 300));
+        Future.delayed(const Duration(milliseconds: 200), () {
+          Broker.getIf<AnimationController>(key: controllerKey)?.forward();
+        });
+        Broker.setIfAbsent<AnimationController>(ctrl, key: controllerKey);
       },
       dispose: (state) {
         Broker.remove<AnimationController>(key: controllerKey)?.dispose();
       },
       builder: (state) {
-        AnimationController? _controller = Broker.get(key: controllerKey);
-        assert(_controller != null, '_controller cannot be null, should init in initState');
-        return _controller == null
+        AnimationController? controller = Broker.getIf(key: controllerKey);
+        assert(controller != null, '_controller cannot be null, should init in initState');
+        return controller == null
             ? CustomPaint(painter: painter(1.0))
             : AnimatedBuilder(
-                animation: _controller,
+                animation: controller,
                 builder: (context, snapshot) {
-                  return CustomPaint(painter: painter(_controller.value));
+                  return CustomPaint(painter: painter(controller.value));
                 },
               );
       },

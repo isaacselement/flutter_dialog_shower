@@ -16,6 +16,10 @@ class Broker {
     return instance.get<T>(key: key);
   }
 
+  static T? getIf<T>({String? key}) {
+    return contains<T>(key: key) ? get<T>(key: key) : null;
+  }
+
   static bool contains<T>({T? value, String? key}) {
     return instance.contains<T>(value: value, key: key);
   }
