@@ -80,13 +80,29 @@ class ElementsUtil {
     return result;
   }
 
-  static Element? getElementOfText(BuildContext context, String text) {
+  static Element? getElement(BuildContext? context, bool Function(Element e) test) {
+    if (context == null) {
+      return null;
+    }
     Element? result;
     ElementsIterator().iterate(context, (element, index) {
-      bool isBingo = element.widget is Text && (element.widget as Text).data == text;
+      bool isBingo = test(element);
       result = isBingo ? element : null;
       return isBingo;
     });
     return result;
   }
+
+  static Element? getElementOfText(BuildContext? context, String text) {
+    return getElement(context, (e) => e.widget is Text && (e.widget as Text).data == text);
+  }
+
+  static Element? getElementOfWidgetType(BuildContext? context, Type type) {
+    return getElement(context, (e) => e.widget.runtimeType == type);
+  }
+
+  static Element? getElementOfStateType(BuildContext? context, Type type) {
+    return getElement(context, (e) => e is StatefulElement && e.state.runtimeType == type);
+  }
+
 }

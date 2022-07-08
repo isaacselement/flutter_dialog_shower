@@ -1,4 +1,5 @@
 import 'package:example/util/logger.dart';
+import 'package:example/util/shower_helper.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
@@ -25,11 +26,21 @@ class PageOfWidgets extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 12),
-        WidgetsUtil.newHeaderWithLine('Tips'),
+        WidgetsUtil.newHeaderWithLine('Loadings'),
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('show loading', onPressed: (state) {
               DialogShower shower = DialogWidgets.showLoading(dismissible: true);
+              int count = 9;
+              ShowerHelper.stopwatchTimer(
+                count: count,
+                tik: (i) {
+                  DialogWidgets.setLoadingText('Hola~!~ $i ~~~~');
+                  if (i == count - 1) {
+                    DialogWrapper.dismissDialog(shower);
+                  }
+                },
+              );
               Future.delayed(const Duration(milliseconds: 3000), () {
                 Logger.d('shower: ${shower.routeName}, route is active: ${shower.route.isActive}');
               });
@@ -68,6 +79,12 @@ class PageOfWidgets extends StatelessWidget {
                 ),
               );
             }),
+          ],
+        ),
+        const SizedBox(height: 12),
+        WidgetsUtil.newHeaderWithLine('Tips'),
+        Wrap(
+          children: [
             WidgetsUtil.newXpelTextButton('show success', onPressed: (state) {
               DialogWidgets.showSuccess(dismissible: true);
             }),

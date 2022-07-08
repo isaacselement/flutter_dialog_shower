@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 import 'package:flutter_dialog_shower/core/broker.dart';
+import 'package:flutter_dialog_shower/util/elements_util.dart';
 import 'package:flutter_dialog_shower/view/cc_animate_widgets.dart';
 
 import 'dialog_shower.dart';
@@ -39,14 +40,14 @@ class DialogWidgets {
     Widget? icon,
     String? text = 'Loading',
     bool dismissible = false,
-    // --------- For Painter Loading -----------
+    // --------- For Loading Painter -----------
     bool? isPaintAnimation,
     bool? isPaintStartStiff,
     bool? isPaintWrapRotate,
     double? side,
     double? stroke,
     Duration? duration,
-    // --------- For Painter Loading -----------
+    // --------- For Loading Painter -----------
   }) {
     Widget widget;
     icon ??= defIconLoading;
@@ -79,36 +80,12 @@ class DialogWidgets {
     return showIconText(icon: w, text: text)..barrierDismissible = dismissible;
   }
 
-  static DialogShower showIconText({
-    double? width = 150,
-    double? height = 150,
-    double? iconTextGap = 16.0,
-    Widget? icon,
-    String? text,
-    TextStyle? textStyle,
-    EdgeInsets? padding,
-    Decoration? decoration,
-    Color? backgroundColor,
-  }) {
-    List<Widget> children = <Widget>[];
-    if (icon != null) {
-      children.add(icon);
-      if (iconTextGap != null && iconTextGap != 0) {
-        children.add(SizedBox(height: iconTextGap));
-      }
-    }
-    if (text != null) {
-      children.add(Text(text, style: textStyle ?? defIconTextStyle ?? const TextStyle(color: Colors.white, fontSize: 16)));
-    }
-    Widget widget = Container(
-      width: width,
-      height: height,
-      padding: padding,
-      decoration: decoration ?? BoxDecoration(color: backgroundColor ?? defIconBgColor ?? Colors.black),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: children),
-    );
-    DialogShower shower = DialogWrapper.show(widget);
-
+  static DialogShower showIconText({Widget? icon, String? text, Function(AnyIconTextOptions options)? onOptions}) {
+    AnyIconTextOptions options = AnyIconTextOptions();
+    options.textStyle = defIconTextStyle;
+    options.backgroundColor = defIconBgColor;
+    onOptions?.call(options);
+    DialogShower shower = DialogWrapper.show(AnyIconTextWidget(icon: icon, text: text, options: options));
     // rewrite properties cause show actually in the next micro task :)
     shower
       ..barrierDismissible = true
@@ -119,6 +96,15 @@ class DialogWidgets {
         return ScaleTransition(child: child, scale: Tween(begin: 0.0, end: 1.0).animate(animation));
       };
     return shower;
+  }
+
+  static void setLoadingText(String text) {
+    DialogShower? shower = DialogWrapper.getTopDialog();
+    BuildContext? context = shower?.containerKey.currentContext;
+    Element? element = ElementsUtil.getElementOfStateType(context, AnyIconTextState);
+    AnyIconTextState? state = (element as StatefulElement?)?.state as AnyIconTextState?;
+    state?.widget.text = text;
+    element?.markNeedsBuild();
   }
 
   // Show Alert With Texts & Buttons
@@ -202,6 +188,60 @@ class DialogWidgets {
       };
     return shower;
   }
+}
+
+/// Widgets
+
+class AnyIconTextWidget extends StatefulWidget {
+  AnyIconTextWidget({Key? key, this.icon, this.text, this.options}) : super(key: key);
+
+  Widget? icon;
+  String? text;
+  AnyIconTextOptions? options;
+
+  @override
+  State<AnyIconTextWidget> createState() => AnyIconTextState();
+}
+
+class AnyIconTextState extends State<AnyIconTextWidget> {
+  AnyIconTextOptions? _options;
+
+  AnyIconTextOptions get options => widget.options ?? (_options ??= AnyIconTextOptions());
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = <Widget>[];
+    if (widget.icon != null) {
+      children.add(widget.icon!);
+    }
+    if (options.spacing != null) {
+      children.add(SizedBox(height: options.spacing!));
+    }
+    if (widget.text != null) {
+      children.add(Text(widget.text!, style: options.textStyle ?? const TextStyle(color: Colors.white, fontSize: 16)));
+    }
+    return Container(
+      width: options.width,
+      height: options.height,
+      padding: options.padding,
+      decoration: options.decoration ?? BoxDecoration(color: options.backgroundColor ?? Colors.black),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: children,
+      ),
+    );
+  }
+}
+
+class AnyIconTextOptions {
+  double? spacing = 16.0;
+  TextStyle? textStyle;
+
+  double? width = 150.0;
+  double? height = 150.0;
+  EdgeInsets? padding;
+  Color? backgroundColor;
+  BoxDecoration? decoration;
 }
 
 /// Painters
@@ -343,6 +383,8 @@ class SuccessIconPainter extends ProgressIconPainter {
     canvas.drawPath(path, paint);
   }
 }
+
+/// Utils
 
 class PainterWidgetUtil {
   static Widget getOneLoadingCircleWidget({
