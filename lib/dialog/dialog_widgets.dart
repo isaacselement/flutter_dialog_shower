@@ -109,73 +109,31 @@ class DialogWidgets {
 
   // Show Alert With Texts & Buttons
   static DialogShower showAlert({
-    double? width,
-    double? height,
-    Decoration? decoration = const BoxDecoration(color: Colors.white),
-    EdgeInsets? padding,
     String? title,
-    TextStyle? titleStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     Widget? icon,
     String? text,
-    TextStyle? textStyle = const TextStyle(fontSize: 16),
-    double? titleBottomGap = 12.0,
-    double? iconBottomGap = 12.0,
-    String? button1Text,
-    TextStyle? button1TextStyle = const TextStyle(fontSize: 17),
+    double? width,
+    double? height,
+    String? button1Title,
+    String? button2Title,
     Function(DialogShower dialog)? button1Event,
-    String? button2Text,
-    TextStyle? button2TextStyle = const TextStyle(fontSize: 17),
     Function(DialogShower dialog)? button2Event,
+    Function(AnyAlertTextOptions options)? onOptions,
   }) {
     DialogShower shower = DialogShower();
-
-    List<Widget> children = <Widget>[];
-    title != null ? children.add(Text(title, style: titleStyle)) : null;
-    title != null ? children.add(SizedBox(height: titleBottomGap)) : null;
-
-    icon != null ? children.add(icon) : null;
-    icon != null ? children.add(SizedBox(height: iconBottomGap)) : null;
-
-    text != null ? children.add(Text(text, style: textStyle)) : null;
-    MainAxisAlignment columnMainAxis = padding == null ? MainAxisAlignment.center : MainAxisAlignment.start;
-
-    // buttons
-    List<Widget> buttonsRowChildren = <Widget>[];
-    if (button1Text != null) {
-      buttonsRowChildren.add(
-        Expanded(
-          child: CupertinoButton(child: Text(button1Text, style: button1TextStyle), onPressed: () => button1Event?.call(shower)),
-        ),
-      );
-    }
-    if (button1Text != null && button2Text != null) {
-      buttonsRowChildren.add(const VerticalDivider(width: 1));
-    }
-    if (button2Text != null) {
-      buttonsRowChildren.add(
-        Expanded(
-          child: CupertinoButton(child: Text(button2Text, style: button2TextStyle), onPressed: () => button2Event?.call(shower)),
-        ),
-      );
-    }
-
-    Widget widget = Container(
-      width: width ?? defAlertWidth,
-      height: height ?? defAlertHeight,
-      decoration: decoration,
-      child: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: padding ?? const EdgeInsets.all(0),
-              child: Column(mainAxisAlignment: columnMainAxis, children: children),
-            ),
-          ),
-          button1Text == null && button2Text == null ? const Offstage(offstage: true) : const Divider(height: 1),
-          IntrinsicHeight(child: Row(children: buttonsRowChildren)),
-        ],
-      ),
-    );
+    AnyAlertTextOptions options = AnyAlertTextOptions();
+    width != null ? options.width = width : null;
+    height != null ? options.height = height : null;
+    button1Title != null ? options.buttonLeftText = button1Title : null;
+    button2Title != null ? options.buttonRightText = button2Title : null;
+    options.buttonLeftEvent = () {
+      button1Event?.call(shower);
+    };
+    options.buttonRightEvent = () {
+      button2Event?.call(shower);
+    };
+    onOptions?.call(options);
+    Widget widget = AnyAlertTextWidget(title: title, icon: icon, text: text, options: options);
 
     DialogWrapper.showWith(shower, widget);
     // rewrite properties
@@ -192,6 +150,7 @@ class DialogWidgets {
 
 /// Widgets
 
+// AnyIconTextWidget
 class AnyIconTextWidget extends StatefulWidget {
   AnyIconTextWidget({Key? key, this.icon, this.text, this.options}) : super(key: key);
 
@@ -225,10 +184,7 @@ class AnyIconTextState extends State<AnyIconTextWidget> {
       height: options.height,
       padding: options.padding,
       decoration: options.decoration ?? BoxDecoration(color: options.backgroundColor ?? Colors.black),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
-      ),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: children),
     );
   }
 }
@@ -244,12 +200,119 @@ class AnyIconTextOptions {
   BoxDecoration? decoration;
 }
 
+// AnyAlertTextWidget
+class AnyAlertTextWidget extends StatefulWidget {
+  AnyAlertTextWidget({Key? key, this.icon, this.title, this.text, this.options}) : super(key: key);
+
+  Widget? icon;
+  String? title;
+  String? text;
+  AnyAlertTextOptions? options;
+
+  @override
+  State<AnyAlertTextWidget> createState() => AnyAlertTextState();
+}
+
+class AnyAlertTextState extends State<AnyAlertTextWidget> {
+  AnyAlertTextOptions? _options;
+
+  AnyAlertTextOptions get options => widget.options ?? (_options ??= AnyAlertTextOptions());
+
+  @override
+  Widget build(BuildContext context) {
+    // contents
+    List<Widget> children = <Widget>[];
+    String? title = widget.title;
+    Widget? icon = widget.icon;
+    String? text = widget.text;
+
+    if (title != null) {
+      children.add(Text(title, style: options.titleStyle));
+      children.add(SizedBox(height: options.titleSpacing));
+    }
+    if (icon != null) {
+      children.add(icon);
+      children.add(SizedBox(height: options.iconSpacing));
+    }
+    if (text != null) {
+      children.add(Text(text, style: options.textStyle));
+      children.add(SizedBox(height: options.textSpacing));
+    }
+
+    Widget? contents;
+    if (children.isNotEmpty) {
+      contents = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: children,
+      );
+    }
+
+    // buttons
+    List<Widget> row = <Widget>[];
+    void _addButton(String? title, TextStyle? titleStyle, Function()? event) {
+      if (title != null) {
+        row.add(
+          Expanded(
+            child: CupertinoButton(child: Text(title, style: titleStyle), onPressed: () => event?.call()),
+          ),
+        );
+      }
+    }
+
+    _addButton(options.buttonLeftText, options.buttonLeftTextStyle, options.buttonLeftEvent);
+    _addButton(options.buttonRightText, options.buttonRightTextStyle, options.buttonRightEvent);
+    if (row.length == 2) {
+      row.insert(1, const VerticalDivider(width: 1));
+    }
+    Widget? buttons;
+    if (row.isNotEmpty) {
+      buttons = IntrinsicHeight(child: Row(children: row));
+    }
+
+    // whole structure
+    List<Widget> list = <Widget>[];
+    if (contents != null) {
+      list.add(Expanded(child: contents));
+    }
+    if (buttons != null) {
+      list.add(const Divider(height: 1));
+      list.add(buttons);
+    }
+
+    return Container(
+      width: options.width,
+      height: options.height,
+      decoration: options.decoration,
+      child: Column(children: list),
+    );
+  }
+}
+
+class AnyAlertTextOptions {
+  double? titleSpacing = 12.0;
+  double? iconSpacing = 12.0;
+  double? textSpacing = 12.0;
+  TextStyle? titleStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+  TextStyle? textStyle = const TextStyle(fontSize: 16);
+
+  String? buttonLeftText;
+  String? buttonRightText;
+  Function()? buttonLeftEvent;
+  Function()? buttonRightEvent;
+  TextStyle? buttonLeftTextStyle = const TextStyle(fontSize: 17);
+  TextStyle? buttonRightTextStyle = const TextStyle(fontSize: 17);
+
+  double? width = 320.0;
+  double? height = 220.0;
+  BoxDecoration? decoration = const BoxDecoration(color: Colors.white);
+}
+
 /// Painters
 
-// https://github.com/sbis04/custom_painter
-// https://blog.codemagic.io/flutter-custom-painter/
 // https://github.com/divyanshub024/flutter_path_animation
 // https://medium.com/flutter-community/playing-with-paths-in-flutter-97198ba046c8
+// https://github.com/sbis04/custom_painter & https://blog.codemagic.io/flutter-custom-painter/
 
 class LoadingIconPainter extends CustomPainter {
   double radius, strokeWidth;
