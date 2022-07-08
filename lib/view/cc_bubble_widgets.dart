@@ -445,7 +445,7 @@ class CcBubblePainter extends CustomPainter {
     assert(() {
       if (isDebugLogEnable) {
         if (kDebugMode) {
-          print('[class $CcBubblePainter] $log');
+          print('[$CcBubblePainter] $log');
         }
       }
       return true;

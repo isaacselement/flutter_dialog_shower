@@ -1,20 +1,24 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 
 class RotateWidget extends StatefulWidget {
   Widget child;
-
+  bool? isClockwise;
   Duration? duration;
 
-  RotateWidget({Key? key, required this.child, this.duration}) : super(key: key);
+  RotateWidget({Key? key, required this.child, this.isClockwise, this.duration}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _RotateWidgetState();
+  State<StatefulWidget> createState() => RotateWidgetState();
 }
 
-class _RotateWidgetState extends State<RotateWidget> with SingleTickerProviderStateMixin {
+class RotateWidgetState extends State<RotateWidget> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
+
+  final double _circle = 2 * math.pi;
 
   @override
   void initState() {
@@ -22,7 +26,7 @@ class _RotateWidgetState extends State<RotateWidget> with SingleTickerProviderSt
 
     animationController = AnimationController(
       vsync: this,
-      duration: widget.duration ?? const Duration(seconds: 1),
+      duration: widget.duration ?? const Duration(milliseconds: 1000),
     );
     animationController.repeat();
   }
@@ -37,13 +41,14 @@ class _RotateWidgetState extends State<RotateWidget> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       child: widget.child,
+      animation: animationController,
       builder: (BuildContext context, Widget? child) {
+        double angle = animationController.value * _circle;
         return Transform.rotate(
-          angle: animationController.value * 6.3,
+          angle: widget.isClockwise == false ? -angle : angle,
           child: child,
         );
       },
-      animation: animationController,
     );
   }
 }

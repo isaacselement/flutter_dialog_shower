@@ -31,8 +31,42 @@ class PageOfWidgets extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('show loading', onPressed: (state) {
               DialogShower shower = DialogWidgets.showLoading(dismissible: true);
               Future.delayed(const Duration(milliseconds: 3000), () {
-                Logger.d('shower: ${shower.routeName}, is active: ${shower.route.isActive}');
+                Logger.d('shower: ${shower.routeName}, route is active: ${shower.route.isActive}');
               });
+            }),
+            WidgetsUtil.newXpelTextButton('show loading, unrotate unstiff', onPressed: (state) {
+              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isPaintWrapRotate: false);
+            }),
+            WidgetsUtil.newXpelTextButton('show loading, unrotate stiff', onPressed: (state) {
+              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: true, isPaintWrapRotate: false);
+            }),
+            WidgetsUtil.newXpelTextButton('show loading, rotate stiff', onPressed: (state) {
+              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: true, isPaintWrapRotate: true);
+            }),
+            WidgetsUtil.newXpelTextButton('show loading, rotate stiff with slower', onPressed: (state) {
+              DialogWidgets.showLoading(
+                dismissible: true,
+                isPaintAnimation: true,
+                isPaintStartStiff: true,
+                isPaintWrapRotate: true,
+                duration: const Duration(milliseconds: 1500),
+              );
+            }),
+            WidgetsUtil.newXpelTextButton('show loading, rotate unstiff', onPressed: (state) {
+              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isPaintWrapRotate: true);
+            }),
+            WidgetsUtil.newXpelTextButton('show loading paint example', onPressed: (state) {
+              DialogWidgets.showIconText(
+                icon: PainterWidgetUtil.getOnePainterWidget(
+                  size: const Size(64, 64),
+                  isRepeat: false,
+                  isRepeatWithReverse: false,
+                  duration: const Duration(milliseconds: 2000),
+                  painter: (progress) {
+                    return LoadingIconPainter(radius: 32, strokeWidth: 4.0, ratioStart: 0, ratioLength: progress);
+                  },
+                ),
+              );
             }),
             WidgetsUtil.newXpelTextButton('show success', onPressed: (state) {
               DialogWidgets.showSuccess(dismissible: true);

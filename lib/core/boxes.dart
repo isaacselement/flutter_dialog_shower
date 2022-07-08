@@ -12,7 +12,7 @@ class Boxes {
     assert(() {
       if (isDebugLogEnable) {
         if (kDebugMode) {
-          print('[class $Boxes] $log');
+          print('[$Boxes] $log');
         }
       }
       return true;
@@ -40,47 +40,59 @@ class BuilderEx extends StatefulWidget {
   const BuilderEx({Key? key, required this.builder, this.name, this.init, this.dispose}) : super(key: key);
 
   @override
-  State<BuilderEx> createState() => BuilderExState();
+  State createState() => BuilderExState();
 }
 
 class BuilderExState extends State<BuilderEx> {
   @override
   void initState() {
+    BuilderExState.callWidgetInit(widget, this);
     super.initState();
+  }
+
+  static void callWidgetInit(BuilderEx widget, State state) {
     try {
-      widget.init?.call(this);
+      widget.init?.call(state);
     } catch (e, s) {
-      Boxes.log('[$runtimeType] ${widget.name} showCallBack exception: ${e.toString()}');
+      Boxes.log('[$state] ${widget.name} showCallBack exception: ${e.toString()}');
       Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
       Boxes.log(s.toString());
     }
     assert(() {
-      Boxes.log('[$runtimeType] ${widget.name} >>>>> initState');
+      Boxes.log('[$state] ${widget.name} >>>>> initState');
       return true;
     }());
   }
 
   @override
   Widget build(BuildContext context) {
+    return BuilderExState.callWidgetBuilder(widget, this);
+  }
+
+  static Widget callWidgetBuilder(BuilderEx widget, State state) {
     assert(() {
-      Boxes.log('[$runtimeType] ${widget.name} >>>>> build');
+      Boxes.log('[$state] ${widget.name} >>>>> build');
       return true;
     }());
-    return widget.builder(this);
+    return widget.builder(state);
   }
 
   @override
   void dispose() {
+    BuilderExState.callWidgetDispose(widget, this);
+    super.dispose();
+  }
+
+  static void callWidgetDispose(BuilderEx widget, State state) {
     try {
-      widget.dispose?.call(this);
+      widget.dispose?.call(state);
     } catch (e, s) {
-      Boxes.log('[$runtimeType] ${widget.name} dismissCallBack exception: ${e.toString()}');
+      Boxes.log('[$state] ${widget.name} dismissCallBack exception: ${e.toString()}');
       Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
       Boxes.log(s.toString());
     }
-    super.dispose();
     assert(() {
-      Boxes.log('[$runtimeType] ${widget.name} >>>>> dispose');
+      Boxes.log('[$state] ${widget.name} >>>>> dispose');
       return true;
     }());
   }
@@ -97,10 +109,29 @@ class BuilderWithTicker extends BuilderEx {
   }) : super(key: key, builder: builder, name: name, init: init, dispose: dispose);
 
   @override
-  State<BuilderEx> createState() => BuilderWithTickerState();
+  State createState() => BuilderWithTickerState();
 }
 
-class BuilderWithTickerState extends BuilderExState with TickerProviderStateMixin {}
+// Do not extends BuilderExState with a mixin ❗️ Cause it parent class will be TickerProviderStateMixin$BuilderExState -> BuilderExState
+// We need to call widget dispose first, otherwise will call TickerProviderStateMixin dipose method first ❗️❗️
+class BuilderWithTickerState extends State<BuilderWithTicker> with TickerProviderStateMixin {
+  @override
+  void initState() {
+    BuilderExState.callWidgetInit(widget, this);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BuilderExState.callWidgetBuilder(widget, this);
+  }
+
+  @override
+  void dispose() {
+    BuilderExState.callWidgetDispose(widget, this);
+    super.dispose();
+  }
+}
 
 /// Widget for get Size immediately
 class GetSizeWidget extends SingleChildRenderObjectWidget {

@@ -35,22 +35,47 @@ class DialogWidgets {
       };
   }
 
-  static DialogShower showLoading({Widget? icon, String? text = 'Loading', bool dismissible = false}) {
-    Widget w = RotateWidget(child: icon ?? defIconLoading ?? CcWidgetUtils.getOneGappyCircle());
-    return showIconText(icon: w, text: text)..barrierDismissible = dismissible;
+  static DialogShower showLoading({
+    Widget? icon,
+    String? text = 'Loading',
+    bool dismissible = false,
+    // --------- For Painter Loading -----------
+    bool? isPaintAnimation,
+    bool? isPaintStartStiff,
+    bool? isPaintWrapRotate,
+    double? side,
+    double? stroke,
+    Duration? duration,
+    // --------- For Painter Loading -----------
+  }) {
+    Widget widget;
+    icon ??= defIconLoading;
+    if (icon != null) {
+      widget = RotateWidget(child: icon);
+    } else {
+      widget = PainterWidgetUtil.getOneLoadingCircleWidget(
+        isPaintAnimation: isPaintAnimation,
+        isPaintStartStiff: isPaintStartStiff,
+        isPaintWrapRotate: isPaintWrapRotate,
+        side: side,
+        stroke: stroke,
+        duration: duration,
+      );
+    }
+    return showIconText(icon: widget, text: text)..barrierDismissible = dismissible;
   }
 
   static DialogShower showSuccess({Widget? icon, String? text = 'Success', bool dismissible = true}) {
     Widget? w = icon ??
         defIconSuccess ??
-        SizedBox(width: 70, height: 46, child: CcWidgetUtils.getOnePainterWidget(painter: (v) => SuccessIconPainter(progress: v)));
+        PainterWidgetUtil.getOnePainterWidget(size: const Size(70, 46), painter: (v) => SuccessIconPainter(progress: v));
     return showIconText(icon: w, text: text)..barrierDismissible = dismissible;
   }
 
   static DialogShower showFailed({Widget? icon, String? text = 'Failed', bool dismissible = true}) {
     Widget? w = icon ??
         defIconFailed ??
-        SizedBox(width: 60, height: 60, child: CcWidgetUtils.getOnePainterWidget(painter: (v) => FailedIconPainter(progress: v)));
+        PainterWidgetUtil.getOnePainterWidget(size: const Size(60, 60), painter: (v) => FailedIconPainter(progress: v));
     return showIconText(icon: w, text: text)..barrierDismissible = dismissible;
   }
 
@@ -190,14 +215,18 @@ class LoadingIconPainter extends CustomPainter {
   double radius, strokeWidth;
 
   // ARC
-  double bigRatio; // [0.0 - 1.0]
+  double ratioStart; // [0.0 - 1.0] // big start ratio
+  double ratioLength; // [0.0 - 1.0] // big sweep angle length, if > 1.0, will reverse if odd
   Color? colorBig, colorSmall;
   double? startAngleBig, sweepAngleBig, startAngleSmall, sweepAngleSmall;
+
+  final double _circle = 2 * math.pi;
 
   LoadingIconPainter({
     required this.radius,
     required this.strokeWidth,
-    this.bigRatio = 4.0 / 5.0,
+    this.ratioStart = 0.0,
+    this.ratioLength = 4.0 / 5.0,
     this.colorBig,
     this.colorSmall,
     this.startAngleBig,
@@ -214,9 +243,10 @@ class LoadingIconPainter extends CustomPainter {
     double height = size.height;
     height = height == 0 ? side : height;
 
-    int i = bigRatio.toInt();
-    bigRatio = i % 2 == 0 ? bigRatio - i : 1.0 - (bigRatio - i);
-    double smallRatio = 1.0 - bigRatio;
+    // ratio big
+    int i = ratioLength.toInt();
+    double fraction = ratioLength - i;
+    double ratioDistance = i % 2 == 0 ? fraction : 1.0 - fraction;
 
     var paintBig = Paint()
       ..style = PaintingStyle.stroke
@@ -227,12 +257,12 @@ class LoadingIconPainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..color = colorSmall ?? Colors.grey.withAlpha(128);
 
-    double startAngleB = startAngleBig ?? 0;
-    double sweepAngleB = sweepAngleBig ?? 2 * math.pi * bigRatio;
+    double startAngleB = startAngleBig ?? _circle * ratioStart;
+    double sweepAngleB = sweepAngleBig ?? _circle * ratioDistance;
     canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleB, sweepAngleB, false, paintBig);
 
-    double startAngleS = startAngleSmall ?? 2 * math.pi * bigRatio;
-    double sweepAngleS = sweepAngleSmall ?? 2 * math.pi * smallRatio;
+    double startAngleS = startAngleSmall ?? startAngleB + sweepAngleB;
+    double sweepAngleS = sweepAngleSmall ?? _circle - sweepAngleB;
     canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleS, sweepAngleS, false, paintSmall);
   }
 
@@ -314,41 +344,103 @@ class SuccessIconPainter extends ProgressIconPainter {
   }
 }
 
-class CcWidgetUtils {
-  static Widget getOneGappyCircle({double? side, double? stroke}) {
+class PainterWidgetUtil {
+  static Widget getOneLoadingCircleWidget({
+    bool? isPaintAnimation,
+    bool? isPaintStartStiff,
+    bool? isPaintWrapRotate,
+    double? side,
+    double? stroke,
+    Duration? duration,
+  }) {
+    isPaintAnimation ??= false;
+    isPaintStartStiff ??= false;
+    isPaintWrapRotate ??= true;
     side ??= 64.0;
     stroke ??= 4.0;
-    return CustomPaint(
-      child: SizedBox(width: side, height: side),
-      painter: LoadingIconPainter(radius: side / 2, strokeWidth: stroke),
-    );
+    double radius = side / 2;
+    double strokeWidth = stroke;
+    Size size = Size(side, side);
+    Duration time = duration ?? const Duration(milliseconds: 1000);
+
+    if (!isPaintAnimation) {
+      return RotateWidget(child: CustomPaint(size: size, painter: LoadingIconPainter(radius: radius, strokeWidth: strokeWidth)));
+    }
+    Widget paintView;
+    Widget getPainterView(bool isRepeatWithReverse, List<double> Function(double progress) getAngels) {
+      return getOnePainterWidget(
+        size: size,
+        isRepeat: true,
+        duration: time,
+        isRepeatWithReverse: isRepeatWithReverse,
+        painter: (progress) {
+          List<double> ratios = getAngels(progress);
+          return LoadingIconPainter(radius: radius, strokeWidth: strokeWidth, ratioStart: ratios.first, ratioLength: ratios.last);
+        },
+      );
+    }
+
+    if (isPaintStartStiff) {
+      double _previous = 0;
+      int repeatCount = 0;
+      paintView = getPainterView(false, (progress) {
+        if (_previous > progress) {
+          repeatCount++;
+        }
+        _previous = progress;
+        double start = 0.0;
+        double length = progress + repeatCount;
+        return [start, length];
+      });
+    } else {
+      double _previous = 0;
+      bool isReversing = false;
+      paintView = getPainterView(true, (progress) {
+        isReversing = _previous > progress;
+        _previous = progress;
+        double start = isReversing ? 1.0 - progress : 0.0;
+        double length = isReversing ? 1.0 - start : progress;
+        return [start, length];
+      });
+    }
+    return isPaintWrapRotate ? RotateWidget(child: paintView, isClockwise: true) : paintView;
   }
 
-  static Widget getOnePainterWidget({required CustomPainter Function(double progress) painter}) {
+  static Widget getOnePainterWidget({
+    required Size size,
+    required CustomPainter Function(double progress) painter,
+    bool isRepeat = false,
+    bool isRepeatWithReverse = false,
+    Duration duration = const Duration(milliseconds: 200),
+  }) {
     String controllerKey = 'Painter_${DateTime.now().millisecondsSinceEpoch}_${shortHash(UniqueKey())}';
     return BuilderWithTicker(
       init: (state) {
         BuilderWithTickerState vsync = state as BuilderWithTickerState;
-        AnimationController ctrl = AnimationController(vsync: vsync, duration: const Duration(milliseconds: 300));
+        AnimationController controller = AnimationController(vsync: vsync, duration: duration);
+        Broker.setIfAbsent<AnimationController>(controller, key: controllerKey);
         Future.delayed(const Duration(milliseconds: 200), () {
-          Broker.getIf<AnimationController>(key: controllerKey)?.forward();
+          AnimationController? controller = Broker.getIf<AnimationController>(key: controllerKey);
+          isRepeat == true ? controller?.repeat(reverse: isRepeatWithReverse) : controller?.forward();
         });
-        Broker.setIfAbsent<AnimationController>(ctrl, key: controllerKey);
       },
       dispose: (state) {
-        Broker.remove<AnimationController>(key: controllerKey)?.dispose();
+        AnimationController? controller = Broker.getIf<AnimationController>(key: controllerKey);
+        controller?.stop();
+        controller?.dispose();
       },
       builder: (state) {
         AnimationController? controller = Broker.getIf(key: controllerKey);
-        assert(controller != null, '_controller cannot be null, should init in initState');
-        return controller == null
-            ? CustomPaint(painter: painter(1.0))
-            : AnimatedBuilder(
-                animation: controller,
-                builder: (context, snapshot) {
-                  return CustomPaint(painter: painter(controller.value));
-                },
-              );
+        assert(controller != null, 'AnimationController cannot be null, should init in initState');
+        if (controller == null) {
+          return CustomPaint(painter: painter(1.0));
+        }
+        return AnimatedBuilder(
+          animation: controller,
+          builder: (context, snapshot) {
+            return CustomPaint(size: size, painter: painter(controller.value));
+          },
+        );
       },
     );
   }
