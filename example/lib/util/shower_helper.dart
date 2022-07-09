@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class ShowerHelper {
-  static void stopwatchTimer({int millis = 1000, required int count, required void Function(int index) tik}) async {
+  static void stopwatchTimer({int millis = 1000, required int count, required bool Function(int index) tik}) async {
     int index = 0;
     while (count-- > 0) {
       await Future.delayed(Duration(milliseconds: millis), () {
-        tik(index++);
+        if (tik(index++)) count = 0;
       });
     }
   }

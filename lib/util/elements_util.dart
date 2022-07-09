@@ -105,4 +105,31 @@ class ElementsUtil {
     return getElement(context, (e) => e is StatefulElement && e.state.runtimeType == type);
   }
 
+  static T? getWidgetOfType<T extends Widget>(BuildContext? context) {
+    Element? element = getElementOfWidgetType(context, T);
+    return element?.widget as T?;
+  }
+
+  static T? getStateOfType<T extends State>(BuildContext? context) {
+    Element? element = getElementOfStateType(context, T);
+    return (element as StatefulElement?)?.state as T?;
+  }
+
+  static void rebuildWidgetOfType<T extends StatefulWidget>(BuildContext? context) {
+    getElementOfWidgetType(context, T)?.markNeedsBuild();
+  }
+
+  static void rebuildStateOfType<T extends State>(BuildContext? context) {
+    getElementOfStateType(context, T)?.markNeedsBuild();
+  }
+
+  static void rebuildWidget(BuildContext? context, StatefulWidget? widget) {
+    if (widget == null) return;
+    getElementOfWidgetType(context, widget.runtimeType)?.markNeedsBuild();
+  }
+
+  static void rebuildState(BuildContext? context, State? state) {
+    if (state == null) return;
+    getElementOfStateType(context, state.runtimeType)?.markNeedsBuild();
+  }
 }

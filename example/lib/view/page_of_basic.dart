@@ -322,6 +322,7 @@ class PageOfBasic extends StatelessWidget {
                   if (counter.value == 0) {
                     ShowerHelper.expandWidth(shower: shower, begin: 200, end: 750, callback: () => counter.value = -1);
                   }
+                  return false;
                 },
               );
             }),
@@ -350,6 +351,7 @@ class PageOfBasic extends StatelessWidget {
                       return true;
                     };
                   }
+                  return false;
                 },
               );
             }),

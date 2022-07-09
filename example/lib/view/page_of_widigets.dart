@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:example/util/logger.dart';
 import 'package:example/util/shower_helper.dart';
 import 'package:example/util/widgets_util.dart';
@@ -31,14 +33,22 @@ class PageOfWidgets extends StatelessWidget {
           children: [
             WidgetsUtil.newXpelTextButton('show loading', onPressed: (state) {
               DialogShower shower = DialogWidgets.showLoading(dismissible: true);
-              int count = 9;
+              int count = 11;
               ShowerHelper.stopwatchTimer(
                 count: count,
                 tik: (i) {
-                  DialogWidgets.setLoadingText('Hola~!~ $i ~~~~');
+                  if (!shower.isShowing) return true;
+                  String msg = 'Hola~~ ${i}s ~~~~';
+                  if (i >= 3) msg = 'Communicating...';
+                  if (i >= 4) msg = 'Uploading...';
+                  if (i >= 6) msg = 'Downloading...';
+                  if (i >= 8) msg = 'Waiting...';
+                  if (i >= 10) msg = 'Done!';
+                  DialogWidgets.setLoadingText(msg);
                   if (i == count - 1) {
                     DialogWrapper.dismissDialog(shower);
                   }
+                  return false;
                 },
               );
               Future.delayed(const Duration(milliseconds: 3000), () {
@@ -97,9 +107,15 @@ class PageOfWidgets extends StatelessWidget {
         WidgetsUtil.newHeaderWithLine('Alerts'),
         Wrap(
           children: [
-            /// TODO ......
             WidgetsUtil.newXpelTextButton('show message', onPressed: (state) {
-              DialogWidgets.showAlert(width: 360, height: 50, text: 'Hey, you are here!');
+              DialogWidgets.showAlert(
+                width: 360,
+                height: 50,
+                text: 'Hey, you are here!',
+                onOptions: (options) {
+                  options.textSpacing = 0;
+                },
+              );
             }),
             WidgetsUtil.newXpelTextButton('show title message', onPressed: (state) {
               DialogWidgets.showAlert(
@@ -138,6 +154,7 @@ class PageOfWidgets extends StatelessWidget {
                 button1Event: (D) => DialogWrapper.dismissTopDialog(),
                 onOptions: (options) {
                   options.alignment = MainAxisAlignment.start;
+                  options.alignment = MainAxisAlignment.start;
                   options.padding = const EdgeInsets.only(top: 16, left: 16, right: 16);
                 },
               );
@@ -164,6 +181,33 @@ class PageOfWidgets extends StatelessWidget {
                   options.padding = const EdgeInsets.only(top: 32, left: 32, right: 32);
                 },
               ).barrierColor = const Color(0x4D1C1D21);
+            }),
+            WidgetsUtil.newXpelTextButton('show message with rebuild', onPressed: (state) {
+              DialogWidgets.showAlert(
+                width: 360,
+                height: 270,
+                title: 'Hola',
+                icon: const Icon(Icons.info, size: 80, color: Colors.green),
+                text: 'A view of the sea when the author was a child made the author invisibly.',
+                button1Title: 'OK',
+                button1Event: (D) => DialogWrapper.dismissTopDialog(),
+                button2Title: 'Next One',
+                button2Event: (d) {
+                  BuildContext? context = d.containerKey.currentContext;
+                  AnyAlertTextWidget? widget = ElementsUtil.getWidgetOfType<AnyAlertTextWidget>(context);
+                  widget?.title = ['OnePlus', 'Vivo', 'Oppo', 'XiaoMi'].elementAt(Random().nextInt(4));
+                  widget?.text = ['Not a joke ~~~', 'Apple iPhone 14', 'An Undefined Phone'].elementAt(Random().nextInt(3));
+                  Color color = [Colors.red, Colors.green, Colors.orange].elementAt(Random().nextInt(3));
+                  widget?.icon = Icon(Icons.info, size: 80, color: color);
+                  ElementsUtil.rebuildWidget(context, widget);
+                  Logger.d('joking...');
+                },
+                onOptions: (options) {
+                  options.alignment = MainAxisAlignment.start;
+                  options.alignment = MainAxisAlignment.start;
+                  options.padding = const EdgeInsets.only(top: 16, left: 16, right: 16);
+                },
+              );
             }),
           ],
         ),

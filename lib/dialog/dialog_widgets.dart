@@ -76,7 +76,13 @@ class DialogWidgets {
   static DialogShower showFailed({Widget? icon, String? text = 'Failed', bool dismissible = true}) {
     Widget? w = icon ??
         defIconFailed ??
-        PainterWidgetUtil.getOnePainterWidget(size: const Size(60, 60), painter: (v) => FailedIconPainter(progress: v));
+        PainterWidgetUtil.getOnePainterWidget(
+          size: const Size(60, 60),
+          painter: (v) => FailedIconPainter(progress: v),
+          onAnimation: (controller) {
+            return Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeOutCubic)).animate(controller);
+          },
+        );
     return showIconText(icon: w, text: text)..barrierDismissible = dismissible;
   }
 
@@ -101,10 +107,9 @@ class DialogWidgets {
   static void setLoadingText(String text) {
     DialogShower? shower = DialogWrapper.getTopDialog();
     BuildContext? context = shower?.containerKey.currentContext;
-    Element? element = ElementsUtil.getElementOfStateType(context, AnyIconTextState);
-    AnyIconTextState? state = (element as StatefulElement?)?.state as AnyIconTextState?;
-    state?.widget.text = text;
-    element?.markNeedsBuild();
+    AnyIconTextWidget? widget = ElementsUtil.getWidgetOfType<AnyIconTextWidget>(context);
+    widget?.text = text;
+    ElementsUtil.rebuildWidgetOfType<AnyIconTextWidget>(context);
   }
 
   // Show Alert With Texts & Buttons
@@ -522,6 +527,7 @@ class PainterWidgetUtil {
     bool isRepeat = false,
     bool isRepeatWithReverse = false,
     Duration duration = const Duration(milliseconds: 200),
+    Animation<double>? Function(AnimationController controller)? onAnimation,
   }) {
     String controllerKey = 'Painter_${DateTime.now().millisecondsSinceEpoch}_${shortHash(UniqueKey())}';
     return BuilderWithTicker(
@@ -545,10 +551,11 @@ class PainterWidgetUtil {
         if (controller == null) {
           return CustomPaint(painter: painter(1.0));
         }
+        Animation<double> animation = onAnimation?.call(controller) ?? controller;
         return AnimatedBuilder(
-          animation: controller,
+          animation: animation,
           builder: (context, snapshot) {
-            return CustomPaint(size: size, painter: painter(controller.value));
+            return CustomPaint(size: size, painter: painter(animation.value));
           },
         );
       },
