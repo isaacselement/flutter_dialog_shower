@@ -150,7 +150,7 @@ class DialogWidgets {
 
 /// Widgets
 
-// AnyIconTextWidget
+/// AnyIconTextWidget
 class AnyIconTextWidget extends StatefulWidget {
   AnyIconTextWidget({Key? key, this.icon, this.text, this.options}) : super(key: key);
 
@@ -200,10 +200,11 @@ class AnyIconTextOptions {
   BoxDecoration? decoration;
 }
 
-// AnyAlertTextWidget
+/// AnyAlertTextWidget
 class AnyAlertTextWidget extends StatefulWidget {
   AnyAlertTextWidget({Key? key, this.icon, this.title, this.text, this.options}) : super(key: key);
 
+  Widget Function(AnyAlertTextState state)? builder;
   Widget? icon;
   String? title;
   String? text;
@@ -220,12 +221,14 @@ class AnyAlertTextState extends State<AnyAlertTextWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.builder != null) {
+      return widget.builder!(this);
+    }
     // contents
     List<Widget> children = <Widget>[];
     String? title = widget.title;
-    Widget? icon = widget.icon;
+    Widget? icon = widget.icon ?? options.icon;
     String? text = widget.text;
-
     if (title != null) {
       children.add(Text(title, style: options.titleStyle));
       children.add(SizedBox(height: options.titleSpacing));
@@ -238,13 +241,11 @@ class AnyAlertTextState extends State<AnyAlertTextWidget> {
       children.add(Text(text, style: options.textStyle));
       children.add(SizedBox(height: options.textSpacing));
     }
-
     Widget? contents;
     if (children.isNotEmpty) {
-      contents = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: children,
+      contents = Padding(
+        padding: options.padding,
+        child: Column(mainAxisAlignment: options.alignment, children: children),
       );
     }
 
@@ -290,11 +291,15 @@ class AnyAlertTextState extends State<AnyAlertTextWidget> {
 }
 
 class AnyAlertTextOptions {
+  Widget? icon;
   double? titleSpacing = 12.0;
   double? iconSpacing = 12.0;
   double? textSpacing = 12.0;
   TextStyle? titleStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
   TextStyle? textStyle = const TextStyle(fontSize: 16);
+
+  EdgeInsets padding = EdgeInsets.zero;
+  MainAxisAlignment alignment = MainAxisAlignment.center;
 
   String? buttonLeftText;
   String? buttonRightText;

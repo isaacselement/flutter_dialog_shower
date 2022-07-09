@@ -103,57 +103,67 @@ class PageOfWidgets extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('show title message', onPressed: (state) {
               DialogWidgets.showAlert(
-                  width: 360,
-                  height: 200,
-                  // padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                  title: 'Attention Please!',
-                  text: 'A view of the sea when the author was a child made the author invisibly.',
-                  onOptions: (options) {
-                    options.titleSpacing = 50;
-                  });
+                width: 360,
+                height: 200,
+                title: 'Attention Please!',
+                text: 'A view of the sea when the author was a child made the author invisibly.',
+                onOptions: (options) {
+                  options.titleSpacing = 50;
+                  options.alignment = MainAxisAlignment.start;
+                  options.padding = const EdgeInsets.only(top: 16, left: 16, right: 16);
+                },
+              );
             }),
             WidgetsUtil.newXpelTextButton('show title icon message', onPressed: (state) {
               DialogWidgets.showAlert(
                 width: 360,
                 height: 240,
-                // padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                 title: 'Attention Please!',
                 icon: const Icon(Icons.info, size: 100, color: Colors.green),
                 text: 'A view of the sea when the author was a child made the author invisibly.',
+                onOptions: (options) {
+                  options.alignment = MainAxisAlignment.start;
+                  options.padding = const EdgeInsets.only(top: 16, left: 16, right: 16);
+                },
               ).barrierColor = const Color(0x4D1C1D21);
             }),
             WidgetsUtil.newXpelTextButton('show title icon message with button', onPressed: (state) {
               DialogWidgets.showAlert(
-                  width: 360,
-                  height: 270,
-                  // padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                  title: 'Attention Please!',
-                  icon: const Icon(Icons.info, size: 80, color: Colors.green),
-                  text: 'A view of the sea when the author was a child made the author invisibly.',
-                  button1Title: 'OK',
-                  button1Event: (D) => DialogWrapper.dismissTopDialog(),
-                  onOptions: (options) {});
+                width: 360,
+                height: 270,
+                title: 'Attention Please!',
+                icon: const Icon(Icons.info, size: 80, color: Colors.green),
+                text: 'A view of the sea when the author was a child made the author invisibly.',
+                button1Title: 'OK',
+                button1Event: (D) => DialogWrapper.dismissTopDialog(),
+                onOptions: (options) {
+                  options.alignment = MainAxisAlignment.start;
+                  options.padding = const EdgeInsets.only(top: 16, left: 16, right: 16);
+                },
+              );
             }),
             WidgetsUtil.newXpelTextButton('show notification', onPressed: (state) {
               DialogWidgets.showAlert(
-                  width: 360,
-                  height: 240,
-                  // padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
-                  title: 'Notification',
-                  text: 'The man of this car does not belong to you. '
-                      'For further understanding, please go to the CS4 store and view the specific tyre and car information.',
-                  button1Title: 'Cancel',
-                  button2Title: 'Go to view',
-                  button1Event: (d) => DialogWrapper.dismissDialog(d),
-                  button2Event: (d) => DialogWrapper.dismissTopDialog().then((value) {
-                        Logger.d('joking...');
-                      }),
-                  onOptions: (options) {
-                    options.titleStyle = const TextStyle(fontSize: 20, color: Color(0xFF1C1D21));
-                    options.textStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21));
-                    options.buttonLeftTextStyle = const TextStyle(color: Color(0xFF4E7DF7));
-                    options.buttonRightTextStyle = const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF4E7DF7));
-                  }).barrierColor = const Color(0x4D1C1D21);
+                width: 360,
+                height: 240,
+                title: 'Notification',
+                text: 'The man of this car does not belong to you. '
+                    'For further understanding, please go to the CS4 store and view the specific tyre and car information.',
+                button1Title: 'Cancel',
+                button2Title: 'Go to view',
+                button1Event: (d) => DialogWrapper.dismissDialog(d),
+                button2Event: (d) => DialogWrapper.dismissTopDialog().then((value) {
+                  Logger.d('joking...');
+                }),
+                onOptions: (options) {
+                  options.titleStyle = const TextStyle(fontSize: 20, color: Color(0xFF1C1D21));
+                  options.textStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21));
+                  options.buttonLeftTextStyle = const TextStyle(color: Color(0xFF4E7DF7));
+                  options.buttonRightTextStyle = const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF4E7DF7));
+                  options.alignment = MainAxisAlignment.start;
+                  options.padding = const EdgeInsets.only(top: 32, left: 32, right: 32);
+                },
+              ).barrierColor = const Color(0x4D1C1D21);
             }),
           ],
         ),
