@@ -52,7 +52,7 @@ class OverlayWidgets {
     // Use micro, for the caller will modified properties(i.e margin, aligment) outside
     // The appear animation controller will setState, don't worry
     Future.microtask(() {
-      String key = shower.alignment?.toString()??'__Shared_Key__';
+      String key = shower.alignment?.toString() ?? '__Shared_Key__';
       List<OverlayShower?> queue = (sharedToastQueue[key] ?? (sharedToastQueue[key] = []));
 
       // 1. get the empty index
@@ -270,9 +270,11 @@ class OverlayWidgets {
     OverlayShower shower = OverlayWrapper.show(const Offstage(offstage: true));
     shower.isWithTicker = true;
     Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
-      Future.microtask(() {
-        BuilderWithTickerState tickerState = shower.statefulKey.currentState as BuilderWithTickerState;
-        tickerBuilder(shower, tickerState);
+      Future.microtask(() { // microtask is  redundant if set shower.isSyncShow = true
+        State? state = shower.statefulKey.currentState;
+        if (state is BuilderWithTickerState) { // type and not-null check!!!
+          tickerBuilder(shower, state);
+        }
       });
     });
     return shower;

@@ -119,23 +119,23 @@ class DialogWidgets {
     String? text,
     double? width,
     double? height,
-    String? button1Title,
-    String? button2Title,
-    Function(DialogShower dialog)? button1Event,
-    Function(DialogShower dialog)? button2Event,
+    String? buttonLeftTitle,
+    String? buttonRightTitle,
+    Function(DialogShower dialog)? buttonLeftEvent,
+    Function(DialogShower dialog)? buttonRightEvent,
     Function(AnyAlertTextOptions options)? onOptions,
   }) {
     DialogShower shower = DialogShower();
     AnyAlertTextOptions options = AnyAlertTextOptions();
     width != null ? options.width = width : null;
     height != null ? options.height = height : null;
-    button1Title != null ? options.buttonLeftText = button1Title : null;
-    button2Title != null ? options.buttonRightText = button2Title : null;
+    buttonLeftTitle != null ? options.buttonLeftText = buttonLeftTitle : null;
+    buttonRightTitle != null ? options.buttonRightText = buttonRightTitle : null;
     options.buttonLeftEvent = () {
-      button1Event?.call(shower);
+      buttonLeftEvent?.call(shower);
     };
     options.buttonRightEvent = () {
-      button2Event?.call(shower);
+      buttonRightEvent?.call(shower);
     };
     onOptions?.call(options);
     Widget widget = AnyAlertTextWidget(title: title, icon: icon, text: text, options: options);
@@ -144,7 +144,7 @@ class DialogWidgets {
     // rewrite properties
     shower
       ..alignment = Alignment.center
-      ..barrierDismissible = button1Event == null && button2Event == null
+      ..barrierDismissible = buttonLeftEvent == null && buttonRightEvent == null
       ..transitionDuration = const Duration(milliseconds: 200)
       ..transitionBuilder = (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
         return ScaleTransition(child: child, scale: Tween(begin: 0.0, end: 1.0).animate(animation));

@@ -150,10 +150,9 @@ class PageOfWidgets extends StatelessWidget {
                 title: 'Attention Please!',
                 icon: const Icon(Icons.info, size: 80, color: Colors.green),
                 text: 'A view of the sea when the author was a child made the author invisibly.',
-                button1Title: 'OK',
-                button1Event: (D) => DialogWrapper.dismissTopDialog(),
+                buttonLeftTitle: 'OK',
+                buttonLeftEvent: (D) => DialogWrapper.dismissTopDialog(),
                 onOptions: (options) {
-                  options.alignment = MainAxisAlignment.start;
                   options.alignment = MainAxisAlignment.start;
                   options.padding = const EdgeInsets.only(top: 16, left: 16, right: 16);
                 },
@@ -166,10 +165,10 @@ class PageOfWidgets extends StatelessWidget {
                 title: 'Notification',
                 text: 'The man of this car does not belong to you. '
                     'For further understanding, please go to the CS4 store and view the specific tyre and car information.',
-                button1Title: 'Cancel',
-                button2Title: 'Go to view',
-                button1Event: (d) => DialogWrapper.dismissDialog(d),
-                button2Event: (d) => DialogWrapper.dismissTopDialog().then((value) {
+                buttonLeftTitle: 'Cancel',
+                buttonRightTitle: 'Go to view',
+                buttonLeftEvent: (d) => DialogWrapper.dismissDialog(d),
+                buttonRightEvent: (d) => DialogWrapper.dismissTopDialog().then((value) {
                   Logger.d('joking...');
                 }),
                 onOptions: (options) {
@@ -189,10 +188,10 @@ class PageOfWidgets extends StatelessWidget {
                 title: 'Hola',
                 icon: const Icon(Icons.info, size: 80, color: Colors.green),
                 text: 'A view of the sea when the author was a child made the author invisibly.',
-                button1Title: 'OK',
-                button1Event: (D) => DialogWrapper.dismissTopDialog(),
-                button2Title: 'Next One',
-                button2Event: (d) {
+                buttonLeftTitle: 'OK',
+                buttonLeftEvent: (D) => DialogWrapper.dismissTopDialog(),
+                buttonRightTitle: 'Next One',
+                buttonRightEvent: (d) {
                   BuildContext? context = d.containerKey.currentContext;
                   AnyAlertTextWidget? widget = ElementsUtil.getWidgetOfType<AnyAlertTextWidget>(context);
                   widget?.title = ['OnePlus', 'Vivo', 'Oppo', 'XiaoMi'].elementAt(Random().nextInt(4));
