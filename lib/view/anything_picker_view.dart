@@ -458,8 +458,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
                   shower.height = notOverflowHeightB;
                   _op.stickToSide = AnythingPickerStickTo.bottom;
                 }
-                console(
-                    () => '[AnythingPicker] determined shower height: ${shower.height}, y: ${shower.y}, stickToSide: ${_op.stickToSide}');
+                console(() => '[AnythingPicker] determined shower height: ${shower.height}, y: ${shower.y}, stick: ${_op.stickToSide}');
 
                 // -------------------- calculate again for support min height --------------------
                 if (_op.pickerMinHeight != null) {
@@ -509,6 +508,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
           ),
         );
       };
+
       shower.setState();
     }();
     return shower;

@@ -90,6 +90,14 @@ class DialogShower {
 
   late Route route;
 
+  bool _isBuilt = false;
+
+  bool get isBuilt => _isBuilt;
+
+  set isBuilt(v) => (_isBuilt = v) ? builtCompleter.complete(v) : null;
+
+  final Completer<bool> builtCompleter = Completer<bool>();
+
   bool _isShowing = false;
 
   bool get isShowing => _isShowing;
@@ -217,7 +225,7 @@ class DialogShower {
       if (NavigatorObserverEx.statesChangingShowers?[routeName] != null) {
         // check it out please !!!!
         assert(() {
-          __shower_log__('❗️❗️❗️ observer already contains this route name: $routeName ???');
+          __shower_log__('❗️ observer already contains this route name: $routeName ???');
           return true;
         }());
         routeName = routeName + '-${1000 + math.Random().nextInt(10000)}';
@@ -304,6 +312,7 @@ class DialogShower {
         _keyboardStreamSubscription = null;
       },
       builder: (state) {
+        isBuilt ? null : isBuilt = true;
         return GestureDetector(
           onTapDown: (TapDownDetails details) {
             assert(() {
@@ -646,13 +655,22 @@ class DialogShower {
 
   /// self defined setState
 
-  void setState([VoidCallback? fn]) {
+  void setState([VoidCallback? fn]) async {
     assert(() {
       __shower_log__('[DialogShower] setState was called, rebuilding...');
       return true;
     }());
+
+    if (!isBuilt) {
+      await builtCompleter.future;
+    }
+
     fn?.call();
-    (_statefulKey.currentContext as StatefulElement).markNeedsBuild();
+    StatefulElement? element = _statefulKey.currentContext as StatefulElement?;
+    assert(element != null, '[DialogShower] ❌ Do not call setState called during build or disposed!');
+    element?.markNeedsBuild();
+    // _builderExKey.currentState?.setState(fn);
+    // _statefulKey.currentState?.setState(fn);
   }
 
   /// Private methods

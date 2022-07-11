@@ -1,11 +1,12 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:async';
+
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:example/view/widget/xp_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
-
 
 class PageOfBubble extends StatelessWidget {
   const PageOfBubble({Key? key}) : super(key: key);
@@ -275,43 +276,45 @@ class BubbleSliderWidget extends StatelessWidget {
         const SizedBox(height: 32),
         AnythingHeader(
           title: 'LayerLinker',
-          options: AnythingHeaderOptions()..leftBuilder = (){
-            return XpTextButton(
-              'Back',
-              width: 200,
-              height: 50,
-              margin: EdgeInsets.zero,
-              padding: EdgeInsets.zero,
-              borderColor: const Color(0xFFDADAE8),
-              backgroundColor: Colors.redAccent,
-              textStyleBuilder: (text, isTappingDown) {
-                Color color = Colors.white;
-                color = isTappingDown ? color.withAlpha(128) : color;
-                return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
-              },
-              onPressed: (state) {
-                DialogWrapper.dismissTopDialog();
-              },
-            );
-          }..rightBuilder = () {
-            return XpTextButton(
-              'Done',
-              width: 200,
-              height: 54,
-              margin: EdgeInsets.zero,
-              padding: EdgeInsets.zero,
-              borderColor: const Color(0xFFDADAE8),
-              backgroundColor: Colors.lightBlue,
-              textStyleBuilder: (text, isTappingDown) {
-                Color color = Colors.white;
-                color = isTappingDown ? color.withAlpha(128) : color;
-                return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
-              },
-              onPressed: (state) {
-                isResetButtonDisable.value = !isResetButtonDisable.value;
-              },
-            );
-          },
+          options: AnythingHeaderOptions()
+            ..leftBuilder = () {
+              return XpTextButton(
+                'Back',
+                width: 200,
+                height: 50,
+                margin: EdgeInsets.zero,
+                padding: EdgeInsets.zero,
+                borderColor: const Color(0xFFDADAE8),
+                backgroundColor: Colors.redAccent,
+                textStyleBuilder: (text, isTappingDown) {
+                  Color color = Colors.white;
+                  color = isTappingDown ? color.withAlpha(128) : color;
+                  return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
+                },
+                onPressed: (state) {
+                  DialogWrapper.dismissTopDialog();
+                },
+              );
+            }
+            ..rightBuilder = () {
+              return XpTextButton(
+                'Done',
+                width: 200,
+                height: 54,
+                margin: EdgeInsets.zero,
+                padding: EdgeInsets.zero,
+                borderColor: const Color(0xFFDADAE8),
+                backgroundColor: Colors.lightBlue,
+                textStyleBuilder: (text, isTappingDown) {
+                  Color color = Colors.white;
+                  color = isTappingDown ? color.withAlpha(128) : color;
+                  return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
+                },
+                onPressed: (state) {
+                  isResetButtonDisable.value = !isResetButtonDisable.value;
+                },
+              );
+            },
         ),
         Expanded(
           child: Container(
@@ -337,6 +340,67 @@ class BubbleSliderWidget extends StatelessWidget {
                           color: Colors.blue,
                         ),
                       ),
+                      AnythingPicker(
+                        values: const [
+                          'India',
+                          'UK',
+                          'USA',
+                          'Russia',
+                          'Korea',
+                          'Mexico',
+                          'Italy',
+                          'Japan',
+                          'Ukraine',
+                          'Germany',
+                        ],
+                        funcOfItemOnTapped: (state, index, value) {
+                          selectCountryValue.value = value as String;
+                          return false;
+                        },
+                      ),
+                      const SizedBox(height: 32),
+                      AnythingPicker(
+                        funcOfValues: () async {
+                          await Future.delayed(const Duration(milliseconds: 1000));
+                          return [
+                            'India',
+                            'UK',
+                            'USA',
+                            'Russia',
+                            'Korea',
+                            'Mexico',
+                            'Italy',
+                            'Japan',
+                            'Ukraine',
+                            'Germany',
+                          ];
+                        },
+                        funcOfItemOnTapped: (state, index, value) {
+                          selectCountryValue.value = value as String;
+                          return false;
+                        },
+                      ),
+                      const SizedBox(height: 32),
+                      AnythingPicker(
+                        funcOfValues: () {
+                          return [
+                            'India',
+                            'UK',
+                            'USA',
+                            'Russia',
+                            'Korea',
+                            'Mexico',
+                            'Italy',
+                            'Japan',
+                            'Ukraine',
+                            'Germany',
+                          ];
+                        },
+                        funcOfItemOnTapped: (state, index, value) {
+                          selectCountryValue.value = value as String;
+                          return false;
+                        },
+                      ),
                       const SizedBox(height: 150),
                       getOneSelectWidget(
                         title: 'Country: ',
@@ -348,19 +412,22 @@ class BubbleSliderWidget extends StatelessWidget {
                             CcBubbleWidget(
                               bubbleTriangleTranslation: 20.0,
                               bubbleTriangleDirection: CcBubbleArrowDirection.top,
-                              child: AnythingSelector(
-                                values: const [
-                                  'India',
-                                  'UK',
-                                  'USA',
-                                  'Russia',
-                                  'Korea',
-                                  'Mexico',
-                                  'Italy',
-                                  'Japan',
-                                  'Ukraine',
-                                  'Germany',
-                                ],
+                              child: AnythingPicker(
+                                funcOfValues: () async {
+                                  await Future.delayed(const Duration(milliseconds: 2000));
+                                  return [
+                                    'India',
+                                    'UK',
+                                    'USA',
+                                    'Russia',
+                                    'Korea',
+                                    'Mexico',
+                                    'Italy',
+                                    'Japan',
+                                    'Ukraine',
+                                    'Germany',
+                                  ];
+                                },
                                 funcOfItemOnTapped: (state, index, value) {
                                   selectCountryValue.value = value as String;
                                   return false;
