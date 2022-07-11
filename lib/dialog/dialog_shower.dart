@@ -249,13 +249,13 @@ class DialogShower {
     );
 
     route = RawDialogRoute(
-      pageBuilder: (BuildContext ctx, Animation<double> first, Animation<double> second) => _getInternalWidget(_child),
-      barrierDismissible: barrierDismissible ?? false,
+      settings: routeSettings,
       barrierLabel: barrierLabel,
       barrierColor: barrierColor,
-      transitionDuration: transitionDuration,
       transitionBuilder: transitionBuilder,
-      settings: routeSettings,
+      transitionDuration: transitionDuration,
+      barrierDismissible: barrierDismissible ?? false,
+      pageBuilder: (BuildContext ctx, Animation<double> first, Animation<double> second) => _getInternalWidget(_child),
     );
     _future = parentNavigator.push(route);
 

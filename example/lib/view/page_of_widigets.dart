@@ -124,7 +124,7 @@ class PageOfWidgets extends StatelessWidget {
                 title: 'Attention Please!',
                 text: 'A view of the sea when the author was a child made the author invisibly.',
                 onOptions: (options) {
-                  options.titleSpacing = 50;
+                  options.textSpacing = 50.0;
                   options.alignment = MainAxisAlignment.start;
                   options.padding = const EdgeInsets.only(top: 16, left: 16, right: 16);
                 },

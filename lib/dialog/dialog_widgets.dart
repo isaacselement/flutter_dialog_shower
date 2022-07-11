@@ -229,6 +229,11 @@ class AnyAlertTextState extends State<AnyAlertTextWidget> {
     if (widget.builder != null) {
       return widget.builder!(this);
     }
+
+    bool isNotNullZero(double? d) {
+      return d != null && d != 0.0;
+    }
+
     // contents
     List<Widget> children = <Widget>[];
     String? title = widget.title;
@@ -236,22 +241,18 @@ class AnyAlertTextState extends State<AnyAlertTextWidget> {
     String? text = widget.text;
     if (title != null) {
       children.add(Text(title, style: options.titleStyle));
-      children.add(SizedBox(height: options.titleSpacing));
     }
     if (icon != null) {
+      if (children.isNotEmpty && isNotNullZero(options.iconSpacing)) children.add(SizedBox(height: options.iconSpacing));
       children.add(icon);
-      children.add(SizedBox(height: options.iconSpacing));
     }
     if (text != null) {
+      if (children.isNotEmpty && isNotNullZero(options.textSpacing)) children.add(SizedBox(height: options.textSpacing));
       children.add(Text(text, style: options.textStyle));
-      children.add(SizedBox(height: options.textSpacing));
     }
     Widget? contents;
     if (children.isNotEmpty) {
-      contents = Padding(
-        padding: options.padding,
-        child: Column(mainAxisAlignment: options.alignment, children: children),
-      );
+      contents = Padding(padding: options.padding, child: Column(mainAxisAlignment: options.alignment, children: children));
     }
 
     // buttons
@@ -282,6 +283,7 @@ class AnyAlertTextState extends State<AnyAlertTextWidget> {
       list.add(Expanded(child: contents));
     }
     if (buttons != null) {
+      if (isNotNullZero(options.buttonsSpacing)) children.add(SizedBox(height: options.buttonsSpacing));
       list.add(const Divider(height: 1));
       list.add(buttons);
     }
@@ -297,7 +299,6 @@ class AnyAlertTextState extends State<AnyAlertTextWidget> {
 
 class AnyAlertTextOptions {
   Widget? icon;
-  double? titleSpacing = 12.0;
   double? iconSpacing = 12.0;
   double? textSpacing = 12.0;
   TextStyle? titleStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
@@ -306,6 +307,7 @@ class AnyAlertTextOptions {
   EdgeInsets padding = EdgeInsets.zero;
   MainAxisAlignment alignment = MainAxisAlignment.center;
 
+  double? buttonsSpacing;
   String? buttonLeftText;
   String? buttonRightText;
   Function()? buttonLeftEvent;
