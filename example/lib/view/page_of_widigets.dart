@@ -150,7 +150,7 @@ class PageOfWidgets extends StatelessWidget {
                 title: 'Attention Please!',
                 icon: const Icon(Icons.info, size: 80, color: Colors.green),
                 text: 'A view of the sea when the author was a child made the author invisibly.',
-                buttonLeftTitle: 'OK',
+                buttonLeftText: 'OK',
                 buttonLeftEvent: (D) => DialogWrapper.dismissTopDialog(),
                 onOptions: (options) {
                   options.alignment = MainAxisAlignment.start;
@@ -165,8 +165,8 @@ class PageOfWidgets extends StatelessWidget {
                 title: 'Notification',
                 text: 'The man of this car does not belong to you. '
                     'For further understanding, please go to the CS4 store and view the specific tyre and car information.',
-                buttonLeftTitle: 'Cancel',
-                buttonRightTitle: 'Go to view',
+                buttonLeftText: 'Cancel',
+                buttonRightText: 'Go to view',
                 buttonLeftEvent: (d) => DialogWrapper.dismissDialog(d),
                 buttonRightEvent: (d) => DialogWrapper.dismissTopDialog().then((value) {
                   Logger.d('joking...');
@@ -188,9 +188,9 @@ class PageOfWidgets extends StatelessWidget {
                 title: 'Hola',
                 icon: const Icon(Icons.info, size: 80, color: Colors.green),
                 text: 'A view of the sea when the author was a child made the author invisibly.',
-                buttonLeftTitle: 'OK',
+                buttonLeftText: 'OK',
                 buttonLeftEvent: (D) => DialogWrapper.dismissTopDialog(),
-                buttonRightTitle: 'Next One',
+                buttonRightText: 'Next One',
                 buttonRightEvent: (d) {
                   BuildContext? context = d.containerKey.currentContext;
                   AnyAlertTextWidget? widget = ElementsUtil.getWidgetOfType<AnyAlertTextWidget>(context);

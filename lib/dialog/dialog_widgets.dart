@@ -14,14 +14,10 @@ import 'dialog_shower.dart';
 import 'dialog_wrapper.dart';
 
 class DialogWidgets {
-  static Widget? defIconLoading;
   static Widget? defIconSuccess;
   static Widget? defIconFailed;
   static Color? defIconBgColor;
   static TextStyle? defIconTextStyle;
-
-  static double? defAlertWidth;
-  static double? defAlertHeight;
 
   // Indicator, Loading, Success, Failed
 
@@ -50,7 +46,6 @@ class DialogWidgets {
     // --------- For Loading Painter -----------
   }) {
     Widget widget;
-    icon ??= defIconLoading;
     if (icon != null) {
       widget = RotateWidget(child: icon);
     } else {
@@ -104,12 +99,14 @@ class DialogWidgets {
     return shower;
   }
 
-  static void setLoadingText(String text) {
-    DialogShower? shower = DialogWrapper.getTopDialog();
+  static void setLoadingText(String text, {DialogShower? shower}) {
+    shower ??= DialogWrapper.getTopDialog();
     BuildContext? context = shower?.containerKey.currentContext;
     AnyIconTextWidget? widget = ElementsUtil.getWidgetOfType<AnyIconTextWidget>(context);
-    widget?.text = text;
-    ElementsUtil.rebuildWidgetOfType<AnyIconTextWidget>(context);
+    if (widget != null) {
+      widget.text = text;
+      ElementsUtil.rebuildWidgetOfType<AnyIconTextWidget>(context);
+    }
   }
 
   // Show Alert With Texts & Buttons
@@ -119,8 +116,8 @@ class DialogWidgets {
     String? text,
     double? width,
     double? height,
-    String? buttonLeftTitle,
-    String? buttonRightTitle,
+    String? buttonLeftText,
+    String? buttonRightText,
     Function(DialogShower dialog)? buttonLeftEvent,
     Function(DialogShower dialog)? buttonRightEvent,
     Function(AnyAlertTextOptions options)? onOptions,
@@ -129,8 +126,8 @@ class DialogWidgets {
     AnyAlertTextOptions options = AnyAlertTextOptions();
     width != null ? options.width = width : null;
     height != null ? options.height = height : null;
-    buttonLeftTitle != null ? options.buttonLeftText = buttonLeftTitle : null;
-    buttonRightTitle != null ? options.buttonRightText = buttonRightTitle : null;
+    buttonLeftText != null ? options.buttonLeftText = buttonLeftText : null;
+    buttonRightText != null ? options.buttonRightText = buttonRightText : null;
     options.buttonLeftEvent = () {
       buttonLeftEvent?.call(shower);
     };
