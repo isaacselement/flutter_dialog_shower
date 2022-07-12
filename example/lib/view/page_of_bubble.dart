@@ -271,6 +271,7 @@ class BubbleSliderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<dynamic> selectedValues = [];
     return Column(
       children: [
         const SizedBox(height: 32),
@@ -379,6 +380,7 @@ class BubbleSliderWidget extends StatelessWidget {
                           selectCountryValue.value = value as String;
                           return false;
                         },
+                        selectedValues: selectedValues,
                       ),
                       const SizedBox(height: 32),
                       AnythingPicker(

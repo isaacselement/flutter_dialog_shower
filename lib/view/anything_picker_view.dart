@@ -573,8 +573,10 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
             DialogWrapper.dismissTopDialog();
           }
         }
-        // update whole display content widget
-        setState(() {});
+        // update whole display content widget.
+        if (mounted) {
+          setState(() {});
+        }
       }
 
       _itemBuilder() {

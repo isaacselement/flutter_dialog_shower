@@ -92,38 +92,34 @@ class DialogShower {
 
   bool _isBuilt = false;
 
+  final Completer<bool> builtCompleter = Completer<bool>();
+
   bool get isBuilt => _isBuilt;
 
   set isBuilt(v) => (_isBuilt = v) ? builtCompleter.complete(v) : null;
-
-  final Completer<bool> builtCompleter = Completer<bool>();
 
   bool _isShowing = false;
 
   bool get isShowing => _isShowing;
 
-  final Completer<bool> _pushedCompleter = Completer<bool>();
-  final Completer<bool> _poppedCompleter = Completer<bool>();
   bool _isPushed = false;
   bool _isPopped = false;
+  final Completer<bool> pushedCompleter = Completer<bool>();
+  final Completer<bool> poppedCompleter = Completer<bool>();
 
   bool get isPushed => _isPushed;
 
   bool get isPopped => _isPopped;
 
-  set isPushed(v) => (_isPushed = v) ? Future.microtask(() => _pushedCompleter.complete(v)) : null;
+  set isPushed(v) => (_isPushed = v) ? Future.microtask(() => pushedCompleter.complete(v)) : null;
 
-  set isPopped(v) => (_isPopped = v) ? Future.microtask(() => _poppedCompleter.complete(v)) : null;
-
-  Future<void> get futurePushed => _pushedCompleter.future;
-
-  Future<void> get futurePoped => _poppedCompleter.future;
+  set isPopped(v) => (_isPopped = v) ? Future.microtask(() => poppedCompleter.complete(v)) : null;
 
   Future<dynamic>? _future;
 
   Future<dynamic> get future async {
     if (_future == null) {
-      await futurePushed; // future pushed indeed, wait pushed the return the actually _future
+      await pushedCompleter.future; // future pushed indeed, wait pushed the return the actually _future
     }
     return _future;
   }
@@ -244,8 +240,6 @@ class DialogShower {
   }
 
   Future<void> _showInternal(Widget _child) async {
-    _isShowing = true;
-
     assert(() {
       __shower_log__('>>>>>>>>>>>>>> showing: $routeName');
       return true;
@@ -283,6 +277,7 @@ class DialogShower {
       // key: _builderExKey,
       name: routeName,
       init: (state) {
+        _isShowing = true;
         // callbacks
         isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
 
@@ -354,7 +349,7 @@ class DialogShower {
               assert(() {
                 __shower_log__('HitTest: $routeName, Container [$x1, $y1], [$x2, $y2]. Tap [$tapX, $tapY]. '
                     'isTapInside X$isTapInsideX && Y$isTapInsideY = $isTapInside, '
-                    'barrierDismissible: $barrierDismissible, I\'m showing: $isShowing, activing: ${route.isActive}');
+                    'barrierDismissible: $barrierDismissible, activing: ${route.isActive}');
                 return true;
               }());
 
@@ -575,30 +570,31 @@ class DialogShower {
   // dismiss ----------------------------------------
 
   Future<void> dismiss<T extends Object?>([T? result]) async {
-    if (_isShowing) {
-      _isShowing = false;
+    if (!_isShowing) {
+      return;
+    }
+    _isShowing = false;
 
-      if (isPopped) {
-        // check it out please !!!!
-        assert(() {
-          __shower_log__('❗️❗️❗️ $routeName dismissed ??? already popped by using the most primitive pop/remove ???');
-          return true;
-        }());
-      } else {
-        assert(() {
-          __shower_log__('>>>>>>>>>>>>>> dismiss popping: $routeName');
-          return true;
-        }());
-        isSyncDismiss ? _dissmiss<T>(result) : Future.microtask(() => _dissmiss<T>(result));
-        if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
-          isPopped = true;
-        }
-        await futurePoped;
-        assert(() {
-          __shower_log__('>>>>>>>>>>>>>> dismiss popped done: $routeName');
-          return true;
-        }());
+    if (isPopped) {
+      // check it out please !!!!
+      assert(() {
+        __shower_log__('❗️❗️❗️ $routeName dismissed ??? already popped by using the most primitive pop/remove ???');
+        return true;
+      }());
+    } else {
+      assert(() {
+        __shower_log__('>>>>>>>>>>>>>> dismiss popping: $routeName');
+        return true;
+      }());
+      isSyncDismiss ? _dissmiss<T>(result) : Future.microtask(() => _dissmiss<T>(result));
+      if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
+        isPopped = true;
       }
+      await poppedCompleter.future;
+      assert(() {
+        __shower_log__('>>>>>>>>>>>>>> dismiss popped done: $routeName');
+        return true;
+      }());
     }
   }
 

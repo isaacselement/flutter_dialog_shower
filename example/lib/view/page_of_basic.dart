@@ -213,10 +213,10 @@ class PageOfBasic extends StatelessWidget {
                 };
             }),
             WidgetsUtil.newXpelTextButton('Show with DialogWrapper', onPressed: (state) {
-              DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
-                DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
-                  DialogWrapper.showRight(_container(text: '3')).futurePushed.then((value) {
-                    DialogWrapper.showBottom(_container(text: '4')).futurePushed.then((value) {
+              DialogWrapper.show(_container(text: '1'), width: 200, height: 200).poppedCompleter.future.then((value) {
+                DialogWrapper.showLeft(_container(text: '2')).poppedCompleter.future.then((value) {
+                  DialogWrapper.showRight(_container(text: '3')).poppedCompleter.future.then((value) {
+                    DialogWrapper.showBottom(_container(text: '4')).poppedCompleter.future.then((value) {
                       DialogWrapper.show(_container(text: 'Click any where out of this box'))
                         ..animationBeginOffset = const Offset(0.0, -1.0)
                         ..alignment = Alignment.topCenter
@@ -227,10 +227,10 @@ class PageOfBasic extends StatelessWidget {
               });
             }),
             WidgetsUtil.newXpelTextButton('DialogWrapper dismiss all dialogs', onPressed: (state) {
-              DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
-                DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
-                  DialogWrapper.showRight(_container(text: '3')).futurePushed.then((value) {
-                    DialogWrapper.showBottom(_container(text: '4')).futurePushed.then((value) {
+              DialogWrapper.show(_container(text: '1'), width: 200, height: 200).poppedCompleter.future.then((value) {
+                DialogWrapper.showLeft(_container(text: '2')).poppedCompleter.future.then((value) {
+                  DialogWrapper.showRight(_container(text: '3')).poppedCompleter.future.then((value) {
+                    DialogWrapper.showBottom(_container(text: '4')).poppedCompleter.future.then((value) {
                       DialogWrapper.show(_container(text: 'Click any where out of this box'))
                         ..animationBeginOffset = const Offset(0.0, -1.0)
                         ..alignment = Alignment.topCenter
@@ -242,11 +242,11 @@ class PageOfBasic extends StatelessWidget {
               });
             }),
             WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog on top', onPressed: (state) {
-              DialogWrapper.show(_container(text: '1'), width: 200, height: 200).futurePushed.then((value) {
-                DialogWrapper.showLeft(_container(text: '2')).futurePushed.then((value) {
+              DialogWrapper.show(_container(text: '1'), width: 200, height: 200).poppedCompleter.future.then((value) {
+                DialogWrapper.showLeft(_container(text: '2')).poppedCompleter.future.then((value) {
                   DialogWrapper.showRight(_container(text: 'Will auto dismiss after 2 seconds'))
                     ..barrierDismissible = false
-                    ..futurePushed.then((value) {
+                    ..poppedCompleter.future.then((value) {
                       Future.delayed(const Duration(seconds: 2), () {
                         // DialogWrapper.dismissTopDialog();
                         DialogWrapper.getTopDialog()?.dismiss();
@@ -256,11 +256,11 @@ class PageOfBasic extends StatelessWidget {
               });
             }),
             WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: (state) {
-              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).futurePushed.then((value) {
-                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').futurePushed.then((value) {
+              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).poppedCompleter.future.then((value) {
+                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
                     ..barrierDismissible = false
-                    ..futurePushed.then((value) {
+                    ..poppedCompleter.future.then((value) {
                       Future.delayed(const Duration(seconds: 2), () {
                         DialogWrapper.dismissDialog(null, key: '__key3__');
                         DialogWrapper.dismissDialog(null, key: '__key2__'); // will dismiss all dialog on top of me
@@ -270,11 +270,11 @@ class PageOfBasic extends StatelessWidget {
               });
             }),
             WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: (state) {
-              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).futurePushed.then((value) {
-                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').futurePushed.then((value) {
+              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).poppedCompleter.future.then((value) {
+                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
                     ..barrierDismissible = false
-                    ..futurePushed.then((value) {
+                    ..poppedCompleter.future.then((value) {
                       Future.delayed(const Duration(seconds: 2), () {
                         DialogWrapper.dismissDialog(null, key: '__key1__'); // will dismiss all dialog on top of me
                       });
@@ -283,9 +283,9 @@ class PageOfBasic extends StatelessWidget {
               });
             }),
             WidgetsUtil.newXpelTextButton('Remove specified shower', onPressed: (state) {
-              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 700, height: 250).futurePushed.then((value) {
-                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').futurePushed.then((value) {
-                  DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__').futurePushed.then((value) {
+              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 700, height: 250).poppedCompleter.future.then((value) {
+                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
+                  DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__').poppedCompleter.future.then((value) {
                     Future.delayed(const Duration(seconds: 2), () {
                       DialogWrapper.getDialogByKey('__key1__')!.remove();
                     });
