@@ -660,11 +660,9 @@ class DialogShower {
       __shower_log__('[DialogShower] setState was called, rebuilding...');
       return true;
     }());
-
     if (!isBuilt) {
       await builtCompleter.future;
     }
-
     fn?.call();
     StatefulElement? element = _statefulKey.currentContext as StatefulElement?;
     assert(element != null, '[DialogShower] ❌ Do not call setState called during build or disposed!');

@@ -195,13 +195,11 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     /// 2.1 content display view
     String? displayedText = widget.funcOfContent?.call(this);
     if (displayedText == null) {
-      if (widget.funcOfItemName != null) {
-        if (widget.selectedValues != null) {
-          displayedText = widget.selectedValues!.map((e) => widget.funcOfItemName!.call(this, null, e)).toList().join('; ');
-          displayedText = displayedText.isNotEmpty ? displayedText : null;
-        } else if (widget.selectedValue != null) {
-          displayedText = widget.funcOfItemName!.call(this, null, widget.selectedValue!);
-        }
+      if (widget.selectedValues != null) {
+        displayedText = widget.selectedValues!.map((e) => itemDisplayName(null, e)).toList().join('; ');
+        displayedText = displayedText.isNotEmpty ? displayedText : null;
+      } else if (widget.selectedValue != null) {
+        displayedText = itemDisplayName(null, widget.selectedValue!);
       }
     }
     Widget? contentCenterWidget = widget.builderOfContentInner?.call(this);
@@ -553,7 +551,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     List<Widget> children = [];
     for (int i = 0; i < length; i++) {
       dynamic e = items!.elementAt(i);
-      String itemName = widget.funcOfItemName?.call(this, i, e) ?? e.toString();
+      String itemName = itemDisplayName(i, e);
 
       _itemOnTap() {
         bool isItemSelected = fnIsSelected(i, e);
@@ -663,6 +661,10 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
       return options.itemNoDataWidget;
     }
     return ListView(shrinkWrap: true, padding: EdgeInsets.zero, children: children);
+  }
+
+  String itemDisplayName(int? index, dynamic element) {
+    return widget.funcOfItemName?.call(this, index, element) ?? element.toString();
   }
 
   static void console(String Function() expr) {
