@@ -20,8 +20,8 @@ class OverlayWidgets {
     BoxShadow? shadow,
     // animation
     Curves? curves,
-    Duration? appearDuraion,
-    Duration? dismissDuraion,
+    Duration? appearDuration,
+    Duration? dismissDuration,
     Duration? onScreenDuration,
     // animation settings
     Offset? slideBegin,
@@ -41,8 +41,8 @@ class OverlayWidgets {
       radius: radius,
       shadow: shadow,
       curves: curves,
-      appearDuraion: appearDuraion,
-      dismissDuraion: dismissDuraion,
+      appearDuration: appearDuration,
+      dismissDuration: dismissDuration,
       onScreenDuration: onScreenDuration,
       slideBegin: slideBegin,
       opacityBegin: opacityBegin,
@@ -70,7 +70,7 @@ class OverlayWidgets {
         queue.add(shower);
       }
 
-      // 2. caculate the position
+      // 2. calculate the position
       EdgeInsets n = increaseOffset;
       EdgeInsets? m = shower.margin;
       shower.margin = EdgeInsets.only(
@@ -116,9 +116,9 @@ class OverlayWidgets {
     BoxShadow? shadow,
     // animation
     Curves? curves,
-    Duration? appearDuraion,
-    Duration? dismissDuraion,
-    Duration? onScreenDuration, // if == Duration.zero, please dimiss manually ~~~
+    Duration? appearDuration,
+    Duration? dismissDuration,
+    Duration? onScreenDuration, // if == Duration.zero, please dismiss manually ~~~
     // animation settings
     Offset? slideBegin,
     double? opacityBegin,
@@ -127,8 +127,8 @@ class OverlayWidgets {
   }) {
     return show(
       curves: curves,
-      appearDuraion: appearDuraion,
-      dismissDuraion: dismissDuraion,
+      appearDuration: appearDuration,
+      dismissDuration: dismissDuration,
       onScreenDuration: onScreenDuration,
       slideBegin: slideBegin,
       opacityBegin: opacityBegin,
@@ -157,8 +157,8 @@ class OverlayWidgets {
   static OverlayShower show({
     required Widget child,
     Curves? curves,
-    Duration? appearDuraion,
-    Duration? dismissDuraion,
+    Duration? appearDuration,
+    Duration? dismissDuration,
     Duration? onScreenDuration,
     // animation settings: only support slide & opacity now // default is opcity animation
     Offset? slideBegin,
@@ -197,8 +197,8 @@ class OverlayWidgets {
     return showWithAnimation(
       child: child,
       curves: curves,
-      appearDuraion: appearDuraion,
-      dismissDuraion: dismissDuraion,
+      appearDuration: appearDuration,
+      dismissDuration: dismissDuration,
       onScreenDuration: onScreenDuration,
       appearAnimatedBuilder: appearAnimatedBuilder,
       dismissAnimatedBuilder: dismissAnimatedBuilder,
@@ -208,18 +208,18 @@ class OverlayWidgets {
   static OverlayShower showWithAnimation({
     required Widget child,
     Curves? curves,
-    Duration? appearDuraion,
-    Duration? dismissDuraion,
+    Duration? appearDuration,
+    Duration? dismissDuration,
     Duration? onScreenDuration,
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? appearAnimatedBuilder,
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? dismissAnimatedBuilder,
   }) {
     const Duration defDuration = Duration(milliseconds: 500);
-    return showWithTicker(tickerBuilder: (shower, vsync) {
+    return showWithTickerVsyncBuilder(tickerBuilder: (shower, vsync) {
       AnimationController appearController = AnimationController(
         vsync: vsync,
-        duration: appearDuraion ?? defDuration,
-        reverseDuration: dismissDuraion ?? defDuration,
+        duration: appearDuration ?? defDuration,
+        reverseDuration: dismissDuration ?? defDuration,
       );
 
       appearController.forward();
@@ -227,12 +227,12 @@ class OverlayWidgets {
         // if onScreenDuration == Duration.zero, put the controller to caller
         shower.obj = appearController;
       } else {
-        // default dimiss in 2 seconds
-        Future.delayed(onScreenDuration ?? const Duration(milliseconds: 2000), () {
+        // default dismiss in 2 seconds
+        Future.delayed(onScreenDuration ?? const Duration(milliseconds: 3000), () {
           if (dismissAnimatedBuilder != null) {
-            AnimationController dimissController = AnimationController(vsync: vsync, duration: dismissDuraion ?? defDuration);
-            shower.setNewChild(dismissAnimatedBuilder(shower, dimissController, child));
-            dimissController.forward().then((value) {
+            AnimationController dismissController = AnimationController(vsync: vsync, duration: dismissDuration ?? defDuration);
+            shower.setNewChild(dismissAnimatedBuilder(shower, dismissController, child));
+            dismissController.forward().then((value) {
               shower.dismiss();
             });
           } else {
@@ -264,7 +264,7 @@ class OverlayWidgets {
     });
   }
 
-  static OverlayShower showWithTicker({
+  static OverlayShower showWithTickerVsyncBuilder({
     required void Function(OverlayShower shower, TickerProviderStateMixin vsync) tickerBuilder,
   }) {
     OverlayShower shower = OverlayWrapper.show(const Offstage(offstage: true));
