@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 
-
 class OverlayShower {
   static BuildContext? gContext;
 
@@ -94,22 +93,27 @@ class OverlayShower {
 
   OverlayShower showImmediately(Widget? child, {OverlayEntry? below, OverlayEntry? above}) {
     _isShowing = true;
-    _entry = OverlayEntry(builder: (context) => isWrappedNothing ? _rawChild(child) : _getBody(child));
+    _entry = OverlayEntry(builder: (context) => body(child));
     Overlay.of(context!, rootOverlay: isUseRootOverlay)!.insert(_entry, below: below, above: above);
-    _invokeShowCallbacks();
     return this;
   }
 
-  Widget _getBody(Widget? child) {
+  Widget body(Widget? child) {
+    void _init(state) => _invokeShowCallbacks();
+
+    void _dispose(state) => _invokeDismissCallbacks();
+
+    Widget _builder(state) => isWrappedNothing ? _rawChild(child) : _getRebuildWidget(child);
+
     // will rebuild with statefulKey
     GlobalKey mKey = _statefulKey;
     if (isWithTicker) {
-      return BuilderWithTicker(key: mKey, builder: (state) => _getRebuildableWidget(child));
+      return BuilderWithTicker(key: mKey, init: _init, dispose: _dispose, builder: _builder);
     }
-    return StatefulBuilder(key: mKey, builder: (context, setState) => _getRebuildableWidget(child));
+    return BuilderEx(key: mKey, init: _init, dispose: _dispose, builder: _builder);
   }
 
-  Widget _getRebuildableWidget(Widget? child) {
+  Widget _getRebuildWidget(Widget? child) {
     // 1. locating with Positioned
     bool isPositioned = top != null || left != null || right != null || bottom != null || width != null || height != null;
     if (isPositioned) {
@@ -155,7 +159,6 @@ class OverlayShower {
 
   void _dissmiss() {
     _entry.remove();
-    _invokeDismissCallbacks();
   }
 
   // setState ----------------------------------------

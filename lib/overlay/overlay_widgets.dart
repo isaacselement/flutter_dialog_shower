@@ -269,13 +269,11 @@ class OverlayWidgets {
   }) {
     OverlayShower shower = OverlayWrapper.show(const Offstage(offstage: true));
     shower.isWithTicker = true;
-    Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
-      Future.microtask(() { // microtask is  redundant if set shower.isSyncShow = true
-        State? state = shower.statefulKey.currentState;
-        if (state is BuilderWithTickerState) { // type and not-null check!!!
-          tickerBuilder(shower, state);
-        }
-      });
+    shower.addShowCallBack((shower) {
+      State? state = shower.statefulKey.currentState;
+      if (state is BuilderWithTickerState) { // type and not-null check!!!
+        tickerBuilder(shower, state);
+      }
     });
     return shower;
   }
