@@ -2,6 +2,10 @@
 # Some Homeless Codes
 
 
+### Publish Steps
+
+    flutter packages pub publish --dry-run
+
 
 ### Python a simple https server
 
