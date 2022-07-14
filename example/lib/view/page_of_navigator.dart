@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
+import 'package:example/view/widget/xp_slider_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
-
-import '../util/logger.dart';
 
 class PageOfNavigator extends StatelessWidget {
   const PageOfNavigator({Key? key}) : super(key: key);
@@ -75,7 +75,21 @@ class PageOfNavigator extends StatelessWidget {
               }));
             }),
           ],
-        )
+        ),
+        const SizedBox(height: 50),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: (state) {
+              DialogShower shower = DialogWrapper.showRight(XpSliderWidget(), width: 604);
+              shower.padding = const EdgeInsets.only(right: 0);
+              shower
+                ..containerBoxShadow = []
+                ..containerBorderRadius = 8.0
+                ..barrierColor = const Color(0x4D1C1D21)
+                ..dismissCallBack = (shower) {};
+            }),
+          ],
+        ),
       ],
     );
   }
@@ -89,10 +103,11 @@ class PageOfNavigator extends StatelessWidget {
               rootBundle.loadString('assets/json/CN.json').then((string) {
                 List<dynamic> value = json.decode(string);
                 DialogWrapper.pushRoot(
-                  PageOfNavigator.getSelectableListWidget(value: value, doneSelectEvent: (depth, object) {
-
-                    return true;
-                  }),
+                  PageOfNavigator.getSelectableListWidget(
+                      value: value,
+                      doneSelectEvent: (depth, object) {
+                        return true;
+                      }),
                   settings: const RouteSettings(name: '__root_route__'),
                   width: 500,
                 );
@@ -116,10 +131,10 @@ class PageOfNavigator extends StatelessWidget {
       funcOfItemName: (s, i, e) => e is Map ? e['areaName'] : '',
       isSearchEnable: true,
       headerOptions: AnythingHeaderOptions()
-      ..leftEvent = (){
-        DialogWrapper.pop();
-      },
-        options: AnythingSelectorOptions()..itemSuffixWidget =  const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+        ..leftEvent = () {
+          DialogWrapper.pop();
+        },
+      options: AnythingSelectorOptions()..itemSuffixWidget = const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
       // itemSuffixBuilder: (state, index, value) {
       //   if (value is Map && value['children'] != null && value['children']!.isNotEmpty) {
       //     return const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey);
@@ -143,5 +158,4 @@ class PageOfNavigator extends StatelessWidget {
       },
     );
   }
-
 }

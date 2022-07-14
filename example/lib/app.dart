@@ -1,8 +1,7 @@
+import 'package:example/util/logger.dart';
+import 'package:example/view/manager/pages_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
-
-import 'util/logger.dart';
-import 'view/manager/pages_manager.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);

@@ -1,18 +1,17 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:example/util/logger.dart';
+import 'package:example/view/page_of_basic.dart';
+import 'package:example/view/page_of_brother.dart';
 import 'package:example/view/page_of_bubble.dart';
+import 'package:example/view/page_of_homeless.dart';
+import 'package:example/view/page_of_keyboard.dart';
+import 'package:example/view/page_of_navigator.dart';
+import 'package:example/view/page_of_overlay.dart';
+import 'package:example/view/page_of_widigets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
-
-import '../../util/logger.dart';
-import '../page_of_basic.dart';
-import '../page_of_brother.dart';
-import '../page_of_homeless.dart';
-import '../page_of_keyboard.dart';
-import '../page_of_navigator.dart';
-import '../page_of_overlay.dart';
-import '../page_of_widigets.dart';
 
 class PagesManager {
   static void initPages() {

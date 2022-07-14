@@ -55,12 +55,12 @@ class PageOfWidgets extends StatelessWidget {
                 Logger.d('shower: ${shower.routeName}, route is active: ${shower.route.isActive}');
               });
             }),
-            WidgetsUtil.newXpelTextButton('show loading, unrotate unstiff', onPressed: (state) {
-              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isPaintWrapRotate: false);
-            }),
-            WidgetsUtil.newXpelTextButton('show loading, unrotate stiff', onPressed: (state) {
-              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: true, isPaintWrapRotate: false);
-            }),
+            // WidgetsUtil.newXpelTextButton('show loading, unrotate unstiff', onPressed: (state) {
+            //   DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isPaintWrapRotate: false);
+            // }),
+            // WidgetsUtil.newXpelTextButton('show loading, unrotate stiff', onPressed: (state) {
+            //   DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: true, isPaintWrapRotate: false);
+            // }),
             WidgetsUtil.newXpelTextButton('show loading, rotate stiff', onPressed: (state) {
               DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: true, isPaintWrapRotate: true);
             }),
