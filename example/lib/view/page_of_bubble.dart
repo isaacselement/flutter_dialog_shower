@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:example/util/logger.dart';
+import 'package:example/util/toast_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:example/view/widget/xp_widgets.dart';
 import 'package:flutter/material.dart';
@@ -240,7 +241,7 @@ class PageOfBubble extends StatelessWidget {
               onTap: (state) {
                 Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
                 Size size = SizesUtil.getSizeS(state) ?? Size.zero;
-                TipsUtil.showTips(
+                ToastUtil.showWithArrow(
                   'You know that ~~~~~~~~~~~~~~~~~~!!!!!',
                   x: position.dx + size.width,
                   y: position.dy + (size.height - 40) / 2, // 40 is the height of tips
@@ -330,7 +331,7 @@ class BubbleSliderWidget extends StatelessWidget {
                         onTap: (state) {
                           Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
                           Size size = SizesUtil.getSizeS(state) ?? Size.zero;
-                          TipsUtil.showTips(
+                          ToastUtil.showWithArrow(
                             'You know that ~~~~~~~~~~~~\n HahuaHuHuaHaHua~~~~~~~ \n I don\'t know that !',
                             x: position.dx + size.width,
                             y: position.dy - 25,
@@ -577,66 +578,6 @@ class BubbleSliderWidget extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class TipsUtil {
-  static void showTips(
-    String text, {
-    required double x,
-    required double y,
-    double? bubbleTriangleTranslation,
-    CcBubbleArrowDirection direction = CcBubbleArrowDirection.left,
-    Duration? onScreenDuration = const Duration(milliseconds: 2000),
-  }) {
-    OverlayWidgets.show(
-      onScreenDuration: onScreenDuration,
-      child: getBubbleTipsWidget(
-        text: text,
-        direction: direction,
-        bubbleTriangleTranslation: bubbleTriangleTranslation,
-      ),
-    )
-      ..alignment = Alignment.topLeft
-      ..padding = EdgeInsets.only(left: x, top: y);
-  }
-
-  static Widget getBubbleTipsWidget({
-    required String text,
-    double? bubbleRadius,
-    Color? bubbleColor,
-    Color? bubbleShadowColor,
-    double? bubbleTriangleLength,
-    double? bubbleTriangleTranslation,
-    CcBubbleArrowDirection direction = CcBubbleArrowDirection.left,
-    EdgeInsets? padding = const EdgeInsets.only(left: 19, right: 19, top: 11, bottom: 11),
-    TextAlign? textAlign = TextAlign.left,
-    TextStyle? textStyle = const TextStyle(color: Colors.white),
-  }) {
-    bubbleTriangleLength ??= 12.0;
-    Offset bubbleTrianglePointOffset = Offset(-8.0, -bubbleTriangleLength / 2);
-    if (direction == CcBubbleArrowDirection.left) {
-      bubbleTrianglePointOffset = Offset(-8.0, -bubbleTriangleLength / 2);
-    } else if (direction == CcBubbleArrowDirection.top) {
-      bubbleTrianglePointOffset = Offset(bubbleTriangleLength / 2, -8.0);
-    } else if (direction == CcBubbleArrowDirection.right) {
-      bubbleTrianglePointOffset = Offset(8.0, bubbleTriangleLength / 2);
-    } else if (direction == CcBubbleArrowDirection.bottom) {
-      bubbleTrianglePointOffset = Offset(-bubbleTriangleLength / 2, 8.0);
-    }
-    return CcBubbleWidget(
-      bubbleTriangleDirection: direction,
-      bubbleTriangleLength: bubbleTriangleLength,
-      bubbleTrianglePointOffset: bubbleTrianglePointOffset,
-      bubbleTriangleTranslation: bubbleTriangleTranslation,
-      bubbleColor: bubbleColor ?? const Color(0xFF1C1D21),
-      bubbleShadowColor: bubbleShadowColor,
-      bubbleRadius: bubbleRadius ?? 6.0,
-      child: Container(
-        padding: padding,
-        child: Text(text, style: textStyle, textAlign: textAlign),
-      ),
     );
   }
 }

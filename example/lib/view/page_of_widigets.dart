@@ -92,7 +92,7 @@ class PageOfWidgets extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        WidgetsUtil.newHeaderWithLine('Tips'),
+        WidgetsUtil.newHeaderWithLine('Alert Result'),
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('show success', onPressed: (state) {
@@ -104,7 +104,7 @@ class PageOfWidgets extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        WidgetsUtil.newHeaderWithLine('Alerts'),
+        WidgetsUtil.newHeaderWithLine('Alerts Message/Notification'),
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('show message', onPressed: (state) {
