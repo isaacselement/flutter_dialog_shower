@@ -9,54 +9,59 @@ class XpSliderWidget extends StatelessWidget {
   Btv<bool> isResetButtonDisable = true.btv;
   Btv<String> selectCountryValue = ''.btv;
 
+  static List<String> _getValues() {
+    return const [
+      'India',
+      'UK',
+      'USA',
+      'Russia',
+      'Korea',
+      'Mexico',
+      'Italy',
+      'Japan',
+      'Ukraine',
+      'Germany',
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     List<dynamic> selectedValues = [];
+
+    bool isDisable = false;
+
+    TextStyle _fnTextStyle(bool isDisable) {
+      return TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: isDisable ? Colors.grey : Colors.white);
+    }
+
+    double _fnPressedOpacity(bool isDisable) {
+      return isDisable ? 1.0 : 0.4;
+    }
+
+    BoxDecoration _fnDecoration(bool isDisable) {
+      return BoxDecoration(
+          color: isDisable ? const Color(0xFFECECF2) : const Color(0xFF4275FF), borderRadius: const BorderRadius.all(Radius.circular(4)));
+    }
+
     return Column(
       children: [
         const SizedBox(height: 32),
         AnythingHeader(
-          title: 'LayerLinker',
-          options: AnythingHeaderOptions()
-            ..leftBuilder = () {
-              return XpTextButton(
-                'Back',
-                width: 200,
-                height: 50,
-                margin: EdgeInsets.zero,
-                padding: EdgeInsets.zero,
-                borderColor: const Color(0xFFDADAE8),
-                backgroundColor: Colors.redAccent,
-                textStyleBuilder: (text, isTappingDown) {
-                  Color color = Colors.white;
-                  color = isTappingDown ? color.withAlpha(128) : color;
-                  return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
-                },
-                onPressed: (state) {
-                  DialogWrapper.dismissTopDialog();
-                },
-              );
-            }
-            ..rightBuilder = () {
-              return XpTextButton(
-                'Done',
-                width: 200,
-                height: 54,
-                margin: EdgeInsets.zero,
-                padding: EdgeInsets.zero,
-                borderColor: const Color(0xFFDADAE8),
-                backgroundColor: Colors.lightBlue,
-                textStyleBuilder: (text, isTappingDown) {
-                  Color color = Colors.white;
-                  color = isTappingDown ? color.withAlpha(128) : color;
-                  return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
-                },
-                onPressed: (state) {
+            title: 'Demo of LayerLinker',
+            options: AnythingHeaderOptions()
+              ..rightPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
+              ..rightWidget = Container(
+                alignment: Alignment.center,
+                decoration: _fnDecoration(isDisable),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text('Done', style: _fnTextStyle(isDisable)),
+              )
+              ..rightEvent = () {
+                if (!isDisable) {
                   isResetButtonDisable.value = !isResetButtonDisable.value;
-                },
-              );
-            },
-        ),
+                }
+              }
+              ..rightPressedOpacity = _fnPressedOpacity(isDisable)),
         Expanded(
           child: Container(
             padding: const EdgeInsets.only(bottom: 16, left: 32, right: 32),
@@ -82,18 +87,7 @@ class XpSliderWidget extends StatelessWidget {
                         ),
                       ),
                       AnythingPicker(
-                        values: const [
-                          'India',
-                          'UK',
-                          'USA',
-                          'Russia',
-                          'Korea',
-                          'Mexico',
-                          'Italy',
-                          'Japan',
-                          'Ukraine',
-                          'Germany',
-                        ],
+                        values: _getValues(),
                         funcOfItemOnTapped: (state, index, value) {
                           selectCountryValue.value = value as String;
                           return false;
@@ -103,18 +97,7 @@ class XpSliderWidget extends StatelessWidget {
                       AnythingPicker(
                         funcOfValues: () async {
                           await Future.delayed(const Duration(milliseconds: 1000));
-                          return [
-                            'India',
-                            'UK',
-                            'USA',
-                            'Russia',
-                            'Korea',
-                            'Mexico',
-                            'Italy',
-                            'Japan',
-                            'Ukraine',
-                            'Germany',
-                          ];
+                          return _getValues();
                         },
                         funcOfItemOnTapped: (state, index, value) {
                           selectCountryValue.value = value as String;
@@ -125,18 +108,7 @@ class XpSliderWidget extends StatelessWidget {
                       const SizedBox(height: 32),
                       AnythingPicker(
                         funcOfValues: () {
-                          return [
-                            'India',
-                            'UK',
-                            'USA',
-                            'Russia',
-                            'Korea',
-                            'Mexico',
-                            'Italy',
-                            'Japan',
-                            'Ukraine',
-                            'Germany',
-                          ];
+                          return _getValues();
                         },
                         funcOfItemOnTapped: (state, index, value) {
                           selectCountryValue.value = value as String;
@@ -157,18 +129,7 @@ class XpSliderWidget extends StatelessWidget {
                               child: AnythingPicker(
                                 funcOfValues: () async {
                                   await Future.delayed(const Duration(milliseconds: 2000));
-                                  return [
-                                    'India',
-                                    'UK',
-                                    'USA',
-                                    'Russia',
-                                    'Korea',
-                                    'Mexico',
-                                    'Italy',
-                                    'Japan',
-                                    'Ukraine',
-                                    'Germany',
-                                  ];
+                                  return _getValues();
                                 },
                                 funcOfItemOnTapped: (state, index, value) {
                                   selectCountryValue.value = value as String;
@@ -199,18 +160,7 @@ class XpSliderWidget extends StatelessWidget {
                               bubbleTriangleTranslation: size.width - 40,
                               bubbleTriangleDirection: CcBubbleArrowDirection.bottom,
                               child: AnythingSelector(
-                                values: const [
-                                  'India',
-                                  'UK',
-                                  'USA',
-                                  'Russia',
-                                  'Korea',
-                                  'Mexico',
-                                  'Italy',
-                                  'Japan',
-                                  'Ukraine',
-                                  'Germany',
-                                ],
+                                values: _getValues(),
                                 funcOfItemOnTapped: (state, index, value) {
                                   selectCountryValue.value = value as String;
                                   return false;
@@ -234,50 +184,54 @@ class XpSliderWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  const Spacer(),
-                  Btw(builder: (context) {
-                    return XpTextButton(
-                      'Reset',
-                      width: 200,
+              LayoutBuilder(builder: (context, constraints) {
+                return Row(
+                  children: [
+                    const Spacer(),
+                    Btw(builder: (context) {
+                      return XpTextButton(
+                        'Reset',
+                        width: constraints.maxWidth / 4,
+                        height: 40,
+                        margin: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.center,
+                        borderColor: const Color(0xFFDADAE8),
+                        isDisable: isResetButtonDisable.value,
+                        backgroundColor: null,
+                        backgroundColorDisable: const Color(0xFFF5F5FA),
+                        textStyleBuilder: (text, isTappingDown) {
+                          if (isResetButtonDisable.value) {
+                            return const TextStyle(color: Color(0xFFBFBFD2), fontSize: 16);
+                          }
+                          Color color = const Color(0xFF1C1D21);
+                          return TextStyle(color: isTappingDown ? color.withAlpha(128) : color, fontSize: 16);
+                        },
+                        onPressed: (state) {},
+                      );
+                    }),
+                    const SizedBox(width: 14),
+                    XpTextButton(
+                      'Save',
+                      width: constraints.maxWidth / 4,
                       height: 40,
                       margin: EdgeInsets.zero,
                       padding: EdgeInsets.zero,
+                      alignment: Alignment.center,
                       borderColor: const Color(0xFFDADAE8),
-                      isDisable: isResetButtonDisable.value,
-                      backgroundColor: null,
-                      backgroundColorDisable: const Color(0xFFF5F5FA),
                       textStyleBuilder: (text, isTappingDown) {
-                        if (isResetButtonDisable.value) {
-                          return const TextStyle(color: Color(0xFFBFBFD2), fontSize: 16);
-                        }
-                        Color color = const Color(0xFF1C1D21);
-                        return TextStyle(color: isTappingDown ? color.withAlpha(128) : color, fontSize: 16);
+                        Color color = Colors.white;
+                        color = isTappingDown ? color.withAlpha(128) : color;
+                        return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
                       },
-                      onPressed: (state) {},
-                    );
-                  }),
-                  const SizedBox(width: 14),
-                  XpTextButton(
-                    'Save',
-                    width: 200,
-                    height: 40,
-                    margin: EdgeInsets.zero,
-                    padding: EdgeInsets.zero,
-                    borderColor: const Color(0xFFDADAE8),
-                    textStyleBuilder: (text, isTappingDown) {
-                      Color color = Colors.white;
-                      color = isTappingDown ? color.withAlpha(128) : color;
-                      return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
-                    },
-                    onPressed: (state) {
-                      isResetButtonDisable.value = !isResetButtonDisable.value;
-                    },
-                  ),
-                  const Spacer(),
-                ],
-              ),
+                      onPressed: (state) {
+                        isResetButtonDisable.value = !isResetButtonDisable.value;
+                      },
+                    ),
+                    const Spacer(),
+                  ],
+                );
+              }),
             ]),
           ),
         ),

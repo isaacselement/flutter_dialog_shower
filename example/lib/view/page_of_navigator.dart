@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
@@ -80,7 +81,7 @@ class PageOfNavigator extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: (state) {
-              DialogShower shower = DialogWrapper.showRight(XpSliderWidget(), width: 604);
+              DialogShower shower = DialogWrapper.showRight(XpSliderWidget(), width: min(SizesUtil.screenWidth, 600));
               shower.padding = const EdgeInsets.only(right: 0);
               shower
                 ..containerBoxShadow = []

@@ -192,9 +192,24 @@
     export IOS_CERTID=frida-cert
 
     git clone --recurse-submodules https://github.com/frida/frida.git
+    # git submodule update --recursive --remote && git pull --recurse-submodules  # https://stackoverflow.com/a/1032653
+    # git log --pretty="%C(Yellow)%h  %C(reset)%ad (%C(Green)%cr%C(reset))%x09 %C(Cyan)%an: %C(reset)%s" -7  # https://stackoverflow.com/q/1441010
     cd frida
     make
-    make gadget-ios
+    make gum-ios
+    make gadget-ios   # need IOS_CERTID, MACOS_CERTID setted
 
-    otool -L build/frida-ios-arm64/usr/lib/frida/frida-gadget.dylib  # @executable_path/Frameworks/FridaGadget.dylib autually name is 'FridaGadget.dylib'
+    otool -L build/frida-ios-arm64/usr/lib/frida/frida-gadget.dylib  # @executable_path/Frameworks/FridaGadget.dylib autually id name is 'FridaGadget.dylib'
+
+    ##### ----------------------------- successfully output ------------------------------- 
+    && $LIPO \
+    build/frida-ios-x86_64/usr/lib/frida/frida-gadget.dylib \
+    build/frida-ios-arm64/usr/lib/frida/frida-gadget.dylib \
+    build/frida-ios-arm64e/usr/lib/frida/frida-gadget.dylib \
+    -create \
+    -output build/frida-ios-universal/usr/lib/frida/frida-gadget.dylib.tmp \
+    && $INSTALL_NAME_TOOL -id @executable_path/Frameworks/FridaGadget.dylib build/frida-ios-universal/usr/lib/frida/frida-gadget.dylib.tmp \
+    && $CODESIGN -f -s "$IOS_CERTID" build/frida-ios-universal/usr/lib/frida/frida-gadget.dylib.tmp \
+    && mv build/frida-ios-universal/usr/lib/frida/frida-gadget.dylib.tmp build/frida-ios-universal/usr/lib/frida/frida-gadget.dylib
+    ##### ----------------------------- successfully output ------------------------------- 
 

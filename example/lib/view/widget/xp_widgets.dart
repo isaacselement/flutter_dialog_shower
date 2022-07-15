@@ -17,6 +17,7 @@ class XpTextButton extends StatefulWidget {
   Color? backgroundColorDisable;
   EdgeInsets? margin;
   EdgeInsets? padding;
+  AlignmentGeometry? alignment;
   bool isDisable = false;
   TextStyle? Function(String text, bool isTapingDown)? textStyleBuilder;
   BoxDecoration? Function(String text, bool isTapingDown)? decorationBuilder;
@@ -34,6 +35,7 @@ class XpTextButton extends StatefulWidget {
     this.backgroundColorDisable = const Color(0xFFF5F5FA),
     this.margin = const EdgeInsets.all(10),
     this.padding = const EdgeInsets.all(10),
+    this.alignment,
     this.onPressed,
     this.isDisable = false,
     this.textStyleBuilder,
@@ -56,16 +58,16 @@ class XpTextButtonState extends State<XpTextButton> {
   @override
   Widget build(BuildContext context) {
     Widget view = Container(
-      padding: widget.margin,
       width: widget.width,
       height: widget.height,
+      padding: widget.margin,
       child: Listener(
         onPointerUp: (event) => isTapingDown = false,
         onPointerDown: (event) => isTapingDown = true,
         child: GestureDetector(
           child: Container(
             padding: widget.padding,
-            // alignment: widget.alignment,
+            alignment: widget.alignment,
             decoration: widget.decorationBuilder?.call(widget.text, isTapingDown) ??
                 (widget.isDisable ? _defBoxDecorationDisable(widget.text) : _defBoxDecoration(widget.text, isTapingDown)),
             child: Text(
