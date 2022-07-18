@@ -27,10 +27,98 @@
 
 ### Jail Broken iOS
 
+    iPhone 6S. iOS 13.3
+    checkra1n [iPhone SE/6S~iPhone X]
+
+    #1 Install checkra1n application on your macosx, and open it.
+    #2 Connect your iPhone with USB to your mac, checkra1n will display device info.
+    #3 Click 'Start' button on checkra1n, read the instructions and click 'Next' to rec mode.
+    #4 Continue follow the instruction, click 'Start'. Hold 'Side' & 'Home' button on device. 
+    #5 Then release 'Side' button after 6 seconds but keep holding on 'Home' button.
+    #6 Finally the device enter DFU mode, and the less jobs will automatically done. 
+
     brew install usbmuxd
     iproxy 2222 22
     ssh -p 2222 root@127.0.0.1
     # enter default password: alpine
+    whoami  # check if i'm root or not :P
+    ls -al /Developer/usr/bin/    # checkout the debugserver
+    echo $PATH
+
+    
+    On Mac:
+    # debugserver
+    ls -al /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport/13.3/DeveloperDiskImage.dmg # also have a debugserver in it.
+    scp -r -P2222 root@localhost:/Developer/usr/bin/debugserver $HOME/Desktop/
+    cd $HOME/Desktop/ && file debugserver && lipo -thin arm64 debugserver -output debugserver_arm64
+
+    ---------------------------- vim en.plist ----------------------------
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+        <key>com.apple.springboard.debugapplications</key>
+        <true/>
+        <key>run-unsigned-code</key>
+        <true/>
+        <key>get-task-allow</key>
+        <true/>
+        <key>task_for_pid-allow</key>
+        <true/>
+    </dict>
+    </plist>
+    ---------------------------- vim en.plist ----------------------------
+
+    OR 
+    ---------------------------- vim en.plist ----------------------------
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+        <key>task_for_pid-allow</key>
+        <true/>
+        <key>run-unsigned-code</key>
+        <true/>
+        <key>platform-application</key>
+        <true/>
+        <key>get-task-allow</key>
+        <true/>
+        <key>com.apple.frontboard.launchapplications</key>
+        <true/>
+        <key>com.apple.frontboard.debugapplications</key>
+        <true/>
+        <key>com.apple.springboard.debugapplications</key>
+        <true/>
+        <key>com.apple.backboardd.launchapplications</key>
+        <true/>
+        <key>com.apple.private.memorystatus</key>
+        <true/>
+        <key>com.apple.private.cs.debugger</key>
+        <true/>
+        <key>com.apple.backboardd.debugapplications</key>
+        <true/>
+        <key>com.apple.private.logging.diagnostic</key>
+        <true/>
+    </dict>
+    </plist>
+    ---------------------------- vim en.plist ----------------------------
+
+
+    codesign -s - --entitlements en.plist -f debugserver_arm64
+    scp -P 2222 debugserver_arm64 root@localhost:/usr/bin/debugserver
+
+    On iOS:
+    ls -al /usr/bin/debugserver
+    ps -A  # ps aux
+    # debugserver -x backboard IP:PORT /var/containers/Bundle/Application/CC6B5412-2536-40E2-9DA5-42F8E4402934/Runner.app/Runner
+    # debugserver localhost:12345 -p 768 # pid, debugserver *:12345 -a Cydia
+    debugserver -x backboard *:12345 /Applications/MobileSMS.app/MobileSMS  # error: rejecting incoming connection from ::ffff:127.0.0.1 (expecting ::1)，change * to 127.0.0.1
+    debugserver -x backboard 127.0.0.1:12345 /Applications/MobileSMS.app/MobileSMS
+    iproxy 54321 12345
+    lldb
+    (lldb)process connect connect://127.0.0.1:54321
+    (lldb)c
+
 
     cd /
     find -name *.app
