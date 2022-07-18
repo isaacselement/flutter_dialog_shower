@@ -4,9 +4,10 @@ import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 class ToastUtil {
   static OverlayShower show(
     String msg, {
+    bool isStateful = false,
     Duration? duration = const Duration(milliseconds: 3000),
   }) {
-    return OverlayWidgets.showToast(msg, onScreenDuration: duration, shadow: const BoxShadow())
+    return OverlayWidgets.showToast(msg, isStateful: isStateful, onScreenDuration: duration, shadow: const BoxShadow())
       ..alignment = Alignment.topCenter
       ..margin = const EdgeInsets.only(top: 50);
   }

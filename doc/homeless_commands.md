@@ -1,6 +1,11 @@
 
 # Some Homeless Codes
 
+### Mount writable NTFS USB-device on Macos
+
+    cd ~/Desktop/ && mkdir Temp && ls -al /Volumes/ && diskutil list 
+    sudo umount /Volumes/XXXXX
+    sudo mount -t ntfs -o rw,auto,nobrowse /dev/diskXXX Temp/ && open Temp/
 
 ### Publish Steps
 

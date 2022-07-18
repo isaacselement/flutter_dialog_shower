@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:example/util/logger.dart';
 import 'package:example/util/shower_helper.dart';
+import 'package:example/util/toast_util.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
@@ -77,6 +78,8 @@ class PageOfWidgets extends StatelessWidget {
               DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isPaintWrapRotate: true);
             }),
             WidgetsUtil.newXpelTextButton('show loading paint example', onPressed: (state) {
+              OverlayShower shower = ToastUtil.show('progress: ~~~', isStateful: true);
+
               DialogWidgets.showIconText(
                 icon: PainterWidgetUtil.getOnePainterWidget(
                   size: const Size(64, 64),
@@ -84,6 +87,11 @@ class PageOfWidgets extends StatelessWidget {
                   isRepeatWithReverse: false,
                   duration: const Duration(milliseconds: 2000),
                   painter: (progress) {
+                    Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
+                      ElementsUtil.rebuild<AnyToastWidget>(shower.statefulKey.currentContext, (widget) {
+                        widget.text = 'progress: ${progress.toStringAsFixed(4)}';
+                      });
+                    });
                     return LoadingIconPainter(radius: 32, strokeWidth: 4.0, ratioStart: 0, ratioLength: progress);
                   },
                 ),

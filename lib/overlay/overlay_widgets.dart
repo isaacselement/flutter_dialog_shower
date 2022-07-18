@@ -106,6 +106,7 @@ class OverlayWidgets {
   /// Toast
   static OverlayShower showToast(
     String text, {
+    bool isStateful = false,
     TextStyle? textStyle,
     // text in padding
     EdgeInsets? padding,
@@ -118,14 +119,23 @@ class OverlayWidgets {
     Curves? curves,
     Duration? appearDuration,
     Duration? dismissDuration,
-    Duration? onScreenDuration, // if == Duration.zero, please dismiss manually ~~~
+    Duration? onScreenDuration, // if set to Duration.zero, should dismiss manually
     // animation settings
     Offset? slideBegin,
     double? opacityBegin,
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? appearAnimatedBuilder,
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? dismissAnimatedBuilder,
   }) {
+    Widget widget = isStateful ? AnyToastWidget(text: text) : AnyToastView(text: text);
+    (widget as AnyToastWidgetProperties)
+      ..textStyle = textStyle
+      ..padding = padding
+      ..radius = radius
+      ..shadow = shadow
+      ..decoration = decoration
+      ..backgroundColor = backgroundColor;
     return show(
+      child: widget,
       curves: curves,
       appearDuration: appearDuration,
       dismissDuration: dismissDuration,
@@ -134,22 +144,6 @@ class OverlayWidgets {
       opacityBegin: opacityBegin,
       appearAnimatedBuilder: appearAnimatedBuilder,
       dismissAnimatedBuilder: dismissAnimatedBuilder,
-      child: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: decoration ??
-            BoxDecoration(
-              color: backgroundColor ?? Colors.black,
-              borderRadius: radius ?? const BorderRadius.all(Radius.circular(6)),
-              boxShadow: [shadow ?? const BoxShadow(color: Colors.grey, blurRadius: 25.0 /*, offset: Offset(4.0, 4.0)*/)],
-            ),
-        child: Padding(
-          padding: padding ?? const EdgeInsets.all(8.0),
-          child: Text(
-            text,
-            style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 15),
-          ),
-        ),
-      ),
     );
   }
 
@@ -160,7 +154,7 @@ class OverlayWidgets {
     Duration? appearDuration,
     Duration? dismissDuration,
     Duration? onScreenDuration,
-    // animation settings: only support slide & opacity now // default is opcity animation
+    // animation settings: only support slide & opacity now // default is opacity animation
     Offset? slideBegin,
     double? opacityBegin,
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? appearAnimatedBuilder,
@@ -190,7 +184,6 @@ class OverlayWidgets {
       if (opacity != null) {
         widgetFade = FadeTransition(opacity: opacity, child: widgetSlide ?? widget);
       }
-
       return widgetFade ?? widgetSlide ?? widget;
     };
 
@@ -214,12 +207,12 @@ class OverlayWidgets {
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? appearAnimatedBuilder,
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? dismissAnimatedBuilder,
   }) {
-    const Duration defDuration = Duration(milliseconds: 500);
+    const Duration defaultDuration = Duration(milliseconds: 500);
     return showWithTickerVsyncBuilder(tickerBuilder: (shower, vsync) {
       AnimationController appearController = AnimationController(
         vsync: vsync,
-        duration: appearDuration ?? defDuration,
-        reverseDuration: dismissDuration ?? defDuration,
+        duration: appearDuration ?? defaultDuration,
+        reverseDuration: dismissDuration ?? defaultDuration,
       );
 
       appearController.forward();
@@ -230,7 +223,7 @@ class OverlayWidgets {
         // default dismiss in 2 seconds
         Future.delayed(onScreenDuration ?? const Duration(milliseconds: 3000), () {
           if (dismissAnimatedBuilder != null) {
-            AnimationController dismissController = AnimationController(vsync: vsync, duration: dismissDuration ?? defDuration);
+            AnimationController dismissController = AnimationController(vsync: vsync, duration: dismissDuration ?? defaultDuration);
             shower.setNewChild(dismissAnimatedBuilder(shower, dismissController, child));
             dismissController.forward().then((value) {
               shower.dismiss();
@@ -271,7 +264,8 @@ class OverlayWidgets {
     shower.isWithTicker = true;
     shower.addShowCallBack((shower) {
       State? state = shower.statefulKey.currentState;
-      if (state is BuilderWithTickerState) { // type and not-null check!!!
+      if (state is BuilderWithTickerState) {
+        // type and not-null check!!!
         tickerBuilder(shower, state);
       }
     });
@@ -298,5 +292,67 @@ class OverlayWidgets {
         ),
       ),
     )..isWrappedNothing = true;
+  }
+}
+
+/// Widgets
+
+mixin AnyToastWidgetProperties {
+  // text
+  late String text;
+  TextStyle? textStyle;
+
+  // text in padding
+  EdgeInsets? padding;
+
+  // container decoration
+  BoxShadow? shadow;
+  BorderRadius? radius;
+  Color? backgroundColor;
+  Decoration? decoration;
+
+  Widget createToastWidget() {
+    decoration ??= BoxDecoration(
+      color: backgroundColor ?? Colors.black,
+      borderRadius: radius ?? const BorderRadius.all(Radius.circular(6)),
+      boxShadow: [shadow ?? const BoxShadow(color: Colors.grey, blurRadius: 25.0 /*, offset: Offset(4.0, 4.0)*/)],
+    );
+    return Container(
+      decoration: decoration,
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: padding ??= const EdgeInsets.all(8.0),
+        child: Text(text, style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 15)),
+      ),
+    );
+  }
+}
+
+/// AnyToastView
+class AnyToastView extends StatelessWidget with AnyToastWidgetProperties {
+  AnyToastView({Key? key, required String text}) : super(key: key) {
+    this.text = text;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return createToastWidget();
+  }
+}
+
+/// AnyToastWidget
+class AnyToastWidget extends StatefulWidget with AnyToastWidgetProperties {
+  AnyToastWidget({Key? key, required String text}) : super(key: key) {
+    this.text = text;
+  }
+
+  @override
+  State<AnyToastWidget> createState() => AnyToastState();
+}
+
+class AnyToastState extends State<AnyToastWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return widget.createToastWidget();
   }
 }

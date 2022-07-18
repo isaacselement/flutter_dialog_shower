@@ -67,6 +67,7 @@ class ElementsUtil {
     return max;
   }
 
+  /// get child of Widget/State/Element
   static Widget? getChildWidget(BuildContext context) {
     return getChildElement(context)?.widget;
   }
@@ -115,6 +116,7 @@ class ElementsUtil {
     return (element as StatefulElement?)?.state as T?;
   }
 
+  /// Rebuild methods
   static void rebuildWidgetOfType<T extends StatefulWidget>(BuildContext? context) {
     getElementOfWidgetType(context, T)?.markNeedsBuild();
   }
@@ -131,5 +133,16 @@ class ElementsUtil {
   static void rebuildState(BuildContext? context, State? state) {
     if (state == null) return;
     getElementOfStateType(context, state.runtimeType)?.markNeedsBuild();
+  }
+
+  // Cause visitChildElements() called during build. Maybe call in WidgetsBinding.addPostFrameCallback((timeStamp) {...})
+  static void rebuild<T extends StatefulWidget>(BuildContext? context, void Function(T widget) fn) {
+    assert(T != StatefulWidget, 'Type should be a subclass a StatefulWidget, but not a StatefulWidget type ${T == StatefulWidget}');
+    T? widget = ElementsUtil.getWidgetOfType<T>(context);
+    if (widget == null) {
+      return;
+    }
+    fn(widget);
+    ElementsUtil.rebuildWidget(context, widget);
   }
 }

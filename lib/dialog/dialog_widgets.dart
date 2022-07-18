@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:ui' as ui;
 import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
@@ -354,8 +355,9 @@ class LoadingIconPainter extends CustomPainter {
     width = width == 0 ? side : width;
     double height = size.height;
     height = height == 0 ? side : height;
+    Rect rect = Rect.fromLTWH(0, 0, width, height);
 
-    // ratio big
+    // ratio first. big is the first, small is the second. big maybe smaller than the small, just a name ...
     int i = ratioLength.toInt();
     double fraction = ratioLength - i;
     double ratioDistance = i % 2 == 0 ? fraction : 1.0 - fraction;
@@ -369,13 +371,25 @@ class LoadingIconPainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..color = colorSmall ?? Colors.grey.withAlpha(128);
 
+    // SweepGradient // RadialGradient // LinearGradient // ui.Gradient.radial // ui.Gradient.linear
+    // Gradient gradient = SweepGradient(
+    //   startAngle: 0,
+    //   endAngle: math.pi / 2,
+    //   tileMode: TileMode.mirror,
+    //   colors: [paintBig.color, paintBig.color.withOpacity(0.5)],
+    // );
+    // paintBig = Paint()
+    //   ..strokeWidth = strokeWidth
+    //   ..style = PaintingStyle.stroke
+    //   ..shader = gradient.createShader(rect);
+
     double startAngleB = startAngleBig ?? _circle * ratioStart;
     double sweepAngleB = sweepAngleBig ?? _circle * ratioDistance;
-    canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleB, sweepAngleB, false, paintBig);
+    canvas.drawArc(rect, startAngleB, sweepAngleB, false, paintBig);
 
     double startAngleS = startAngleSmall ?? startAngleB + sweepAngleB;
     double sweepAngleS = sweepAngleSmall ?? _circle - sweepAngleB;
-    canvas.drawArc(Rect.fromLTWH(0, 0, width, height), startAngleS, sweepAngleS, false, paintSmall);
+    canvas.drawArc(rect, startAngleS, sweepAngleS, false, paintSmall);
   }
 
   @override
