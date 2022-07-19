@@ -139,7 +139,7 @@ class AnythingSelector extends StatelessWidget {
     List<Widget> children = [];
     for (int i = 0; i < length; i++) {
       dynamic e = items!.elementAt(i);
-      String itemName = widget.funcOfItemName?.call(this, i, e) ?? e.toString();
+      String itemName = itemDisplayName(i, e);
 
       _itemOnTap() {
         bool isItemSelected = fnIsSelected(i, e);
@@ -161,8 +161,6 @@ class AnythingSelector extends StatelessWidget {
             DialogWrapper.dismissTopDialog();
           }
         }
-        // update whole display content widget
-        // setState(() {});
       }
 
       _itemBuilder() {
@@ -256,7 +254,7 @@ class AnythingSelector extends StatelessWidget {
     AnythingSelectorOptions options = widget.options ?? AnythingSelectorOptions();
 
     bool isSearchable(text, i, e) {
-      String itemName = widget.funcOfItemName?.call(this, i, e) ?? e.toString();
+      String itemName = itemDisplayName(i, e);
       return widget.searchableOnChanged?.call(this, text, i, e) ?? itemName.contains(text);
     }
 
@@ -314,6 +312,11 @@ class AnythingSelector extends StatelessWidget {
 
     return widget.searchBoxBuilder?.call(this, onEventSearchTextChanged) ?? searchBoxBuilder();
   }
+
+  String itemDisplayName(int? index, dynamic element) {
+    return funcOfItemName?.call(this, index, element) ?? element.toString();
+  }
+
 }
 
 class AnythingSelectorOptions {

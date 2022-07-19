@@ -38,15 +38,16 @@ class AnythingPicker extends StatefulWidget {
   bool? Function(AnythingPickerState state, int index, dynamic object)? funcOfItemIfSelected;
   bool? Function(AnythingPickerState state, int index, dynamic object)? funcOfItemIfDisabled;
 
-  Widget? Function(AnythingPickerState state, DialogShower shower, List<dynamic>? values)? builderOfPicker;
-
   Widget? Function(AnythingPickerState state, int index, dynamic object)? builderOfItemOuter;
   Widget? Function(AnythingPickerState state, int index, dynamic object)? builderOfItemInner;
   Widget? Function(AnythingPickerState state, int index, dynamic object, List<Widget> children)? builderOfItemChildren;
 
+  Widget? Function(AnythingPickerState state, DialogShower shower, List<dynamic>? values)? builderOfPicker;
+
   void Function(AnythingPickerState state, DialogShower shower)? showerCallback;
   void Function(AnythingPickerState state, DialogShower shower)? showerShowedCallback;
   void Function(AnythingPickerState state, DialogShower shower)? showerDismissedCallback;
+  DialogShower? Function(AnythingPickerState state, BuildContext context)? builderOfShower;
 
   bool? isDisable;
   bool? isLoading;
@@ -82,6 +83,7 @@ class AnythingPicker extends StatefulWidget {
     this.showerCallback,
     this.showerShowedCallback,
     this.showerDismissedCallback,
+    this.builderOfShower,
     this.isDisable = false,
     this.isLoading = false,
     this.isRequired,
@@ -280,7 +282,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
         // return true do nothing ...
       } else {
         // return false or null or not implement do the default behaviour ...
-        DialogShower shower = onEventShowPicker(context);
+        DialogShower shower = widget.builderOfShower?.call(this, context) ?? onEventShowPicker(context);
         mShower = shower;
         widget.showerCallback?.call(this, shower);
         shower.addShowCallBack((shower) {
@@ -370,11 +372,12 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
       List? items = await widget.funcOfValues?.call() ?? widget.values;
 
       Widget picker = StatefulBuilder(
-          // key: mPickerKey,
-          builder: (BuildContext context, StateSetter setState) {
-        setStateOfPicker = setState;
-        return widget.builderOfPicker?.call(this, shower, items) ?? getValuesPicker(items);
-      });
+        // key: mPickerKey,
+        builder: (BuildContext context, StateSetter setState) {
+          setStateOfPicker = setState;
+          return widget.builderOfPicker?.call(this, shower, items) ?? getValuesPicker(items);
+        },
+      );
 
       if (options.pickerHeight == null) {
         // Label A: auto deciding height
@@ -572,10 +575,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
             widget.selectedValue = e;
             DialogWrapper.dismissTopDialog();
           }
-        }
-        // update whole display content widget.
-        if (mounted) {
-          setState(() {});
+          // update whole display content widget.
+          refresh();
         }
       }
 
@@ -659,14 +660,20 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
       children.add(item);
     }
 
-    if (children.isEmpty) {
-      return options.itemNoDataWidget;
+    if (children.isEmpty && options.itemNoDataWidget != null) {
+      return options.itemNoDataWidget!;
     }
     return ListView(shrinkWrap: true, padding: EdgeInsets.zero, children: children);
   }
 
   String itemDisplayName(int? index, dynamic element) {
     return widget.funcOfItemName?.call(this, index, element) ?? element.toString();
+  }
+
+  void refresh() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   static void console(String Function() expr) {
@@ -794,7 +801,7 @@ class AnythingPickerOptions {
   Widget? itemSuffixWidget;
 
   Widget? itemCheckedWidget = const Icon(Icons.check, size: 18, color: Color(0xFF4275FF));
-  Widget itemNoDataWidget = const SizedBox(height: 100, child: Center(child: Text('No data', style: TextStyle(color: Colors.grey))));
+  Widget? itemNoDataWidget = const SizedBox(height: 100, child: Center(child: Text('No data', style: TextStyle(color: Colors.grey))));
 
   AnythingPickerOptions();
 

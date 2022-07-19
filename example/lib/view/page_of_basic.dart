@@ -256,7 +256,10 @@ class PageOfBasic extends StatelessWidget {
               });
             }),
             WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: (state) {
-              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).poppedCompleter.future.then((value) {
+              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200)
+                  .poppedCompleter
+                  .future
+                  .then((value) {
                 DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
                     ..barrierDismissible = false
@@ -270,7 +273,10 @@ class PageOfBasic extends StatelessWidget {
               });
             }),
             WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: (state) {
-              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200).poppedCompleter.future.then((value) {
+              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200)
+                  .poppedCompleter
+                  .future
+                  .then((value) {
                 DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
                     ..barrierDismissible = false
@@ -283,7 +289,10 @@ class PageOfBasic extends StatelessWidget {
               });
             }),
             WidgetsUtil.newXpelTextButton('Remove specified shower', onPressed: (state) {
-              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 700, height: 250).poppedCompleter.future.then((value) {
+              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 700, height: 250)
+                  .poppedCompleter
+                  .future
+                  .then((value) {
                 DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__').poppedCompleter.future.then((value) {
                     Future.delayed(const Duration(seconds: 2), () {
@@ -320,7 +329,7 @@ class PageOfBasic extends StatelessWidget {
                 tik: (i) {
                   counter.value = --counter.value;
                   if (counter.value == 0) {
-                    ShowerHelper.expandWidth(shower: shower, begin: 200, end: 750, callback: () => counter.value = -1);
+                    ShowerHelper.transformWidth(shower: shower, begin: 200, end: 750, onFinish: () => counter.value = -1);
                   }
                   return false;
                 },
@@ -343,7 +352,8 @@ class PageOfBasic extends StatelessWidget {
                 tik: (i) {
                   counter.value = --counter.value;
                   if (counter.value == 0) {
-                    AnimationController? c = ShowerHelper.expandWidth(shower: shower, begin: 200, end: 750, callback: () => counter.value = -1);
+                    AnimationController? c =
+                        ShowerHelper.transformWidth(shower: shower, begin: 200, end: 750, onFinish: () => counter.value = -1);
                     shower.dialogOnTapCallback = (shower, offset) {
                       c?.reverse().then((value) {
                         shower.dismiss();
@@ -364,7 +374,8 @@ class PageOfBasic extends StatelessWidget {
               shower.isWithTicker = true;
 
               shower.barrierOnTapCallback = (shower, offset) {
-                AnimationController controller = ShowerHelper.createAnimationController(shower, duration: 200);
+                AnimationController controller =
+                    ShowerHelper.createAnimationController(shower, duration: const Duration(milliseconds: 200));
                 Animation<double> animate = Tween<double>(begin: 700, end: 0).chain(CurveTween(curve: Curves.ease)).animate(controller);
                 animate.addListener(() {
                   shower.width = animate.value;
@@ -387,7 +398,7 @@ class PageOfBasic extends StatelessWidget {
               int tapCount = 0;
               AnimationController? controller;
               shower.addShowCallBack((shower) {
-                controller = ShowerHelper.createAnimationController(shower, duration: 300);
+                controller = ShowerHelper.createAnimationController(shower, duration: const Duration(milliseconds: 300));
                 Animation<double> aniH = Tween<double>(begin: 1080, end: 250)
                     // .chain(CurveTween(curve: const Cubic(0.755, 0.05, 0.855, 0.06)))
                     .chain(CurveTween(curve: const Cubic(0.18, 1.0, 0.04, 1.0)))

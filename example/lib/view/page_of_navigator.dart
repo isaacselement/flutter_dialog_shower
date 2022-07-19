@@ -82,6 +82,7 @@ class PageOfNavigator extends StatelessWidget {
           children: [
             WidgetsUtil.newXpelTextButton('Show bubble on Dialog', onPressed: (state) {
               DialogShower shower = DialogWrapper.showRight(XpSliderWidget(), width: min(SizesUtil.screenWidth, 600));
+              shower.isWithTicker = true;
               shower.padding = const EdgeInsets.only(right: 0);
               shower
                 ..containerBoxShadow = []

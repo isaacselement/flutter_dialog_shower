@@ -224,7 +224,7 @@ class _GetLayoutState extends State<GetLayoutWidget> with WidgetsBindingObserver
 
 class ThrottleAny {
   bool enable = true;
-  Duration delay = const Duration(milliseconds: 1000);
+  Duration delay = const Duration(milliseconds: 800);
 
   void call(Function func, {Duration? duration}) {
     String symbol = '$runtimeType.call';
@@ -309,4 +309,13 @@ class DebouncerAny {
   static DebouncerAny? remove(String key) {
     return maps?.remove(key);
   }
+}
+
+/// extension of List
+extension ListBoxesEx<E> on List<E> {
+  E? get firstSafe => atSafe(0);
+
+  E? get lastSafe => atSafe(length - 1);
+
+  E? atSafe(int index) => (isEmpty || index < 0 || index >= length) ? null : elementAt(index);
 }

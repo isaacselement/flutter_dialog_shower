@@ -11,11 +11,11 @@ class ShowerHelper {
     }
   }
 
-  static AnimationController createAnimationController(DialogShower shower, {int duration = 500}) {
+  static AnimationController createAnimationController(DialogShower shower, {Duration? duration}) {
     assert(shower.isWithTicker, 'Your shower should assign isWithTicker property to true');
     AnimationController controller = AnimationController(
       vsync: shower.statefulKey.currentState! as BuilderWithTickerState,
-      duration: Duration(milliseconds: duration),
+      duration: duration ?? const Duration(milliseconds: 500),
     );
     shower.isAutoSizeForNavigator = false;
     shower.isSyncInvokeDismissCallback = true;
@@ -27,7 +27,14 @@ class ShowerHelper {
     return controller;
   }
 
-  static AnimationController? expandWidth({required DialogShower shower, double? begin, double? end, void Function()? callback}) {
+  static AnimationController? transformWidth({
+    required DialogShower shower,
+    double? begin,
+    double? end,
+    Duration? duration,
+    void Function()? onFinish,
+    void Function(double value)? onDuring,
+  }) {
     if (!shower.isWithTicker) {
       return null;
     }
@@ -35,12 +42,11 @@ class ShowerHelper {
     Animation<double> animation = Tween<double>(begin: begin, end: end).chain(CurveTween(curve: Curves.ease)).animate(controller);
     animation.addListener(() {
       shower.width = animation.value;
+      onDuring?.call(animation.value);
       shower.setState();
     });
     controller.forward().then((value) {
-      Future.delayed(const Duration(milliseconds: 100)).then((value) {
-        callback?.call();
-      });
+      onFinish?.call();
     });
     return controller;
   }

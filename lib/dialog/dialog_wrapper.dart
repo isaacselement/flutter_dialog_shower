@@ -164,7 +164,18 @@ class DialogWrapper {
   }
 
   static void pop<T>({T? result}) {
-    getTopNavigatorDialog()?.pop(result: result);
+    getTopNavigatorDialog()?.pop<T>(result: result);
+  }
+
+  static void popOrDismiss<T>({T? result}) {
+    DialogShower? dialog = DialogWrapper.getTopDialog();
+    if (dialog?.isWrappedByNavigator ?? false) {
+      if (getTopNavigatorDialog()?.getNavigator()?.canPop() ?? false) {
+        pop<T>(result: result);
+        return;
+      }
+    }
+    DialogWrapper.dismissDialog(dialog, result: result);
   }
 
   /// Appearing dialogs management

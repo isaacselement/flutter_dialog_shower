@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 
@@ -142,5 +144,22 @@ class CcTapDebouncerState extends CcTapWidgetState {
     DebouncerAny.instance.call(() {
       super.onEventTap();
     });
+  }
+}
+
+/// Transform Widget such as for Icons.arrow_back_ios
+class CcTransformZ extends StatelessWidget {
+  const CcTransformZ({Key? key, this.child, this.ratio}) : super(key: key);
+
+  final Widget? child;
+  final double? ratio; // [0.0 - 2.0] * pi for on circle angle
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform(
+      child: child,
+      alignment: Alignment.center,
+      transform: Matrix4.rotationZ((ratio ?? 0) * math.pi),
+    );
   }
 }

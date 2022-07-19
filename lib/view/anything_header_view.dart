@@ -31,11 +31,10 @@ class AnythingHeader extends StatelessWidget {
           // center
           Container(
             alignment: Alignment.center,
-            padding: kOptions.titlePadding,
             child: Text(
               title ?? '',
               style: kOptions.titleStyle,
-              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           // left
@@ -96,7 +95,6 @@ class AnythingHeaderOptions {
 
   // title
   TextStyle? titleStyle = const TextStyle(fontSize: 17, color: Color(0xFF1C1D21), fontWeight: FontWeight.bold);
-  EdgeInsets? titlePadding = const EdgeInsets.only(top: 18, bottom: 18);
 
   // left
   double? leftWidth;
@@ -124,7 +122,12 @@ class AnythingHeaderOptions {
 
   AnythingHeaderOptions clone() {
     AnythingHeaderOptions newInstance = AnythingHeaderOptions();
+    // header
+    newInstance.headerWidth = headerWidth;
+    newInstance.headerHeight = headerHeight;
     newInstance.headerDecoration = headerDecoration;
+
+    // title
     newInstance.titleStyle = titleStyle;
 
     // left
