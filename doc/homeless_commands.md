@@ -27,16 +27,18 @@
 
 ### Jail Broken iOS
 
+    # 1
     iPhone 6S. iOS 13.3
     checkra1n [iPhone SE/6S~iPhone X]
 
-    #1 Install checkra1n application on your macosx, and open it.
-    #2 Connect your iPhone with USB to your mac, checkra1n will display device info.
-    #3 Click 'Start' button on checkra1n, read the instructions and click 'Next' to rec mode.
-    #4 Continue follow the instruction, click 'Start'. Hold 'Side' & 'Home' button on device. 
-    #5 Then release 'Side' button after 6 seconds but keep holding on 'Home' button.
-    #6 Finally the device enter DFU mode, and the less jobs will automatically done. 
+    #####1 Install checkra1n application on your macosx, and open it.
+    #####2 Connect your iPhone with USB to your mac, checkra1n will display device info.
+    #####3 Click 'Start' button on checkra1n, read the instructions and click 'Next' to rec mode.
+    #####4 Continue follow the instruction, click 'Start'. Hold 'Side' & 'Home' button on device. 
+    #####5 Then release 'Side' button after 6 seconds but keep holding on 'Home' button.
+    #####6 Finally the device enter DFU mode, and the less jobs will automatically done. 
 
+    # 2
     brew install usbmuxd
     iproxy 2222 22
     ssh -p 2222 root@127.0.0.1
@@ -45,9 +47,9 @@
     ls -al /Developer/usr/bin/    # checkout the debugserver
     echo $PATH
 
-    
+    # 3
     On Mac:
-    # debugserver
+    # debugserver on device's path /Developer/usr/bin/debugserver, once you connect device with xcode 
     ls -al /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport/13.3/DeveloperDiskImage.dmg # also have a debugserver in it.
     scp -r -P2222 root@localhost:/Developer/usr/bin/debugserver $HOME/Desktop/
     cd $HOME/Desktop/ && file debugserver && lipo -thin arm64 debugserver -output debugserver_arm64
@@ -68,7 +70,6 @@
     </dict>
     </plist>
     ---------------------------- vim en.plist ----------------------------
-
     OR 
     ---------------------------- vim en.plist ----------------------------
     <?xml version="1.0" encoding="UTF-8"?>
@@ -103,10 +104,10 @@
     </plist>
     ---------------------------- vim en.plist ----------------------------
 
-
     codesign -s - --entitlements en.plist -f debugserver_arm64
     scp -P 2222 debugserver_arm64 root@localhost:/usr/bin/debugserver
 
+    # 4
     On iOS:
     ls -al /usr/bin/debugserver
     ps -A  # ps aux
