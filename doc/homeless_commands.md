@@ -84,6 +84,8 @@
         <true/>
         <key>get-task-allow</key>
         <true/>
+        <key>com.apple.system-task-ports</key>
+        <true/>
         <key>com.apple.frontboard.launchapplications</key>
         <true/>
         <key>com.apple.frontboard.debugapplications</key>
@@ -92,11 +94,11 @@
         <true/>
         <key>com.apple.backboardd.launchapplications</key>
         <true/>
+        <key>com.apple.backboardd.debugapplications</key>
+        <true/>
         <key>com.apple.private.memorystatus</key>
         <true/>
         <key>com.apple.private.cs.debugger</key>
-        <true/>
-        <key>com.apple.backboardd.debugapplications</key>
         <true/>
         <key>com.apple.private.logging.diagnostic</key>
         <true/>
@@ -111,13 +113,19 @@
     On iOS:
     ls -al /usr/bin/debugserver
     ps -A  # ps aux
-    # debugserver -x backboard IP:PORT /var/containers/Bundle/Application/CC6B5412-2536-40E2-9DA5-42F8E4402934/Runner.app/Runner
-    # debugserver localhost:12345 -p 768 # pid, debugserver *:12345 -a Cydia
     debugserver -x backboard *:12345 /Applications/MobileSMS.app/MobileSMS  # error: rejecting incoming connection from ::ffff:127.0.0.1 (expecting ::1)，change * to 127.0.0.1
+    # debugserver localhost:12345 -p 768 # pid, debugserver *:12345 -a Cydia
     debugserver -x backboard 127.0.0.1:12345 /Applications/MobileSMS.app/MobileSMS
+    debugserver -x backboard 127.0.0.1:12345  /var/containers/Bundle/Application/9BC5831A-1B80-40A2-AB2D-E39E31E088D4/Runner.app/Runner --enable-dart-profiling --disable-service-auth-codes 
+    
+    On Macosx:    
     iproxy 54321 12345
     lldb
     (lldb)process connect connect://127.0.0.1:54321
+    (lldb)c
+    (lldb)breakpoint set -name Precompiled__MyAppState_19445837_staticVarAIncrement_5749
+    (lldb)breakpoint list
+    (lldb)process interrupt
     (lldb)c
 
 
