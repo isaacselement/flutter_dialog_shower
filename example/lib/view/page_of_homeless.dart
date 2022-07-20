@@ -223,7 +223,7 @@ class PageOfHomeless extends StatelessWidget {
   }
 
   void _initSettings() {
-    Boxes.isDebugLogEnable = true;
+    boxes_log_enable = true;
     EventTruck.onWithKey(
       key: 'event_key_1',
       onData: (object) {

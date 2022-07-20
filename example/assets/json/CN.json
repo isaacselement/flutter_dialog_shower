@@ -1,5 +1,423 @@
 [
   {
+    "areaCode": "540000",
+    "areaName": "西藏自治区",
+    "children": [
+      {
+        "areaCode": "540100",
+        "areaName": "拉萨市",
+        "children": [
+          {
+            "areaCode": "540102",
+            "areaName": "城关区",
+            "children": null
+          },
+          {
+            "areaCode": "540103",
+            "areaName": "堆龙德庆区",
+            "children": null
+          },
+          {
+            "areaCode": "540104",
+            "areaName": "达孜区",
+            "children": null
+          },
+          {
+            "areaCode": "540121",
+            "areaName": "林周县",
+            "children": null
+          },
+          {
+            "areaCode": "540122",
+            "areaName": "当雄县",
+            "children": null
+          },
+          {
+            "areaCode": "540123",
+            "areaName": "尼木县",
+            "children": null
+          },
+          {
+            "areaCode": "540124",
+            "areaName": "曲水县",
+            "children": null
+          },
+          {
+            "areaCode": "540127",
+            "areaName": "墨竹工卡县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540200",
+        "areaName": "日喀则市",
+        "children": [
+          {
+            "areaCode": "540202",
+            "areaName": "桑珠孜区",
+            "children": null
+          },
+          {
+            "areaCode": "540221",
+            "areaName": "南木林县",
+            "children": null
+          },
+          {
+            "areaCode": "540222",
+            "areaName": "江孜县",
+            "children": null
+          },
+          {
+            "areaCode": "540223",
+            "areaName": "定日县",
+            "children": null
+          },
+          {
+            "areaCode": "540224",
+            "areaName": "萨迦县",
+            "children": null
+          },
+          {
+            "areaCode": "540225",
+            "areaName": "拉孜县",
+            "children": null
+          },
+          {
+            "areaCode": "540226",
+            "areaName": "昂仁县",
+            "children": null
+          },
+          {
+            "areaCode": "540227",
+            "areaName": "谢通门县",
+            "children": null
+          },
+          {
+            "areaCode": "540228",
+            "areaName": "白朗县",
+            "children": null
+          },
+          {
+            "areaCode": "540229",
+            "areaName": "仁布县",
+            "children": null
+          },
+          {
+            "areaCode": "540230",
+            "areaName": "康马县",
+            "children": null
+          },
+          {
+            "areaCode": "540231",
+            "areaName": "定结县",
+            "children": null
+          },
+          {
+            "areaCode": "540232",
+            "areaName": "仲巴县",
+            "children": null
+          },
+          {
+            "areaCode": "540233",
+            "areaName": "亚东县",
+            "children": null
+          },
+          {
+            "areaCode": "540234",
+            "areaName": "吉隆县",
+            "children": null
+          },
+          {
+            "areaCode": "540235",
+            "areaName": "聂拉木县",
+            "children": null
+          },
+          {
+            "areaCode": "540236",
+            "areaName": "萨嘎县",
+            "children": null
+          },
+          {
+            "areaCode": "540237",
+            "areaName": "岗巴县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540300",
+        "areaName": "昌都市",
+        "children": [
+          {
+            "areaCode": "540302",
+            "areaName": "卡若区",
+            "children": null
+          },
+          {
+            "areaCode": "540321",
+            "areaName": "江达县",
+            "children": null
+          },
+          {
+            "areaCode": "540322",
+            "areaName": "贡觉县",
+            "children": null
+          },
+          {
+            "areaCode": "540323",
+            "areaName": "类乌齐县",
+            "children": null
+          },
+          {
+            "areaCode": "540324",
+            "areaName": "丁青县",
+            "children": null
+          },
+          {
+            "areaCode": "540325",
+            "areaName": "察雅县",
+            "children": null
+          },
+          {
+            "areaCode": "540326",
+            "areaName": "八宿县",
+            "children": null
+          },
+          {
+            "areaCode": "540327",
+            "areaName": "左贡县",
+            "children": null
+          },
+          {
+            "areaCode": "540328",
+            "areaName": "芒康县",
+            "children": null
+          },
+          {
+            "areaCode": "540329",
+            "areaName": "洛隆县",
+            "children": null
+          },
+          {
+            "areaCode": "540330",
+            "areaName": "边坝县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540400",
+        "areaName": "林芝市",
+        "children": [
+          {
+            "areaCode": "540402",
+            "areaName": "巴宜区",
+            "children": null
+          },
+          {
+            "areaCode": "540421",
+            "areaName": "工布江达县",
+            "children": null
+          },
+          {
+            "areaCode": "540422",
+            "areaName": "米林县",
+            "children": null
+          },
+          {
+            "areaCode": "540423",
+            "areaName": "墨脱县",
+            "children": null
+          },
+          {
+            "areaCode": "540424",
+            "areaName": "波密县",
+            "children": null
+          },
+          {
+            "areaCode": "540425",
+            "areaName": "察隅县",
+            "children": null
+          },
+          {
+            "areaCode": "540426",
+            "areaName": "朗县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540500",
+        "areaName": "山南市",
+        "children": [
+          {
+            "areaCode": "540502",
+            "areaName": "乃东区",
+            "children": null
+          },
+          {
+            "areaCode": "540521",
+            "areaName": "扎囊县",
+            "children": null
+          },
+          {
+            "areaCode": "540522",
+            "areaName": "贡嘎县",
+            "children": null
+          },
+          {
+            "areaCode": "540523",
+            "areaName": "桑日县",
+            "children": null
+          },
+          {
+            "areaCode": "540524",
+            "areaName": "琼结县",
+            "children": null
+          },
+          {
+            "areaCode": "540525",
+            "areaName": "曲松县",
+            "children": null
+          },
+          {
+            "areaCode": "540526",
+            "areaName": "措美县",
+            "children": null
+          },
+          {
+            "areaCode": "540527",
+            "areaName": "洛扎县",
+            "children": null
+          },
+          {
+            "areaCode": "540528",
+            "areaName": "加查县",
+            "children": null
+          },
+          {
+            "areaCode": "540529",
+            "areaName": "隆子县",
+            "children": null
+          },
+          {
+            "areaCode": "540530",
+            "areaName": "错那县",
+            "children": null
+          },
+          {
+            "areaCode": "540531",
+            "areaName": "浪卡子县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "540600",
+        "areaName": "那曲市",
+        "children": [
+          {
+            "areaCode": "540602",
+            "areaName": "色尼区",
+            "children": null
+          },
+          {
+            "areaCode": "540621",
+            "areaName": "嘉黎县",
+            "children": null
+          },
+          {
+            "areaCode": "540622",
+            "areaName": "比如县",
+            "children": null
+          },
+          {
+            "areaCode": "540623",
+            "areaName": "聂荣县",
+            "children": null
+          },
+          {
+            "areaCode": "540624",
+            "areaName": "安多县",
+            "children": null
+          },
+          {
+            "areaCode": "540625",
+            "areaName": "申扎县",
+            "children": null
+          },
+          {
+            "areaCode": "540626",
+            "areaName": "索县",
+            "children": null
+          },
+          {
+            "areaCode": "540627",
+            "areaName": "班戈县",
+            "children": null
+          },
+          {
+            "areaCode": "540628",
+            "areaName": "巴青县",
+            "children": null
+          },
+          {
+            "areaCode": "540629",
+            "areaName": "尼玛县",
+            "children": null
+          },
+          {
+            "areaCode": "540630",
+            "areaName": "双湖县",
+            "children": null
+          }
+        ]
+      },
+      {
+        "areaCode": "542500",
+        "areaName": "阿里地区",
+        "children": [
+          {
+            "areaCode": "542521",
+            "areaName": "普兰县",
+            "children": null
+          },
+          {
+            "areaCode": "542522",
+            "areaName": "札达县",
+            "children": null
+          },
+          {
+            "areaCode": "542523",
+            "areaName": "噶尔县",
+            "children": null
+          },
+          {
+            "areaCode": "542524",
+            "areaName": "日土县",
+            "children": null
+          },
+          {
+            "areaCode": "542525",
+            "areaName": "革吉县",
+            "children": null
+          },
+          {
+            "areaCode": "542526",
+            "areaName": "改则县",
+            "children": null
+          },
+          {
+            "areaCode": "542527",
+            "areaName": "措勤县",
+            "children": null
+          }
+        ]
+      }
+    ]
+  },
+  {
     "areaCode": "150000",
     "areaName": "内蒙古自治区",
     "children": [
@@ -586,424 +1004,6 @@
           {
             "areaCode": "152923",
             "areaName": "额济纳旗",
-            "children": null
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "areaCode": "540000",
-    "areaName": "西藏自治区",
-    "children": [
-      {
-        "areaCode": "540100",
-        "areaName": "拉萨市",
-        "children": [
-          {
-            "areaCode": "540102",
-            "areaName": "城关区",
-            "children": null
-          },
-          {
-            "areaCode": "540103",
-            "areaName": "堆龙德庆区",
-            "children": null
-          },
-          {
-            "areaCode": "540104",
-            "areaName": "达孜区",
-            "children": null
-          },
-          {
-            "areaCode": "540121",
-            "areaName": "林周县",
-            "children": null
-          },
-          {
-            "areaCode": "540122",
-            "areaName": "当雄县",
-            "children": null
-          },
-          {
-            "areaCode": "540123",
-            "areaName": "尼木县",
-            "children": null
-          },
-          {
-            "areaCode": "540124",
-            "areaName": "曲水县",
-            "children": null
-          },
-          {
-            "areaCode": "540127",
-            "areaName": "墨竹工卡县",
-            "children": null
-          }
-        ]
-      },
-      {
-        "areaCode": "540200",
-        "areaName": "日喀则市",
-        "children": [
-          {
-            "areaCode": "540202",
-            "areaName": "桑珠孜区",
-            "children": null
-          },
-          {
-            "areaCode": "540221",
-            "areaName": "南木林县",
-            "children": null
-          },
-          {
-            "areaCode": "540222",
-            "areaName": "江孜县",
-            "children": null
-          },
-          {
-            "areaCode": "540223",
-            "areaName": "定日县",
-            "children": null
-          },
-          {
-            "areaCode": "540224",
-            "areaName": "萨迦县",
-            "children": null
-          },
-          {
-            "areaCode": "540225",
-            "areaName": "拉孜县",
-            "children": null
-          },
-          {
-            "areaCode": "540226",
-            "areaName": "昂仁县",
-            "children": null
-          },
-          {
-            "areaCode": "540227",
-            "areaName": "谢通门县",
-            "children": null
-          },
-          {
-            "areaCode": "540228",
-            "areaName": "白朗县",
-            "children": null
-          },
-          {
-            "areaCode": "540229",
-            "areaName": "仁布县",
-            "children": null
-          },
-          {
-            "areaCode": "540230",
-            "areaName": "康马县",
-            "children": null
-          },
-          {
-            "areaCode": "540231",
-            "areaName": "定结县",
-            "children": null
-          },
-          {
-            "areaCode": "540232",
-            "areaName": "仲巴县",
-            "children": null
-          },
-          {
-            "areaCode": "540233",
-            "areaName": "亚东县",
-            "children": null
-          },
-          {
-            "areaCode": "540234",
-            "areaName": "吉隆县",
-            "children": null
-          },
-          {
-            "areaCode": "540235",
-            "areaName": "聂拉木县",
-            "children": null
-          },
-          {
-            "areaCode": "540236",
-            "areaName": "萨嘎县",
-            "children": null
-          },
-          {
-            "areaCode": "540237",
-            "areaName": "岗巴县",
-            "children": null
-          }
-        ]
-      },
-      {
-        "areaCode": "540300",
-        "areaName": "昌都市",
-        "children": [
-          {
-            "areaCode": "540302",
-            "areaName": "卡若区",
-            "children": null
-          },
-          {
-            "areaCode": "540321",
-            "areaName": "江达县",
-            "children": null
-          },
-          {
-            "areaCode": "540322",
-            "areaName": "贡觉县",
-            "children": null
-          },
-          {
-            "areaCode": "540323",
-            "areaName": "类乌齐县",
-            "children": null
-          },
-          {
-            "areaCode": "540324",
-            "areaName": "丁青县",
-            "children": null
-          },
-          {
-            "areaCode": "540325",
-            "areaName": "察雅县",
-            "children": null
-          },
-          {
-            "areaCode": "540326",
-            "areaName": "八宿县",
-            "children": null
-          },
-          {
-            "areaCode": "540327",
-            "areaName": "左贡县",
-            "children": null
-          },
-          {
-            "areaCode": "540328",
-            "areaName": "芒康县",
-            "children": null
-          },
-          {
-            "areaCode": "540329",
-            "areaName": "洛隆县",
-            "children": null
-          },
-          {
-            "areaCode": "540330",
-            "areaName": "边坝县",
-            "children": null
-          }
-        ]
-      },
-      {
-        "areaCode": "540400",
-        "areaName": "林芝市",
-        "children": [
-          {
-            "areaCode": "540402",
-            "areaName": "巴宜区",
-            "children": null
-          },
-          {
-            "areaCode": "540421",
-            "areaName": "工布江达县",
-            "children": null
-          },
-          {
-            "areaCode": "540422",
-            "areaName": "米林县",
-            "children": null
-          },
-          {
-            "areaCode": "540423",
-            "areaName": "墨脱县",
-            "children": null
-          },
-          {
-            "areaCode": "540424",
-            "areaName": "波密县",
-            "children": null
-          },
-          {
-            "areaCode": "540425",
-            "areaName": "察隅县",
-            "children": null
-          },
-          {
-            "areaCode": "540426",
-            "areaName": "朗县",
-            "children": null
-          }
-        ]
-      },
-      {
-        "areaCode": "540500",
-        "areaName": "山南市",
-        "children": [
-          {
-            "areaCode": "540502",
-            "areaName": "乃东区",
-            "children": null
-          },
-          {
-            "areaCode": "540521",
-            "areaName": "扎囊县",
-            "children": null
-          },
-          {
-            "areaCode": "540522",
-            "areaName": "贡嘎县",
-            "children": null
-          },
-          {
-            "areaCode": "540523",
-            "areaName": "桑日县",
-            "children": null
-          },
-          {
-            "areaCode": "540524",
-            "areaName": "琼结县",
-            "children": null
-          },
-          {
-            "areaCode": "540525",
-            "areaName": "曲松县",
-            "children": null
-          },
-          {
-            "areaCode": "540526",
-            "areaName": "措美县",
-            "children": null
-          },
-          {
-            "areaCode": "540527",
-            "areaName": "洛扎县",
-            "children": null
-          },
-          {
-            "areaCode": "540528",
-            "areaName": "加查县",
-            "children": null
-          },
-          {
-            "areaCode": "540529",
-            "areaName": "隆子县",
-            "children": null
-          },
-          {
-            "areaCode": "540530",
-            "areaName": "错那县",
-            "children": null
-          },
-          {
-            "areaCode": "540531",
-            "areaName": "浪卡子县",
-            "children": null
-          }
-        ]
-      },
-      {
-        "areaCode": "540600",
-        "areaName": "那曲市",
-        "children": [
-          {
-            "areaCode": "540602",
-            "areaName": "色尼区",
-            "children": null
-          },
-          {
-            "areaCode": "540621",
-            "areaName": "嘉黎县",
-            "children": null
-          },
-          {
-            "areaCode": "540622",
-            "areaName": "比如县",
-            "children": null
-          },
-          {
-            "areaCode": "540623",
-            "areaName": "聂荣县",
-            "children": null
-          },
-          {
-            "areaCode": "540624",
-            "areaName": "安多县",
-            "children": null
-          },
-          {
-            "areaCode": "540625",
-            "areaName": "申扎县",
-            "children": null
-          },
-          {
-            "areaCode": "540626",
-            "areaName": "索县",
-            "children": null
-          },
-          {
-            "areaCode": "540627",
-            "areaName": "班戈县",
-            "children": null
-          },
-          {
-            "areaCode": "540628",
-            "areaName": "巴青县",
-            "children": null
-          },
-          {
-            "areaCode": "540629",
-            "areaName": "尼玛县",
-            "children": null
-          },
-          {
-            "areaCode": "540630",
-            "areaName": "双湖县",
-            "children": null
-          }
-        ]
-      },
-      {
-        "areaCode": "542500",
-        "areaName": "阿里地区",
-        "children": [
-          {
-            "areaCode": "542521",
-            "areaName": "普兰县",
-            "children": null
-          },
-          {
-            "areaCode": "542522",
-            "areaName": "札达县",
-            "children": null
-          },
-          {
-            "areaCode": "542523",
-            "areaName": "噶尔县",
-            "children": null
-          },
-          {
-            "areaCode": "542524",
-            "areaName": "日土县",
-            "children": null
-          },
-          {
-            "areaCode": "542525",
-            "areaName": "革吉县",
-            "children": null
-          },
-          {
-            "areaCode": "542526",
-            "areaName": "改则县",
-            "children": null
-          },
-          {
-            "areaCode": "542527",
-            "areaName": "措勤县",
             "children": null
           }
         ]

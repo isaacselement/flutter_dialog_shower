@@ -320,22 +320,28 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
       options.pickerMaxHeight ??= y;
     }
 
+    Boxes<AnythingPickerOptions?> cartonOption = Boxes();
+    AnythingPickerOptions _getOptions() {
+      return cartonOption.object ?? options;
+    }
+
     Widget _wrapWithBubble(DialogShower shower, Widget child) {
-      if (options.bubbleTriangleDirection == CcBubbleArrowDirection.none) {
+      AnythingPickerOptions options = _getOptions();
+      if (options.bubbleTriangleDirection == null) {
         return child;
       }
       shower.containerDecoration = null;
       return CcBubbleWidget(
-        bubbleShadowColor: options.bubbleShadowColor,
-        bubbleShadowRadius: options.bubbleShadowRadius,
-        bubbleTriangleDirection: options.bubbleTriangleDirection,
+        child: child,
         bubbleColor: options.bubbleColor,
         bubbleRadius: options.bubbleRadius,
+        bubbleShadowColor: options.bubbleShadowColor,
+        bubbleShadowRadius: options.bubbleShadowRadius,
         bubbleTriangleLength: options.bubbleTriangleLength,
         isTriangleOccupiedSpace: options.isTriangleOccupiedSpace,
         bubbleTrianglePointOffset: options.bubbleTrianglePointOffset,
         bubbleTriangleTranslation: options.bubbleTriangleTranslation,
-        child: child,
+        bubbleTriangleDirection: options.bubbleTriangleDirection ?? CcBubbleArrowDirection.none,
       );
     }
 
@@ -395,7 +401,6 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
         // Label A: auto deciding height
         Size screenSize = MediaQuery.of(DialogShower.gContext!).size;
         double screenHeight = screenSize.height;
-        // double screenWidth = screenSize.width;
         return Offstage(
           offstage: true,
           child: GetSizeWidget(
@@ -430,6 +435,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
               AnythingPickerOptions _op = options;
               if (_op.stickToSide == AnythingPickerStickTo.auto) {
                 _op = options.clone();
+                cartonOption.object = _op;
                 double _heightBak = shower.height!;
 
                 // -------------------- auto determined the height & the direction --------------------
@@ -471,8 +477,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
                     overflowT = overflowTop();
                     if (overflowB > 0 && overflowT > 0) {
                       assert(() {
-                        console(() =>
-                            '[AnythingPicker] ❗️❗️❗️the picker mini height is too large for none of direction have enough space!!!');
+                        console(
+                            () => '[AnythingPicker] ❗️❗️❗️the picker mini height is too large, all directions have not enough space!!!');
                         return true;
                       }());
                       shower.height = _heightBackup;
@@ -485,6 +491,14 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
                     }
                   }
                   console(() => '[AnythingPicker] Mini shower height ${shower.height}, y: ${shower.y}, stickToSide: ${_op.stickToSide}');
+                }
+
+                if (_op.bubbleTriangleDirection == CcBubbleArrowDirection.none) {
+                  if (_op.stickToSide == AnythingPickerStickTo.top) {
+                    _op.bubbleTriangleDirection = CcBubbleArrowDirection.bottom;
+                  } else if (_op.stickToSide == AnythingPickerStickTo.bottom) {
+                    _op.bubbleTriangleDirection = CcBubbleArrowDirection.top;
+                  }
                 }
               }
 
@@ -716,13 +730,13 @@ enum AnythingPickerStickTo { auto, top, bottom }
 
 /// Anything Picker Options/Configs Class
 class AnythingPickerOptions {
-  CcBubbleArrowDirection bubbleTriangleDirection = CcBubbleArrowDirection.none;
+  CcBubbleArrowDirection? bubbleTriangleDirection;
   bool isTriangleOccupiedSpace = true;
-  Color? bubbleColor;
+  Color? bubbleColor = Colors.white;
   double bubbleRadius = 8.0;
   double bubbleShadowRadius = 100;
   Color? bubbleShadowColor = Colors.grey.withAlpha(128);
-  double? bubbleTriangleLength;
+  double? bubbleTriangleLength = 12.0;
   Offset? bubbleTrianglePointOffset;
   double? bubbleTriangleTranslation;
 

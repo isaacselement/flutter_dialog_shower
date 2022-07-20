@@ -1,23 +1,14 @@
+// ignore_for_file: non_constant_identifier_names, avoid_print
+
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class Boxes {
-  static bool isDebugLogEnable = false;
+class Boxes<T> {
 
-  static log(String log) {
-    assert(() {
-      if (isDebugLogEnable) {
-        if (kDebugMode) {
-          print('[$Boxes] $log');
-        }
-      }
-      return true;
-    }());
-  }
+  T? object;
 
   static SingletonFlutterWindow getWindow() {
     // return getWidgetsBinding().window;
@@ -28,6 +19,29 @@ class Boxes {
     return WidgetsBinding.instance!;
   }
 }
+
+bool boxes_log_enable = true;
+
+__boxes_log__(String log) {
+  assert(() {
+    if (boxes_log_enable) {
+      print('[$Boxes] $log');
+    }
+    return true;
+  }());
+}
+
+/// Extensions
+
+/// extension of List
+extension ListBoxesEx<E> on List<E> {
+  E? get firstSafe => atSafe(0);
+
+  E? get lastSafe => atSafe(length - 1);
+
+  E? atSafe(int index) => (isEmpty || index < 0 || index >= length) ? null : elementAt(index);
+}
+
 
 /// View
 
@@ -54,12 +68,12 @@ class BuilderExState extends State<BuilderEx> {
     try {
       widget.init?.call(state);
     } catch (e, s) {
-      Boxes.log('[$state] ${widget.name} showCallBack exception: ${e.toString()}');
-      Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
-      Boxes.log(s.toString());
+      __boxes_log__('[$state] ${widget.name} showCallBack exception: ${e.toString()}');
+      __boxes_log__(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
+      __boxes_log__(s.toString());
     }
     assert(() {
-      Boxes.log('[$state] ${widget.name} >>>>> initState');
+      __boxes_log__('[$state] ${widget.name} >>>>> initState');
       return true;
     }());
   }
@@ -71,7 +85,7 @@ class BuilderExState extends State<BuilderEx> {
 
   static Widget callWidgetBuilder(BuilderEx widget, State state) {
     assert(() {
-      Boxes.log('[$state] ${widget.name} >>>>> build');
+      __boxes_log__('[$state] ${widget.name} >>>>> build');
       return true;
     }());
     return widget.builder(state);
@@ -87,12 +101,12 @@ class BuilderExState extends State<BuilderEx> {
     try {
       widget.dispose?.call(state);
     } catch (e, s) {
-      Boxes.log('[$state] ${widget.name} dismissCallBack exception: ${e.toString()}');
-      Boxes.log(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
-      Boxes.log(s.toString());
+      __boxes_log__('[$state] ${widget.name} dismissCallBack exception: ${e.toString()}');
+      __boxes_log__(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
+      __boxes_log__(s.toString());
     }
     assert(() {
-      Boxes.log('[$state] ${widget.name} >>>>> dispose');
+      __boxes_log__('[$state] ${widget.name} >>>>> dispose');
       return true;
     }());
   }
@@ -141,7 +155,7 @@ class GetSizeWidget extends SingleChildRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    Boxes.log('[$runtimeType] createRenderObject');
+    __boxes_log__('[$runtimeType] createRenderObject');
     return _GetSizeRenderObject()..onLayoutChanged = onLayoutChanged;
   }
 }
@@ -155,7 +169,7 @@ class _GetSizeRenderObject extends RenderProxyBox {
     super.performLayout();
 
     Size? size = child?.size;
-    Boxes.log('[$runtimeType] performLayout >>>>>>>>> size: $size');
+    __boxes_log__('[$runtimeType] performLayout >>>>>>>>> size: $size');
     bool isSizeChanged = size != null && size != _size;
     if (isSizeChanged) {
       _invoke(_size, size);
@@ -231,7 +245,7 @@ class ThrottleAny {
     bool isSyncCall = StackTrace.current.toString().replaceFirst(symbol, '_').contains(symbol);
     if (isSyncCall) {
       if (callers.contains(this)) {
-        Boxes.log('❌❗️ Do not call function ThrottleAny.call in the same stack with the same instance of ThrottleAny! ${callers.length}');
+        __boxes_log__('❌❗️ Do not call function ThrottleAny.call in the same stack with the same instance of ThrottleAny! ${callers.length}');
         func();
         return;
       }
@@ -311,11 +325,3 @@ class DebouncerAny {
   }
 }
 
-/// extension of List
-extension ListBoxesEx<E> on List<E> {
-  E? get firstSafe => atSafe(0);
-
-  E? get lastSafe => atSafe(length - 1);
-
-  E? atSafe(int index) => (isEmpty || index < 0 || index >= length) ? null : elementAt(index);
-}

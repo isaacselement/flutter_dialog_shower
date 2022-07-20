@@ -129,13 +129,41 @@ class XpSliderWidget extends StatelessWidget {
                   },
                   options: AnythingPickerOptions()
                     ..contentHintText = ''
-                    // ..bubbleTriangleDirection = CcBubbleArrowDirection.top,  /// TODO ...
+                    ..bubbleShadowColor = Colors.purpleAccent
+                    ..bubbleTriangleDirection = CcBubbleArrowDirection.top,
                 ),
-                const SizedBox(height: 80),
+                const SizedBox(height: 64),
                 _bodyRowTips(),
-                const SizedBox(height: 100),
+                const SizedBox(height: 64),
                 _bodyCityPicker(),
-                const SizedBox(height: 200),
+                const SizedBox(height: 32),
+                AnythingPicker(
+                  title: 'AnythingPicker with auto position. (Arrowed. Scroll me up and down ~~~)',
+                  values: _getListValues(),
+                  funcOfItemOnTapped: (state, index, value) {
+                    selectCountryValue.value = value as String;
+                    return false;
+                  },
+                  options: AnythingPickerOptions()
+                    ..contentHintText = ''
+                    ..bubbleShadowColor = Colors.purpleAccent
+                    // bubbleTriangleDirection: if you don't wanna an arrow set it to null. set it to none, we will auto change it .
+                    ..bubbleTriangleDirection = CcBubbleArrowDirection.none,
+                ),
+                const SizedBox(height: 32),
+                AnythingPicker(
+                  title: 'AnythingPicker with auto position. (Scroll me up and down ~~~)',
+                  values: _getListValues(),
+                  funcOfItemOnTapped: (state, index, value) {
+                    selectCountryValue.value = value as String;
+                    return false;
+                  },
+                  options: AnythingPickerOptions()
+                    ..contentHintText = ''
+                    ..bubbleShadowColor = Colors.purpleAccent
+                    // bubbleTriangleDirection: if you don't wanna an arrow set it to null. set it to none, we will auto change it .
+                    ..bubbleTriangleDirection = CcBubbleArrowDirection.none,
+                ),
                 const SizedBox(height: 500),
               ],
             ),

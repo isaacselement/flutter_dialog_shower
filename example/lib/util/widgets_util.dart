@@ -114,7 +114,8 @@ class WidgetsUtil {
       child: Text(
         titleText,
         maxLines: 8,
-        style: const TextStyle(fontSize: 16, color: Colors.white, overflow: TextOverflow.ellipsis, shadows: <Shadow>[
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontSize: 16, color: Colors.white, shadows: <Shadow>[
           Shadow(offset: Offset(3.0, 3.0), blurRadius: 2.0, color: Color.fromARGB(255, 0, 0, 0)),
           Shadow(offset: Offset(5.0, 5.0), blurRadius: 8.0, color: Color.fromARGB(125, 177, 239, 83)),
         ]),
@@ -244,7 +245,8 @@ class WidgetsUtil {
     return CcBubbleWidget(
       width: width,
       height: height,
-      bubbleColor: Colors.black, // triangle color
+      bubbleColor: Colors.black,
+      // triangle color
       bubbleTriangleDirection: direction,
       bubbleTriangleTranslation: bubbleTriangleTranslation,
       bubbleShadowColor: Colors.pink,
@@ -269,5 +271,4 @@ class WidgetsUtil {
       ),
     );
   }
-
 }

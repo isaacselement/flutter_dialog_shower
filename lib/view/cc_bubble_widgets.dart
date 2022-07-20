@@ -175,11 +175,11 @@ class CcBubblePainter extends CustomPainter {
     this.triangleTranslation,
     this.triangleDirection = CcBubbleArrowDirection.top,
     this.isTriangleOccupiedSpace = true,
-    this.shadowBlurRadius = 10,
-    this.shadowSpreadRadius = 0,
+    this.shadowBlurRadius,
+    this.shadowSpreadRadius,
     this.shadowColor = Colors.grey,
     this.shadowOffset = Offset.zero,
-    this.color = Colors.white,
+    this.color,
   });
 
   @override
@@ -358,7 +358,7 @@ class CcBubblePainter extends CustomPainter {
     canvas.drawPath(
       pointsPath,
       Paint()
-        ..color = color!
+        ..color = color ?? Colors.white
         ..style = PaintingStyle.fill
         ..strokeCap = StrokeCap.round
         ..strokeWidth = 1,
