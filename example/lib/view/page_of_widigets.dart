@@ -75,7 +75,8 @@ class PageOfWidgets extends StatelessWidget {
               );
             }),
             WidgetsUtil.newXpelTextButton('show loading, rotate unstiff', onPressed: (state) {
-              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isPaintWrapRotate: true);
+              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isPaintWrapRotate: true)
+                .barrierColor = Colors.transparent;
             }),
             WidgetsUtil.newXpelTextButton('show loading paint example', onPressed: (state) {
               OverlayShower shower = ToastUtil.show('progress: ~~~', isStateful: true);
