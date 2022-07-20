@@ -35,15 +35,19 @@ DialogShower.init(context);  # init with a root context in your app
 
 
 ###### 1. Loading & Notifications
-<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.30.46.gif" width="50%">
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.30.46.gif" width="75%">
+
 ###### 2. Various show & dismiss animation
-<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.34.57.gif" width="50%">
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.34.57.gif" width="75%">
+
 ###### 3. Toast and Menu
-<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.39.28.gif" width="50%">
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.39.28.gif" width="75%">
+
 ###### 4. Nested Navigator
-<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2020.03.08.gif" width="50%">
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2020.03.08.gif" width="75%">
+
 ###### 5. Various Pickers and Tooltips
-<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2020.01.08.gif" width="50%">
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2020.01.08.gif" width="75%">
 
 
 
