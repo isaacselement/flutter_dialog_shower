@@ -11,6 +11,7 @@
 
     flutter packages pub publish --dry-run
     flutter packages pub publish
+    # Then open the google link and login to authorize.
 
 
 ### Python a simple https server
