@@ -20,12 +20,12 @@ class Boxes<T> {
   }
 }
 
-bool boxes_log_enable = true;
+bool boxes_log_enable = false;
 
 __boxes_log__(String log) {
   assert(() {
     if (boxes_log_enable) {
-      print('[$Boxes] $log');
+      print('[Boxes] $log');
     }
     return true;
   }());

@@ -7,13 +7,13 @@ class SizesUtil {
 
   static late double screenHeight;
 
-  static late double statuBarHeight;
+  static late double statusBarHeight;
 
   static init(BuildContext context) {
     mediaQueryDate = MediaQuery.of(context);
     screenWidth = mediaQueryDate.size.width;
     screenHeight = mediaQueryDate.size.height;
-    statuBarHeight = mediaQueryDate.padding.top;
+    statusBarHeight = mediaQueryDate.padding.top;
   }
 
   static Size? getSizeS(State state) {

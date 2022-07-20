@@ -161,7 +161,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     List<Widget> titleRowChildren = [];
 
     if (widget.title != null) {
-      titleRowChildren.add(Text(widget.title!, style: options.titleStyle));
+      // https://stackoverflow.com/a/69116599
+      titleRowChildren.add(Flexible(child: Text(widget.title!, style: options.titleStyle, maxLines: 1)));
     }
     if (options.titleEndIcon != null) {
       titleRowChildren.add(options.titleEndIcon!);
@@ -746,7 +747,7 @@ class AnythingPickerOptions {
   );
 
   // title widget
-  TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21));
+  TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21), overflow: TextOverflow.ellipsis);
   Widget? titleEndIcon;
 
   // content widget

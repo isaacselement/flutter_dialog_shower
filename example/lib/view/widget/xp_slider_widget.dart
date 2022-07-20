@@ -11,8 +11,8 @@ import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 class XpSliderWidget extends StatelessWidget {
   XpSliderWidget({Key? key}) : super(key: key);
 
+  Btv<String> title = 'Nested Navigator & Layer'.btv;
   Btv<bool> isResetButtonDisable = true.btv;
-  Btv<String> selectCountryValue = ''.btv;
 
   @override
   Widget build(BuildContext context) {
@@ -27,49 +27,53 @@ class XpSliderWidget extends StatelessWidget {
   }
 
   Widget _header() {
-    Btv<bool> isExpanded = false.btv;
-    double originalWidth = DialogWrapper.getTopDialog()?.width ?? 600;
-    void shrinkExpandEvent(BuildContext context) {
-      DialogShower? shower = DialogWrapper.getTopDialog();
-      if (shower != null && shower.isWithTicker == true) {
-        ShowerHelper.transformWidth(
-          shower: shower,
-          begin: shower.width,
-          end: isExpanded.value ? originalWidth : SizesUtil.screenWidth,
-          onDuring: (v) {
-            // show the toast during expand animation
-            String msg = 'Progress: ${v.toStringAsFixed(5)}';
-            AnyToastWidget? widget = ElementsUtil.getWidgetOfType<AnyToastWidget>(context);
-            if (widget == null) {
-              ToastUtil.show(msg);
-            } else {
-              Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
-                ElementsUtil.rebuild<AnyToastWidget>(shower.statefulKey.currentContext, (widget) {
-                  widget.text = msg;
-                });
-              });
-            }
-          },
-          onFinish: () {
-            isExpanded.value = !isExpanded.value;
-          },
-        );
+    DialogShower? shower = DialogWrapper.getTopDialog();
+    double mOriginalWidth = shower?.width ?? 600;
+
+    void transform(double from, double to, void Function()? onFinish) {
+      if (shower == null || shower.isWithTicker != true) {
+        return;
       }
+      ShowerHelper.transformWidth(
+        shower: shower,
+        begin: from,
+        end: to,
+        onDuring: (v) {
+          // show the toast during expand animation
+          String msg = 'Progress: ${v.toStringAsFixed(5)}';
+          AnyToastWidget? widget = ElementsUtil.getWidgetOfType<AnyToastWidget>(OverlayShower.gContext);
+          if (widget == null) {
+            ToastUtil.show(msg);
+          } else {
+            Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
+              ElementsUtil.rebuild<AnyToastWidget>(shower.statefulKey.currentContext, (widget) {
+                widget.text = msg;
+              });
+            });
+          }
+        },
+        onFinish: onFinish,
+      );
     }
 
-    void doneEvent() {
-      isResetButtonDisable.value = !isResetButtonDisable.value;
-    }
-
+    Btv<bool> isExpanded = false.btv;
     return Btw(builder: (context) {
       return HeaderUtil.headerWidget(
-        title: 'Nested Navigator & Layer',
-        rightTitlesList: [isExpanded.value ? 'Shrink' : 'Expand', 'Done'],
+        title: title.value,
+        rightTitlesList: [isExpanded.value ? 'Full Screen' : '', isExpanded.value ? 'Shrink' : 'Expand', 'Done'],
         rightEventsList: [
           () {
-            shrinkExpandEvent(context);
+            transform(shower?.width ?? 600, SizesUtil.screenWidth, null);
           },
-          doneEvent
+          () {
+            double w = shower?.width ?? 600;
+            transform(w, isExpanded.value ? mOriginalWidth : w + w / 2, () {
+              isExpanded.value = !isExpanded.value;
+            });
+          },
+          () {
+            isResetButtonDisable.value = !isResetButtonDisable.value;
+          },
         ],
       );
     });
@@ -90,7 +94,7 @@ class XpSliderWidget extends StatelessWidget {
                   title: 'AnythingPicker demonstration',
                   values: _getListValues(),
                   funcOfItemOnTapped: (state, index, value) {
-                    selectCountryValue.value = value as String;
+                    title.value = value as String;
                     return false;
                   },
                   options: AnythingPickerOptions()..contentHintText = 'Single Selection',
@@ -102,7 +106,7 @@ class XpSliderWidget extends StatelessWidget {
                     return _getListValues();
                   },
                   funcOfItemOnTapped: (state, index, value) {
-                    selectCountryValue.value = value as String;
+                    title.value = value as String;
                     return false;
                   },
                   options: AnythingPickerOptions()..contentHintText = 'Loading Selection',
@@ -113,7 +117,7 @@ class XpSliderWidget extends StatelessWidget {
                     return _getListValues();
                   },
                   funcOfItemOnTapped: (state, index, value) {
-                    selectCountryValue.value = value as String;
+                    title.value = value as String;
                     return false;
                   },
                   options: AnythingPickerOptions()..contentHintText = 'Multiple Selection',
@@ -121,31 +125,66 @@ class XpSliderWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 AnythingPicker(
-                  title: 'AnythingPicker with arrow',
+                  title: 'AnythingPicker with arrow ',
                   values: _getListValues(),
                   funcOfItemOnTapped: (state, index, value) {
-                    selectCountryValue.value = value as String;
                     return false;
+                  },
+                  funcOfTitleOnTapped: (state, context) {
+                    Offset offset = OffsetsUtil.getOffsetB(context) ?? Offset.zero;
+                    String msg =
+                        'But Flexible with FlexFit.\nloose acts like Expanded so the \nSuffixIcon gets pushed to the end \neven though TextGoesHere is a short text.';
+                    ToastUtil.showDialogToast(msg, x: offset.dx + 200, y: offset.dy - 32);
                   },
                   options: AnythingPickerOptions()
                     ..contentHintText = ''
+                    ..titleEndIcon = const Icon(Icons.info_outlined, size: 16, color: Colors.black54)
                     ..bubbleShadowColor = Colors.purpleAccent
                     ..bubbleTriangleDirection = CcBubbleArrowDirection.top,
                 ),
                 const SizedBox(height: 64),
-                _bodyRowTips(),
+                _bodyTips(),
                 const SizedBox(height: 64),
-                _bodyCityPicker(),
-                const SizedBox(height: 32),
+                AnythingGangedPicker(
+                  title: 'City multi-level selection demonstration',
+                  showerWidth: 450,
+                  funcOfTitle: (view, i, e) {
+                    return e is Map ? e['areaName'] : 'Province';
+                  },
+                  funcOfValues: (view, i, e) async {
+                    if (e == null) {
+                      String string = await rootBundle.loadString('assets/json/CN.json');
+                      return (json.decode(string)) as List<dynamic>?;
+                    }
+                    return (e is Map ? e['children'] : e) as List<dynamic>?;
+                  },
+                  funcOfItemName: (view, i, e) {
+                    return e is Map ? e['areaName'] : '';
+                  },
+                  isHasNextLevel: (view, i, e) {
+                    return (e is Map ? e['children'] : null) != null;
+                  },
+                  funcOfLeafItemOnTapped: (view, i, e) {
+                    OverlayWidgets.showToastInQueue('You select the leaf: $e').alignment = Alignment.topCenter;
+                    String address = view.relativeElements.map((e) => e['areaName']).toList().join('/');
+                    OverlayWidgets.showToastInQueue('Detail address is: $address').alignment = Alignment.topCenter;
+                    return false;
+                  },
+                  onPickerOptions: (view, options){
+                    options.titleStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 64),
                 AnythingPicker(
-                  title: 'AnythingPicker with auto position. (Arrowed. Scroll me up and down ~~~)',
+                  title: 'AnythingPicker with auto position. (Arrowed. Scroll me up and down ~~~)  ',
                   values: _getListValues(),
                   funcOfItemOnTapped: (state, index, value) {
-                    selectCountryValue.value = value as String;
                     return false;
                   },
                   options: AnythingPickerOptions()
                     ..contentHintText = ''
+                    // ..titleEndIcon = const Icon(Icons.info_outlined, color: Colors.black) // test text overflow ...
                     ..bubbleShadowColor = Colors.purpleAccent
                     // bubbleTriangleDirection: if you don't wanna an arrow set it to null. set it to none, we will auto change it .
                     ..bubbleTriangleDirection = CcBubbleArrowDirection.none,
@@ -155,7 +194,6 @@ class XpSliderWidget extends StatelessWidget {
                   title: 'AnythingPicker with auto position. (Scroll me up and down ~~~)',
                   values: _getListValues(),
                   funcOfItemOnTapped: (state, index, value) {
-                    selectCountryValue.value = value as String;
                     return false;
                   },
                   options: AnythingPickerOptions()
@@ -175,7 +213,7 @@ class XpSliderWidget extends StatelessWidget {
     );
   }
 
-  Widget _bodyRowTips() {
+  Widget _bodyTips() {
     LayerLink _layerLink = LayerLink();
 
     return Row(
@@ -186,19 +224,6 @@ class XpSliderWidget extends StatelessWidget {
             Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
             Size size = SizesUtil.getSizeS(state) ?? Size.zero;
             ToastUtil.showWithArrow(
-              '1. You know that ~~~~~~~~~~~~\n2. HuaHuHuaHaHua~~~~~~~ \n3. I don\'t know that!!!',
-              x: position.dx + size.width,
-              y: position.dy - 25,
-            );
-          },
-        ),
-        const SizedBox(width: 50),
-        CcTapWidget(
-          child: const Icon(Icons.info_outline, color: Colors.grey),
-          onTap: (state) {
-            Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
-            Size size = SizesUtil.getSizeS(state) ?? Size.zero;
-            ToastUtil.showDialogToast(
               '1. You know that ~~~~~~~~~~~~\n2. HuaHuHuaHaHua~~~~~~~ \n3. I don\'t know that!!!',
               x: position.dx + size.width,
               y: position.dy - 25,
@@ -221,32 +246,6 @@ class XpSliderWidget extends StatelessWidget {
           ),
         )
       ],
-    );
-  }
-
-  Widget _bodyCityPicker() {
-    return AnythingGangedPicker(
-      title: 'City selection demonstration',
-      showerWidth: 450,
-      funcOfTitle: (view, i, e) {
-        return e is Map ? e['areaName'] : 'Province';
-      },
-      funcOfValues: (view, i, e) async {
-        if (e == null) {
-          String string = await rootBundle.loadString('assets/json/CN.json');
-          return (json.decode(string)) as List<dynamic>?;
-        }
-        return (e is Map ? e['children'] : e) as List<dynamic>?;
-      },
-      funcOfItemName: (view, i, e) {
-        return e is Map ? e['areaName'] : '';
-      },
-      hasNext: (view, i, e) {
-        return (e is Map ? e['children'] : null) != null;
-      },
-      funcOfLeafItemOnTapped: (view, i, e) {
-        return false;
-      },
     );
   }
 
