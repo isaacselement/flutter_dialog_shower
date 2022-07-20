@@ -29,6 +29,23 @@ DialogShower.init(context);  # init with a root context in your app
     ..containerBorderRadius = 5.0
     ..show(__your_widget_here__);
 ```
+###### `OverlayShower usage is the same as DialogShower`
+
+### Demonstrations
+
+
+###### 1. Loading & Notifications
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.30.46.gif" width="50%">
+###### 2. Various show & dismiss animation
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.34.57.gif" width="50%">
+###### 3. Toast and Menu
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.39.28.gif" width="50%">
+###### 4. Nested Navigator
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2020.03.08.gif" width="50%">
+###### 5. Various Pickers and Tooltips
+<img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2020.01.08.gif" width="50%">
+
+
 
 
 # Brother
