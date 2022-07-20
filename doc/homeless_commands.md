@@ -10,6 +10,7 @@
 ### Publish Steps
 
     flutter packages pub publish --dry-run
+    flutter packages pub publish
 
 
 ### Python a simple https server
