@@ -722,7 +722,8 @@ class DialogShower {
   /// Other Utils Methods
   // Note: you should DialogShower.init(context) first ~~~
   static bool isKeyboardShowing() {
-    return MediaQuery.of(DialogShower.gContext!).viewInsets.bottom > 0;
+    assert(gContext != null, 'Should call DialogShower.init first in your runApp context');
+    return MediaQuery.of(gContext!).viewInsets.bottom > 0;
   }
 }
 

@@ -7,16 +7,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class Boxes<T> {
-
   T? object;
 
   static SingletonFlutterWindow getWindow() {
-    // return getWidgetsBinding().window;
-    return window;
+    return window; // getWidgetsBinding().window;
   }
 
   static WidgetsBinding getWidgetsBinding() {
-    return WidgetsBinding.instance!;
+    return WidgetsBinding.instance!; // remove ! if you want to support Flutter v3.x.x
   }
 }
 
@@ -41,7 +39,6 @@ extension ListBoxesEx<E> on List<E> {
 
   E? atSafe(int index) => (isEmpty || index < 0 || index >= length) ? null : elementAt(index);
 }
-
 
 /// View
 
@@ -245,7 +242,8 @@ class ThrottleAny {
     bool isSyncCall = StackTrace.current.toString().replaceFirst(symbol, '_').contains(symbol);
     if (isSyncCall) {
       if (callers.contains(this)) {
-        __boxes_log__('❌❗️ Do not call function ThrottleAny.call in the same stack with the same instance of ThrottleAny! ${callers.length}');
+        __boxes_log__(
+            '❌❗️ Do not call function ThrottleAny.call in the same stack with the same instance of ThrottleAny! ${callers.length}');
         func();
         return;
       }
@@ -324,4 +322,3 @@ class DebouncerAny {
     return maps?.remove(key);
   }
 }
-

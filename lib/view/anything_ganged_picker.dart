@@ -8,7 +8,6 @@ class AnythingGangedPicker extends StatelessWidget {
   AnythingGangedPicker({
     Key? key,
     this.title,
-    this.showerWidth,
     required this.funcOfTitle,
     required this.funcOfValues,
     required this.isHasNextLevel,
@@ -16,13 +15,13 @@ class AnythingGangedPicker extends StatelessWidget {
     required this.funcOfLeafItemOnTapped,
     // custom theme fields
     this.onShower,
+    this.onShowerWidth,
     this.onPickerOptions,
     this.onHeaderOptions,
     this.onSelectorOptions,
   }) : super(key: key);
 
   String? title;
-  double? showerWidth;
   bool? isSearchEnable;
 
   // required fields
@@ -33,6 +32,7 @@ class AnythingGangedPicker extends StatelessWidget {
   FutureOr<List<dynamic>?> Function(AnythingGangedPicker view, int? index, dynamic object) funcOfValues;
 
   // optional fields
+  double? Function(AnythingGangedPicker view)? onShowerWidth;
   void Function(AnythingGangedPicker view, DialogShower shower)? onShower;
   AnythingPickerOptions? Function(AnythingGangedPicker view, AnythingPickerOptions options)? onPickerOptions;
   AnythingHeaderOptions? Function(AnythingGangedPicker view, AnythingHeaderOptions options)? onHeaderOptions;
@@ -121,8 +121,7 @@ class AnythingGangedPicker extends StatelessWidget {
     widget = ColoredBox(color: Colors.white, child: widget);
 
     if (isRoot) {
-      DialogShower shower = DialogWrapper.pushRoot(widget, width: showerWidth);
-
+      DialogShower shower = DialogWrapper.pushRoot(widget, width: onShowerWidth?.call(this));
       shower
         ..context = DialogWrapper.getTopNavigatorDialog()?.getNavigator()?.context ?? DialogShower.gContext
         ..isUseRootNavigator = false
@@ -132,7 +131,7 @@ class AnythingGangedPicker extends StatelessWidget {
           DialogShower.isKeyboardShowing() ? FocusManager.instance.primaryFocus?.unfocus() : DialogWrapper.dismissTopDialog();
           return true;
         }
-        ..transitionBuilder = (context, animation, secondaryAnimation, child) {
+        ..transitionBuilder = (context, animation, animationVice, child) {
           return SlideTransition(
             position: Tween<Offset>(begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(animation),
             child: child,

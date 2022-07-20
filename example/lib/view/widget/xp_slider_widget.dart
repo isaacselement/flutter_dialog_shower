@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 import 'package:example/util/header_util.dart';
 import 'package:example/util/shower_helper.dart';
 import 'package:example/util/toast_util.dart';
@@ -134,7 +135,7 @@ class XpSliderWidget extends StatelessWidget {
                     Offset offset = OffsetsUtil.getOffsetB(context) ?? Offset.zero;
                     String msg =
                         'But Flexible with FlexFit.\nloose acts like Expanded so the \nSuffixIcon gets pushed to the end \neven though TextGoesHere is a short text.';
-                    ToastUtil.showDialogToast(msg, x: offset.dx + 200, y: offset.dy - 32);
+                    ToastUtil.showDialogToast(msg, x: offset.dx + 200, y: offset.dy - 36);
                   },
                   options: AnythingPickerOptions()
                     ..contentHintText = ''
@@ -147,7 +148,6 @@ class XpSliderWidget extends StatelessWidget {
                 const SizedBox(height: 64),
                 AnythingGangedPicker(
                   title: 'City multi-level selection demonstration',
-                  showerWidth: 450,
                   funcOfTitle: (view, i, e) {
                     return e is Map ? e['areaName'] : 'Province';
                   },
@@ -165,12 +165,24 @@ class XpSliderWidget extends StatelessWidget {
                     return (e is Map ? e['children'] : null) != null;
                   },
                   funcOfLeafItemOnTapped: (view, i, e) {
-                    OverlayWidgets.showToastInQueue('You select the leaf: $e').alignment = Alignment.topCenter;
-                    String address = view.relativeElements.map((e) => e['areaName']).toList().join('/');
-                    OverlayWidgets.showToastInQueue('Detail address is: $address').alignment = Alignment.topCenter;
+                    void showQueueLeftToast(String msg) {
+                      OverlayWidgets.showToastInQueue(
+                        msg,
+                        increaseOffset: const EdgeInsets.only(top: 45, left: 18),
+                        slideBegin: const Offset(-1000, 0),
+                      )
+                        ..alignment = Alignment.topLeft
+                        ..margin = const EdgeInsets.only(top: 220, left: 20);
+                    }
+                    showQueueLeftToast('You select the leaf: $e');
+                    Future.delayed(const Duration(milliseconds: 500), () {
+                      String address = view.relativeElements.map((e) => e['areaName']).toList().join('/');
+                      showQueueLeftToast('Detail address is: $address');
+                    });
                     return false;
                   },
-                  onPickerOptions: (view, options){
+                  onShowerWidth: (view) => math.max((DialogWrapper.getTopDialog()?.width ?? 600) / 3 * 2, 450),
+                  onPickerOptions: (view, options) {
                     options.titleStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
                     return null;
                   },
@@ -200,7 +212,7 @@ class XpSliderWidget extends StatelessWidget {
                     ..contentHintText = ''
                     ..bubbleShadowColor = Colors.purpleAccent
                     // bubbleTriangleDirection: if you don't wanna an arrow set it to null. set it to none, we will auto change it .
-                    ..bubbleTriangleDirection = CcBubbleArrowDirection.none,
+                    ..bubbleTriangleDirection = null,
                 ),
                 const SizedBox(height: 500),
               ],
