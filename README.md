@@ -34,7 +34,7 @@ DialogShower.init(context);  # init with a root context in your app
 ### Demonstrations
 
 
-###### 1. Loading & Notifications & Actions
+###### 1. Loading & Alerts & Actions
 <img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.30.46.gif" width="75%">
 
 ###### 2. Various show & dismiss animation
