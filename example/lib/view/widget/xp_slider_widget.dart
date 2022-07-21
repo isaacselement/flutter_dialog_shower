@@ -93,7 +93,7 @@ class XpSliderWidget extends StatelessWidget {
                 const SizedBox(height: 20),
                 AnythingPicker(
                   title: 'AnythingPicker demonstration',
-                  values: _getListValues(),
+                  values: _getStringsListValues(),
                   funcOfItemOnTapped: (state, index, value) {
                     title.value = value as String;
                     return false;
@@ -104,7 +104,7 @@ class XpSliderWidget extends StatelessWidget {
                 AnythingPicker(
                   funcOfValues: () async {
                     await Future.delayed(const Duration(milliseconds: 1000));
-                    return _getListValues();
+                    return _getStringsListValues();
                   },
                   funcOfItemOnTapped: (state, index, value) {
                     title.value = value as String;
@@ -114,20 +114,50 @@ class XpSliderWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 AnythingPicker(
+                  selectedValues: selectedValues,
+                  // as a repository, important for support multi-selections !!!
                   funcOfValues: () {
-                    return _getListValues();
+                    return _getEmployeesListValues();
                   },
-                  funcOfItemOnTapped: (state, index, value) {
-                    title.value = value as String;
+                  funcOfItemName: (state, i, e) {
+                    return (e as Employee).name;
+                  },
+                  funcOfItemOnTapped: (state, i, e) {
+                    title.value = (e as Employee).title;
                     return false;
                   },
+                  builderOfItemInner: (state, i, e) {
+                    Employee employee = e as Employee;
+                    bool isTapping = state.isItemTapping.value;
+                    bool isSelected = state.widget.selectedValues?.contains(e) ?? false;
+                    Color color = isTapping ? Colors.orange : (isSelected ? Colors.grey.withOpacity(0.4) : Colors.white);
+                    return Container(
+                      height: 45,
+                      decoration:
+                          BoxDecoration(color: color, border: Border(bottom: BorderSide(width: 1, color: Colors.grey.withOpacity(0.2)))),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Row(
+                        children: [
+                          Icon(Icons.person_outlined, color: isSelected ? Colors.redAccent : Colors.black),
+                          const SizedBox(width: 8),
+                          Text(employee.title, style: isSelected ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                          const Spacer(),
+                          Text('Name: ${employee.name}', style: const TextStyle(color: Colors.deepOrangeAccent)),
+                        ],
+                      ),
+                    );
+                  },
                   options: AnythingPickerOptions()..contentHintText = 'Multiple Selection',
-                  selectedValues: selectedValues,
                 ),
                 const SizedBox(height: 32),
                 AnythingPicker(
                   title: 'AnythingPicker with arrow ',
-                  values: _getListValues(),
+                  funcOfValues: () {
+                    return _getStudentsListValues();
+                  },
+                  funcOfItemName: (state, i, e) {
+                    return (e as Student).name;
+                  },
                   funcOfItemOnTapped: (state, index, value) {
                     return false;
                   },
@@ -174,6 +204,7 @@ class XpSliderWidget extends StatelessWidget {
                         ..alignment = Alignment.topLeft
                         ..margin = const EdgeInsets.only(top: 220, left: 20);
                     }
+
                     showQueueLeftToast('You select the leaf: $e');
                     Future.delayed(const Duration(milliseconds: 500), () {
                       String address = view.relativeElements.map((e) => e['areaName']).toList().join('/');
@@ -190,7 +221,7 @@ class XpSliderWidget extends StatelessWidget {
                 const SizedBox(height: 64),
                 AnythingPicker(
                   title: 'AnythingPicker with auto position. (Arrowed. Scroll me up and down ~~~)  ',
-                  values: _getListValues(),
+                  values: _getStringsListValues(),
                   funcOfItemOnTapped: (state, index, value) {
                     return false;
                   },
@@ -204,7 +235,7 @@ class XpSliderWidget extends StatelessWidget {
                 const SizedBox(height: 32),
                 AnythingPicker(
                   title: 'AnythingPicker with auto position. (Scroll me up and down ~~~)',
-                  values: _getListValues(),
+                  values: _getStringsListValues(),
                   funcOfItemOnTapped: (state, index, value) {
                     return false;
                   },
@@ -316,7 +347,7 @@ class XpSliderWidget extends StatelessWidget {
 
   /// Static Methods
 
-  static List<String> _getListValues() {
+  static List<String> _getStringsListValues() {
     return const [
       'India',
       'UK',
@@ -330,4 +361,43 @@ class XpSliderWidget extends StatelessWidget {
       'Germany',
     ];
   }
+
+  static List<Employee> _getEmployeesListValues() {
+    return [
+      Employee('UI Manager', 'Koko.Lee'),
+      Employee('Soft Manager', 'Oreoea.ss'),
+      Employee('Device Manager', 'Cell.SU'),
+      Employee('DB Manager', 'India.USA'),
+      Employee('Computer Manager', 'Austria.Iv'),
+      Employee('CPU Manager', 'Oppo.Chen'),
+      Employee('CPU President', 'John.Trump'),
+      Employee('CEO', 'John.Ceo'),
+    ];
+  }
+
+  static List<Student> _getStudentsListValues() {
+    return [
+      Student(18, 'TheBoy'),
+      Student(22, 'Lcuy'),
+      Student(31, 'Cicie'),
+      Student(22, 'Lukas'),
+      Student(21, 'Isasie'),
+      Student(31, 'QiCue'),
+      Student(19, 'BaBee'),
+    ];
+  }
+}
+
+class Employee {
+  String title;
+  String name;
+
+  Employee(this.title, this.name);
+}
+
+class Student {
+  int age;
+  String name;
+
+  Student(this.age, this.name);
 }
