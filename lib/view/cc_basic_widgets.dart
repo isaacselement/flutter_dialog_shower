@@ -3,7 +3,94 @@ import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 
+class CcButtonWidget extends StatefulWidget {
+  CcButtonWidget({
+    Key? key,
+    this.text,
+    this.textStyle,
+    this.width,
+    this.height,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.decoration,
+    this.alignment = Alignment.center,
+    this.isDisable = false,
+    this.pressedOpacity = 0.4,
+    required this.onTap,
+    this.builder,
+  }) : super(key: key);
+
+  String? text;
+  TextStyle? textStyle;
+
+  double? width;
+  double? height;
+  EdgeInsets? padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+  BoxDecoration? decoration;
+  AlignmentGeometry? alignment = Alignment.center;
+
+  bool isDisable = false;
+  double pressedOpacity = 0.4;
+  void Function(CcButtonState state) onTap;
+  Widget? Function(CcButtonState state)? builder;
+
+  @override
+  State<CcButtonWidget> createState() => CcButtonState();
+}
+
+class CcButtonState extends State<CcButtonWidget> {
+  bool _isTapingDown = false;
+
+  get isTapingDown => _isTapingDown;
+
+  set isTapingDown(v) {
+    if (widget.isDisable) {
+      return;
+    }
+    setState(() => _isTapingDown = v);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    BoxDecoration decoration = widget.decoration ??
+        BoxDecoration(
+          border: Border.all(color: const Color(0xFFDADAE8)),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: widget.isDisable ? const Color(0xFFF5F5FA) : const Color(0xFF4275FF),
+        );
+    TextStyle textStyle = widget.textStyle ??
+        TextStyle(
+          color: widget.isDisable ? const Color(0xFFBFBFD2) : const Color(0xFFFFFFFF),
+        );
+
+    return Listener(
+      onPointerUp: (event) => isTapingDown = false,
+      onPointerDown: (event) => isTapingDown = true,
+      child: GestureDetector(
+        child: Opacity(
+          opacity: isTapingDown ? widget.pressedOpacity : 1.0,
+          child: Container(
+            width: widget.width,
+            height: widget.height,
+            padding: widget.padding,
+            alignment: widget.alignment,
+            decoration: decoration,
+            child: widget.builder?.call(this) ?? Text(widget.text ?? 'Cancel', style: textStyle, maxLines: 1),
+          ),
+        ),
+        onTap: () {
+          if (widget.isDisable) {
+            return;
+          }
+          isTapingDown = false;
+          widget.onTap.call(this);
+        },
+      ),
+    );
+  }
+}
+
 /// Tapped Widget with tap effect
+
 class CcTapWidget extends StatefulWidget {
   final Widget? child;
   final double? pressedOpacity;

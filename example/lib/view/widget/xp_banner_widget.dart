@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:example/util/logger.dart';
 import 'package:example/util/toast_util.dart';
-import 'package:example/view/widget/xp_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
@@ -20,11 +19,13 @@ class XpBannerWidget extends StatelessWidget {
 
     // important!!! get your shower reference first ~~~, get with key once you have passed a key to shower wrapper
     OverlayShower? myShower = OverlayWrapper.getTopLayer();
-    Logger.d('My Shower is: ${myShower.runtimeType} >>>>> ${myShower?.name}');
+    Object? obj = myShower?.obj;
+    Logger.d('My Shower is: ${myShower.runtimeType} >>>>> ${myShower?.name}, obj: $obj');
 
-    return CcTapWidget(
-      pressedOpacity: 1.0,
-      onTap: (state) {
+    Function? dismissFn = obj is List && obj.lastSafe is Function ? obj.lastSafe : null;
+
+    return GestureDetector(
+      onTap: () {
         Object? obj = myShower?.obj;
         if (obj is List && obj.firstSafe is Timer) {
           Timer timer = obj.firstSafe;
@@ -33,6 +34,9 @@ class XpBannerWidget extends StatelessWidget {
           ToastUtil.show('Clicked! You should dismiss this banner manually~~~').margin = const EdgeInsets.only(top: 200);
         }
         height.value = height.value != heightShrink ? heightShrink : heightExpanded;
+      },
+      onVerticalDragEnd: (details) {
+        dismissFn?.call();
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -52,7 +56,6 @@ class XpBannerWidget extends StatelessWidget {
               children: [
                 Positioned(
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(title, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 12),
@@ -65,48 +68,37 @@ class XpBannerWidget extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: heightShrink,
+                  top: heightShrink + 8,
                   left: 0,
+                  right: 0,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      XpTextButton(
-                        'Cancel',
+                      CcButtonWidget(
+                        text: 'Dismiss',
                         width: 100,
                         height: 40,
-                        margin: EdgeInsets.zero,
-                        padding: EdgeInsets.zero,
-                        alignment: Alignment.center,
-                        borderColor: const Color(0xFFDADAE8),
-                        backgroundColor: null,
-                        backgroundColorDisable: const Color(0xFFF5F5FA),
-                        textStyleBuilder: (text, isTappingDown) {
-                          Color color = const Color(0xFF1C1D21);
-                          return TextStyle(color: isTappingDown ? color.withAlpha(128) : color, fontSize: 16);
-                        },
-                        onPressed: (state) {
-                          Logger.d('state is: ${state.runtimeType} >>>>> $state');
-                          Object? obj = myShower?.obj;
-                          if (obj is List && obj.lastSafe is Function) {
-                            Logger.d('state call dismiss !~~~~~');
-                            (obj.lastSafe as Function).call();
-                          }
+                        textStyle: const TextStyle(color: Color(0xFF1C1D21), fontSize: 16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F5FA),
+                          border: Border.all(color: const Color(0xFFDADAE8)),
+                          borderRadius: const BorderRadius.all(Radius.circular(5)),
+                        ),
+                        onTap: (state) {
+                          Logger.d('manually call dismiss animation !~~~~~');
+                          dismissFn?.call();
                         },
                       ),
                       const SizedBox(width: 100),
-                      XpTextButton(
-                        'Go',
+                      CcButtonWidget(
+                        text: 'Go',
                         width: 100,
                         height: 40,
-                        margin: EdgeInsets.zero,
-                        padding: EdgeInsets.zero,
-                        alignment: Alignment.center,
-                        borderColor: const Color(0xFFDADAE8),
-                        textStyleBuilder: (text, isTappingDown) {
-                          Color color = Colors.white;
-                          color = isTappingDown ? color.withAlpha(128) : color;
-                          return TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.bold);
+                        textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                        onTap: (state) {
+                          Logger.d('manually call dismiss animation !~~~~~');
+                          dismissFn?.call();
                         },
-                        onPressed: (state) {},
                       ),
                     ],
                   ),

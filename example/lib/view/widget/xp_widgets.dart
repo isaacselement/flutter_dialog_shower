@@ -74,7 +74,8 @@ class XpTextButtonState extends State<XpTextButton> {
               widget.text,
               style: widget.textStyleBuilder?.call(widget.text, isTapingDown) ??
                   (widget.isDisable ? _defTextStyleDisable(widget.text) : _defTextStyle(widget.text, isTapingDown)),
-              overflow: TextOverflow.ellipsis, maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
           onTap: () {
@@ -87,7 +88,7 @@ class XpTextButtonState extends State<XpTextButton> {
       ),
     );
     // as small as possible
-    return  view;
+    return view;
   }
 
   BoxDecoration _defBoxDecorationDisable(String text) {

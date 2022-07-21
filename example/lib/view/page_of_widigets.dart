@@ -76,7 +76,7 @@ class PageOfWidgets extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('show loading, rotate unstiff', onPressed: (state) {
               DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isPaintWrapRotate: true)
-                .barrierColor = Colors.transparent;
+                  .barrierColor = Colors.transparent;
             }),
             WidgetsUtil.newXpelTextButton('show loading paint example', onPressed: (state) {
               OverlayShower shower = ToastUtil.show('progress: ~~~', isStateful: true);
@@ -219,7 +219,62 @@ class PageOfWidgets extends StatelessWidget {
             }),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
+        WidgetsUtil.newHeaderWithLine('Action Sheet'),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('show actions', onPressed: (state) {
+              TextStyle style = const TextStyle(color: Color(0xFF1C1D21), fontSize: 16);
+              BoxDecoration decoration = BoxDecoration(
+                color: const Color(0xFFF5F5FA),
+                border: Border.all(color: const Color(0xFFDADAE8)),
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+              );
+              Widget _fnRow(IconData icon, String text) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(icon), const SizedBox(width: 5), Text(text)],
+                );
+              }
+
+              DialogWrapper.showBottom(SizedBox(
+                width: 380,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CcButtonWidget(
+                      height: 40,
+                      decoration: decoration,
+                      builder: (state) => _fnRow(Icons.copy, 'Copy That'),
+                      onTap: (state) {
+                        DialogWrapper.dismissTopDialog();
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    CcButtonWidget(
+                      height: 40,
+                      decoration: decoration,
+                      builder: (state) => _fnRow(Icons.email, 'Send Email'),
+                      onTap: (state) {},
+                    ),
+                    const SizedBox(height: 20),
+                    CcButtonWidget(
+                      height: 40,
+                      decoration: decoration,
+                      builder: (state) => _fnRow(Icons.phone, 'Phone Call'),
+                      onTap: (state) {},
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ))
+                ..containerBorderRadius = 1.0
+                ..containerBackgroundColor = Colors.transparent
+                ..containerShadowColor = Colors.transparent;
+            }),
+          ],
+        ),
+        const SizedBox(height: 12),
       ],
     );
   }
