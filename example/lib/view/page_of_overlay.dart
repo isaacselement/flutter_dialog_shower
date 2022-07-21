@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:example/util/logger.dart';
+import 'package:example/util/toast_util.dart';
 import 'package:example/util/widgets_util.dart';
+import 'package:example/view/widget/xp_banner_widget.dart';
+import 'package:example/view/widget/xp_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
@@ -49,6 +53,9 @@ class PageOfOverlay extends StatelessWidget {
         const SizedBox(height: 32),
         WidgetsUtil.newHeaderWithLine('Toast'),
         demoUsageOfToasts(),
+        const SizedBox(height: 32),
+        WidgetsUtil.newHeaderWithLine('Banner'),
+        demoUsageOfBanner(),
         const SizedBox(height: 32),
         WidgetsUtil.newHeaderWithLine('LayerLink Pure'),
         const SizedBox(height: 2),
@@ -387,6 +394,37 @@ class PageOfOverlay extends StatelessWidget {
     );
   }
 
+  Column demoUsageOfBanner() {
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Show Banner', onPressed: (state) {
+              OverlayWidgets.showToast(
+                'Notification: you can scroll the content simultaneously.',
+                slideBegin: const Offset(0, -100),
+                onWidgetBuild: (widget) {
+                  AnyToastWidgetProperties v = widget as AnyToastWidgetProperties;
+                  v
+                    ..padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                    ..textStyle = const TextStyle(color: Colors.black)
+                    ..backgroundColor = Colors.white;
+                },
+              )
+                ..padding = const EdgeInsets.only(top: 6)
+                ..alignment = Alignment.topCenter;
+            }),
+            WidgetsUtil.newXpelTextButton('Show Custom Banner', onPressed: (state) {
+              OverlayWidgets.show(child: const XpBannerWidget(), slideBegin: const Offset(0, -100))
+                ..padding = const EdgeInsets.only(top: 6)
+                ..alignment = Alignment.topCenter;
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget layerLinkOfPure() {
     int itemCount = 50;
     return Container(
@@ -543,10 +581,10 @@ class _LayerLinkEntryState extends State<LayerLinkEntryWidget> {
             clipBehavior: Clip.antiAlias,
             margin: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: state.isTapingDown ? Colors.transparent : Colors.grey,
-              border: Border.all(color: state.isTapingDown ? Colors.transparent : Colors.black, width: 1),
+              color: Colors.white,
               borderRadius: const BorderRadius.all(Radius.circular(8)),
-              boxShadow: [BoxShadow(color: state.isTapingDown ? Colors.transparent : Colors.red, blurRadius: 20.0)],
+              border: Border.all(color: state.isTapingDown ? Colors.transparent : Colors.grey, width: 1),
+              boxShadow: [BoxShadow(color: state.isTapingDown ? Colors.transparent : Colors.grey, blurRadius: 3.0)],
             ),
             child: Center(child: Text('${widget.index} Click Me', style: WidgetsUtil.getTextStyleWithPassionOne(fontSize: 15))),
           );

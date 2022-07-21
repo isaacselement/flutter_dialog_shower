@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 
@@ -19,7 +21,7 @@ class OverlayWidgets {
     BorderRadius? radius,
     BoxShadow? shadow,
     // animation
-    Curves? curves,
+    Curve? curve,
     Duration? appearDuration,
     Duration? dismissDuration,
     Duration? onScreenDuration,
@@ -40,7 +42,7 @@ class OverlayWidgets {
       backgroundColor: backgroundColor,
       radius: radius,
       shadow: shadow,
-      curves: curves,
+      curve: curve,
       appearDuration: appearDuration,
       dismissDuration: dismissDuration,
       onScreenDuration: onScreenDuration,
@@ -107,16 +109,16 @@ class OverlayWidgets {
   static OverlayShower showToast(
     String text, {
     bool isStateful = false,
-    TextStyle? textStyle,
-    // text in padding
+    // widget properties
+    BoxShadow? shadow,
     EdgeInsets? padding,
-    // container decoration
+    TextStyle? textStyle,
+    BorderRadius? radius,
     Decoration? decoration,
     Color? backgroundColor,
-    BorderRadius? radius,
-    BoxShadow? shadow,
-    // animation
-    Curves? curves,
+    void Function(Widget widget)? onWidgetBuild,
+    // animation properties
+    Curve? curve,
     Duration? appearDuration,
     Duration? dismissDuration,
     Duration? onScreenDuration, // if set to Duration.zero, should dismiss manually
@@ -128,15 +130,16 @@ class OverlayWidgets {
   }) {
     Widget widget = isStateful ? AnyToastWidget(text: text) : AnyToastView(text: text);
     (widget as AnyToastWidgetProperties)
-      ..textStyle = textStyle
-      ..padding = padding
       ..radius = radius
       ..shadow = shadow
+      ..padding = padding
+      ..textStyle = textStyle
       ..decoration = decoration
       ..backgroundColor = backgroundColor;
+    onWidgetBuild?.call(widget);
     return show(
       child: widget,
-      curves: curves,
+      curve: curve,
       appearDuration: appearDuration,
       dismissDuration: dismissDuration,
       onScreenDuration: onScreenDuration,
@@ -150,7 +153,7 @@ class OverlayWidgets {
   /// Basic show with animation
   static OverlayShower show({
     required Widget child,
-    Curves? curves,
+    Curve? curve,
     Duration? appearDuration,
     Duration? dismissDuration,
     Duration? onScreenDuration,
@@ -162,8 +165,8 @@ class OverlayWidgets {
   }) {
     opacityBegin ??= (slideBegin == null ? 0.0 : opacityBegin);
     appearAnimatedBuilder ??= (shower, controller, widget) {
-      Curve curve = Interval(0.0, 1.0, curve: (curves ?? Curves.linearToEaseOut) as Curve);
-      Animation<double> animateCurve = CurvedAnimation(curve: curve, parent: controller);
+      Curve _curve = Interval(0.0, 1.0, curve: curve ?? Curves.linearToEaseOut);
+      Animation<double> animateCurve = CurvedAnimation(curve: _curve, parent: controller);
       Animation<double>? opacity = opacityBegin == null ? null : Tween(begin: opacityBegin, end: 1.0).animate(animateCurve);
       Animation<Offset>? slide = slideBegin == null ? null : Tween<Offset>(begin: slideBegin, end: Offset.zero).animate(animateCurve);
       // Animation<Offset> slide = Tween<Offset>(begin: slideBegin, end:  Offset.zero).animate(controller);
@@ -189,7 +192,6 @@ class OverlayWidgets {
 
     return showWithAnimation(
       child: child,
-      curves: curves,
       appearDuration: appearDuration,
       dismissDuration: dismissDuration,
       onScreenDuration: onScreenDuration,
@@ -200,7 +202,6 @@ class OverlayWidgets {
 
   static OverlayShower showWithAnimation({
     required Widget child,
-    Curves? curves,
     Duration? appearDuration,
     Duration? dismissDuration,
     Duration? onScreenDuration,
@@ -215,27 +216,33 @@ class OverlayWidgets {
         reverseDuration: dismissDuration ?? defaultDuration,
       );
 
-      appearController.forward();
-      if (onScreenDuration == Duration.zero) {
-        // if onScreenDuration == Duration.zero, put the controller to caller
-        shower.obj = appearController;
-      } else {
-        // default dismiss in 2 seconds
-        Future.delayed(onScreenDuration ?? const Duration(milliseconds: 3000), () {
-          if (dismissAnimatedBuilder != null) {
-            AnimationController dismissController = AnimationController(vsync: vsync, duration: dismissDuration ?? defaultDuration);
-            shower.setNewChild(dismissAnimatedBuilder(shower, dismissController, child));
-            dismissController.forward().then((value) {
+      void dismiss() {
+        if (dismissAnimatedBuilder != null) {
+          AnimationController dismissController = AnimationController(vsync: vsync, duration: dismissDuration ?? defaultDuration);
+          shower.setNewChild(dismissAnimatedBuilder(shower, dismissController, child));
+          dismissController.forward().then((value) {
+            shower.dismiss();
+          });
+        } else {
+          if (shower.isShowing) {
+            appearController.reverse().then((value) {
               shower.dismiss();
             });
-          } else {
-            if (shower.isShowing) {
-              appearController.reverse().then((value) {
-                shower.dismiss();
-              });
-            }
           }
+        }
+      }
+
+      if (onScreenDuration == Duration.zero) {
+        // put the controller to caller, if onScreenDuration == Duration.zero
+        shower.obj = [appearController, dismiss];
+      } else {
+        // default dismiss in 3 seconds
+        Duration duration = onScreenDuration ?? const Duration(milliseconds: 3000);
+        Timer dismissTimer = Timer(duration, () {
+          dismiss();
         });
+        // put the timer to caller, if onScreenDuration != Duration.zero
+        shower.obj = [dismissTimer, dismiss];
       }
       shower.addDismissCallBack((shower) {
         appearController.dispose();
@@ -254,18 +261,21 @@ class OverlayWidgets {
         // 2. Using animation widget
         shower.setNewChild(appearAnimatedBuilder(shower, appearController, child));
       }
+
+      // start the show animation
+      appearController.forward();
     });
   }
 
   static OverlayShower showWithTickerVsyncBuilder({
     required void Function(OverlayShower shower, TickerProviderStateMixin vsync) tickerBuilder,
   }) {
+    // Tricky: show a Offstage first, then we got the vsync state :)
     OverlayShower shower = OverlayWrapper.show(const Offstage(offstage: true));
     shower.isWithTicker = true;
     shower.addShowCallBack((shower) {
       State? state = shower.statefulKey.currentState;
-      if (state is BuilderWithTickerState) {
-        // type and not-null check!!!
+      if (state is BuilderWithTickerState) { // type and not-null checked
         tickerBuilder(shower, state);
       }
     });
@@ -298,6 +308,9 @@ class OverlayWidgets {
 /// Widgets
 
 mixin AnyToastWidgetProperties {
+  double? width;
+  double? height;
+
   // text
   late String text;
   TextStyle? textStyle;
@@ -310,6 +323,8 @@ mixin AnyToastWidgetProperties {
   BorderRadius? radius;
   Color? backgroundColor;
   Decoration? decoration;
+  Clip clipBehavior = Clip.antiAlias;
+  Widget? Function(AnyToastWidgetProperties widget)? builder;
 
   Widget createToastWidget() {
     decoration ??= BoxDecoration(
@@ -318,11 +333,13 @@ mixin AnyToastWidgetProperties {
       boxShadow: [shadow ?? const BoxShadow(color: Colors.grey, blurRadius: 25.0 /*, offset: Offset(4.0, 4.0)*/)],
     );
     return Container(
+      width: width,
+      height: height,
       decoration: decoration,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: clipBehavior,
       child: Padding(
         padding: padding ??= const EdgeInsets.all(8.0),
-        child: Text(text, style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 15)),
+        child: builder?.call(this) ?? Text(text, style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 15)),
       ),
     );
   }

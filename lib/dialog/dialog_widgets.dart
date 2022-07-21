@@ -128,20 +128,17 @@ class DialogWidgets {
     height != null ? options.height = height : null;
     buttonLeftText != null ? options.buttonLeftText = buttonLeftText : null;
     buttonRightText != null ? options.buttonRightText = buttonRightText : null;
-    options.buttonLeftEvent = () {
-      buttonLeftEvent?.call(shower);
-    };
-    options.buttonRightEvent = () {
-      buttonRightEvent?.call(shower);
-    };
+    buttonLeftEvent != null ? options.buttonLeftEvent = () => buttonLeftEvent.call(shower) : null;
+    buttonRightEvent != null ? options.buttonRightEvent = () => buttonRightEvent.call(shower) : null;
+    bool isBarrierDismissible = buttonLeftEvent == null && buttonRightEvent == null;
+    // customized by caller
     onOptions?.call(options);
     Widget widget = AnyAlertTextWidget(title: title, icon: icon, text: text, options: options);
-
     DialogWrapper.showWith(shower, widget);
     // rewrite properties
     shower
       ..alignment = Alignment.center
-      ..barrierDismissible = buttonLeftEvent == null && buttonRightEvent == null
+      ..barrierDismissible = isBarrierDismissible
       ..transitionDuration = const Duration(milliseconds: 200)
       ..transitionBuilder = (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
         return ScaleTransition(child: child, scale: Tween(begin: 0.0, end: 1.0).animate(animation));
