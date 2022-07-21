@@ -18,7 +18,7 @@ class XpBannerWidget extends StatelessWidget {
     double heightExpanded = 100.0;
     Btv<double> height = heightShrink.btv;
 
-    // important!!! get your shower reference first ~~~
+    // important!!! get your shower reference first ~~~, get with key once you have passed a key to shower wrapper
     OverlayShower? myShower = OverlayWrapper.getTopLayer();
     Logger.d('My Shower is: ${myShower.runtimeType} >>>>> ${myShower?.name}');
 

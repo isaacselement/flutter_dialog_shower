@@ -40,6 +40,11 @@ extension ListBoxesEx<E> on List<E> {
   E? atSafe(int index) => (isEmpty || index < 0 || index >= length) ? null : elementAt(index);
 }
 
+extension StringX on String {
+  // https://github.com/flutter/flutter/issues/18761
+  String get overflow => Characters(this).replaceAll(Characters(''), Characters('\u{200B}')).toString();
+}
+
 /// View
 
 /// Widget for setSate & init & dispose callback

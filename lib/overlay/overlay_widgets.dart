@@ -12,6 +12,7 @@ class OverlayWidgets {
 
   static OverlayShower showToastInQueue(
     String text, {
+    String? key,
     TextStyle? textStyle,
     // text in padding
     EdgeInsets? padding,
@@ -36,6 +37,7 @@ class OverlayWidgets {
   }) {
     OverlayShower shower = showToast(
       text,
+      key: key,
       textStyle: textStyle,
       padding: padding,
       decoration: decoration,
@@ -51,11 +53,11 @@ class OverlayWidgets {
       appearAnimatedBuilder: appearAnimatedBuilder,
       dismissAnimatedBuilder: dismissAnimatedBuilder,
     );
-    // Use micro, for the caller will modified properties(i.e margin, aligment) outside
+    // Use micro, for the caller will modified properties(i.e margin, alignment) outside
     // The appear animation controller will setState, don't worry
     Future.microtask(() {
-      String key = shower.alignment?.toString() ?? '__Shared_Key__';
-      List<OverlayShower?> queue = (sharedToastQueue[key] ?? (sharedToastQueue[key] = []));
+      String keyInQueue = shower.alignment?.toString() ?? '__Shared_Key__';
+      List<OverlayShower?> queue = (sharedToastQueue[keyInQueue] ?? (sharedToastQueue[keyInQueue] = []));
 
       // 1. get the empty index
       int index = -1;
@@ -108,6 +110,7 @@ class OverlayWidgets {
   /// Toast
   static OverlayShower showToast(
     String text, {
+    String? key,
     bool isStateful = false,
     // widget properties
     BoxShadow? shadow,
@@ -138,6 +141,7 @@ class OverlayWidgets {
       ..backgroundColor = backgroundColor;
     onWidgetBuild?.call(widget);
     return show(
+      key: key,
       child: widget,
       curve: curve,
       appearDuration: appearDuration,
@@ -153,6 +157,7 @@ class OverlayWidgets {
   /// Basic show with animation
   static OverlayShower show({
     required Widget child,
+    String? key,
     Curve? curve,
     Duration? appearDuration,
     Duration? dismissDuration,
@@ -191,6 +196,7 @@ class OverlayWidgets {
     };
 
     return showWithAnimation(
+      key: key,
       child: child,
       appearDuration: appearDuration,
       dismissDuration: dismissDuration,
@@ -202,6 +208,7 @@ class OverlayWidgets {
 
   static OverlayShower showWithAnimation({
     required Widget child,
+    String? key,
     Duration? appearDuration,
     Duration? dismissDuration,
     Duration? onScreenDuration,
@@ -209,73 +216,77 @@ class OverlayWidgets {
     Widget Function(OverlayShower shower, AnimationController controller, Widget widget)? dismissAnimatedBuilder,
   }) {
     const Duration defaultDuration = Duration(milliseconds: 500);
-    return showWithTickerVsyncBuilder(tickerBuilder: (shower, vsync) {
-      AnimationController appearController = AnimationController(
-        vsync: vsync,
-        duration: appearDuration ?? defaultDuration,
-        reverseDuration: dismissDuration ?? defaultDuration,
-      );
+    return showWithTickerVsyncBuilder(
+        key: key,
+        tickerBuilder: (shower, vsync) {
+          AnimationController appearController = AnimationController(
+            vsync: vsync,
+            duration: appearDuration ?? defaultDuration,
+            reverseDuration: dismissDuration ?? defaultDuration,
+          );
 
-      void dismiss() {
-        if (dismissAnimatedBuilder != null) {
-          AnimationController dismissController = AnimationController(vsync: vsync, duration: dismissDuration ?? defaultDuration);
-          shower.setNewChild(dismissAnimatedBuilder(shower, dismissController, child));
-          dismissController.forward().then((value) {
-            shower.dismiss();
-          });
-        } else {
-          if (shower.isShowing) {
-            appearController.reverse().then((value) {
-              shower.dismiss();
-            });
+          void dismiss() {
+            if (dismissAnimatedBuilder != null) {
+              AnimationController dismissController = AnimationController(vsync: vsync, duration: dismissDuration ?? defaultDuration);
+              shower.setNewChild(dismissAnimatedBuilder(shower, dismissController, child));
+              dismissController.forward().then((value) {
+                shower.dismiss();
+              });
+            } else {
+              if (shower.isShowing) {
+                appearController.reverse().then((value) {
+                  shower.dismiss();
+                });
+              }
+            }
           }
-        }
-      }
 
-      if (onScreenDuration == Duration.zero) {
-        // put the controller to caller, if onScreenDuration == Duration.zero
-        shower.obj = [appearController, dismiss];
-      } else {
-        // default dismiss in 3 seconds
-        Duration duration = onScreenDuration ?? const Duration(milliseconds: 3000);
-        Timer dismissTimer = Timer(duration, () {
-          dismiss();
+          if (onScreenDuration == Duration.zero) {
+            // put the controller to caller, if onScreenDuration == Duration.zero
+            shower.obj = [appearController, dismiss];
+          } else {
+            // default dismiss in 3 seconds
+            Duration duration = onScreenDuration ?? const Duration(milliseconds: 3000);
+            Timer dismissTimer = Timer(duration, () {
+              dismiss();
+            });
+            // put the timer to caller, if onScreenDuration != Duration.zero
+            shower.obj = [dismissTimer, dismiss];
+          }
+          shower.addDismissCallBack((shower) {
+            appearController.dispose();
+          });
+
+          if (appearAnimatedBuilder == null) {
+            // 1. Using Opacity & Shower's builder default
+            appearController.addListener(() {
+              shower.setState(() {});
+            });
+            Animation<double> opacity = Tween(begin: 0.0, end: 1.0).animate(appearController);
+            shower.builder = (shower) {
+              return Opacity(opacity: opacity.value, child: child);
+            };
+          } else {
+            // 2. Using animation widget
+            shower.setNewChild(appearAnimatedBuilder(shower, appearController, child));
+          }
+
+          // start the show animation
+          appearController.forward();
         });
-        // put the timer to caller, if onScreenDuration != Duration.zero
-        shower.obj = [dismissTimer, dismiss];
-      }
-      shower.addDismissCallBack((shower) {
-        appearController.dispose();
-      });
-
-      if (appearAnimatedBuilder == null) {
-        // 1. Using Opacity & Shower's builder default
-        appearController.addListener(() {
-          shower.setState(() {});
-        });
-        Animation<double> opacity = Tween(begin: 0.0, end: 1.0).animate(appearController);
-        shower.builder = (shower) {
-          return Opacity(opacity: opacity.value, child: child);
-        };
-      } else {
-        // 2. Using animation widget
-        shower.setNewChild(appearAnimatedBuilder(shower, appearController, child));
-      }
-
-      // start the show animation
-      appearController.forward();
-    });
   }
 
   static OverlayShower showWithTickerVsyncBuilder({
+    String? key,
     required void Function(OverlayShower shower, TickerProviderStateMixin vsync) tickerBuilder,
   }) {
     // Tricky: show a Offstage first, then we got the vsync state :)
-    OverlayShower shower = OverlayWrapper.show(const Offstage(offstage: true));
+    OverlayShower shower = OverlayWrapper.show(const Offstage(offstage: true), key: key);
     shower.isWithTicker = true;
     shower.addShowCallBack((shower) {
       State? state = shower.statefulKey.currentState;
-      if (state is BuilderWithTickerState) { // type and not-null checked
+      if (state is BuilderWithTickerState) {
+        // type and not-null checked
         tickerBuilder(shower, state);
       }
     });

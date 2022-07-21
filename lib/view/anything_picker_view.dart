@@ -162,7 +162,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
 
     if (widget.title != null) {
       // https://stackoverflow.com/a/69116599
-      titleRowChildren.add(Flexible(child: Text(widget.title!, style: options.titleStyle, maxLines: 1)));
+      titleRowChildren.add(Flexible(child: Text(widget.title!, style: options.titleStyle, maxLines: options.titleMaxLines,)));
     }
     if (options.titleEndIcon != null) {
       titleRowChildren.add(options.titleEndIcon!);
@@ -211,14 +211,10 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
       TextStyle? style = displayedText != null ? options.contentTextStyle : options.contentHintStyle;
       Text displayedValueWidget = Text(
         text,
-        maxLines: 1,
         style: style,
-        overflow: TextOverflow.ellipsis,
+        maxLines: options.contentMaxLines,
       );
-      contentCenterWidget = Container(
-        padding: options.contentPadding,
-        child: displayedValueWidget,
-      );
+      contentCenterWidget = Container(padding: options.contentPadding, child: displayedValueWidget);
     }
     contentRowInnerChildren.add(Expanded(child: contentCenterWidget));
 
@@ -617,6 +613,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
           child: Text(
             itemName,
             style: itemNameStyle,
+            maxLines: options.itemMaxLines,
           ),
         );
         children.add(itemTextWidget);
@@ -747,6 +744,7 @@ class AnythingPickerOptions {
   );
 
   // title widget
+  int? titleMaxLines = 1;
   TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21), overflow: TextOverflow.ellipsis);
   Widget? titleEndIcon;
 
@@ -760,8 +758,9 @@ class AnythingPickerOptions {
 
   // content text widget
   String contentHintText = 'Select';
-  TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2));
-  TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21));
+  int? contentMaxLines = 1;
+  TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2), overflow: TextOverflow.ellipsis);
+  TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21), overflow: TextOverflow.ellipsis);
 
   // content end widget
   Widget? contentStartWidget;
@@ -807,6 +806,7 @@ class AnythingPickerOptions {
   Decoration? itemDecorationTapped = const BoxDecoration(color: Color(0xFFE0E0E0));
   Decoration? itemDecorationDisabled;
 
+  int? itemMaxLines;
   TextStyle? itemStyleNormal = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21));
   TextStyle? itemStyleSelected = const TextStyle(fontSize: 16, color: Color(0xFF5E81F4));
   TextStyle? itemStyleDisabled = const TextStyle(fontSize: 16, color: Color(0xFFBDBDBD));
@@ -835,6 +835,7 @@ class AnythingPickerOptions {
 
     newInstance.requiredIcon = requiredIcon;
 
+    newInstance.titleMaxLines = titleMaxLines;
     newInstance.titleStyle = titleStyle;
     newInstance.titleEndIcon = titleEndIcon;
 
@@ -846,6 +847,7 @@ class AnythingPickerOptions {
     newInstance.contentDecorationFocused = contentDecorationFocused;
 
     newInstance.contentHintText = contentHintText;
+    newInstance.contentMaxLines = contentMaxLines;
     newInstance.contentHintStyle = contentHintStyle;
     newInstance.contentTextStyle = contentTextStyle;
 
@@ -877,6 +879,7 @@ class AnythingPickerOptions {
     newInstance.itemDecorationTapped = itemDecorationTapped;
     newInstance.itemDecorationDisabled = itemDecorationDisabled;
 
+    newInstance.itemMaxLines = itemMaxLines;
     newInstance.itemStyleNormal = itemStyleNormal;
     newInstance.itemStyleSelected = itemStyleSelected;
     newInstance.itemStyleDisabled = itemStyleDisabled;
