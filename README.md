@@ -40,7 +40,7 @@ DialogShower.init(context);  # init with a root context in your app
 ###### 2. Various show & dismiss animation
 <img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.34.57.gif" width="75%">
 
-###### 3. Toast and Menu
+###### 3. Toast & Menu & Banner
 <img src="https://raw.githubusercontent.com/isaacselement/flutter_dialog_shower/master/example/images/gif/Kapture%202022-07-20%20at%2019.39.28.gif" width="75%">
 
 ###### 4. Nested Navigator
