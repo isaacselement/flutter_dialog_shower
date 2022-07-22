@@ -43,7 +43,7 @@ class AnythingGangedPicker extends StatelessWidget {
   List<dynamic> relativeElements = [];
   late AnythingPickerState pickerState;
 
-  static const Widget kArrowIcon = CcTransformZ(ratio: 1, child: Icon(Icons.arrow_back_ios_rounded, size: 13, color: Color(0xFFBFBFD2)));
+  static const Widget kArrowIcon = TransformZaxisWidget(ratio: 1, child: Icon(Icons.arrow_back_ios_rounded, size: 13, color: Color(0xFFBFBFD2)));
 
   @override
   Widget build(BuildContext context) {

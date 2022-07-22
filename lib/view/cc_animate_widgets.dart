@@ -4,12 +4,13 @@ import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 
+/// A Repeated Spin Widget
 class RotateWidget extends StatefulWidget {
-  Widget child;
-  bool? isClockwise;
-  Duration? duration;
+  final Widget child;
+  final bool? isClockwise;
+  final Duration? duration;
 
-  RotateWidget({Key? key, required this.child, this.isClockwise, this.duration}) : super(key: key);
+  const RotateWidget({Key? key, required this.child, this.isClockwise, this.duration}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => RotateWidgetState();
@@ -22,13 +23,9 @@ class RotateWidgetState extends State<RotateWidget> with SingleTickerProviderSta
 
   @override
   void initState() {
-    super.initState();
-
-    animationController = AnimationController(
-      vsync: this,
-      duration: widget.duration ?? const Duration(milliseconds: 1000),
-    );
+    animationController = AnimationController(vsync: this, duration: widget.duration ?? const Duration(milliseconds: 1000));
     animationController.repeat();
+    super.initState();
   }
 
   @override
@@ -44,11 +41,25 @@ class RotateWidgetState extends State<RotateWidget> with SingleTickerProviderSta
       animation: animationController,
       builder: (BuildContext context, Widget? child) {
         double angle = animationController.value * _circle;
-        return Transform.rotate(
-          angle: widget.isClockwise == false ? -angle : angle,
-          child: child,
-        );
+        return Transform.rotate(child: child, angle: widget.isClockwise == false ? -angle : angle);
       },
+    );
+  }
+}
+
+/// Transform Widget such as for Icons.arrow_back_ios
+class TransformZaxisWidget extends StatelessWidget {
+  const TransformZaxisWidget({Key? key, this.child, this.ratio}) : super(key: key);
+
+  final Widget? child;
+  final double? ratio; // [0.0 - 2.0] * pi for on circle angle
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform(
+      child: child,
+      alignment: Alignment.center,
+      transform: Matrix4.rotationZ((ratio ?? 1) * math.pi),
     );
   }
 }

@@ -1,23 +1,15 @@
-import 'dart:math' as math;
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 
 /// Buttom Widgets
 
 class CcButtonWidget extends StatefulWidget {
-  CcButtonWidget({
-    Key? key,
-    this.text,
-    this.builder,
-    this.options,
-    required this.onTap,
-  }) : super(key: key);
-
   String? text;
   CcButtonWidgetOptions? options;
   void Function(CcButtonState state) onTap;
   Widget? Function(CcButtonState state)? builder;
+
+  CcButtonWidget({Key? key, this.text, this.builder, this.options, required this.onTap}) : super(key: key);
 
   @override
   State<CcButtonWidget> createState() => CcButtonState();
@@ -29,9 +21,7 @@ class CcButtonState extends State<CcButtonWidget> {
   get isTapingDown => _isTapingDown;
 
   set isTapingDown(v) {
-    if (options.isDisable) {
-      return;
-    }
+    if (options.isDisable) return;
     _isTapingDown = v;
     setState(() {});
   }
@@ -69,9 +59,7 @@ class CcButtonState extends State<CcButtonWidget> {
           ),
         ),
         onTap: () {
-          if (options.isDisable) {
-            return;
-          }
+          if (options.isDisable) return;
           widget.onTap.call(this);
         },
       ),
@@ -264,21 +252,4 @@ class CcTapDebouncerWidget extends CcTapWidget {
 class CcTapDebouncerState extends CcTapState {
   @override
   void onEventTap() => DebouncerAny.instance.call(() => super.onEventTap());
-}
-
-/// Transform Widget such as for Icons.arrow_back_ios
-class CcTransformZ extends StatelessWidget {
-  const CcTransformZ({Key? key, this.child, this.ratio}) : super(key: key);
-
-  final Widget? child;
-  final double? ratio; // [0.0 - 2.0] * pi for on circle angle
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform(
-      child: child,
-      alignment: Alignment.center,
-      transform: Matrix4.rotationZ((ratio ?? 0) * math.pi),
-    );
-  }
 }
