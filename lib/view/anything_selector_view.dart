@@ -18,9 +18,9 @@ class AnythingSelector extends StatelessWidget {
 
   String? Function(AnythingSelector view, int? index, dynamic object)? funcOfItemName;
   bool? Function(AnythingSelector view, int index, dynamic object)? funcOfItemOnTapped;
-  bool Function(AnythingSelector view, dynamic element, dynamic e)? funcOfItemIsEqual;
   bool? Function(AnythingSelector view, int index, dynamic object)? funcOfItemIfSelected;
   bool? Function(AnythingSelector view, int index, dynamic object)? funcOfItemIfDisabled;
+  bool Function(AnythingSelector view, int index, dynamic object, dynamic e)? funcOfItemIsEqual;
 
   Widget? Function(AnythingSelector view, int index, dynamic object)? builderOfItemOuter;
   Widget? Function(AnythingSelector view, int index, dynamic object)? builderOfItemInner;
@@ -113,27 +113,77 @@ class AnythingSelector extends StatelessWidget {
     return Column(children: children);
   }
 
-  Widget getValuesPicker(List? items) {
-    AnythingSelector widget = this;
-    AnythingSelectorOptions options = widget.options ?? AnythingSelectorOptions();
+  AnythingSelector get widget => this;
 
-    bool? isContains(List<dynamic>? list, dynamic element) {
-      if (list == null) {
-        return null;
+  AnythingSelectorOptions? _options;
+
+  AnythingSelectorOptions get mOptions => widget.options ?? (_options ??= AnythingSelectorOptions());
+
+  Widget getValuesSearchBox() {
+    AnythingSelectorOptions options = mOptions;
+
+    bool isSearchable(text, i, e) {
+      String itemName = itemDisplayName(i, e);
+      return widget.searchableOnChanged?.call(this, text, i, e) ?? itemName.contains(text);
+    }
+
+    void onTextChanged(String text) {
+      if (widget.values == null) {
+        return;
       }
-      if (widget.funcOfItemIsEqual != null) {
-        for (dynamic e in list) {
-          if (widget.funcOfItemIsEqual?.call(this, element, e) ?? false) {
-            return true;
+      widget.searchValues?.clear();
+      List<dynamic> values = widget.values!;
+      if (text.isEmpty) {
+        widget.searchValues?.addAll(values);
+      } else {
+        for (int i = 0; i < values.length; i++) {
+          dynamic e = values[i];
+          if (isSearchable(text, i, e)) {
+            widget.searchValues?.add(e);
           }
         }
       }
-      return list.contains(element);
+      searchValuesKey.update();
     }
 
-    bool fnIsSelected(i, e) =>
-        widget.funcOfItemIfSelected?.call(this, i, e) ?? isContains(widget.selectedValues, e) ?? widget.selectedValue == e;
-    bool fnIsDisabled(i, e) => widget.funcOfItemIfDisabled?.call(this, i, e) ?? isContains(widget.disabledValues, e) ?? false;
+    void onEventSearchTextChanged(String text) {
+      if (widget.searchTextOnChanged != null) {
+        widget.searchTextOnChanged?.call(this, text);
+      } else {
+        onTextChanged(text);
+      }
+    }
+
+    Widget searchBoxBuilder() {
+      TextEditingController controller = TextEditingController();
+      return Container(
+        padding: options.searchBoxPadding,
+        child: CupertinoTextField(
+          controller: controller,
+          padding: options.searchPadding,
+          decoration: options.searchDecoration,
+          prefix: options.searchPrefixIcon,
+          placeholder: options.searchPlaceHolder,
+          suffixMode: OverlayVisibilityMode.editing,
+          suffix: CcTapWidget(
+            child: options.searchClearIcon,
+            onTap: (state) {
+              controller.clear();
+              onEventSearchTextChanged(controller.text);
+            },
+          ),
+          onChanged: (text) {
+            onEventSearchTextChanged(text);
+          },
+        ),
+      );
+    }
+
+    return widget.searchBoxBuilder?.call(this, onEventSearchTextChanged) ?? searchBoxBuilder();
+  }
+
+  Widget getValuesPicker(List? items) {
+    AnythingSelectorOptions options = mOptions;
 
     int length = items?.length ?? 0;
     List<Widget> children = [];
@@ -142,8 +192,8 @@ class AnythingSelector extends StatelessWidget {
       String itemName = itemDisplayName(i, e);
 
       _itemOnTap() {
-        bool isItemSelected = fnIsSelected(i, e);
-        bool isItemDisabled = fnIsDisabled(i, e);
+        bool isItemSelected = itemIsSelected(i, e);
+        bool isItemDisabled = itemIsDisabled(i, e);
 
         if (isItemDisabled) {
           return;
@@ -164,8 +214,8 @@ class AnythingSelector extends StatelessWidget {
       }
 
       _itemBuilder() {
-        bool isItemSelected = fnIsSelected(i, e);
-        bool isItemDisabled = fnIsDisabled(i, e);
+        bool isItemSelected = itemIsSelected(i, e);
+        bool isItemDisabled = itemIsDisabled(i, e);
 
         List<Widget> children = [];
 
@@ -249,72 +299,28 @@ class AnythingSelector extends StatelessWidget {
     return ListView(shrinkWrap: true, padding: EdgeInsets.zero, children: children);
   }
 
-  Widget getValuesSearchBox() {
-    AnythingSelector widget = this;
-    AnythingSelectorOptions options = widget.options ?? AnythingSelectorOptions();
-
-    bool isSearchable(text, i, e) {
-      String itemName = itemDisplayName(i, e);
-      return widget.searchableOnChanged?.call(this, text, i, e) ?? itemName.contains(text);
-    }
-
-    void onTextChanged(String text) {
-      if (widget.values == null) {
-        return;
-      }
-      widget.searchValues?.clear();
-      List<dynamic> values = widget.values!;
-      if (text.isEmpty) {
-        widget.searchValues?.addAll(values);
-      } else {
-        for (int i = 0; i < values.length; i++) {
-          dynamic e = values[i];
-          if (isSearchable(text, i, e)) {
-            widget.searchValues?.add(e);
-          }
-        }
-      }
-      searchValuesKey.update();
-    }
-
-    void onEventSearchTextChanged(String text) {
-      if (widget.searchTextOnChanged != null) {
-        widget.searchTextOnChanged?.call(this, text);
-      } else {
-        onTextChanged(text);
-      }
-    }
-
-    Widget searchBoxBuilder() {
-      TextEditingController controller = TextEditingController();
-      return Container(
-        padding: options.searchBoxPadding,
-        child: CupertinoTextField(
-          controller: controller,
-          padding: options.searchPadding,
-          decoration: options.searchDecoration,
-          prefix: options.searchPrefixIcon,
-          placeholder: options.searchPlaceHolder,
-          suffixMode: OverlayVisibilityMode.editing,
-          suffix: CcTapWidget(
-            child: options.searchClearIcon,
-            onTap: (state) {
-              controller.clear();
-              onEventSearchTextChanged(controller.text);
-            },
-          ),
-          onChanged: (text) {
-            onEventSearchTextChanged(text);
-          },
-        ),
-      );
-    }
-
-    return widget.searchBoxBuilder?.call(this, onEventSearchTextChanged) ?? searchBoxBuilder();
+  String itemDisplayName(int? i, dynamic e) {
+    return widget.funcOfItemName?.call(this, i, e) ?? e.toString();
   }
 
-  String itemDisplayName(int? index, dynamic element) {
-    return funcOfItemName?.call(this, index, element) ?? element.toString();
+  bool? isContains(List<dynamic>? list, dynamic e) {
+    if (list != null && widget.funcOfItemIsEqual != null) {
+      int len = list.length;
+      for (int i = 0; i < len; i++) {
+        if (widget.funcOfItemIsEqual?.call(this, i, list.elementAt(i), e) ?? false) {
+          return true;
+        }
+      }
+    }
+    return list?.contains(e);
+  }
+
+  bool itemIsSelected(int i, dynamic e) {
+    return widget.funcOfItemIfSelected?.call(this, i, e) ?? isContains(widget.selectedValues, e) ?? widget.selectedValue == e;
+  }
+
+  bool itemIsDisabled(int i, dynamic e) {
+    return widget.funcOfItemIfDisabled?.call(this, i, e) ?? isContains(widget.disabledValues, e) ?? false;
   }
 
 }
