@@ -80,7 +80,7 @@ class PageOfKeyboard extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        WidgetsUtil.newHeaderWithLine('Custome Positione: '),
+        WidgetsUtil.newHeaderWithLine('Custome Position: '),
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show center', onPressed: (state) {
