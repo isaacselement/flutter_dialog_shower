@@ -18,15 +18,28 @@ class Boxes<T> {
   }
 }
 
-bool boxes_log_enable = false;
+class Journal {
+  static bool enable = false;
 
-__boxes_log__(String log) {
-  assert(() {
-    if (boxes_log_enable) {
-      print('[Boxes] $log');
-    }
-    return true;
-  }());
+  /// https://dart.dev/guides/language/language-tour#assert
+  /// Only print and evaluate the expression function on debug mode, will omit in production/profile mode
+  static void console(String Function() expr) {
+    assert(() {
+      if (enable) {
+        print(expr());
+      }
+      return true;
+    }());
+  }
+
+  static void d(String log) {
+    assert(() {
+      if (enable) {
+        print('[Boxes] $log');
+      }
+      return true;
+    }());
+  }
 }
 
 /// Extensions
@@ -70,12 +83,12 @@ class BuilderExState extends State<BuilderEx> {
     try {
       widget.init?.call(state);
     } catch (e, s) {
-      __boxes_log__('[$state] ${widget.name} showCallBack exception: ${e.toString()}');
-      __boxes_log__(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
-      __boxes_log__(s.toString());
+      Journal.d('[$state] ${widget.name} showCallBack exception: ${e.toString()}');
+      Journal.d(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
+      Journal.d(s.toString());
     }
     assert(() {
-      __boxes_log__('[$state] ${widget.name} >>>>> initState');
+      Journal.d('[$state] ${widget.name} >>>>> initState');
       return true;
     }());
   }
@@ -87,7 +100,7 @@ class BuilderExState extends State<BuilderEx> {
 
   static Widget callWidgetBuilder(BuilderEx widget, State state) {
     assert(() {
-      __boxes_log__('[$state] ${widget.name} >>>>> build');
+      Journal.d('[$state] ${widget.name} >>>>> build');
       return true;
     }());
     return widget.builder(state);
@@ -103,12 +116,12 @@ class BuilderExState extends State<BuilderEx> {
     try {
       widget.dispose?.call(state);
     } catch (e, s) {
-      __boxes_log__('[$state] ${widget.name} dismissCallBack exception: ${e.toString()}');
-      __boxes_log__(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
-      __boxes_log__(s.toString());
+      Journal.d('[$state] ${widget.name} dismissCallBack exception: ${e.toString()}');
+      Journal.d(e is Error ? e.stackTrace?.toString() ?? 'No stackTrace' : 'No stackTrace');
+      Journal.d(s.toString());
     }
     assert(() {
-      __boxes_log__('[$state] ${widget.name} >>>>> dispose');
+      Journal.d('[$state] ${widget.name} >>>>> dispose');
       return true;
     }());
   }
@@ -157,7 +170,7 @@ class GetSizeWidget extends SingleChildRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    __boxes_log__('[$runtimeType] createRenderObject');
+    Journal.d('[$runtimeType] createRenderObject');
     return _GetSizeRenderObject()..onLayoutChanged = onLayoutChanged;
   }
 }
@@ -171,7 +184,7 @@ class _GetSizeRenderObject extends RenderProxyBox {
     super.performLayout();
 
     Size? size = child?.size;
-    __boxes_log__('[$runtimeType] performLayout >>>>>>>>> size: $size');
+    Journal.d('[$runtimeType] performLayout >>>>>>>>> size: $size');
     bool isSizeChanged = size != null && size != _size;
     if (isSizeChanged) {
       _invoke(_size, size);
@@ -247,8 +260,7 @@ class ThrottleAny {
     bool isSyncCall = StackTrace.current.toString().replaceFirst(symbol, '_').contains(symbol);
     if (isSyncCall) {
       if (callers.contains(this)) {
-        __boxes_log__(
-            '❌❗️ Do not call function ThrottleAny.call in the same stack with the same instance of ThrottleAny! ${callers.length}');
+        Journal.d('❌❗️ Do not call function ThrottleAny.call in the same stack with the same instance of ThrottleAny! ${callers.length}');
         func();
         return;
       }

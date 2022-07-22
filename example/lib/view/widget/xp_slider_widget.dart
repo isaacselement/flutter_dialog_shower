@@ -129,7 +129,7 @@ class XpSliderWidget extends StatelessWidget {
                   builderOfItemInner: (state, i, e) {
                     Employee employee = e as Employee;
                     bool isTapping = state.isItemTapping.value;
-                    bool isSelected = state.widget.selectedValues?.contains(e) ?? false;
+                    bool isSelected = state.itemIsSelected(i, e);
                     Color color = isTapping ? Colors.orange : (isSelected ? Colors.grey.withOpacity(0.4) : Colors.white);
                     return Container(
                       height: 45,
