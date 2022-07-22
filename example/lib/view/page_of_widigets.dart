@@ -224,16 +224,16 @@ class PageOfWidgets extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('show actions', onPressed: (state) {
-              TextStyle style = const TextStyle(color: Color(0xFF1C1D21), fontSize: 16);
               BoxDecoration decoration = BoxDecoration(
                 color: const Color(0xFFF5F5FA),
                 border: Border.all(color: const Color(0xFFDADAE8)),
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
               );
               Widget _fnRow(IconData icon, String text) {
+                TextStyle style = const TextStyle(color: Color(0xFF1C1D21), fontSize: 16);
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(icon), const SizedBox(width: 5), Text(text)],
+                  children: [Icon(icon), const SizedBox(width: 5), Text(text, style: style)],
                 );
               }
 
@@ -243,8 +243,9 @@ class PageOfWidgets extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     CcButtonWidget(
-                      height: 40,
-                      decoration: decoration,
+                      options: CcButtonWidgetOptions()
+                        ..height = 40
+                        ..decoration = decoration,
                       builder: (state) => _fnRow(Icons.copy, 'Copy That'),
                       onTap: (state) {
                         DialogWrapper.dismissTopDialog();
@@ -252,15 +253,17 @@ class PageOfWidgets extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     CcButtonWidget(
-                      height: 40,
-                      decoration: decoration,
+                      options: CcButtonWidgetOptions()
+                        ..height = 40
+                        ..decoration = decoration,
                       builder: (state) => _fnRow(Icons.email, 'Send Email'),
                       onTap: (state) {},
                     ),
                     const SizedBox(height: 20),
                     CcButtonWidget(
-                      height: 40,
-                      decoration: decoration,
+                      options: CcButtonWidgetOptions()
+                        ..height = 40
+                        ..decoration = decoration,
                       builder: (state) => _fnRow(Icons.phone, 'Phone Call'),
                       onTap: (state) {},
                     ),

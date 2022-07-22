@@ -469,7 +469,7 @@ class PageOfOverlay extends StatelessWidget {
                 link: _layerLink,
                 child: CcTapWidget(
                   builder: (state) {
-                    state as CcTapWidgetState;
+                    state as CcTapState;
                     return Container(
                         height: 50,
                         clipBehavior: Clip.antiAlias,
@@ -572,7 +572,7 @@ class _LayerLinkEntryState extends State<LayerLinkEntryWidget> {
       link: _layerLink,
       child: CcTapWidget(
         builder: (state) {
-          state as CcTapWidgetState;
+          state as CcTapState;
           return Container(
             height: 50,
             clipBehavior: Clip.antiAlias,

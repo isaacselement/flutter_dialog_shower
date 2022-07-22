@@ -3,33 +3,19 @@ import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 
+/// Buttom Widgets
+
 class CcButtonWidget extends StatefulWidget {
   CcButtonWidget({
     Key? key,
     this.text,
-    this.textStyle,
-    this.width,
-    this.height,
-    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    this.decoration,
-    this.alignment = Alignment.center,
-    this.isDisable = false,
-    this.pressedOpacity = 0.4,
-    required this.onTap,
     this.builder,
+    this.options,
+    required this.onTap,
   }) : super(key: key);
 
   String? text;
-  TextStyle? textStyle;
-
-  double? width;
-  double? height;
-  EdgeInsets? padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-  BoxDecoration? decoration;
-  AlignmentGeometry? alignment = Alignment.center;
-
-  bool isDisable = false;
-  double pressedOpacity = 0.4;
+  CcButtonWidgetOptions? options;
   void Function(CcButtonState state) onTap;
   Widget? Function(CcButtonState state)? builder;
 
@@ -43,23 +29,28 @@ class CcButtonState extends State<CcButtonWidget> {
   get isTapingDown => _isTapingDown;
 
   set isTapingDown(v) {
-    if (widget.isDisable) {
+    if (options.isDisable) {
       return;
     }
-    setState(() => _isTapingDown = v);
+    _isTapingDown = v;
+    setState(() {});
   }
+
+  CcButtonWidgetOptions? _options;
+
+  CcButtonWidgetOptions get options => widget.options ?? (_options ??= CcButtonWidgetOptions());
 
   @override
   Widget build(BuildContext context) {
-    BoxDecoration decoration = widget.decoration ??
+    BoxDecoration decoration = options.decoration ??
         BoxDecoration(
           border: Border.all(color: const Color(0xFFDADAE8)),
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          color: widget.isDisable ? const Color(0xFFF5F5FA) : const Color(0xFF4275FF),
+          color: options.isDisable ? const Color(0xFFF5F5FA) : const Color(0xFF4275FF),
         );
-    TextStyle textStyle = widget.textStyle ??
+    TextStyle textStyle = options.textStyle ??
         TextStyle(
-          color: widget.isDisable ? const Color(0xFFBFBFD2) : const Color(0xFFFFFFFF),
+          color: options.isDisable ? const Color(0xFFBFBFD2) : const Color(0xFFFFFFFF),
         );
 
     return Listener(
@@ -67,21 +58,20 @@ class CcButtonState extends State<CcButtonWidget> {
       onPointerDown: (event) => isTapingDown = true,
       child: GestureDetector(
         child: Opacity(
-          opacity: isTapingDown ? widget.pressedOpacity : 1.0,
+          opacity: isTapingDown ? options.pressedOpacity : 1.0,
           child: Container(
-            width: widget.width,
-            height: widget.height,
-            padding: widget.padding,
-            alignment: widget.alignment,
+            width: options.width,
+            height: options.height,
+            padding: options.padding,
+            alignment: options.alignment,
             decoration: decoration,
             child: widget.builder?.call(this) ?? Text(widget.text ?? 'Cancel', style: textStyle, maxLines: 1),
           ),
         ),
         onTap: () {
-          if (widget.isDisable) {
+          if (options.isDisable) {
             return;
           }
-          isTapingDown = false;
           widget.onTap.call(this);
         },
       ),
@@ -89,149 +79,191 @@ class CcButtonState extends State<CcButtonWidget> {
   }
 }
 
-/// Tapped Widget with tap effect
+class CcButtonWidgetOptions {
+  double? width;
+  double? height;
 
-class CcTapWidget extends StatefulWidget {
-  final Widget? child;
-  final double? pressedOpacity;
-  final Widget Function(State state)? builder;
-  final void Function(State state) onTap;
+  TextStyle? textStyle;
+  EdgeInsets? padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
 
-  const CcTapWidget({Key? key, this.builder, this.child, required this.onTap, this.pressedOpacity = 0.5}) : super(key: key);
+  BoxDecoration? decoration;
+  AlignmentGeometry? alignment = Alignment.center;
 
-  @override
-  State createState() => CcTapWidgetState();
+  bool isDisable = false;
+  double pressedOpacity = 0.4;
+
+  CcButtonWidgetOptions();
+
+  CcButtonWidgetOptions clone() {
+    CcButtonWidgetOptions newInstance = CcButtonWidgetOptions();
+    newInstance.width = width;
+    newInstance.height = height;
+    newInstance.textStyle = textStyle;
+    newInstance.padding = padding;
+    newInstance.decoration = decoration;
+    newInstance.alignment = alignment;
+    newInstance.isDisable = isDisable;
+    newInstance.pressedOpacity = pressedOpacity;
+    return newInstance;
+  }
 }
 
-class CcTapWidgetState extends State<CcTapWidget> {
+/// Tapped Widgets
+
+abstract class CcTapViewBase extends StatefulWidget {
+  Widget? child;
+  bool isDisable = false;
+  double? pressedOpacity;
+  void Function(State state) onTap;
+  Widget Function(State state)? builder;
+
+  CcTapViewBase({Key? key, this.child, this.isDisable = false, this.pressedOpacity, this.builder, required this.onTap}) : super(key: key);
+}
+
+abstract class CcTapStateBase extends State {
   bool _isTapingDown = false;
 
   get isTapingDown => _isTapingDown;
 
   set isTapingDown(v) {
+    if (myWidget.isDisable) return;
     setState(() => _isTapingDown = v);
   }
+
+  CcTapViewBase get myWidget => widget as CcTapViewBase;
 
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerDown: (e) => isTapingDown = true,
       onPointerUp: (e) => isTapingDown = false,
+      onPointerDown: (e) => isTapingDown = true,
       onPointerCancel: (e) => isTapingDown = false,
       child: GestureDetector(
-        child: widget.builder?.call(this) ??
-            Opacity(
-              child: widget.child,
-              opacity: isTapingDown ? widget.pressedOpacity ?? 0.5 : 1,
-            ),
         onTap: () {
+          if (myWidget.isDisable) return;
           onEventTap();
         },
+        child: myWidget.builder?.call(this) ?? Opacity(child: myWidget.child, opacity: isTapingDown ? myWidget.pressedOpacity ?? 0.5 : 1),
       ),
     );
   }
 
   void onEventTap() {
-    widget.onTap(this);
+    myWidget.onTap(this);
   }
 }
 
-/// Tapped Widget that tap once only
-class CcTapOnceWidget extends StatefulWidget {
-  final Widget? child;
-  final double? pressedOpacity;
-  final Widget Function()? builder;
-  final void Function(CcTapOnceWidgetState state) onTap;
-
-  const CcTapOnceWidget({Key? key, this.builder, this.child, required this.onTap, this.pressedOpacity = 0.5}) : super(key: key);
+/// with tap effect
+class CcTapWidget extends CcTapViewBase {
+  CcTapWidget({
+    Key? key,
+    Widget? child,
+    bool? isDisable,
+    double? pressedOpacity = 0.5,
+    Widget Function(State state)? builder,
+    required void Function(State state) onTap,
+  }) : super(
+          key: key,
+          child: child,
+          isDisable: isDisable ?? false,
+          pressedOpacity: pressedOpacity,
+          builder: builder,
+          onTap: onTap,
+        );
 
   @override
-  State<CcTapOnceWidget> createState() => CcTapOnceWidgetState();
+  State createState() => CcTapState();
 }
 
-class CcTapOnceWidgetState extends State<CcTapOnceWidget> {
-  bool _isTapingDown = false;
+class CcTapState extends CcTapStateBase {}
 
-  get isTapingDown => _isTapingDown;
+/// with tap effect and tap once only
+class CcTapOnceWidget extends CcTapViewBase {
+  CcTapOnceWidget({
+    Key? key,
+    Widget? child,
+    bool? isDisable,
+    double? pressedOpacity = 0.5,
+    Widget Function(State state)? builder,
+    required void Function(State state) onTap,
+  }) : super(
+          key: key,
+          child: child,
+          isDisable: isDisable ?? false,
+          pressedOpacity: pressedOpacity,
+          builder: builder,
+          onTap: onTap,
+        );
 
-  set isTapingDown(v) {
-    setState(() => _isTapingDown = v);
-  }
+  @override
+  State createState() => CcTapOnceState();
+}
 
+class CcTapOnceState extends CcTapStateBase {
   bool _isTappedOnce = false;
 
   @override
-  Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (e) => isTapingDown = true,
-      onPointerUp: (e) => isTapingDown = false,
-      onPointerCancel: (e) => isTapingDown = false,
-      child: GestureDetector(
-        child: widget.builder?.call() ??
-            Opacity(
-              child: widget.child,
-              opacity: isTapingDown ? widget.pressedOpacity ?? 0.5 : 1,
-            ),
-        onTap: () {
-          onEventTap();
-        },
-      ),
-    );
-  }
-
   void onEventTap() {
     if (_isTappedOnce) {
       return;
     }
     _isTappedOnce = true;
-    widget.onTap(this);
+    super.onEventTap();
   }
 }
 
 /// Tapped Widget with throttle
 class CcTapThrottledWidget extends CcTapWidget {
-  const CcTapThrottledWidget({
+  CcTapThrottledWidget({
     Key? key,
     Widget? child,
-    double? pressedOpacity,
+    bool? isDisable,
+    double? pressedOpacity = 0.5,
     Widget Function(State state)? builder,
     required void Function(State state) onTap,
-  }) : super(key: key, child: child, builder: builder, onTap: onTap, pressedOpacity: pressedOpacity);
+  }) : super(
+          key: key,
+          child: child,
+          isDisable: isDisable,
+          pressedOpacity: pressedOpacity,
+          builder: builder,
+          onTap: onTap,
+        );
 
   @override
   State createState() => CcTapThrottledState();
 }
 
-class CcTapThrottledState extends CcTapWidgetState {
+class CcTapThrottledState extends CcTapState {
   @override
-  void onEventTap() {
-    ThrottleAny.instance.call(() {
-      super.onEventTap();
-    });
-  }
+  void onEventTap() => ThrottleAny.instance.call(() => super.onEventTap());
 }
 
 /// Tapped Widget with debounce
 class CcTapDebouncerWidget extends CcTapWidget {
-  const CcTapDebouncerWidget({
+  CcTapDebouncerWidget({
     Key? key,
     Widget? child,
-    double? pressedOpacity,
+    bool? isDisable,
+    double? pressedOpacity = 0.5,
     Widget Function(State state)? builder,
     required void Function(State state) onTap,
-  }) : super(key: key, child: child, builder: builder, onTap: onTap, pressedOpacity: pressedOpacity);
+  }) : super(
+          key: key,
+          child: child,
+          isDisable: isDisable,
+          pressedOpacity: pressedOpacity,
+          builder: builder,
+          onTap: onTap,
+        );
 
   @override
   State createState() => CcTapDebouncerState();
 }
 
-class CcTapDebouncerState extends CcTapWidgetState {
+class CcTapDebouncerState extends CcTapState {
   @override
-  void onEventTap() {
-    DebouncerAny.instance.call(() {
-      super.onEventTap();
-    });
-  }
+  void onEventTap() => DebouncerAny.instance.call(() => super.onEventTap());
 }
 
 /// Transform Widget such as for Icons.arrow_back_ios

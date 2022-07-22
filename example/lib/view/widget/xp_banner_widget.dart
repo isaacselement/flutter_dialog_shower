@@ -76,29 +76,31 @@ class XpBannerWidget extends StatelessWidget {
                     children: [
                       CcButtonWidget(
                         text: 'Dismiss',
-                        width: 100,
-                        height: 40,
-                        textStyle: const TextStyle(color: Color(0xFF1C1D21), fontSize: 16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF5F5FA),
-                          border: Border.all(color: const Color(0xFFDADAE8)),
-                          borderRadius: const BorderRadius.all(Radius.circular(5)),
-                        ),
                         onTap: (state) {
                           Logger.d('manually call dismiss animation !~~~~~');
                           dismissFn?.call();
                         },
+                        options: CcButtonWidgetOptions()
+                          ..width = 100
+                          ..height = 40
+                          ..textStyle = const TextStyle(color: Color(0xFF1C1D21), fontSize: 16)
+                          ..decoration = BoxDecoration(
+                            color: const Color(0xFFF5F5FA),
+                            border: Border.all(color: const Color(0xFFDADAE8)),
+                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                          ),
                       ),
                       const SizedBox(width: 100),
                       CcButtonWidget(
                         text: 'Go',
-                        width: 100,
-                        height: 40,
-                        textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         onTap: (state) {
                           Logger.d('manually call dismiss animation !~~~~~');
                           dismissFn?.call();
                         },
+                        options: CcButtonWidgetOptions()
+                          ..width = 100
+                          ..height = 40
+                          ..textStyle = const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),

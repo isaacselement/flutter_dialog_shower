@@ -664,7 +664,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
               _itemOnTap();
             },
             builder: (state) {
-              isItemTapping.value = (state as CcTapWidgetState).isTapingDown;
+              isItemTapping.value = (state as CcTapState).isTapingDown;
               return _itemBuilderWrap();
             },
           );
