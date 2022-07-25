@@ -98,11 +98,11 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
 
   AnythingPickerOptions? _options;
 
-  AnythingPickerOptions get options => widget.options ?? (_options ??= AnythingPickerOptions());
+  AnythingPickerOptions get getOptions => widget.options ?? (_options ??= AnythingPickerOptions());
 
   Btv<bool> isFocused = false.btv;
 
-  Btv<bool> isItemTapping = false.btv;
+  List<int> tappingIndexes = [];
 
   DialogShower? mShower;
 
@@ -124,6 +124,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
 
   @override
   Widget build(BuildContext context) {
+    AnythingPickerOptions options = getOptions;
     Widget? requiredWidget;
     if (widget.isRequired != null) {
       assert(options.requiredIcon != null, 'Required widget cannot be null when isRequired is true!');
@@ -154,6 +155,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
   }
 
   Widget _build(BuildContext context) {
+    AnythingPickerOptions options = getOptions;
     List<Widget> allWholeColumnChildren = [];
 
     /// 1. title
@@ -304,6 +306,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
 
   /// Interaction: show the shower !!!
   DialogShower onEventShowPicker(BuildContext context) {
+    AnythingPickerOptions options = getOptions;
+
     // wrap content widget x,y,w,h to a rect
     RenderBox box = context.findRenderObject()! as RenderBox;
     Size size = box.size;
@@ -352,7 +356,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     double showerHeight = options.pickerHeight ?? math.min(options.pickerMaxHeight ?? height, height);
     DialogShower shower = DialogShower();
     shower.x = x + (options.pickerShowOffsetX ?? 0);
-    shower.y = _getOnBottomSideShowerY(rect); // default load indicator on bottom for AUTO ...
+    shower.y = _getOnBottomSideShowerY(options, rect); // default load indicator on bottom for AUTO ...
     shower.width = showerWidth;
     shower.height = showerHeight;
     _refreshShowerY(options, shower, rect);
@@ -409,6 +413,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
   }
 
   GetSizeWidget _autoSetShowerHY(DialogShower shower, Widget picker, Rect rect, Boxes<AnythingPickerOptions?> cartonOption) {
+    AnythingPickerOptions options = getOptions;
     // Label A: auto deciding height
     Size screenSize = MediaQuery.of(DialogShower.gContext!).size;
     double screenHeight = screenSize.height;
@@ -422,7 +427,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
         _refreshShowerY(options, shower, rect);
 
         double remainSpaceBottom() {
-          double bottomY = _getOnBottomSideShowerY(rect);
+          double bottomY = _getOnBottomSideShowerY(options, rect);
           return screenHeight - bottomY - (options.pickerMarginScreenBottom ?? 0);
         }
 
@@ -536,21 +541,23 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
 
   void _refreshShowerY(AnythingPickerOptions options, DialogShower shower, Rect rect) {
     if (options.stickToSide == AnythingPickerStickTo.bottom) {
-      shower.y = _getOnBottomSideShowerY(rect);
+      shower.y = _getOnBottomSideShowerY(options, rect);
     } else if (options.stickToSide == AnythingPickerStickTo.top) {
-      shower.y = _getOnTopSideShowerY(shower, rect);
+      shower.y = _getOnTopSideShowerY(options, shower, rect);
     }
   }
 
-  double _getOnBottomSideShowerY(Rect rect) {
+  double _getOnBottomSideShowerY(AnythingPickerOptions options, Rect rect) {
     return rect.top + rect.height + (options.pickerShowOffsetY ?? 0);
   }
 
-  double _getOnTopSideShowerY(DialogShower shower, Rect rect) {
+  double _getOnTopSideShowerY(AnythingPickerOptions options, DialogShower shower, Rect rect) {
     return rect.top - (shower.height ?? 0) - (options.pickerShowOffsetY ?? 0);
   }
 
   Widget getValuesPicker(List? items) {
+    AnythingPickerOptions options = getOptions;
+
     int length = items?.length ?? 0;
     List<Widget> children = [];
     for (int i = 0; i < length; i++) {
@@ -628,7 +635,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
         Decoration? decoration = options.itemDecorationNormal;
         if (isItemDisabled) {
           decoration = options.itemDecorationDisabled;
-        } else if (isItemTapping.value) {
+        } else if (itemIsTapping(i)) {
           decoration = options.itemDecorationTapped;
         }
         return Container(
@@ -654,7 +661,10 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
               _itemOnTap();
             },
             builder: (state) {
-              isItemTapping.value = (state as CcTapState).isTapingDown;
+              tappingIndexes.remove(i);
+              if ((state as CcTapState).isTapingDown) {
+                tappingIndexes.add(i);
+              }
               return _itemBuilderWrap();
             },
           );
@@ -691,6 +701,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
   bool itemIsDisabled(int i, dynamic e) {
     return widget.funcOfItemIfDisabled?.call(this, i, e) ?? isContains(widget.disabledValues, e) ?? false;
   }
+
+  bool itemIsTapping(int i) => tappingIndexes.contains(i);
 
   void refresh() {
     if (mounted) {

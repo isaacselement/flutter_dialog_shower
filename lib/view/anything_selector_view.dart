@@ -37,7 +37,7 @@ class AnythingSelector extends StatelessWidget {
 
   AnythingSelectorOptions? options;
 
-  Btv<bool> isItemTapping = false.btv;
+  List<int> tappingIndexes = [];
 
   AnythingSelector({
     Key? key,
@@ -116,10 +116,10 @@ class AnythingSelector extends StatelessWidget {
 
   AnythingSelectorOptions? _options;
 
-  AnythingSelectorOptions get mOptions => widget.options ?? (_options ??= AnythingSelectorOptions());
+  AnythingSelectorOptions get getOptions => widget.options ?? (_options ??= AnythingSelectorOptions());
 
   Widget getValuesSearchBox() {
-    AnythingSelectorOptions options = mOptions;
+    AnythingSelectorOptions options = getOptions;
 
     bool isSearchable(text, i, e) {
       String itemName = itemDisplayName(i, e);
@@ -182,7 +182,7 @@ class AnythingSelector extends StatelessWidget {
   }
 
   Widget getValuesPicker(List? items) {
-    AnythingSelectorOptions options = mOptions;
+    AnythingSelectorOptions options = getOptions;
 
     int length = items?.length ?? 0;
     List<Widget> children = [];
@@ -259,7 +259,7 @@ class AnythingSelector extends StatelessWidget {
         Decoration? decoration = options.itemDecorationNormal;
         if (isItemDisabled) {
           decoration = options.itemDecorationDisabled;
-        } else if (isItemTapping.value) {
+        } else if (itemIsTapping(i)) {
           decoration = options.itemDecorationTapped;
         }
         return Container(
@@ -285,7 +285,10 @@ class AnythingSelector extends StatelessWidget {
               _itemOnTap();
             },
             builder: (state) {
-              isItemTapping.value = (state as CcTapState).isTapingDown;
+              tappingIndexes.remove(i);
+              if ((state as CcTapState).isTapingDown) {
+                tappingIndexes.add(i);
+              }
               return _itemBuilderWrap();
             },
           );
@@ -322,6 +325,9 @@ class AnythingSelector extends StatelessWidget {
   bool itemIsDisabled(int i, dynamic e) {
     return widget.funcOfItemIfDisabled?.call(this, i, e) ?? isContains(widget.disabledValues, e) ?? false;
   }
+
+  bool itemIsTapping(int i) => tappingIndexes.contains(i);
+
 }
 
 class AnythingSelectorOptions {
