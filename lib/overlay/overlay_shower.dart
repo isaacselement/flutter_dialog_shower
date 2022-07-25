@@ -153,11 +153,11 @@ class OverlayShower {
   Future<void> dismiss() async {
     if (_isShowing) {
       _isShowing = false;
-      _dissmiss();
+      _dismiss();
     }
   }
 
-  void _dissmiss() {
+  void _dismiss() {
     _entry.remove();
   }
 

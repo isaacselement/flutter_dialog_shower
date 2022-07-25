@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'dart:ui' as ui;
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 import 'package:flutter_dialog_shower/event/keyboard_event_listener.dart';
-// delete this import if u dont need keyboard interaction.
 
 class DialogShower {
   static BuildContext? gContext;
@@ -25,19 +24,22 @@ class DialogShower {
   bool? barrierDismissible = false;
   String barrierLabel = "";
   bool isDismissKeyboardOnTapped = true;
-  Duration transitionDuration = const Duration(milliseconds: 250);
+  // navigator animation direction, default is SlideTransition from Bottom with 250 milliseconds duration
   RouteTransitionsBuilder? transitionBuilder;
+  Offset? animationBeginOffset = const Offset(0.0, 1.0);
+  Duration transitionDuration = const Duration(milliseconds: 250);
+
+  String routeName = '';
+
+  late Route route;
 
   NavigatorState get parentNavigator => Navigator.of(context!, rootNavigator: isUseRootNavigator);
-
-  /// Animation direction
-  Offset? animationBeginOffset = const Offset(0.0, 1.0); // default from Bottom
 
   /// scaffold
   Color? scaffoldBackgroundColor = Colors.transparent;
 
-  /// container
-  AlignmentGeometry? alignment = Alignment.center; // alignment center default
+  /// container size & position
+  AlignmentGeometry? alignment = Alignment.center;
   EdgeInsets? margin;
   EdgeInsets? padding;
   double? width;
@@ -45,7 +47,7 @@ class DialogShower {
   double? renderedWidth;
   double? renderedHeight;
 
-  // should set aligment to Alignment.topLeft if u want base is top left for the x y. Then call setState of shower if set x y later .
+  // should set alignment to Alignment.topLeft if u want base is top left for the x y. Then call setState of shower if set x y later .
   set x(double v) => padding = EdgeInsets.only(left: v, top: padding?.top ?? 0);
 
   set y(double v) => padding = EdgeInsets.only(left: padding?.left ?? 0, top: v);
@@ -54,6 +56,7 @@ class DialogShower {
 
   double get y => padding?.top ?? 0;
 
+  /// container appearance
   Clip containerClipBehavior = Clip.antiAlias;
   Decoration? containerDecoration = _notInitializedDecoration;
   double containerBorderRadius = 0.0;
@@ -63,6 +66,10 @@ class DialogShower {
   Color containerShadowColor = Colors.transparent;
 
   /// events
+  TapUpDetails? _tapUpDetails;
+
+  TapUpDetails? get tapUpDetails => _tapUpDetails;
+
   bool Function(DialogShower shower, Offset point)? dialogOnTapCallback;
   bool Function(DialogShower shower, Offset point)? barrierOnTapCallback;
   bool Function(DialogShower shower, Offset point, bool isTapInside)? wholeOnTapCallback;
@@ -84,12 +91,7 @@ class DialogShower {
   KeyboardVisibilityCallBack? keyboardEventCallBack;
   StreamSubscription? _keyboardStreamSubscription;
 
-  /// modified/assigned internal .....
-
-  String routeName = '';
-
-  late Route route;
-
+  /// shower is built once or not
   bool _isBuilt = false;
 
   final Completer<bool> builtCompleter = Completer<bool>();
@@ -98,6 +100,7 @@ class DialogShower {
 
   set isBuilt(v) => (_isBuilt = v) ? builtCompleter.complete(v) : null;
 
+  /// shower is between the [init] phase and [dispose] phase or not
   bool _isShowing = false;
 
   bool get isShowing => _isShowing;
@@ -126,20 +129,18 @@ class DialogShower {
 
   Future<R>? then<R>(FutureOr<R> Function(dynamic value) onValue, {Function? onError}) => future.then(onValue, onError: onError);
 
-  /// private .....
-  TapUpDetails? get tapUpDetails => _tapUpDetails;
-  TapUpDetails? _tapUpDetails;
-
+  /// GlobalKey for shower rebuild/setState
   // GlobalKey<BuilderExState> get builderExKey => _builderExKey;
   // final GlobalKey<BuilderExState> _builderExKey = GlobalKey<BuilderExState>();
 
   GlobalKey get statefulKey => _statefulKey;
   final GlobalKey _statefulKey = GlobalKey();
 
+  /// GlobalKey for container
   GlobalKey get containerKey => _containerKey;
   final GlobalKey _containerKey = GlobalKey();
 
-  /// extension for navigate inner dialog
+  /// extension for inner nested navigator dialog
   bool isWrappedByNavigator = false;
   bool isAutoSizeForNavigator = true;
   String? wrappedNavigatorInitialName;
@@ -245,10 +246,7 @@ class DialogShower {
       return true;
     }());
 
-    RouteSettings routeSettings = RouteSettings(
-      name: routeName,
-      arguments: null,
-    );
+    RouteSettings routeSettings = RouteSettings(name: routeName, arguments: null);
 
     route = RawDialogRoute(
       settings: routeSettings,
@@ -569,14 +567,15 @@ class DialogShower {
 
   // dismiss ----------------------------------------
 
+  bool _isDismiss = false;
+
   Future<void> dismiss<T extends Object?>([T? result]) async {
-    if (!_isShowing) {
+    if (_isDismiss) {
       return;
     }
-    _isShowing = false;
+    _isDismiss = true;
 
     if (isPopped) {
-      // check it out please !!!!
       assert(() {
         __shower_log__('❗️❗️❗️ $routeName dismissed ??? already popped by using the most primitive pop/remove ???');
         return true;
@@ -586,7 +585,7 @@ class DialogShower {
         __shower_log__('>>>>>>>>>>>>>> dismiss popping: $routeName');
         return true;
       }());
-      isSyncDismiss ? _dissmiss<T>(result) : Future.microtask(() => _dissmiss<T>(result));
+      isSyncDismiss ? _dismiss<T>(result) : Future.microtask(() => _dismiss<T>(result));
       if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
         isPopped = true;
       }
@@ -600,7 +599,7 @@ class DialogShower {
 
   // pop/push/remove will caused NavigatorObserver.didPop/didPus/didRemove method call immediately in the same eventloop
   // so we should set isPopped/isPushed immediately but call completer later using Future.microtask
-  void _dissmiss<T extends Object?>([T? result]) => parentNavigator.pop<T>(result);
+  void _dismiss<T extends Object?>([T? result]) => parentNavigator.pop<T>(result);
 
   void remove() => parentNavigator.removeRoute(route);
 
