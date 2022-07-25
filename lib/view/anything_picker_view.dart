@@ -43,7 +43,6 @@ class AnythingPicker extends StatefulWidget {
   Widget? Function(AnythingPickerState state, int index, dynamic object, List<Widget> children)? builderOfItemChildren;
 
   Widget? Function(AnythingPickerState state, DialogShower shower, List<dynamic>? values)? builderOfPicker;
-
   void Function(AnythingPickerState state, DialogShower shower)? showerCallback;
   void Function(AnythingPickerState state, DialogShower shower)? showerShowedCallback;
   void Function(AnythingPickerState state, DialogShower shower)? showerDismissedCallback;
@@ -785,7 +784,7 @@ class AnythingPickerOptions {
   );
   Widget? contentLoadingIcon = const AnythingLoadingWidget(side: 18, stroke: 1.3);
 
-  // picker and its items
+  // picker options
   AnythingPickerStickTo stickToSide = AnythingPickerStickTo.auto;
   double? pickerMarginScreenTop = 25;
   double? pickerMarginScreenBottom = 25;
@@ -799,6 +798,7 @@ class AnythingPickerOptions {
   double? pickerShowOffsetX;
   double? pickerShowOffsetY = 5;
 
+  // item options
   double? itemWidth;
   double? itemHeight;
   EdgeInsets? itemMargin;
@@ -814,9 +814,7 @@ class AnythingPickerOptions {
   TextStyle? itemStyleDisabled = const TextStyle(fontSize: 16, color: Color(0xFFBDBDBD));
 
   Widget? itemPrefixWidget;
-
   Widget? itemSuffixWidget;
-
   Widget? itemCheckedWidget = const Icon(Icons.check, size: 18, color: Color(0xFF4275FF));
   Widget? itemNoDataWidget = const SizedBox(height: 100, child: Center(child: Text('No data', style: TextStyle(color: Colors.grey))));
 

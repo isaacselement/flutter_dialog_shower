@@ -6,7 +6,7 @@ import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 // ignore: must_be_immutable
 class AnythingSelector extends StatelessWidget {
-  String? title;
+  String? header;
   AnythingHeaderOptions? headerOptions;
 
   List<dynamic>? values;
@@ -16,6 +16,7 @@ class AnythingSelector extends StatelessWidget {
   List<dynamic>? selectedValues; // indicate that is multi-selection mode when it's not null
   List<dynamic>? disabledValues;
 
+  // false/null/none-implement for continue using the default behaviour
   String? Function(AnythingSelector view, int? index, dynamic object)? funcOfItemName;
   bool? Function(AnythingSelector view, int index, dynamic object)? funcOfItemOnTapped;
   bool? Function(AnythingSelector view, int index, dynamic object)? funcOfItemIfSelected;
@@ -26,7 +27,7 @@ class AnythingSelector extends StatelessWidget {
   Widget? Function(AnythingSelector view, int index, dynamic object)? builderOfItemInner;
   Widget? Function(AnythingSelector view, int index, dynamic object, List<Widget> children)? builderOfItemChildren;
 
-  // ----------------- search start -----------------
+  /// Search
   bool? isSearchEnable;
   List<dynamic>? searchValues;
   BtKey searchValuesKey = BtKey();
@@ -34,15 +35,13 @@ class AnythingSelector extends StatelessWidget {
   Widget? Function(AnythingSelector view, void Function(String text) fn)? searchBoxBuilder;
   bool? Function(AnythingSelector view, String text, int index, dynamic object)? searchableOnChanged;
 
-  // ----------------- search end -----------------
-
   AnythingSelectorOptions? options;
 
   Btv<bool> isItemTapping = false.btv;
 
   AnythingSelector({
     Key? key,
-    this.title,
+    this.header,
     this.headerOptions,
     this.values,
     this.funcOfValues,
@@ -68,10 +67,10 @@ class AnythingSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> children = [];
 
-    // title view
-    if (title != null) {
+    // header view
+    if (header != null) {
       children.add(AnythingHeader(
-        title: title,
+        title: header,
         options: headerOptions,
       ));
     }
@@ -235,6 +234,7 @@ class AnythingSelector extends StatelessWidget {
           child: Text(
             itemName,
             style: itemNameStyle,
+            maxLines: options.itemMaxLines,
           ),
         );
         children.add(itemTextWidget);
@@ -322,7 +322,6 @@ class AnythingSelector extends StatelessWidget {
   bool itemIsDisabled(int i, dynamic e) {
     return widget.funcOfItemIfDisabled?.call(this, i, e) ?? isContains(widget.disabledValues, e) ?? false;
   }
-
 }
 
 class AnythingSelectorOptions {
@@ -336,6 +335,7 @@ class AnythingSelectorOptions {
   Decoration? itemDecorationTapped = const BoxDecoration(color: Color(0xFFE0E0E0));
   Decoration? itemDecorationDisabled;
 
+  int? itemMaxLines;
   TextStyle? itemStyleNormal = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21));
   TextStyle? itemStyleSelected = const TextStyle(fontSize: 16, color: Color(0xFF5E81F4));
   TextStyle? itemStyleDisabled = const TextStyle(fontSize: 16, color: Color(0xFFBDBDBD));
@@ -346,13 +346,18 @@ class AnythingSelectorOptions {
   Widget? itemNoDataWidget = const SizedBox(height: 100, child: Center(child: Text('No data', style: TextStyle(color: Colors.grey))));
 
   // search options
-  EdgeInsets? searchBoxPadding = const EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 16);
   String? searchPlaceHolder = 'Search';
   EdgeInsets searchPadding = const EdgeInsets.all(10.0);
   BoxDecoration? searchDecoration = BoxDecoration(
     color: Colors.white,
     border: Border.all(color: Colors.grey, width: 0.0),
     borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+  );
+  EdgeInsets? searchBoxPadding = const EdgeInsets.only(
+    left: 24,
+    right: 24,
+    top: 16,
+    bottom: 16,
   );
   Widget? searchPrefixIcon = const Padding(
     padding: EdgeInsets.only(left: 12),
@@ -387,6 +392,7 @@ class AnythingSelectorOptions {
     newInstance.itemDecorationTapped = itemDecorationTapped;
     newInstance.itemDecorationDisabled = itemDecorationDisabled;
 
+    newInstance.itemMaxLines = itemMaxLines;
     newInstance.itemStyleNormal = itemStyleNormal;
     newInstance.itemStyleSelected = itemStyleSelected;
     newInstance.itemStyleDisabled = itemStyleDisabled;

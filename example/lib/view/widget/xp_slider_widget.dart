@@ -176,7 +176,7 @@ class XpSliderWidget extends StatelessWidget {
                 const SizedBox(height: 64),
                 _bodyTips(),
                 const SizedBox(height: 64),
-                AnythingGangedPicker(
+                AnythingLevelsPicker(
                   title: 'City multi-level selection demonstration',
                   funcOfTitle: (view, i, e) {
                     return e is Map ? e['areaName'] : 'Province';

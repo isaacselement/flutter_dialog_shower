@@ -149,7 +149,7 @@ class PageOfNavigator extends StatelessWidget {
 
     Widget widget = AnythingSelector(
       isSearchEnable: true,
-      title: (value is Map) ? value['areaName'] : 'Select City',
+      header: (value is Map) ? value['areaName'] : 'Select City',
       values: ((value is Map ? value['children'] : value) as List<dynamic>).cast(),
       funcOfItemName: (s, i, e) => e is Map ? e['areaName'] : '',
       options: selectorOptions,

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 /// TODO: support multi selection ~~~
-class AnythingGangedPicker extends StatelessWidget {
-  AnythingGangedPicker({
+class AnythingLevelsPicker extends StatelessWidget {
+  AnythingLevelsPicker({
     Key? key,
     this.title,
     required this.funcOfTitle,
@@ -25,18 +25,18 @@ class AnythingGangedPicker extends StatelessWidget {
   bool? isSearchEnable;
 
   // required fields
-  bool Function(AnythingGangedPicker view, int? index, dynamic object) isHasNextLevel;
-  String? Function(AnythingGangedPicker view, int? index, dynamic object) funcOfTitle;
-  String? Function(AnythingGangedPicker view, int? index, dynamic object) funcOfItemName;
-  bool? Function(AnythingGangedPicker view, int? index, dynamic object) funcOfLeafItemOnTapped;
-  FutureOr<List<dynamic>?> Function(AnythingGangedPicker view, int? index, dynamic object) funcOfValues;
+  bool Function(AnythingLevelsPicker view, int? index, dynamic object) isHasNextLevel;
+  String? Function(AnythingLevelsPicker view, int? index, dynamic object) funcOfTitle;
+  String? Function(AnythingLevelsPicker view, int? index, dynamic object) funcOfItemName;
+  bool? Function(AnythingLevelsPicker view, int? index, dynamic object) funcOfLeafItemOnTapped;
+  FutureOr<List<dynamic>?> Function(AnythingLevelsPicker view, int? index, dynamic object) funcOfValues;
 
   // optional fields
-  double? Function(AnythingGangedPicker view)? onShowerWidth;
-  void Function(AnythingGangedPicker view, DialogShower shower)? onShower;
-  AnythingPickerOptions? Function(AnythingGangedPicker view, AnythingPickerOptions options)? onPickerOptions;
-  AnythingHeaderOptions? Function(AnythingGangedPicker view, AnythingHeaderOptions options)? onHeaderOptions;
-  AnythingSelectorOptions? Function(AnythingGangedPicker view, AnythingSelectorOptions options)? onSelectorOptions;
+  double? Function(AnythingLevelsPicker view)? onShowerWidth;
+  void Function(AnythingLevelsPicker view, DialogShower shower)? onShower;
+  AnythingPickerOptions? Function(AnythingLevelsPicker view, AnythingPickerOptions options)? onPickerOptions;
+  AnythingHeaderOptions? Function(AnythingLevelsPicker view, AnythingHeaderOptions options)? onHeaderOptions;
+  AnythingSelectorOptions? Function(AnythingLevelsPicker view, AnythingSelectorOptions options)? onSelectorOptions;
 
   // private fields
   List<int> relativeIndexes = [];
@@ -93,7 +93,7 @@ class AnythingGangedPicker extends StatelessWidget {
 
     Widget widget = AnythingSelector(
       isSearchEnable: isSearchEnable,
-      title: funcOfTitle(this, relativeIndexes.lastSafe, relativeElements.lastSafe),
+      header: funcOfTitle(this, relativeIndexes.lastSafe, relativeElements.lastSafe),
       funcOfValues: () async {
         return funcOfValues(this, relativeIndexes.lastSafe, relativeElements.lastSafe);
       },
