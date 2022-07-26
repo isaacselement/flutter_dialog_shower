@@ -43,6 +43,8 @@ class DialogWidgets {
     double? side,
     double? stroke,
     Duration? duration,
+    Color? colorBig,
+    Color? colorSmall,
     // --------- For Loading Painter -----------
   }) {
     Widget widget;
@@ -56,6 +58,8 @@ class DialogWidgets {
         side: side,
         stroke: stroke,
         duration: duration,
+        colorBig: colorBig,
+        colorSmall: colorSmall,
       );
     }
     return showIconText(icon: widget, text: text)..barrierDismissible = dismissible;
@@ -476,6 +480,8 @@ class PainterWidgetUtil {
     double? side,
     double? stroke,
     Duration? duration,
+    Color? colorBig,
+    Color? colorSmall,
   }) {
     isPaintAnimation ??= false;
     isPaintStartStiff ??= false;
@@ -488,7 +494,17 @@ class PainterWidgetUtil {
     Duration time = duration ?? const Duration(milliseconds: 1000);
 
     if (!isPaintAnimation) {
-      return RotateWidget(child: CustomPaint(size: size, painter: LoadingIconPainter(radius: radius, strokeWidth: strokeWidth)));
+      return RotateWidget(
+        child: CustomPaint(
+          size: size,
+          painter: LoadingIconPainter(
+            radius: radius,
+            strokeWidth: strokeWidth,
+            colorBig: colorBig,
+            colorSmall: colorSmall,
+          ),
+        ),
+      );
     }
     Widget paintView;
     Widget getPainterView(bool isRepeatWithReverse, List<double> Function(double progress) getAngels) {
@@ -499,7 +515,14 @@ class PainterWidgetUtil {
         isRepeatWithReverse: isRepeatWithReverse,
         painter: (progress) {
           List<double> ratios = getAngels(progress);
-          return LoadingIconPainter(radius: radius, strokeWidth: strokeWidth, ratioStart: ratios.first, ratioLength: ratios.last);
+          return LoadingIconPainter(
+            radius: radius,
+            strokeWidth: strokeWidth,
+            ratioStart: ratios.first,
+            ratioLength: ratios.last,
+            colorBig: colorBig,
+            colorSmall: colorSmall,
+          );
         },
       );
     }

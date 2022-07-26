@@ -35,6 +35,8 @@ class PageOfHomeless extends StatelessWidget {
           _buildBrokerTest(),
           const SizedBox(height: 16),
           _buildTapWidget(),
+          const SizedBox(height: 32),
+          _buildHomelessWidget(),
         ],
       ),
     );
@@ -163,6 +165,42 @@ class PageOfHomeless extends StatelessWidget {
                 });
               });
             }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHomelessWidget() {
+    Btv<bool> hidden = true.btv;
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Spin', onPressed: (state) {
+              hidden.value = !hidden.value;
+            }),
+            Btw(
+              builder: (context) {
+                if (hidden.value) {
+                  return const Offstage(offstage: true);
+                }
+                return RotateWidget(
+                  curve: Curves.fastOutSlowIn,
+                  duration: const Duration(milliseconds: 500),
+                  child: PainterWidgetUtil.getOneLoadingCircleWidget(
+                    isPaintAnimation: true,
+                    isPaintStartStiff: true,
+                    isPaintWrapRotate: false,
+                    side: 80,
+                    stroke: 6,
+                    duration: const Duration(milliseconds: 1500),
+                    colorSmall: Colors.black,
+                    colorBig: Colors.redAccent,
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ],

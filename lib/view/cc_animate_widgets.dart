@@ -7,10 +7,12 @@ import 'package:flutter/cupertino.dart';
 /// A Repeated Spin Widget
 class RotateWidget extends StatefulWidget {
   final Widget child;
+  final Curve? curve;
+  final bool? isRepeat;
   final bool? isClockwise;
   final Duration? duration;
 
-  const RotateWidget({Key? key, required this.child, this.isClockwise, this.duration}) : super(key: key);
+  const RotateWidget({Key? key, required this.child, this.isClockwise, this.duration, this.curve, this.isRepeat}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => RotateWidgetState();
@@ -24,7 +26,7 @@ class RotateWidgetState extends State<RotateWidget> with SingleTickerProviderSta
   @override
   void initState() {
     animationController = AnimationController(vsync: this, duration: widget.duration ?? const Duration(milliseconds: 1000));
-    animationController.repeat();
+    widget.isRepeat ?? true ? animationController.repeat() : animationController.forward();
     super.initState();
   }
 
@@ -36,9 +38,13 @@ class RotateWidgetState extends State<RotateWidget> with SingleTickerProviderSta
 
   @override
   Widget build(BuildContext context) {
+    Animation amination = animationController;
+    if (widget.curve != null) {
+      amination = CurvedAnimation(parent: animationController, curve: widget.curve!);
+    }
     return AnimatedBuilder(
       child: widget.child,
-      animation: animationController,
+      animation: amination,
       builder: (BuildContext context, Widget? child) {
         double angle = animationController.value * _circle;
         return Transform.rotate(child: child, angle: widget.isClockwise == false ? -angle : angle);
