@@ -3,8 +3,6 @@ import 'package:flutter_dialog_shower/core/boxes.dart';
 
 import 'dialog_shower.dart';
 
-
-
 class DialogWrapper {
   /// Shower basic useage wrapper
   // Note, direction example:
@@ -81,9 +79,9 @@ class DialogWrapper {
     Widget? widget = centralOfShower?.call(shower, child: child) ?? child;
 
     shower.show(widget, width: width, height: height);
-    add(shower, key: key);
+    addToRepo(shower, key: key);
     shower.addDismissCallBack((d) {
-      remove(d);
+      deleteInRepo(d);
     });
     return shower;
   }
@@ -205,27 +203,37 @@ class DialogWrapper {
   }
 
   static void iterateDialogs(bool Function(DialogShower dialog) handler) {
-    List<DialogShower> tmp = [..._list()];
-    for (int i = tmp.length - 1; i >= 0; i--) {
-      if (handler(tmp.elementAt(i))) {
+    List<DialogShower> list = _list();
+    for (int i = list.length - 1; i >= 0; i--) {
+      if (handler(list.elementAt(i))) {
         break;
       }
     }
   }
 
+  // shower management: add/remove/iterate in ordinal
+  static void deleteInRepo(DialogShower? dialog) {
+    _list().remove(dialog);
+    _map().removeWhere((key, value) => value == dialog);
+  }
+
+  static void addToRepo(DialogShower dialog, {String? key}) {
+    if (key != null) {
+      _map()[key] = dialog;
+    }
+    _list().add(dialog);
+  }
+
+  // dismiss methods
   static Future<void> dismissAppearingDialogs() async {
     List<DialogShower> tmp = [..._list()];
     _list().clear();
+    _map().clear();
+
     for (int i = tmp.length - 1; i >= 0; i--) {
       var dialog = tmp[i];
       await _dismiss(dialog);
     }
-
-    // Map<String, DialogShower> map = {}..addAll(_map());
-    _map().clear(); // just clear, cause _addDialog entry method: _map element already in _list
-    // map.forEach((key, dialog) async {
-    //   await _dismiss(dialog);
-    // });
   }
 
   static Future<void> dismissTopDialog({int? count}) async {
@@ -239,48 +247,32 @@ class DialogWrapper {
   }
 
   static Future<void> dismissDialog<T extends Object?>(DialogShower? dialog, {String? key, T? result}) async {
-    // remove & dismiss from top to bottom if dialog in list
-    if (dialog != null && (_list().contains(dialog))) {
+    // dismiss from top to bottom if dialog in list
+    Future<void> deleteWithDismiss(DialogShower dialog) async {
       List<DialogShower> tmp = [..._list()];
       for (int i = tmp.length - 1; i >= 0; i--) {
         DialogShower d = tmp.elementAt(i);
-        remove(d);
+        deleteInRepo(d);
         await _dismiss<T>(d, result: result);
         if (d == dialog) {
           break;
         }
       }
     }
+
+    if (dialog != null && (_list().contains(dialog))) {
+      await deleteWithDismiss(dialog);
+    }
     if (key != null && (dialog = _map()[key]) != null) {
-      List<DialogShower> tmp = [..._list()];
-      for (int i = tmp.length - 1; i >= 0; i--) {
-        DialogShower d = tmp.elementAt(i);
-        remove(d);
-        await _dismiss<T>(d, result: result);
-        if (d == dialog) {
-          break;
-        }
-      }
+      await deleteWithDismiss(dialog!);
     }
   }
 
-  // important!!! do not use this method unless you take management of your own shower
+  // important!!! do not use this method independently unless you take management of your own shower
   static Future<void> _dismiss<T extends Object?>(DialogShower? dialog, {T? result}) async {
     if (dialog != null) {
       await dialog.dismiss<T>(result);
     }
   }
 
-  // shower management: add/remove/iterate in ordinal
-  static void remove(DialogShower? dialog) {
-    _list().remove(dialog);
-    _map().removeWhere((key, value) => value == dialog);
-  }
-
-  static void add(DialogShower dialog, {String? key}) {
-    if (key != null) {
-      _map()[key] = dialog;
-    }
-    _list().add(dialog);
-  }
 }
