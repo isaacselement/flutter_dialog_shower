@@ -23,6 +23,7 @@ class ElementsIterator {
 }
 
 class ElementsUtil {
+  /// Get Size & Offset methods
   static Size? getSize(BuildContext context) {
     RenderObject? box = context.findRenderObject();
     if (box is RenderBox) {
@@ -67,7 +68,7 @@ class ElementsUtil {
     return max;
   }
 
-  /// get child of Widget/State/Element
+  /// Get child of Widget/State/Element methods
   static Widget? getChildWidget(BuildContext context) {
     return getChildElement(context)?.widget;
   }
