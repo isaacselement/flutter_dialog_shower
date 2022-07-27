@@ -3,8 +3,10 @@
 import 'package:flutter/cupertino.dart';
 
 // Inspired by GetX[https://github.com/jonataslaw/getx]. Brother is the simplified version for GetX widget/state management.
-// Btw -> Observer/StatefulWidget, btv -> Notifier/Data. Wrap your widget with Btw in a scope as small as possible for best practice.
-// BtKey -> For decoupling, btv plays two roles of Notifier & Data, but we may need Notifier only in some business scenarios.
+
+// Btw -> Observer/StatefulWidget, Btv -> Notifier/Data.
+// Wrap your widget with Btw in a scope as small as possible for the best practice with a Btv in build procedure.
+// BtKey -> For decoupling, Btv plays two roles of Notifier & Data, but we may need Data is not a Notifier in some business scenarios.
 
 /// Brother Values
 class Btv<T> extends BtNotifier<T> {
