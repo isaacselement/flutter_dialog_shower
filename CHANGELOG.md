@@ -4,8 +4,15 @@
 * DialogWrapper - A Convenient Manager for DialogShower
 * DialogWidgets - Some frequently-used dialog ui: Loading, Tips, Confirm/Cancel alert …
 
-
 # 1.1.0
 
 * Support Flutter SDK 3.x.x
 * OverlayShower - New features :)
+
+# 1.2.0
+
+* Refactor the codes
+
+# 1.2.1
+
+* Refactor the codes

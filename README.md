@@ -105,6 +105,9 @@ DialogShower.init(context);  # init with a root context in your app
 
 
 
+# Contact & Discussion
+
+<font size=5>QQ</font> Group ID: <font size=5>638027386</font>
 
 
 
