@@ -37,6 +37,8 @@ class PageOfHomeless extends StatelessWidget {
           _buildTapWidget(),
           const SizedBox(height: 32),
           _buildHomelessWidget(),
+          const SizedBox(height: 32),
+          _buildAnythingWidget(),
         ],
       ),
     );
@@ -248,6 +250,21 @@ class PageOfHomeless extends StatelessWidget {
                 Logger.d('CcTapDebouncerWidget ~~~~');
               },
             )
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAnythingWidget() {
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            AnythingFielder(
+              title: 'VIN码',
+              options: AnythingFielderOptions()..contentHintText = '点击OCR识别或输入vin码后6位',
+            ),
           ],
         ),
       ],

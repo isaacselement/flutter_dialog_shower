@@ -320,7 +320,7 @@ class AnythingFielderOptions {
   Widget? contentLoadingIcon = const AnythingLoadingWidget(side: 18, stroke: 1.3);
 
   /// Extras...
-  int maxLength = 0x7fffffffffffffff;
+  int maxLength = 0x0800000000000000;
   bool Function(AnythingFielderState state, String text)? onEventTextChangedRaw;
   String? Function(AnythingFielderState state, String text)? onEventTextChangedFilter;
   TextInputType? keyboardType;
