@@ -164,11 +164,13 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     if (widget.title != null) {
       // https://stackoverflow.com/a/69116599
       titleRowChildren.add(Flexible(
-          child: Text(
-        widget.title!,
-        style: options.titleStyle,
-        maxLines: options.titleMaxLines,
-      )));
+        child: Text(
+          widget.title!,
+          style: options.titleStyle,
+          maxLines: options.titleMaxLines,
+          overflow: options.titleOverflow,
+        ),
+      ));
     }
     if (options.titleEndIcon != null) {
       titleRowChildren.add(options.titleEndIcon!);
@@ -219,6 +221,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
         text,
         style: style,
         maxLines: options.contentMaxLines,
+        overflow: options.contentOverflow,
       );
       contentCenterWidget = Container(padding: options.contentPadding, child: displayedValueWidget);
     }
@@ -757,9 +760,10 @@ class AnythingPickerOptions {
   );
 
   // title widget
-  int? titleMaxLines = 1;
-  TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21));//, overflow: TextOverflow.ellipsis);
   Widget? titleEndIcon;
+  int? titleMaxLines = 1;
+  TextOverflow? titleOverflow = TextOverflow.ellipsis;
+  TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21)); //, overflow: TextOverflow.ellipsis);
 
   // content widget
   double? contentWidth;
@@ -772,8 +776,9 @@ class AnythingPickerOptions {
   // content text widget
   String contentHintText = 'Select';
   int? contentMaxLines = 1;
-  TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2));//, overflow: TextOverflow.ellipsis);
-  TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21));//, overflow: TextOverflow.ellipsis);
+  TextOverflow? contentOverflow = TextOverflow.ellipsis;
+  TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2)); //, overflow: TextOverflow.ellipsis);
+  TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21)); //, overflow: TextOverflow.ellipsis);
 
   // content end widget
   Widget? contentStartWidget;
@@ -847,9 +852,10 @@ class AnythingPickerOptions {
 
     newInstance.requiredIcon = requiredIcon;
 
-    newInstance.titleMaxLines = titleMaxLines;
-    newInstance.titleStyle = titleStyle;
     newInstance.titleEndIcon = titleEndIcon;
+    newInstance.titleMaxLines = titleMaxLines;
+    newInstance.titleOverflow = titleOverflow;
+    newInstance.titleStyle = titleStyle;
 
     newInstance.contentWidth = contentWidth;
     newInstance.contentHeight = contentHeight;
@@ -860,6 +866,7 @@ class AnythingPickerOptions {
 
     newInstance.contentHintText = contentHintText;
     newInstance.contentMaxLines = contentMaxLines;
+    newInstance.contentOverflow = contentOverflow;
     newInstance.contentHintStyle = contentHintStyle;
     newInstance.contentTextStyle = contentTextStyle;
 
