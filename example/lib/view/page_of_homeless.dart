@@ -262,8 +262,22 @@ class PageOfHomeless extends StatelessWidget {
         Wrap(
           children: [
             AnythingFielder(
-              title: 'VIN码',
-              options: AnythingFielderOptions()..contentHintText = '点击OCR识别或输入vin码后6位',
+              title: 'First Name',
+              options: AnythingFielderOptions()..contentHintText = 'i.e. Kethoree',
+            ),
+            AnythingFielder(
+              title: 'Last Name',
+              options: AnythingFielderOptions()..contentHintText = 'i.e. Jobs',
+            ),
+            AnythingFielder(
+              title: 'Age',
+              funcOfEndClear: (state){},
+              options: AnythingFielderOptions()
+                ..contentHintText = 'Just input your age with digital number, just a long hint text. i.e. 18 :P'
+                ..isHorizontal = true
+                ..textAlign = TextAlign.end
+                ..contentDecorationNormal = null
+                ..contentDecorationFocused = null,
             ),
           ],
         ),

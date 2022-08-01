@@ -106,8 +106,6 @@ class AnythingFielderState extends State<AnythingFielder> {
   }
 
   Widget _build(BuildContext context) {
-    List<Widget> allWholeColumnChildren = [];
-
     /// 1. title
     List<Widget> titleRowChildren = [];
 
@@ -123,17 +121,10 @@ class AnythingFielderState extends State<AnythingFielder> {
     Widget? titleWidget;
     if (widget.funcOfTitleOnTapped != null) {
       titleWidget = Builder(builder: (context) {
-        return InkWell(
-            child: titleRow,
-            onTap: () {
-              widget.funcOfTitleOnTapped?.call(this, context);
-            });
+        return InkWell(child: titleRow, onTap: () => widget.funcOfTitleOnTapped?.call(this, context));
       });
     } else {
       titleWidget = titleRow;
-    }
-    if (titleWidget != null) {
-      allWholeColumnChildren.add(titleWidget);
     }
 
     /// 2. content
@@ -194,10 +185,11 @@ class AnythingFielderState extends State<AnythingFielder> {
       Widget displayedValueWidget;
       if (widget.isEditable ?? true) {
         displayedValueWidget = CupertinoTextField(
-          padding: EdgeInsets.zero,
           decoration: null,
           focusNode: focusNode,
           controller: valueController,
+          padding: options.textPadding,
+          textAlign: options.textAlign,
           maxLength: options.maxLength,
           style: options.contentTextStyle,
           keyboardType: options.keyboardType,
@@ -269,14 +261,28 @@ class AnythingFielderState extends State<AnythingFielder> {
           },
         );
 
-    allWholeColumnChildren.add(contentWidget);
-
-    return Column(children: allWholeColumnChildren);
+    /// 2.4 default is column for vertical
+    if (options.isHorizontal == true) {
+      return Row(
+        children: [
+          titleWidget ?? const Offstage(offstage: true),
+          Expanded(child: contentWidget),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        titleWidget ?? const Offstage(offstage: true),
+        contentWidget,
+      ],
+    );
   }
 }
 
 /// Anything Options/Configs Class
 class AnythingFielderOptions {
+  bool? isHorizontal;
+
   Widget? requiredIcon = const Padding(
     padding: EdgeInsets.only(right: 4),
     child: Text('*', style: TextStyle(fontSize: 14, color: Color(0xFFFF616F))),
@@ -319,11 +325,13 @@ class AnythingFielderOptions {
   );
   Widget? contentLoadingIcon = const AnythingLoadingWidget(side: 18, stroke: 1.3);
 
-  /// Extras...
+  // value field CupertinoTextField properties
   int maxLength = 0x0800000000000000;
   bool Function(AnythingFielderState state, String text)? onEventTextChangedRaw;
   String? Function(AnythingFielderState state, String text)? onEventTextChangedFilter;
   TextInputType? keyboardType;
+  TextAlign textAlign = TextAlign.start;
+  EdgeInsets textPadding = EdgeInsets.zero;
 
   /// Methods
   AnythingFielderOptions();
@@ -331,6 +339,7 @@ class AnythingFielderOptions {
   AnythingFielderOptions clone() {
     AnythingFielderOptions newInstance = AnythingFielderOptions();
 
+    newInstance.isHorizontal = isHorizontal;
     newInstance.requiredIcon = requiredIcon;
 
     newInstance.titleStyle = titleStyle;
@@ -357,6 +366,8 @@ class AnythingFielderOptions {
     newInstance.onEventTextChangedRaw = onEventTextChangedRaw;
     newInstance.onEventTextChangedFilter = onEventTextChangedFilter;
     newInstance.keyboardType = keyboardType;
+    newInstance.textAlign = textAlign;
+    newInstance.textPadding = textPadding;
 
     return newInstance;
   }
