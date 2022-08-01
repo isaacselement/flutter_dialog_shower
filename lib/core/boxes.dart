@@ -297,7 +297,7 @@ class ThrottleAny {
 
   static ThrottleAny get(String key) {
     maps ??= {};
-    return (maps?[key] ??= ThrottleAny())!;
+    return (maps![key] ??= ThrottleAny());
   }
 
   static ThrottleAny? remove(String key) {
@@ -332,7 +332,7 @@ class DebouncerAny {
 
   static DebouncerAny get(String key) {
     maps ??= {};
-    return (maps?[key] ??= DebouncerAny())!;
+    return (maps![key] ??= DebouncerAny());
   }
 
   static DebouncerAny? remove(String key) {

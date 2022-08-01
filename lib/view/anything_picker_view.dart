@@ -758,7 +758,7 @@ class AnythingPickerOptions {
 
   // title widget
   int? titleMaxLines = 1;
-  TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21), overflow: TextOverflow.ellipsis);
+  TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21));//, overflow: TextOverflow.ellipsis);
   Widget? titleEndIcon;
 
   // content widget
@@ -772,8 +772,8 @@ class AnythingPickerOptions {
   // content text widget
   String contentHintText = 'Select';
   int? contentMaxLines = 1;
-  TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2), overflow: TextOverflow.ellipsis);
-  TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21), overflow: TextOverflow.ellipsis);
+  TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2));//, overflow: TextOverflow.ellipsis);
+  TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21));//, overflow: TextOverflow.ellipsis);
 
   // content end widget
   Widget? contentStartWidget;
