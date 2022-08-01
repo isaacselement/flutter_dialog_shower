@@ -137,33 +137,28 @@ class AnythingFielderState extends State<AnythingFielder> {
 
     /// 2.1 content end view
     bool isShouldShowEndClearIcon = false;
-    Widget? contentEndWidget;
-    if (widget.builderOfEndWidget != null) {
-      contentEndWidget = widget.builderOfEndWidget?.call(this);
-    } else {
-      contentEndWidget = options.contentEndWidget;
+    Widget? contentEndWidget = widget.builderOfEndWidget?.call(this) ?? options.contentEndWidget;
 
-      if (widget.isEditable ?? true && contentEndWidget == null) {
-        if (widget.isLoading ?? false) {
-          assert(options.contentLoadingIcon != null, 'Loading widget cannot be null when isLoading is true!');
-          contentEndWidget = options.contentLoadingIcon!;
-        } else if (widget.funcOfEndClear != null) {
-          // if funcOfClear supplied, we offered the clear button
-          isShouldShowEndClearIcon = true;
-          if (displayedText != null && displayedText.isNotEmpty) {
-            contentEndWidget = CcTapWidget(
-              onTap: (state) {
-                setState(() {
-                  widget.funcOfEndClear!.call(this);
-                  widget.value = null;
+    if (contentEndWidget == null && (widget.isEditable ?? true)) {
+      if (widget.isLoading ?? false) {
+        assert(options.contentLoadingIcon != null, 'Loading widget cannot be null when isLoading is true!');
+        contentEndWidget = options.contentLoadingIcon!;
+      } else if (widget.funcOfEndClear != null) {
+        // if funcOfClear supplied, we offered the clear button
+        isShouldShowEndClearIcon = true;
+        if (displayedText != null && displayedText.isNotEmpty) {
+          contentEndWidget = CcTapWidget(
+            onTap: (state) {
+              setState(() {
+                widget.funcOfEndClear!.call(this);
+                widget.value = null;
 
-                  previousText = null;
-                  previousTextSelection = null;
-                });
-              },
-              child: options.contentClearIcon,
-            );
-          }
+                previousText = null;
+                previousTextSelection = null;
+              });
+            },
+            child: options.contentClearIcon,
+          );
         }
       }
     }

@@ -783,11 +783,10 @@ class AnythingPickerOptions {
   // content end widget
   Widget? contentStartWidget;
   Widget? contentEndWidget;
-  Widget? contentArrowIcon = Transform(
-    alignment: Alignment.center,
-    transform: Matrix4.rotationZ(-90 / 180 * math.pi),
-    child: const Icon(Icons.arrow_back_ios_rounded, size: 13, color: Color(0xFFBFBFD2)),
-  );
+  Widget? contentArrowIcon = const RotatedBox(
+    quarterTurns: 2,
+    child: Icon(Icons.arrow_back_ios_sharp, size: 13, color: Color(0xFFBFBFD2)),
+  ); // Transform with Alignment.center & Matrix4.rotationZ(-90 / 180 * math.pi)
   Widget? contentClearIcon = Container(
     color: Colors.transparent,
     alignment: Alignment.centerRight,
