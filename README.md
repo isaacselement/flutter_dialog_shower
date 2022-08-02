@@ -1,5 +1,5 @@
 
-##### Build & Run `example/lib/main.dart` on iOS/Android device for more demostrations
+##### Build & Run `example/lib/main.dart` on iOS/Android/Chrome for more demostrations
 
 <p float="left">
   <img src="https://github.com/isaacselement/flutter_dialog_shower/raw/master/example/images/demo_bubble.png" width="30%" />
@@ -107,7 +107,7 @@ DialogShower.init(context);  # init with a root context in your app
 
 # Contact & Discussion
 
-<font size=5>QQ</font> Group ID: <font size=5>638027386</font>
+QQ Group ID: 638027386
 
 
 

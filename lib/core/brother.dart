@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 
 // Inspired by GetX[https://github.com/jonataslaw/getx]. Brother is the simplified version for GetX widget/state management.
 
@@ -36,24 +36,20 @@ extension ExtBtT<T> on T {
 }
 
 /// Brother Widgets
-typedef BtWidgetShouldRebuild<T> = bool Function(BtWidgetState state);
+typedef BtWidgetOnRebuild = bool Function(BtWidgetState state, dynamic data);
 
 class Btw extends BtWidget {
   Widget Function(BuildContext context) builder;
 
-  Btw({Key? key, required this.builder, String? updateKey, BtWidgetShouldRebuild? shouldRebuild})
-      : super(key: key, updateKey: updateKey, shouldRebuild: shouldRebuild);
+  Btw({Key? key, required this.builder, String? updateKey, BtWidgetOnRebuild? onRebuild})
+      : super(key: key, updateKey: updateKey, onRebuild: onRebuild);
 
   @override
   Widget build(BuildContext context) => builder(context);
 
-  // New Feature: update widget by a string key .
-  static Map<String, BtKey>? _map;
-
-  static Map<String, BtKey> get map => (_map ??= {});
-
+  // New Feature: update bt widget by a string key
   static update(String updateKey) {
-    map[updateKey]?.update();
+    BtWidgetState.map[updateKey]?.update();
   }
 
   static updates(List<String> keys) {
@@ -62,10 +58,10 @@ class Btw extends BtWidget {
 }
 
 abstract class BtWidget extends StatefulWidget {
-  BtWidget({Key? key, this.updateKey, this.shouldRebuild}) : super(key: key);
+  BtWidget({Key? key, this.updateKey, this.onRebuild}) : super(key: key);
 
-  String? updateKey;
-  BtWidgetShouldRebuild? shouldRebuild;
+  final String? updateKey; // final is needed, we need do removal job ...
+  BtWidgetOnRebuild? onRebuild;
 
   @override
   State<StatefulWidget> createState() => BtWidgetState();
@@ -81,7 +77,7 @@ class BtWidgetState extends State<BtWidget> {
   void initState() {
     super.initState();
     observer.listen((data) {
-      if ((widget.shouldRebuild?.call(this) ?? true) && mounted) {
+      if ((widget.onRebuild?.call(this, data) ?? true) && mounted) {
         setState(() {});
       }
     });
@@ -90,49 +86,54 @@ class BtWidgetState extends State<BtWidget> {
   @override
   void dispose() {
     observer.close();
-    _updateKeyRemove();
-    super.dispose();
+    _updateKeyRemoveOnDispose(this);
     __brother_debug_log__('BtWidget disposed');
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    BtObserver? bakup = BtObserver.proxy;
+    BtObserver? backup = BtObserver.proxy;
     BtObserver.proxy = observer;
-    _updateKeyAdd();
+    _updateKeyAddOnBuild(this);
     Widget result = widget.build(context);
-    BtObserver.proxy = bakup;
-    if (observer._subscriptions.isEmpty) {
+    BtObserver.proxy = backup;
+    if (observer.isNotifierEmpty()) {
       __brother_error_log__(
-          'The improper use of Btw has been detected. The btv value getter method didn\'t call, pls check your code/conditional logic.');
+          'The improper use of Btw has been detected. The btv value getter method did not call, pls check your code/conditional logic.');
     }
     return result;
   }
 
-  void _updateKeyAdd() {
-    if (widget.updateKey != null) {
-      String updateKey = widget.updateKey!;
-      BtObserver.proxy?.addListener(Btw.map[updateKey] ?? (Btw.map[updateKey] = BtKey()));
+  // New Feature: update bt widget by a string key
+  static Map<String, BtKey>? _map;
+
+  static Map<String, BtKey> get map => (_map ??= {});
+
+  static void _updateKeyAddOnBuild(BtWidgetState state) {
+    if (state.widget.updateKey != null) {
+      String updateKey = state.widget.updateKey!;
+      BtObserver.proxy?.bindNotifier(map[updateKey] ?? (map[updateKey] = BtKey()));
     }
   }
 
-  void _updateKeyRemove() {
-    if (widget.updateKey != null) {
-      String updateKey = widget.updateKey!;
-      BtKey? btKey = Btw.map[updateKey];
+  static void _updateKeyRemoveOnDispose(BtWidgetState state) {
+    if (state.widget.updateKey != null) {
+      String updateKey = state.widget.updateKey!;
+      BtKey? btKey = map[updateKey];
       if (btKey?.isSubscriptionsEmpty() ?? false) {
-        Btw.map.remove(updateKey);
+        map.remove(updateKey);
         __brother_debug_log__('BtWidget remove updateKey: $updateKey');
       }
     }
   }
 }
 
-/// Brother Key is a Notifier
+/// Brother Key is a Notifier without holding a value/data
 class BtKey extends BtNotifier {
   @override
   void update() {
-    _stream.add(null);
+    _stream.update(null);
   }
 }
 
@@ -140,43 +141,45 @@ class BtKey extends BtNotifier {
 abstract class BtNotifier<T> {
   final BtStream<T> _stream = BtStream();
 
-  get eye => BtObserver.proxy?.addListener(this);
+  get eye => BtObserver.proxy?.bindNotifier(this);
 
   late T _value;
 
   T get value {
-    BtObserver.proxy?.addListener(this);
+    eye;
     return _value;
   }
 
   set value(T data) {
     _value = data;
-    _stream.add(data);
-  }
-
-  void add(T? data) {
-    _stream.add(data);
+    _stream.update(data);
   }
 
   // just set data and you should update view later manually for calling update method
-  set data(T data) {
-    _value = data;
+  set data(T data) => _value = data;
+
+  T get rawData => _value;
+
+  // just update with current _value
+  void update() {
+    _stream.update(_value);
   }
 
-  void update() {
-    _stream.add(_value);
+  // just update with a data that not persist to the _value field, you can pass a null to observer :)
+  void add(T? data) {
+    _stream.update(data);
   }
 
   BtSubscription<T> listen(BtSubscriptionCallBack? onData) {
     return _stream.listen(onData);
   }
 
-  void remove(BtSubscription<T> sub) {
-    _stream.subscriptions.remove(sub);
+  void eliminate(BtSubscription<T> sub) {
+    _stream.eliminate(sub);
   }
 
   bool isSubscriptionsEmpty() {
-    return _stream.subscriptions.isEmpty;
+    return _stream.isEmpty();
   }
 }
 
@@ -185,15 +188,17 @@ class BtObserver<T> {
   static BtObserver? proxy;
 
   final BtStream<T> _stream = BtStream();
-  final _subscriptions = <BtNotifier, List<BtSubscription<T>>>{}; // for reclaim notifier resources on close
 
-  void addListener(BtNotifier<T> btrNotifier) {
-    if (!_subscriptions.containsKey(btrNotifier)) {
-      BtSubscription<T> sub = btrNotifier.listen((data) {
-        if (!_stream.isClosed) _stream.add(data);
+  // holding the notifier and subscription, for reclaim the notifier resources on close
+  final _subscriptions = <BtNotifier, List<BtSubscription<T>>>{};
+
+  void bindNotifier(BtNotifier<T> notifier) {
+    if (!_subscriptions.containsKey(notifier)) {
+      BtSubscription<T> sub = notifier.listen((data) {
+        // call the method the _stream listened ever
+        _stream.update(data);
       });
-      _subscriptions[btrNotifier] ??= <BtSubscription<T>>[];
-      _subscriptions[btrNotifier]?.add(sub);
+      (_subscriptions[notifier] ??= <BtSubscription<T>>[]).add(sub);
     }
   }
 
@@ -204,12 +209,17 @@ class BtObserver<T> {
   void close() {
     _subscriptions.forEach((_notifier, _subscriptions) {
       for (BtSubscription<T> sub in _subscriptions) {
-        sub.close();
-        _notifier.remove(sub);
+        // just remove subscription from notifier, do not close the notifier, cause notifier maybe bind with other observer
+        // notifier and observer are in a Many-to-many relationships
+        _notifier.eliminate(sub);
       }
     });
     _subscriptions.clear();
     _stream.close();
+  }
+
+  bool isNotifierEmpty() {
+    return _subscriptions.isEmpty;
   }
 }
 
@@ -220,30 +230,35 @@ class BtStream<T> {
   List<BtSubscription<T>> subscriptions = <BtSubscription<T>>[];
 
   BtSubscription<T> listen(BtSubscriptionCallBack? onData) {
-    BtSubscription<T> sub = BtSubscription<T>();
-    sub.onData = onData;
+    BtSubscription<T> sub = BtSubscription<T>(onData: onData);
     subscriptions.add(sub);
     return sub;
   }
 
-  void add(T? data) {
+  void update(T? data) {
+    if (isClosed) {
+      return;
+    }
     for (BtSubscription sub in subscriptions) {
-      if (!sub.isClosed) {
-        sub.onData?.call(data);
-      }
+      sub.call(data);
     }
   }
 
-  void remove(BtSubscription<T> sub) {
+  bool isEmpty() {
+    return subscriptions.isEmpty;
+  }
+
+  void eliminate(BtSubscription<T> sub) {
+    sub.close();
     subscriptions.remove(sub);
   }
 
   void close() {
+    isClosed = true;
     for (BtSubscription sub in subscriptions) {
       sub.close();
     }
     subscriptions.clear();
-    isClosed = true;
   }
 }
 
@@ -253,10 +268,18 @@ typedef BtSubscriptionCallBack<T> = void Function(T? data);
 class BtSubscription<T> {
   BtSubscriptionCallBack? onData;
 
+  BtSubscription({this.onData});
+
   bool isClosed = false;
 
   void close() {
     isClosed = true;
+  }
+
+  void call(T? data) {
+    if (!isClosed) {
+      onData?.call(data);
+    }
   }
 }
 

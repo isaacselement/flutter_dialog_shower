@@ -26,44 +26,28 @@ class PageOfBrother extends StatelessWidget {
   }
 
   Widget buildContainer() {
+    Widget demonstrationBox({required String title, required Widget Function() demo}) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          demo(),
+        ],
+      );
+    }
+
     return Column(
       children: [
         const SizedBox(height: 32),
         Wrap(
           spacing: 32,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Btw & btv', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                _buildBtwBtv(),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Btw & btv null', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                _buildBtwBtvNull(),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Btw & btKey', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                _buildBtwBtKey(),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Btw & String Key', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                _buildBtwWithStringKey(),
-              ],
-            ),
+            demonstrationBox(title: 'Btw & Btv', demo: () => _buildBtwBtv()),
+            demonstrationBox(title: 'Btw & Btv initialize with null', demo: () => _buildBtwBtvNull()),
+            demonstrationBox(title: 'Btw & BtKey', demo: () => _buildBtwBtKey()),
+            demonstrationBox(title: 'Btw & String Key', demo: () => _buildBtwWithStringKey()),
           ],
         ),
-        const SizedBox(height: 32),
-        BrotherBasicView(),
         const SizedBox(height: 96),
         BrotherAdvanceView(),
       ],
@@ -88,7 +72,7 @@ class PageOfBrother extends StatelessWidget {
     return Btw(
       builder: (context) {
         return CupertinoButton(
-            child: Icon(Icons.flare, size: 50, color: color.value??Colors.purpleAccent),
+            child: Icon(Icons.flare, size: 50, color: color.value ?? Colors.purpleAccent),
             onPressed: () {
               if (color.value == null) {
                 color.value = Colors.deepOrange;
@@ -123,97 +107,34 @@ class PageOfBrother extends StatelessWidget {
   Widget _buildBtwWithStringKey() {
     Color colorHello = Colors.black26;
     Color colorRefresh = Colors.black26;
+    String mKeyOne = '__hello_hello_hello__';
+    String mKeyTwo = '__can_you_see__';
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Btw(
-          updateKey: '__hello_hello_hello__',
+          updateKey: mKeyOne,
           builder: (context) {
             return CupertinoButton(
                 child: Icon(Icons.restore_from_trash, size: 50, color: colorHello),
                 onPressed: () {
                   colorHello = colorHello == Colors.red ? Colors.purpleAccent : Colors.red;
-                  Btw.update('__hello_hello_hello__');
+                  Btw.update(mKeyOne);
                 });
           },
         ),
         Btw(
-          updateKey: '__can_you_see__',
+          updateKey: mKeyTwo,
           builder: (context) {
             return CupertinoButton(
                 child: Icon(Icons.refresh, size: 50, color: colorRefresh),
                 onPressed: () {
                   colorHello = colorHello == Colors.red ? Colors.purpleAccent : Colors.red;
                   colorRefresh = colorRefresh == Colors.red ? Colors.purpleAccent : Colors.red;
-                  Btw.updates(['__hello_hello_hello__', '__can_you_see__']);
+                  Btw.updates([mKeyOne, mKeyTwo]);
                 });
           },
         ),
-      ],
-    );
-  }
-}
-
-class BrotherBasicView extends StatelessWidget {
-  BrotherBasicView({Key? key}) : super(key: key);
-
-  Btv<int> basicIndex = 0.btv;
-  Btv<String> basicString = ''.btv;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text('Basic usage of Btw & btv', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 12),
-        const Text('Just click icons below', style: TextStyle(fontSize: 15, color: Colors.blueGrey)),
-        Btw(builder: (context) {
-          return Wrap(
-            spacing: 20,
-            children: [
-              ViewsGenerator.createIconTabButton(
-                'Support',
-                0,
-                const Icon(Icons.support, size: 50, color: Colors.black26),
-                const Icon(Icons.support_sharp, size: 50, color: Colors.deepOrange),
-                basicIndex,
-                basicString,
-              ),
-              ViewsGenerator.createIconTabButton(
-                'Surround',
-                1,
-                const Icon(Icons.surround_sound, size: 50, color: Colors.black26),
-                const Icon(Icons.surround_sound_sharp, size: 50, color: Colors.deepOrange),
-                basicIndex,
-                basicString,
-              ),
-              ViewsGenerator.createIconTabButton(
-                'Store',
-                2,
-                const Icon(Icons.store, size: 50, color: Colors.black26),
-                const Icon(Icons.store_sharp, size: 50, color: Colors.deepOrange),
-                basicIndex,
-                basicString,
-              ),
-              ViewsGenerator.createIconTabButton(
-                'Esports',
-                3,
-                const Icon(Icons.sports_esports, size: 50, color: Colors.black26),
-                const Icon(Icons.sports_esports_sharp, size: 50, color: Colors.deepOrange),
-                basicIndex,
-                basicString,
-              ),
-              ViewsGenerator.createIconTabButton(
-                'Spa',
-                4,
-                const Icon(Icons.spa, size: 50, color: Colors.black26),
-                const Icon(Icons.spa_sharp, size: 50, color: Colors.deepOrange),
-                basicIndex,
-                basicString,
-              ),
-            ],
-          );
-        }),
       ],
     );
   }
@@ -243,7 +164,7 @@ class BrotherAdvanceView extends StatelessWidget {
               const SizedBox(height: 12),
               Btw(
                 builder: (context) {
-                  String text = changeMeLists.value.isEmpty ? 'Change me [List]' : changeMeLists.value.toString();
+                  String text = changeMeLists.value.isEmpty ? 'Click me. Change me [List]' : changeMeLists.value.toString();
                   return InkWell(
                     child: Padding(
                         padding: const EdgeInsets.only(left: 16, right: 16),
@@ -259,7 +180,7 @@ class BrotherAdvanceView extends StatelessWidget {
               const SizedBox(height: 12),
               Btw(
                 builder: (context) {
-                  String text = changeMeMaps.value.isEmpty ? 'Change me {Map}' : changeMeMaps.value.toString();
+                  String text = changeMeMaps.value.isEmpty ? 'Click me. Change me {Map}' : changeMeMaps.value.toString();
                   return InkWell(
                     child: Padding(
                         padding: const EdgeInsets.only(left: 16, right: 16),
@@ -272,11 +193,13 @@ class BrotherAdvanceView extends StatelessWidget {
                   );
                 },
               ),
+              const SizedBox(height: 24),
+              const Text('Just click icons below', style: TextStyle(fontSize: 15, color: Colors.blueGrey)),
               Btw(builder: (context) {
                 return Wrap(
                   spacing: 20,
                   children: [
-                    ViewsGenerator.createIconTabButton(
+                    createIconTabButton(
                       'Support',
                       0,
                       const Icon(Icons.support, size: 50, color: Colors.black26),
@@ -284,7 +207,7 @@ class BrotherAdvanceView extends StatelessWidget {
                       advancedIndex,
                       advancedString,
                     ),
-                    ViewsGenerator.createIconTabButton(
+                    createIconTabButton(
                       'Surround',
                       1,
                       const Icon(Icons.surround_sound, size: 50, color: Colors.black26),
@@ -292,7 +215,7 @@ class BrotherAdvanceView extends StatelessWidget {
                       advancedIndex,
                       advancedString,
                     ),
-                    ViewsGenerator.createIconTabButton(
+                    createIconTabButton(
                       'Store',
                       2,
                       const Icon(Icons.store, size: 50, color: Colors.black26),
@@ -300,7 +223,7 @@ class BrotherAdvanceView extends StatelessWidget {
                       advancedIndex,
                       advancedString,
                     ),
-                    ViewsGenerator.createIconTabButton(
+                    createIconTabButton(
                       'Esports',
                       3,
                       const Icon(Icons.sports_esports, size: 50, color: Colors.black26),
@@ -308,7 +231,7 @@ class BrotherAdvanceView extends StatelessWidget {
                       advancedIndex,
                       advancedString,
                     ),
-                    ViewsGenerator.createIconTabButton(
+                    createIconTabButton(
                       'Spa',
                       4,
                       const Icon(Icons.spa, size: 50, color: Colors.black26),
@@ -373,10 +296,8 @@ class BrotherAdvanceView extends StatelessWidget {
       ],
     );
   }
-}
 
-class ViewsGenerator {
-  static Widget createIconTabButton(
+  Widget createIconTabButton(
       String myName, int myIndex, Widget icon, Widget iconSelected, Btv<int> selectedIndex, Btv<String> selectedString) {
     return CupertinoButton(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
