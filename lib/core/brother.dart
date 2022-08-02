@@ -9,11 +9,6 @@ import 'package:flutter/widgets.dart';
 // BtKey -> For decoupling, Btv plays two roles of Notifier & Data, but we may need Data is not a Notifier in some business scenarios.
 
 /// Brother Values
-class Btv<T> extends BtNotifier<T> {
-  Btv(T initial) : super() {
-    _value = initial;
-  }
-}
 
 extension ExtBtBool on bool {
   Btv<bool> get btv => Btv(this);
@@ -33,6 +28,12 @@ extension ExtBtString on String {
 
 extension ExtBtT<T> on T {
   Btv<T> get btv => Btv<T>(this);
+}
+
+class Btv<T> extends BtNotifier<T> {
+  Btv(T initial) : super() {
+    _value = initial;
+  }
 }
 
 /// Brother Widgets
