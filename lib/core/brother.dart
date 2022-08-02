@@ -202,6 +202,10 @@ class BtObserver<T> {
     }
   }
 
+  bool isNotifierEmpty() {
+    return _subscriptions.isEmpty;
+  }
+
   BtSubscription<T> listen(BtSubscriptionCallBack? onData) {
     return _stream.listen(onData);
   }
@@ -216,10 +220,6 @@ class BtObserver<T> {
     });
     _subscriptions.clear();
     _stream.close();
-  }
-
-  bool isNotifierEmpty() {
-    return _subscriptions.isEmpty;
   }
 }
 
@@ -284,7 +284,7 @@ class BtSubscription<T> {
 }
 
 /// Brother Log Utilities
-bool brother_log_enable = true;
+bool brother_log_enable = false;
 
 __brother_debug_log__(String log) {
   assert(() {

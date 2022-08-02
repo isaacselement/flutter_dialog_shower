@@ -50,6 +50,8 @@ class PageOfBrother extends StatelessWidget {
         ),
         const SizedBox(height: 96),
         BrotherAdvanceView(),
+        const SizedBox(height: 96),
+        BrotherManagementView(),
       ],
     );
   }
@@ -314,6 +316,72 @@ class BrotherAdvanceView extends StatelessWidget {
       onPressed: () {
         selectedIndex.value = myIndex;
       },
+    );
+  }
+}
+
+class BrotherManagementView extends StatelessWidget {
+  BrotherManagementView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Text('Check the Observer & Notifier Recycling Situation ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        CupertinoButton(
+          padding: const EdgeInsets.only(left: 0, right: 0, bottom: 16, top: 16),
+          child: const Text(
+            'Click me to show up a dialog, then dismiss dialog for inspect the dispose situation',
+            style: TextStyle(color: Colors.blue, fontSize: 15),
+          ),
+          onPressed: () {
+            DialogWrapper.showBottom(_dialogView())
+              ..showCallBack = (shower) {
+                Logger.d("[BrotherManagementView] ###### notifierOne.isSubscriptionsEmpty s: ${notifierOne.isSubscriptionsEmpty()}");
+                Logger.d("[BrotherManagementView] ###### notifierTwo.isSubscriptionsEmpty s: ${notifierTwo.isSubscriptionsEmpty()}");
+                Logger.d("[BrotherManagementView] ###### notifierExtra.isSubscriptionsEmpty s: ${notifierExtra.isSubscriptionsEmpty()}");
+                Logger.d("[BrotherManagementView] ###### update keys s: ${BtWidgetState.map}");
+              }
+              ..dismissCallBack = (shower) {
+                Logger.d("[BrotherManagementView] ###### notifierOne.isSubscriptionsEmpty d: ${notifierOne.isSubscriptionsEmpty()}");
+                Logger.d("[BrotherManagementView] ###### notifierTwo.isSubscriptionsEmpty d: ${notifierTwo.isSubscriptionsEmpty()}");
+                Logger.d("[BrotherManagementView] ###### notifierExtra.isSubscriptionsEmpty d: ${notifierExtra.isSubscriptionsEmpty()}");
+                Logger.d("[BrotherManagementView] ###### update keys d: ${BtWidgetState.map}");
+              };
+          },
+        ),
+        Btw(
+          builder: (context) {
+            return Text(notifierExtra.value);
+          },
+        ),
+      ],
+    );
+  }
+
+  Btv<String> notifierOne = '1. Good job'.btv;
+  Btv<String> notifierTwo = '2. Well done'.btv;
+  Btv<String> notifierExtra = 'Extra Notifier ...'.btv;
+
+  Widget _dialogView() {
+    return Container(
+      width: 200,
+      height: 200,
+      color: Colors.deepPurple,
+      alignment: Alignment.center,
+      child: Btw(
+        updateKey: '__a_arbitrarily_key__',
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(notifierOne.value),
+              Text(notifierTwo.value),
+              Text(notifierExtra.value),
+            ],
+          );
+        },
+      ),
     );
   }
 }
