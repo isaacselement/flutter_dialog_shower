@@ -93,7 +93,7 @@ class PageOfWidgets extends StatelessWidget {
                         widget.text = 'progress: ${progress.toStringAsFixed(4)}';
                       });
                     });
-                    return LoadingIconPainter(radius: 32, strokeWidth: 4.0, ratioStart: 0, ratioLength: progress);
+                    return LoadingIconPainter(radius: 32, strokeWidth: 4.0, ratio1stPoint: 0, ratio1stSweep: progress);
                   },
                 ),
               );
@@ -224,52 +224,13 @@ class PageOfWidgets extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('show actions', onPressed: (state) {
-              BoxDecoration decoration = BoxDecoration(
-                color: const Color(0xFFF5F5FA),
-                border: Border.all(color: const Color(0xFFDADAE8)),
-                borderRadius: const BorderRadius.all(Radius.circular(5)),
-              );
-              Widget _fnRow(IconData icon, String text) {
-                TextStyle style = const TextStyle(color: Color(0xFF1C1D21), fontSize: 16);
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(icon), const SizedBox(width: 5), Text(text, style: style)],
-                );
-              }
-
-              DialogWrapper.showBottom(SizedBox(
+              DialogWrapper.showBottom(const ActionIconButtons(
                 width: 380,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CcButtonWidget(
-                      options: CcButtonWidgetOptions()
-                        ..height = 40
-                        ..decoration = decoration,
-                      builder: (state) => _fnRow(Icons.copy, 'Copy That'),
-                      onTap: (state) {
-                        DialogWrapper.dismissTopDialog();
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    CcButtonWidget(
-                      options: CcButtonWidgetOptions()
-                        ..height = 40
-                        ..decoration = decoration,
-                      builder: (state) => _fnRow(Icons.email, 'Send Email'),
-                      onTap: (state) {},
-                    ),
-                    const SizedBox(height: 20),
-                    CcButtonWidget(
-                      options: CcButtonWidgetOptions()
-                        ..height = 40
-                        ..decoration = decoration,
-                      builder: (state) => _fnRow(Icons.phone, 'Phone Call'),
-                      onTap: (state) {},
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+                buttonList: [
+                  {'icon': Icons.copy, 'text': 'Copy That'},
+                  {'icon': Icons.email, 'text': 'Send Email'},
+                  {'icon': Icons.phone, 'text': 'Phone Call'},
+                ],
               ))
                 ..containerBorderRadius = 1.0
                 ..containerBackgroundColor = Colors.transparent
@@ -280,5 +241,57 @@ class PageOfWidgets extends StatelessWidget {
         const SizedBox(height: 12),
       ],
     );
+  }
+}
+
+class ActionIconButtons extends StatelessWidget {
+  const ActionIconButtons({Key? key, required this.buttonList, this.spacing = 20, this.width}) : super(key: key);
+
+  final double? width;
+  final double spacing;
+  final List<Map<String, dynamic>> buttonList;
+
+  @override
+  Widget build(BuildContext context) {
+    BoxDecoration decoration = BoxDecoration(
+      color: const Color(0xFFF5F5FA),
+      border: Border.all(color: const Color(0xFFDADAE8)),
+      borderRadius: const BorderRadius.all(Radius.circular(5)),
+    );
+
+    Widget _fnRow(IconData icon, String text) {
+      TextStyle style = const TextStyle(color: Color(0xFF1C1D21), fontSize: 16);
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Icon(icon), const SizedBox(width: 5), Text(text, style: style)],
+      );
+    }
+
+    Widget _fnButton({required IconData icon, required String text, double height = 40, void Function()? event}) {
+      return CcButtonWidget(
+        options: CcButtonWidgetOptions()
+          ..height = height
+          ..decoration = decoration,
+        builder: (state) => _fnRow(icon, text),
+        onTap: (state) {
+          DialogWrapper.dismissTopDialog();
+          event?.call();
+        },
+      );
+    }
+
+    List<Widget> children = <Widget>[];
+    for (int i = 0; i < buttonList.length; i++) {
+      Map<String, dynamic> e = buttonList[i];
+      if (i != 0) {
+        children.add(SizedBox(height: spacing));
+      }
+      children.add(_fnButton(icon: e['icon'], text: e['text'], event: e['event']));
+    }
+    Widget child = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: children,
+    );
+    return width != null ? SizedBox(width: width, child: child) : child;
   }
 }

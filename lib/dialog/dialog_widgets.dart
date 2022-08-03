@@ -320,32 +320,35 @@ class AnyAlertTextOptions {
 
 /// Painters
 
-// https://github.com/divyanshub024/flutter_path_animation
+// Reference:
+// https://blog.codemagic.io/flutter-custom-painter/
 // https://medium.com/flutter-community/playing-with-paths-in-flutter-97198ba046c8
-// https://github.com/sbis04/custom_painter & https://blog.codemagic.io/flutter-custom-painter/
 
 class LoadingIconPainter extends CustomPainter {
   double radius, strokeWidth;
 
-  // ARC
-  double ratioStart; // [0.0 - 1.0] // big start ratio
-  double ratioLength; // [0.0 - 1.0] // big sweep angle length, if > 1.0, will reverse if odd
-  Color? colorBig, colorSmall;
-  double? startAngleBig, sweepAngleBig, startAngleSmall, sweepAngleSmall;
+  // Arc
+  // ratio value scope is [0.0 - 1.0], the default paint start point and paint length if angles not specific
+  // fist start ratio point, and sweep angle ratio length(> 1.0, will reverse if odd). the left space will be render the second
+  bool ratioReverseIfOdd;
+  double ratio1stPoint, ratio1stSweep;
+  double? startAngle1st, sweepAngle1st, startAngle2nd, sweepAngle2nd;
+  Color? color1st, color2nd;
 
   final double _circle = 2 * math.pi;
 
   LoadingIconPainter({
     required this.radius,
     required this.strokeWidth,
-    this.ratioStart = 0.0,
-    this.ratioLength = 4.0 / 5.0,
-    this.colorBig,
-    this.colorSmall,
-    this.startAngleBig,
-    this.sweepAngleBig,
-    this.startAngleSmall,
-    this.sweepAngleSmall,
+    this.ratioReverseIfOdd = true,
+    this.ratio1stPoint = 0.0,
+    this.ratio1stSweep = 4.0 / 5.0,
+    this.startAngle1st,
+    this.sweepAngle1st,
+    this.startAngle2nd,
+    this.sweepAngle2nd,
+    this.color1st,
+    this.color2nd,
   });
 
   @override
@@ -357,39 +360,44 @@ class LoadingIconPainter extends CustomPainter {
     height = height == 0 ? side : height;
     Rect rect = Rect.fromLTWH(0, 0, width, height);
 
-    // ratio first. big is the first, small is the second. big maybe smaller than the small, just a name ...
-    int i = ratioLength.toInt();
-    double fraction = ratioLength - i;
-    double ratioDistance = i % 2 == 0 ? fraction : 1.0 - fraction;
+    // ratio first
+    double wrapRatio(double v) {
+      int i = v.toInt();
+      double fraction = v - i;
+      double retVal = ratioReverseIfOdd ? (i % 2 == 0 ? fraction : 1.0 - fraction) : fraction;
+      return retVal; // ensure [0.0 - 1.0], when ratioReverseWhenOdd is true: v.toInt() is Odd, v will be inverse ratio
+    }
+
+    double ratioStart = wrapRatio(ratio1stPoint);
+    double ratioDistance = wrapRatio(ratio1stSweep);
 
     var paintBig = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
-      ..color = colorBig ?? Colors.white;
+      ..color = color1st ?? Colors.white;
     var paintSmall = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
-      ..color = colorSmall ?? Colors.grey.withAlpha(128);
+      ..color = color2nd ?? Colors.grey.withAlpha(128);
 
     // SweepGradient // RadialGradient // LinearGradient // ui.Gradient.radial // ui.Gradient.linear
-    // Gradient gradient = SweepGradient(
-    //   startAngle: 0,
-    //   endAngle: math.pi / 2,
-    //   tileMode: TileMode.mirror,
-    //   colors: [paintBig.color, paintBig.color.withOpacity(0.5)],
-    // );
     // paintBig = Paint()
     //   ..strokeWidth = strokeWidth
     //   ..style = PaintingStyle.stroke
-    //   ..shader = gradient.createShader(rect);
+    //   ..shader = SweepGradient(
+    //     startAngle: 0,
+    //     endAngle: math.pi / 2,
+    //     tileMode: TileMode.mirror,
+    //     colors: [paintBig.color, paintBig.color.withOpacity(0.5)],
+    //   ).createShader(rect);
 
-    double startAngleB = startAngleBig ?? _circle * ratioStart;
-    double sweepAngleB = sweepAngleBig ?? _circle * ratioDistance;
-    canvas.drawArc(rect, startAngleB, sweepAngleB, false, paintBig);
+    double startAngleOne = startAngle1st ?? _circle * ratioStart;
+    double sweepAngleOne = sweepAngle1st ?? _circle * ratioDistance;
+    canvas.drawArc(rect, startAngleOne, sweepAngleOne, false, paintBig);
 
-    double startAngleS = startAngleSmall ?? startAngleB + sweepAngleB;
-    double sweepAngleS = sweepAngleSmall ?? _circle - sweepAngleB;
-    canvas.drawArc(rect, startAngleS, sweepAngleS, false, paintSmall);
+    double startAngleTwo = startAngle2nd ?? startAngleOne + sweepAngleOne;
+    double sweepAngleTwo = sweepAngle2nd ?? _circle - sweepAngleOne;
+    canvas.drawArc(rect, startAngleTwo, sweepAngleTwo, false, paintSmall);
   }
 
   @override
@@ -500,8 +508,8 @@ class PainterWidgetUtil {
           painter: LoadingIconPainter(
             radius: radius,
             strokeWidth: strokeWidth,
-            colorBig: colorBig,
-            colorSmall: colorSmall,
+            color1st: colorBig,
+            color2nd: colorSmall,
           ),
         ),
       );
@@ -518,10 +526,10 @@ class PainterWidgetUtil {
           return LoadingIconPainter(
             radius: radius,
             strokeWidth: strokeWidth,
-            ratioStart: ratios.first,
-            ratioLength: ratios.last,
-            colorBig: colorBig,
-            colorSmall: colorSmall,
+            ratio1stPoint: ratios.first,
+            ratio1stSweep: ratios.last,
+            color1st: colorBig,
+            color2nd: colorSmall,
           );
         },
       );
