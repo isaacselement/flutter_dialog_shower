@@ -36,13 +36,13 @@ class Btv<T> extends BtNotifier<T> {
 }
 
 /// Brother Widgets
-typedef BtWidgetOnRebuild = bool Function(BtWidgetState state, dynamic data);
+typedef BtWidgetShouldRebuild = bool Function(BtWidgetState state, dynamic data);
 
 class Btw extends BtWidget {
   Widget Function(BuildContext context) builder;
 
-  Btw({Key? key, required this.builder, String? updateKey, BtWidgetOnRebuild? onRebuild})
-      : super(key: key, updateKey: updateKey, onRebuild: onRebuild);
+  Btw({Key? key, required this.builder, String? updateKey, BtWidgetShouldRebuild? shouldRebuild})
+      : super(key: key, updateKey: updateKey, shouldRebuild: shouldRebuild);
 
   @override
   Widget build(BuildContext context) => builder(context);
@@ -58,10 +58,10 @@ class Btw extends BtWidget {
 }
 
 abstract class BtWidget extends StatefulWidget {
-  BtWidget({Key? key, this.updateKey, this.onRebuild}) : super(key: key);
+  BtWidget({Key? key, this.updateKey, this.shouldRebuild}) : super(key: key);
 
   final String? updateKey; // final is needed, we need do removal job ...
-  BtWidgetOnRebuild? onRebuild;
+  BtWidgetShouldRebuild? shouldRebuild;
 
   @override
   State<StatefulWidget> createState() => BtWidgetState();
@@ -77,7 +77,7 @@ class BtWidgetState extends State<BtWidget> {
   void initState() {
     super.initState();
     observer.listen((data) {
-      if ((widget.onRebuild?.call(this, data) ?? true) && mounted) {
+      if ((widget.shouldRebuild?.call(this, data) ?? true) && mounted) {
         setState(() {});
       }
     });

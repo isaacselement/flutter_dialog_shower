@@ -271,14 +271,16 @@ class PageOfHomeless extends StatelessWidget {
             ),
             AnythingFielder(
               title: 'Age',
-              funcOfEndClear: (state){},
+              funcOfEndClear: (state) {},
               options: AnythingFielderOptions()
                 ..contentHintText = 'Just input your age with digital number, just a long hint text. i.e. 18 :P'
+                ..keyboardType = TextInputType.phone
                 ..isHorizontal = true
                 ..textAlign = TextAlign.end
                 ..contentDecorationNormal = null
                 ..contentDecorationFocused = null,
             ),
+
           ],
         ),
       ],
