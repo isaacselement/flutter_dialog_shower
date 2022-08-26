@@ -177,8 +177,8 @@ class WidgetsUtil {
       width: width,
       height: height,
       alignment: Alignment.center,
-      decoration: const BoxDecoration(color: Color(0xFFF5F5FA)),
       padding: const EdgeInsets.only(left: 8, right: 8),
+      decoration: const BoxDecoration(color: Color(0xFFF5F5FA)),
       child: Text(desc, style: const TextStyle(fontSize: 13, color: Color(0xFF8181A5))),
     );
   }

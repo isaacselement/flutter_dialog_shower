@@ -17,14 +17,15 @@ class DialogShower {
   bool isSyncInvokeShowCallback = false;
   bool isSyncInvokeDismissCallback = false;
 
-  /// navigate
+  /// Navigator properties
   BuildContext? context;
   bool isUseRootNavigator = true;
   Color barrierColor = Colors.transparent;
   bool? barrierDismissible = false;
   String barrierLabel = "";
   bool isDismissKeyboardOnTapped = true;
-  // navigator animation direction, default is SlideTransition from Bottom with 250 milliseconds duration
+
+  // Navigator animation direction, default is SlideTransition from Bottom with 250 milliseconds duration
   RouteTransitionsBuilder? transitionBuilder;
   Offset? animationBeginOffset = const Offset(0.0, 1.0);
   Duration transitionDuration = const Duration(milliseconds: 250);
@@ -35,10 +36,10 @@ class DialogShower {
 
   NavigatorState get parentNavigator => Navigator.of(context!, rootNavigator: isUseRootNavigator);
 
-  /// scaffold
+  /// Scaffold properties
   Color? scaffoldBackgroundColor = Colors.transparent;
 
-  /// container size & position
+  /// Container size & position
   AlignmentGeometry? alignment = Alignment.center;
   EdgeInsets? margin;
   EdgeInsets? padding;
@@ -56,7 +57,7 @@ class DialogShower {
 
   double get y => padding?.top ?? 0;
 
-  /// container appearance
+  /// Container appearance
   Clip containerClipBehavior = Clip.antiAlias;
   Decoration? containerDecoration = _notInitializedDecoration;
   double containerBorderRadius = 0.0;
@@ -65,7 +66,7 @@ class DialogShower {
   double containerShadowBlurRadius = 0.0;
   Color containerShadowColor = Colors.transparent;
 
-  /// events
+  /// Events
   TapUpDetails? _tapUpDetails;
 
   TapUpDetails? get tapUpDetails => _tapUpDetails;
@@ -91,7 +92,7 @@ class DialogShower {
   KeyboardVisibilityCallBack? keyboardEventCallBack;
   StreamSubscription? _keyboardStreamSubscription;
 
-  /// shower is built once or not
+  /// Shower has been built or not
   bool _isBuilt = false;
 
   final Completer<bool> builtCompleter = Completer<bool>();
@@ -100,7 +101,7 @@ class DialogShower {
 
   set isBuilt(v) => (_isBuilt = v) ? builtCompleter.complete(v) : null;
 
-  /// shower is between the [init] phase and [dispose] phase or not
+  /// Shower is between the state's [init] phase and [dispose] phase or not
   bool _isShowing = false;
 
   bool get isShowing => _isShowing;
@@ -118,6 +119,7 @@ class DialogShower {
 
   set isPopped(v) => (_isPopped = v) ? Future.microtask(() => poppedCompleter.complete(v)) : null;
 
+  /// Future indicate that shower has been dismissed
   Future<dynamic>? _future;
 
   Future<dynamic> get future async {
@@ -156,6 +158,10 @@ class DialogShower {
     }
     gContext = context;
 
+    /// Important:
+    /// Make sure that the given context has a [MediaQuery] ancestor.
+    /// Make sure that the given context should under WidgetsApp/CupertinoApp/MaterialApp, those widgets introduce a MediaQuery
+    assert(context.dependOnInheritedWidgetOfExactType<MediaQuery>() != null, '');
     assert(() {
       __shower_log__('[init] current context size: ${MediaQuery.of(context).size}');
       return true;
@@ -218,7 +224,6 @@ class DialogShower {
   DialogShower show(Widget _child, {double? width, double? height}) {
     if (routeName.isEmpty) {
       routeName = 'SHOWER-${DateTime.now().microsecondsSinceEpoch}';
-
       if (NavigatorObserverEx.statesChangingShowers?[routeName] != null) {
         // check it out please !!!!
         assert(() {
@@ -276,7 +281,7 @@ class DialogShower {
       name: routeName,
       init: (state) {
         _isShowing = true;
-        // callbacks
+        // invoke callbacks
         isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
 
         // keyboard visibility
@@ -297,7 +302,7 @@ class DialogShower {
           return true;
         }());
 
-        // callbacks
+        // invoke callbacks
         isSyncInvokeDismissCallback ? _invokeDismissCallbacks() : Future.microtask(() => _invokeDismissCallbacks());
 
         // keyboard visibility
@@ -400,7 +405,7 @@ class DialogShower {
   }
 
   Widget _getScaffoldBody(Widget _child) {
-    // will rebuild with statefulKey
+    /// we will rebuild using the statefulKey
     GlobalKey mKey = _statefulKey;
     if (isWithTicker) {
       return BuilderWithTicker(key: mKey, builder: (state) => _getScaffoldContainer(_child));
@@ -409,7 +414,7 @@ class DialogShower {
   }
 
   Widget _getScaffoldContainer(Widget _child) {
-    // ---------------------------- calculate _padding, _width, _height ----------------------------
+    /// ---------------------------- calculate _padding, _width, _height ----------------------------
     double? _width = width ?? renderedWidth;
     double? _height = height ?? renderedHeight;
 
@@ -427,7 +432,6 @@ class DialogShower {
       double physicalWidth = _window.physicalSize.width;
       double physicalHeight = _window.physicalSize.height;
       double physicalTop = _window.padding.top;
-
       EdgeInsets contextPadding = contextQuery.padding;
       EdgeInsets windowPadding = windowQuery.padding;
       __shower_log__('Self: $routeName, _width: $_width, _height: $_height');
@@ -438,8 +442,8 @@ class DialogShower {
       return true;
     }());
 
-    // We use a Padding outside for handle vertically center instead of Container Alignment.Center, cause when keyboard comes out once child get focus,
-    // will make the child stick to the top of the container.
+    // We use a Padding outside for handle vertically center instead of Container Alignment.Center
+    // Cause when keyboard comes out once child get focus, will make the child stick to the top of the container.
 
     EdgeInsets? _padding;
 
@@ -478,7 +482,7 @@ class DialogShower {
       __shower_log__('_padding: $_padding, alignment: $alignment, animationBeginOffset: $animationBeginOffset');
       return true;
     }());
-    // ---------------------------- calculate _padding, _width, _height ----------------------------
+    /// ---------------------------- calculate _padding, _width, _height ----------------------------
 
     Widget smallestContainer = _getSmallestContainer(_child, _width, _height);
     if (alignment == null) {
@@ -497,8 +501,7 @@ class DialogShower {
   bool _isTryToGetSmallestSize = false;
 
   Widget _getSmallestContainer(Widget child, double? width, double? height) {
-    Widget ccccc = child;
-    Widget widget = ccccc;
+    Widget widget = child;
     if (isWrappedByNavigator && isAutoSizeForNavigator && (width == null || height == null)) {
       __shower_log__('[GetSizeWidget] try to get size, casue navigator will lead to max stretch of container child ...');
       _isTryToGetSmallestSize = true;
@@ -511,7 +514,7 @@ class DialogShower {
           __shower_log__('[GetSizeWidget] onSizeChanged was called >>>>>>>>>>>>> size: $size');
           _setRenderedSizeWithSetState(size);
         },
-        child: ccccc,
+        child: child,
       );
     } else if (isWrappedByNavigator) {
       __shower_log__('show with navigator');
@@ -522,15 +525,14 @@ class DialogShower {
         onGenerateRoute: (RouteSettings settings) {
           return PageRouteBuilder(
             pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
-              return ccccc;
+              return child;
             },
           );
         },
       );
     }
 
-    // cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
-    // flutter source will throw: Failed assertion: 'decoration != null || clipBehavior == Clip.none': is not true.
+    /// Cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
     Decoration? decoration = containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration;
     Clip clipBehavior = decoration == null ? Clip.none : containerClipBehavior;
 
@@ -545,7 +547,7 @@ class DialogShower {
     );
   }
 
-  // setState ----------------------------------------
+  /// setState ----------------------------------------
 
   Widget? newChild;
 
@@ -565,7 +567,7 @@ class DialogShower {
     return builder?.call(this) ?? newChild ?? child ?? const Offstage(offstage: true);
   }
 
-  // dismiss ----------------------------------------
+  /// dismiss ----------------------------------------
 
   bool _isDismiss = false;
 
@@ -597,8 +599,8 @@ class DialogShower {
     }
   }
 
-  // pop/push/remove will caused NavigatorObserver.didPop/didPus/didRemove method call immediately in the same eventloop
-  // so we should set isPopped/isPushed immediately but call completer later using Future.microtask
+  /// pop/push/remove will caused NavigatorObserver.didPop/didPus/didRemove method call immediately in the same eventloop
+  /// so we should set isPopped/isPushed immediately but call completer later using Future.microtask
   void _dismiss<T extends Object?>([T? result]) => parentNavigator.pop<T>(result);
 
   void remove() => parentNavigator.removeRoute(route);
@@ -719,7 +721,8 @@ class DialogShower {
   }
 
   /// Other Utils Methods
-  // Note: you should DialogShower.init(context) first ~~~
+
+  /// Note: you should DialogShower.init(context) first ~~~
   static bool isKeyboardShowing() {
     assert(gContext != null, 'Should call DialogShower.init first in your runApp context');
     return MediaQuery.of(gContext!).viewInsets.bottom > 0;

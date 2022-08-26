@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:example/util/logger.dart';
+import 'package:example/util/widgets_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
@@ -38,6 +39,10 @@ class PageOfBrother extends StatelessWidget {
 
     return Column(
       children: [
+        const SizedBox(height: 16),
+        WidgetsUtil.newHeaderWithGradient('Brother is simple version of GetX'),
+        const SizedBox(height: 16),
+        WidgetsUtil.newDescriptions('Btw is Obx & Btv is Obs'),
         const SizedBox(height: 32),
         Wrap(
           spacing: 32,
