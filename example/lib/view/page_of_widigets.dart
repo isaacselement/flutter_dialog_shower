@@ -32,6 +32,42 @@ class PageOfWidgets extends StatelessWidget {
         WidgetsUtil.newHeaderWithLine('Loadings'),
         Wrap(
           children: [
+            // WidgetsUtil.newXpelTextButton('Show Cupertino Indicator', onPressed: (state) {
+            //   DialogWidgets.showIndicator();
+            // }),
+
+            WidgetsUtil.newXpelTextButton('Show Material Indicator', onPressed: (state) {
+              DialogWidgets.showLoading(
+                text: null,
+                widget: const CircularProgressIndicator(strokeWidth: 3, color: Colors.white),
+                onOptions: (options) {
+                  options.width = 80;
+                  options.height = 80;
+                },
+              ).barrierDismissible = true;
+            }),
+
+            // WidgetsUtil.newXpelTextButton('Show Material Indicator', onPressed: (state) {
+            //   DialogShower shower = DialogWidgets.showLoading(
+            //     text: null,
+            //     widget: const Offstage(offstage: true),
+            //     onOptions: (options) {
+            //       options.width = 80;
+            //       options.height = 80;
+            //     },
+            //   );
+            //   shower.barrierDismissible = true;
+            //   shower.isWithTicker = true;
+            //   shower.addShowCallBack((shower) {
+            //     State? state = shower.statefulKey.currentState;
+            //     if (state is BuilderWithTickerState) {
+            //       AnimationController controller = AnimationController(duration: const Duration(seconds: 2), vsync: state);
+            //       Animation<Color?> animation = ColorTween(begin: Colors.yellow, end: Colors.red).animate(controller);
+            //       shower.setNewChild(CircularProgressIndicator(strokeWidth: 3, color: Colors.white, valueColor: animation));
+            //     }
+            //   });
+            // }),
+
             WidgetsUtil.newXpelTextButton('show loading', onPressed: (state) {
               DialogShower shower = DialogWidgets.showLoading(dismissible: true);
               int count = 11;
@@ -39,7 +75,7 @@ class PageOfWidgets extends StatelessWidget {
                 count: count,
                 tik: (i) {
                   if (!shower.isShowing) return true;
-                  String msg = 'Hola~~ ${i}s ~~~~';
+                  String msg = 'Handshaking ${i}s...';
                   if (i >= 3) msg = 'Communicating...';
                   if (i >= 4) msg = 'Uploading...';
                   if (i >= 6) msg = 'Downloading...';
@@ -63,19 +99,19 @@ class PageOfWidgets extends StatelessWidget {
             //   DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: true, isPaintWrapRotate: false);
             // }),
             WidgetsUtil.newXpelTextButton('show loading, rotate stiff', onPressed: (state) {
-              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: true, isPaintWrapRotate: true);
+              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: true, isRotating: true);
             }),
             WidgetsUtil.newXpelTextButton('show loading, rotate stiff with slower', onPressed: (state) {
               DialogWidgets.showLoading(
+                isRotating: true,
                 dismissible: true,
                 isPaintAnimation: true,
                 isPaintStartStiff: true,
-                isPaintWrapRotate: true,
                 duration: const Duration(milliseconds: 1500),
               );
             }),
             WidgetsUtil.newXpelTextButton('show loading, rotate unstiff', onPressed: (state) {
-              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isPaintWrapRotate: true)
+              DialogWidgets.showLoading(dismissible: true, isPaintAnimation: true, isPaintStartStiff: false, isRotating: true)
                   .barrierColor = Colors.transparent;
             }),
             WidgetsUtil.newXpelTextButton('show loading paint example', onPressed: (state) {

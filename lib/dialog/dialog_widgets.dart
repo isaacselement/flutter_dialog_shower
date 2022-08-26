@@ -33,13 +33,14 @@ class DialogWidgets {
   }
 
   static DialogShower showLoading({
-    Widget? icon,
+    Widget? widget,
     String? text = 'Loading',
+    bool isRotating = true,
     bool dismissible = false,
+    AlterIconTextOptions? onOptions,
     // --------- For Loading Painter -----------
     bool? isPaintAnimation,
     bool? isPaintStartStiff,
-    bool? isPaintWrapRotate,
     double? side,
     double? stroke,
     Duration? duration,
@@ -47,22 +48,17 @@ class DialogWidgets {
     Color? colorSmall,
     // --------- For Loading Painter -----------
   }) {
-    Widget widget;
-    if (icon != null) {
-      widget = RotateWidget(child: icon);
-    } else {
-      widget = PainterWidgetUtil.getOneLoadingCircleWidget(
-        isPaintAnimation: isPaintAnimation,
-        isPaintStartStiff: isPaintStartStiff,
-        isPaintWrapRotate: isPaintWrapRotate,
-        side: side,
-        stroke: stroke,
-        duration: duration,
-        colorBig: colorBig,
-        colorSmall: colorSmall,
-      );
-    }
-    return showIconText(icon: widget, text: text)..barrierDismissible = dismissible;
+    widget ??= PainterWidgetUtil.getOneLoadingCircleWidget(
+      isPaintAnimation: isPaintAnimation,
+      isPaintStartStiff: isPaintStartStiff,
+      side: side,
+      stroke: stroke,
+      duration: duration,
+      colorBig: colorBig,
+      colorSmall: colorSmall,
+    );
+    widget = isRotating ? RotateWidget(child: widget) : widget;
+    return showIconText(icon: widget, text: text, onOptions: onOptions)..barrierDismissible = dismissible;
   }
 
   static DialogShower showSuccess({Widget? icon, String? text = 'Success', bool dismissible = true}) {
@@ -85,10 +81,8 @@ class DialogWidgets {
     return showIconText(icon: w, text: text)..barrierDismissible = dismissible;
   }
 
-  static DialogShower showIconText({Widget? icon, String? text, Function(AnyIconTextOptions options)? onOptions}) {
+  static DialogShower showIconText({Widget? icon, String? text, AlterIconTextOptions? onOptions}) {
     AnyIconTextOptions options = AnyIconTextOptions();
-    options.textStyle = defIconTextStyle;
-    options.backgroundColor = defIconBgColor;
     onOptions?.call(options);
     DialogShower shower = DialogWrapper.show(AnyIconTextWidget(icon: icon, text: text, options: options));
     // rewrite properties cause show actually in the next micro task :)
@@ -176,10 +170,11 @@ class AnyIconTextState extends State<AnyIconTextWidget> {
     if (widget.icon != null) {
       children.add(widget.icon!);
     }
-    if (options.spacing != null) {
-      children.add(SizedBox(height: options.spacing!));
-    }
+
     if (widget.text != null) {
+      if (options.spacing != null) {
+        children.add(SizedBox(height: options.spacing!));
+      }
       children.add(Text(widget.text!, style: options.textStyle ?? const TextStyle(color: Colors.white, fontSize: 16)));
     }
     return Container(
@@ -202,6 +197,8 @@ class AnyIconTextOptions {
   Color? backgroundColor;
   BoxDecoration? decoration;
 }
+
+typedef AlterIconTextOptions = Function(AnyIconTextOptions options);
 
 /// AnyAlertTextWidget
 class AnyAlertTextWidget extends StatefulWidget {
@@ -484,7 +481,6 @@ class PainterWidgetUtil {
   static Widget getOneLoadingCircleWidget({
     bool? isPaintAnimation,
     bool? isPaintStartStiff,
-    bool? isPaintWrapRotate,
     double? side,
     double? stroke,
     Duration? duration,
@@ -493,7 +489,6 @@ class PainterWidgetUtil {
   }) {
     isPaintAnimation ??= false;
     isPaintStartStiff ??= false;
-    isPaintWrapRotate ??= true;
     side ??= 64.0;
     stroke ??= 4.0;
     double radius = side / 2;
@@ -558,7 +553,7 @@ class PainterWidgetUtil {
         return [start, length];
       });
     }
-    return isPaintWrapRotate ? RotateWidget(child: paintView, isClockwise: true) : paintView;
+    return paintView;
   }
 
   static Widget getOnePainterWidget({

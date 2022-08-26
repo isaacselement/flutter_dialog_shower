@@ -193,7 +193,6 @@ class PageOfHomeless extends StatelessWidget {
                   child: PainterWidgetUtil.getOneLoadingCircleWidget(
                     isPaintAnimation: true,
                     isPaintStartStiff: true,
-                    isPaintWrapRotate: false,
                     side: 80,
                     stroke: 6,
                     duration: const Duration(milliseconds: 1500),
