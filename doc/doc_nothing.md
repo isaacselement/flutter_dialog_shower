@@ -126,8 +126,15 @@
     (lldb)process connect connect://127.0.0.1:54321
     (lldb)c
     (lldb)breakpoint set -name Precompiled__MyAppState_19445837_staticVarAIncrement_5749
+    (lldb)br set -name '-[AppDelegate application:didFinishLaunchingWithOptions] '
+    (lldb)br set -r '-\[PHCollection *'
     (lldb)breakpoint list
+    (lldb)breakpoint disable/delete
     (lldb)process interrupt
+    (lldb)bt
+    (lldb)register read
+    (lldb)po $x0
+    (lldb)p (char *)$x1
     (lldb)c
 
 
