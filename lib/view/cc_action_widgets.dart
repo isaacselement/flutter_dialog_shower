@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 
-/// Buttom Widgets
+/// Button Widgets
 
 class CcButtonWidget extends StatefulWidget {
   String? text;

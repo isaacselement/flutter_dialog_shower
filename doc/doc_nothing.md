@@ -49,6 +49,14 @@
     ls -al /Developer/usr/bin/    # checkout the debugserver
     echo $PATH
 
+    Try unplug & plug USB again if below error occurred:
+        kex_exchange_identification: read: Connection reset by peer
+        Connection reset by 127.0.0.1 port 2222
+
+    ls -al /System/Library/Caches/com.apple.dyld/
+    scp -r -P2222 root@localhost:/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64 ./
+    ls -al $HOME/Library/Developer/Xcode/iOS\ DeviceSupport/[__Version__]/Symbols/System/Library/Caches/com.apple.dyld/
+
     # 3
     On Mac:
     # debugserver on device's path /Developer/usr/bin/debugserver, once you connect device with xcode 

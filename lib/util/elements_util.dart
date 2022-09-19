@@ -99,6 +99,14 @@ class ElementsUtil {
     return getElement(context, (e) => e.widget is Text && (e.widget as Text).data == text);
   }
 
+  static Element? getElementOfWidget(BuildContext? context, Widget widget) {
+    return getElement(context, (e) => e.widget == widget);
+  }
+
+  static Element? getElementOfState(BuildContext? context, State state) {
+    return getElement(context, (e) => e is StatefulElement && e.state == state);
+  }
+
   static Element? getElementOfWidgetType(BuildContext? context, Type type) {
     return getElement(context, (e) => e.widget.runtimeType == type);
   }
@@ -115,6 +123,11 @@ class ElementsUtil {
   static T? getStateOfType<T extends State>(BuildContext? context) {
     Element? element = getElementOfStateType(context, T);
     return (element as StatefulElement?)?.state as T?;
+  }
+
+  static T? getStateOfWidget<T extends State>(BuildContext? context, StatefulWidget widget) {
+    StatefulElement? element = getElementOfWidget(context, widget) as StatefulElement?;
+    return element?.state as T?;
   }
 
   /// Rebuild methods
@@ -136,7 +149,7 @@ class ElementsUtil {
     getElementOfStateType(context, state.runtimeType)?.markNeedsBuild();
   }
 
-  // Cause visitChildElements() called during build. Maybe call in WidgetsBinding.addPostFrameCallback((timeStamp) {...})
+  // Cause visitChildElements() called during build. Maybe need call in WidgetsBinding.addPostFrameCallback
   static void rebuild<T extends StatefulWidget>(BuildContext? context, void Function(T widget) fn) {
     assert(T != StatefulWidget, 'Type should be a subclass a StatefulWidget, but not a StatefulWidget type ${T == StatefulWidget}');
     T? widget = ElementsUtil.getWidgetOfType<T>(context);
