@@ -8,6 +8,7 @@ import 'package:example/view/page_of_homeless.dart';
 import 'package:example/view/page_of_keyboard.dart';
 import 'package:example/view/page_of_navigator.dart';
 import 'package:example/view/page_of_overlay.dart';
+import 'package:example/view/page_of_tester.dart';
 import 'package:example/view/page_of_widigets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +81,13 @@ class PagesManager {
       const Icon(Icons.auto_awesome, size: 32, color: Colors.black26),
       const Icon(Icons.auto_awesome_sharp, size: 32, color: Colors.orange),
       const PageOfHomeless(),
+    );
+    addTabPage(
+      false,
+      'Smoke Test',
+      const Icon(Icons.directions_bike, size: 32, color: Colors.black26),
+      const Icon(Icons.directions_bike_sharp, size: 32, color: Colors.orange),
+      PageOfTester(),
     );
   }
 

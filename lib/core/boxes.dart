@@ -249,10 +249,10 @@ class _GetLayoutState extends State<GetLayoutWidget> with WidgetsBindingObserver
   }
 }
 
-/// Util
+/// Utils
 
-class ThrottleAny {
-  bool enable = true;
+class AnyThrottle {
+  bool _enable = true;
   Duration delay = const Duration(milliseconds: 800);
 
   void call(Function func, {Duration? duration}) {
@@ -276,66 +276,124 @@ class ThrottleAny {
   }
 
   void _call(Function func, {Duration? duration}) {
-    if (enable) {
-      enable = false;
+    if (_enable) {
+      _enable = false;
       func();
       Future.delayed(duration ?? delay, () {
-        enable = true;
+        _enable = true;
       });
     }
   }
 
-  /// Static instance and methods
+  /// Static list for checking instance in same call stack
 
-  static List<ThrottleAny> callers = [];
+  static List<AnyThrottle> callers = [];
 
-  static ThrottleAny? _instance;
+  /// Static instance
 
-  static ThrottleAny get instance => (_instance ??= ThrottleAny());
+  static AnyThrottle? _instance;
 
-  static Map<String, ThrottleAny>? maps;
+  static AnyThrottle get instance => (_instance ??= AnyThrottle());
 
-  static ThrottleAny get(String key) {
+  /// Static key-value mapping instances
+
+  static Map<String, AnyThrottle>? maps;
+
+  static AnyThrottle get(String key) {
     maps ??= {};
-    return (maps![key] ??= ThrottleAny());
+    return (maps![key] ??= AnyThrottle());
   }
 
-  static ThrottleAny? remove(String key) {
+  static AnyThrottle? remove(String key) {
     return maps?.remove(key);
   }
 }
 
-class DebouncerAny {
-  Timer? timer;
+class AnyDebouncer {
+  Timer? _timer;
   Duration delay = const Duration(milliseconds: 800);
 
-  DebouncerAny();
-
   void call(void Function() action, {Duration? duration}) {
-    timer?.cancel();
-    timer = Timer(duration ?? delay, action);
+    _timer?.cancel();
+    _timer = Timer(duration ?? delay, action);
   }
 
-  /// Notifies if the delayed call is active.
-  bool get isRunning => timer?.isActive ?? false;
+  bool get isRunning => _timer?.isActive ?? false;
 
-  /// Cancel the current delayed call.
-  void cancel() => timer?.cancel();
+  void dispose() {
+    _timer?.cancel();
+    _timer = null;
+  }
 
-  /// Static instance and methods
+  /// Static instance
 
-  static DebouncerAny? _instance;
+  static AnyDebouncer? _instance;
 
-  static DebouncerAny get instance => (_instance ??= DebouncerAny());
+  static AnyDebouncer get instance => (_instance ??= AnyDebouncer());
 
-  static Map<String, DebouncerAny>? maps;
+  /// Static key-value mapping instances
 
-  static DebouncerAny get(String key) {
+  static Map<String, AnyDebouncer>? maps;
+
+  static AnyDebouncer get(String key) {
     maps ??= {};
-    return (maps![key] ??= DebouncerAny());
+    return (maps![key] ??= AnyDebouncer());
   }
 
-  static DebouncerAny? remove(String key) {
+  static AnyDebouncer? remove(String key) {
+    return maps?.remove(key);
+  }
+}
+
+class AntiBouncer {
+  AntiBouncer({this.shouldBeInvoked});
+
+  bool Function()? shouldBeInvoked;
+
+  bool _isInvoking = false;
+
+  List<FutureOr<void> Function()> queue = [];
+
+  void call(void Function() action) {
+    queue.add(action);
+    _invoke();
+  }
+
+  void _invoke() {
+    if (!(shouldBeInvoked?.call() ?? _isInvoking)) {
+      return;
+    }
+    () async {
+      if (queue.isNotEmpty) {
+        FutureOr<void> Function() current = queue.last;
+        queue.clear();
+
+        // invoke
+        _isInvoking = true;
+        await current();
+        _isInvoking = false;
+
+        _invoke();
+      }
+    }();
+  }
+
+  /// Static instance
+
+  static AntiBouncer? _instance;
+
+  static AntiBouncer get instance => (_instance ??= AntiBouncer());
+
+  /// Static key-value mapping instances
+
+  static Map<String, AntiBouncer>? maps;
+
+  static AntiBouncer get(String key) {
+    maps ??= {};
+    return (maps![key] ??= AntiBouncer());
+  }
+
+  static AntiBouncer? remove(String key) {
     return maps?.remove(key);
   }
 }

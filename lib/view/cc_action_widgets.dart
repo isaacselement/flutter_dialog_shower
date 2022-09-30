@@ -224,7 +224,7 @@ class CcTapThrottledWidget extends CcTapWidget {
 
 class CcTapThrottledState extends CcTapState {
   @override
-  void onEventTap() => ThrottleAny.instance.call(() => super.onEventTap());
+  void onEventTap() => AnyThrottle.instance.call(() => super.onEventTap());
 }
 
 /// Tapped Widget with debounce
@@ -251,5 +251,5 @@ class CcTapDebouncerWidget extends CcTapWidget {
 
 class CcTapDebouncerState extends CcTapState {
   @override
-  void onEventTap() => DebouncerAny.instance.call(() => super.onEventTap());
+  void onEventTap() => AnyDebouncer.instance.call(() => super.onEventTap());
 }

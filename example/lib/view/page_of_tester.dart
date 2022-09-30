@@ -1,15 +1,17 @@
+import 'dart:math';
+
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:example/view/page_of_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
-class PageOfHomeless extends StatelessWidget {
-  const PageOfHomeless({Key? key}) : super(key: key);
+class PageOfTester extends StatelessWidget {
+  PageOfTester({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Logger.d("[PageOfHomeless] ----------->>>>>>>>>>>> build/rebuild!!!");
+    Logger.d("[PageOfTester] ----------->>>>>>>>>>>> build/rebuild!!!");
 
     return Navigator(
       onGenerateRoute: (RouteSettings settings) {
@@ -145,22 +147,22 @@ class PageOfHomeless extends StatelessWidget {
           children: [
             WidgetsUtil.newXpelTextButton('Throttled New', onPressed: (state) {
               AnyThrottle.instance.call(() {
-                Logger.console(() => '=======>>>>>>>>>>>> AnyThrottle instance 1');
+                Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 1');
                 AnyThrottle().call(() {
-                  Logger.console(() => '=======>>>>>>>>>>>> AnyThrottle New 1');
+                  Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny New 1');
                   _callInInternal();
                 });
               });
             }),
             WidgetsUtil.newXpelTextButton('Throttled Sync', onPressed: (state) {
               AnyThrottle.instance.call(() {
-                Logger.console(() => '=======>>>>>>>>>>>> AnyThrottle instance 1');
+                Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 1');
                 AnyThrottle.instance.call(() {
-                  Logger.console(() => '=======>>>>>>>>>>>> AnyThrottle instance 2');
+                  Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 2');
                   AnyThrottle().call(() {
-                    Logger.console(() => '=======>>>>>>>>>>>> AnyThrottle New 1');
+                    Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny New 1');
                     AnyThrottle.instance.call(() {
-                      Logger.console(() => '=======>>>>>>>>>>>> AnyThrottle instance 3');
+                      Logger.console(() => '=======>>>>>>>>>>>> ThrottleAny instance 3');
                       _callInInternal();
                     });
                   });
@@ -208,6 +210,10 @@ class PageOfHomeless extends StatelessWidget {
     );
   }
 
+  AntiBouncer? antiBouncer;
+  int antiIndex = 0;
+  bool isPinging = false;
+
   Widget _buildTapWidget() {
     return Column(
       children: [
@@ -248,7 +254,32 @@ class PageOfHomeless extends StatelessWidget {
               onTap: (state) {
                 Logger.d('CcTapDebouncerWidget ~~~~');
               },
-            )
+            ),
+            CcTapWidget(
+              child: const Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Text('Test anti bouncer'),
+              ),
+              onTap: (state) {
+                antiIndex++;
+                print('@@@@@@@@@@@@@----> $antiIndex, length: ${antiBouncer?.queue.length}');
+
+                antiBouncer ??= AntiBouncer(shouldBeInvoked: () {
+                  return !isPinging;
+                });
+                antiBouncer?.call(() async {
+                  isPinging = true;
+                  int waiteMillisSeconds = 5000;
+                  if (Random().nextBool()) {
+                    waiteMillisSeconds = waiteMillisSeconds + 1000;
+                  }
+                  print('${DateTime.now()} @@@@@@@@@@@@@ call index ----> $antiIndex, $waiteMillisSeconds');
+                  await Future.delayed(Duration(milliseconds: waiteMillisSeconds));
+
+                  isPinging = false;
+                });
+              },
+            ),
           ],
         ),
       ],
@@ -279,7 +310,6 @@ class PageOfHomeless extends StatelessWidget {
                 ..contentDecorationNormal = null
                 ..contentDecorationFocused = null,
             ),
-
           ],
         ),
       ],

@@ -50,7 +50,7 @@ class HeaderUtil {
 
     void _fnEvent(bool isDisable, void Function()? event) {
       if (!isDisable) {
-        ThrottleAny.instance.call(() => event?.call());
+        AnyThrottle.instance.call(() => event?.call());
       }
     }
 

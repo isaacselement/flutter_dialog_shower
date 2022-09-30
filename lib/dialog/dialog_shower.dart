@@ -296,7 +296,7 @@ class DialogShower {
         _isShowing = false;
         NavigatorObserverEx.statesChangingShowers?.remove(routeName);
         assert(() {
-          DebouncerAny.get(runtimeType.toString()).call(() {
+          AnyDebouncer.get(runtimeType.toString()).call(() {
             __shower_log__('Now the statistics of showers in cache: ${NavigatorObserverEx.statesChangingShowers}');
           });
           return true;
