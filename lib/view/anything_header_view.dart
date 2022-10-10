@@ -31,6 +31,7 @@ class AnythingHeader extends StatelessWidget {
           // center
           Container(
             alignment: Alignment.center,
+            padding: kOptions.titlePadding,
             child: Text(
               title ?? '',
               style: kOptions.titleStyle,
@@ -95,6 +96,7 @@ class AnythingHeaderOptions {
 
   // title
   TextStyle? titleStyle = const TextStyle(fontSize: 17, color: Color(0xFF1C1D21), fontWeight: FontWeight.bold);
+  EdgeInsets? titlePadding;
 
   // left
   double? leftWidth;
@@ -129,6 +131,7 @@ class AnythingHeaderOptions {
 
     // title
     newInstance.titleStyle = titleStyle;
+    newInstance.titlePadding = titlePadding;
 
     // left
     newInstance.leftWidth = leftWidth;

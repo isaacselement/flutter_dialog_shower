@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 //ignore: must_be_immutable
@@ -190,6 +191,7 @@ class AnythingFielderState extends State<AnythingFielder> {
           keyboardType: options.keyboardType,
           placeholder: options.contentHintText,
           placeholderStyle: options.contentHintStyle,
+          inputFormatters: options.inputFormatters,
           toolbarOptions: const ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
           onChanged: (String text) {
             // valueController.text already is text now ...
@@ -320,13 +322,14 @@ class AnythingFielderOptions {
   );
   Widget? contentLoadingIcon = const AnythingLoadingWidget(side: 18, stroke: 1.3);
 
-  // value field CupertinoTextField properties
+  // value field on CupertinoTextField properties
   int maxLength = 0x0800000000000000;
   bool Function(AnythingFielderState state, String text)? onEventTextChangedRaw;
   String? Function(AnythingFielderState state, String text)? onEventTextChangedFilter;
   TextInputType? keyboardType;
   TextAlign textAlign = TextAlign.start;
   EdgeInsets textPadding = EdgeInsets.zero;
+  List<TextInputFormatter>? inputFormatters;
 
   /// Methods
   AnythingFielderOptions();
@@ -363,6 +366,7 @@ class AnythingFielderOptions {
     newInstance.keyboardType = keyboardType;
     newInstance.textAlign = textAlign;
     newInstance.textPadding = textPadding;
+    newInstance.inputFormatters = inputFormatters;
 
     return newInstance;
   }
