@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 
@@ -22,8 +24,9 @@ class CcButtonState extends State<CcButtonWidget> {
 
   set isTapingDown(v) {
     if (options.isDisable) return;
-    _isTapingDown = v;
-    setState(() {});
+    setState(() {
+      _isTapingDown = v;
+    });
   }
 
   CcButtonWidgetOptions? _options;
@@ -32,17 +35,6 @@ class CcButtonState extends State<CcButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    BoxDecoration decoration = options.decoration ??
-        BoxDecoration(
-          border: Border.all(color: const Color(0xFFDADAE8)),
-          borderRadius: const BorderRadius.all(Radius.circular(5)),
-          color: options.isDisable ? const Color(0xFFF5F5FA) : const Color(0xFF4275FF),
-        );
-    TextStyle textStyle = options.textStyle ??
-        TextStyle(
-          color: options.isDisable ? const Color(0xFFBFBFD2) : const Color(0xFFFFFFFF),
-        );
-
     return Listener(
       onPointerUp: (event) => isTapingDown = false,
       onPointerDown: (event) => isTapingDown = true,
@@ -54,8 +46,13 @@ class CcButtonState extends State<CcButtonWidget> {
             height: options.height,
             padding: options.padding,
             alignment: options.alignment,
-            decoration: decoration,
-            child: widget.builder?.call(this) ?? Text(widget.text ?? 'Cancel', style: textStyle, maxLines: 1),
+            decoration: options.isDisable ? options.decorationDisable : options.decoration,
+            child: widget.builder?.call(this) ??
+                Text(
+                  widget.text ?? 'Cancel',
+                  maxLines: 1,
+                  style: options.isDisable ? options.textStyle : options.textStyleDisable,
+                ),
           ),
         ),
         onTap: () {
@@ -68,32 +65,89 @@ class CcButtonState extends State<CcButtonWidget> {
 }
 
 class CcButtonWidgetOptions {
+  bool isDisable = false;
+  double pressedOpacity = 0.4;
+
   double? width;
   double? height;
 
-  TextStyle? textStyle;
   EdgeInsets? padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-
-  BoxDecoration? decoration;
   AlignmentGeometry? alignment = Alignment.center;
 
-  bool isDisable = false;
-  double pressedOpacity = 0.4;
+  BoxDecoration? decoration = BoxDecoration(
+    border: Border.all(color: const Color(0xFFDADAE8)),
+    borderRadius: const BorderRadius.all(Radius.circular(5)),
+    color: const Color(0xFF4275FF),
+  );
+  BoxDecoration? decorationDisable = BoxDecoration(
+    border: Border.all(color: const Color(0xFFDADAE8)),
+    borderRadius: const BorderRadius.all(Radius.circular(5)),
+    color: const Color(0xFFF5F5FA),
+  );
+
+  TextStyle? textStyle = const TextStyle(color: Color(0xFFFFFFFF));
+  TextStyle? textStyleDisable = const TextStyle(color: Color(0xFFBFBFD2));
 
   CcButtonWidgetOptions();
 
   CcButtonWidgetOptions clone() {
     CcButtonWidgetOptions newInstance = CcButtonWidgetOptions();
-    newInstance.width = width;
-    newInstance.height = height;
-    newInstance.textStyle = textStyle;
-    newInstance.padding = padding;
-    newInstance.decoration = decoration;
-    newInstance.alignment = alignment;
     newInstance.isDisable = isDisable;
     newInstance.pressedOpacity = pressedOpacity;
+
+    newInstance.width = width;
+    newInstance.height = height;
+    newInstance.padding = padding;
+    newInstance.alignment = alignment;
+    newInstance.decoration = decoration;
+    newInstance.decorationDisable = decorationDisable;
+
+    newInstance.textStyle = textStyle;
+    newInstance.textStyleDisable = textStyleDisable;
     return newInstance;
   }
+}
+
+/// Cupertino Button
+
+class CcAppleButton extends StatelessWidget {
+  CcAppleButton({Key? key, this.title, this.child, required this.onPressed, this.options}) : super(key: key);
+
+  String? title;
+  Widget? child;
+  VoidCallback onPressed;
+  CcAppleButtonOptions? options;
+
+  CcAppleButtonOptions get _options => (options ??= CcAppleButtonOptions());
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+      minSize: 0,
+      padding: EdgeInsets.zero,
+      onPressed: onPressed,
+      child: Container(
+        width: _options.width,
+        height: _options.height,
+        padding: _options.padding,
+        alignment: _options.alignment,
+        decoration: _options.decoration,
+        child: child ?? Text(title ?? '', style: _options.titleStyle),
+      ),
+    );
+  }
+}
+
+class CcAppleButtonOptions {
+  CcAppleButtonOptions();
+
+  double? width;
+  double? height;
+  Alignment? alignment = Alignment.center;
+  EdgeInsets? padding = const EdgeInsets.symmetric(vertical: 10);
+  BoxDecoration? decoration = const BoxDecoration(color: Color(0xFF006BE1), borderRadius: BorderRadius.all(Radius.circular(5)));
+
+  TextStyle? titleStyle = const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16);
 }
 
 /// Tapped Widgets
