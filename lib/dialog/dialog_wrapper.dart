@@ -135,6 +135,7 @@ class DialogWrapper {
     bool? fullscreenDialog,
   }) {
     DialogShower? shower = getTopNavigatorDialog();
+    assert(shower != null, 'You should ensure already have a naviagtor-shower popuped, using pushRoot or isWrappedByNavigator = true.');
     return shower!.push(
       widget,
       duration: duration ?? const Duration(milliseconds: 200),

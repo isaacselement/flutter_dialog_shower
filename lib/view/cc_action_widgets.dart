@@ -75,14 +75,14 @@ class CcButtonWidgetOptions {
   AlignmentGeometry? alignment = Alignment.center;
 
   BoxDecoration? decoration = BoxDecoration(
+    color: const Color(0xFF4275FF),
     border: Border.all(color: const Color(0xFFDADAE8)),
     borderRadius: const BorderRadius.all(Radius.circular(5)),
-    color: const Color(0xFF4275FF),
   );
   BoxDecoration? decorationDisable = BoxDecoration(
+    color: const Color(0xFFF5F5FA),
     border: Border.all(color: const Color(0xFFDADAE8)),
     borderRadius: const BorderRadius.all(Radius.circular(5)),
-    color: const Color(0xFFF5F5FA),
   );
 
   TextStyle? textStyle = const TextStyle(color: Color(0xFFFFFFFF));
@@ -111,12 +111,15 @@ class CcButtonWidgetOptions {
 /// Cupertino Button
 
 class CcAppleButton extends StatelessWidget {
-  CcAppleButton({Key? key, this.title, this.child, required this.onPressed, this.options}) : super(key: key);
+  CcAppleButton({Key? key, this.title, this.child, required this.onPressed, this.isDisable, this.options}) : super(key: key);
 
   String? title;
   Widget? child;
+  bool? isDisable;
   VoidCallback onPressed;
   CcAppleButtonOptions? options;
+
+  bool get _isDisable => (isDisable ??= false);
 
   CcAppleButtonOptions get _options => (options ??= CcAppleButtonOptions());
 
@@ -125,14 +128,14 @@ class CcAppleButton extends StatelessWidget {
     return CupertinoButton(
       minSize: 0,
       padding: EdgeInsets.zero,
-      onPressed: onPressed,
+      onPressed: _isDisable ? null : onPressed,
       child: Container(
         width: _options.width,
         height: _options.height,
         padding: _options.padding,
         alignment: _options.alignment,
-        decoration: _options.decoration,
-        child: child ?? Text(title ?? '', style: _options.titleStyle),
+        decoration: _isDisable ? _options.decorationDisable : _options.decoration,
+        child: child ?? Text(title ?? '', style: _isDisable ? _options.textStyleDisable : _options.textStyle),
       ),
     );
   }
@@ -146,8 +149,10 @@ class CcAppleButtonOptions {
   Alignment? alignment = Alignment.center;
   EdgeInsets? padding = const EdgeInsets.symmetric(vertical: 10);
   BoxDecoration? decoration = const BoxDecoration(color: Color(0xFF006BE1), borderRadius: BorderRadius.all(Radius.circular(5)));
+  BoxDecoration? decorationDisable = const BoxDecoration(color: Color(0xFFF5F5FA), borderRadius: BorderRadius.all(Radius.circular(5)));
 
-  TextStyle? titleStyle = const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16);
+  TextStyle? textStyle = const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16);
+  TextStyle? textStyleDisable = const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 16);
 }
 
 /// Tapped Widgets
