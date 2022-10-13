@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
@@ -10,6 +9,10 @@ import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 //ignore: must_be_immutable
 class AnythingPicker extends StatefulWidget {
   String? title;
+
+  // phase
+  void Function(AnythingPickerState state)? onStateInit;
+  void Function(AnythingPickerState state)? onStateDispose;
 
   // false/null/none-implement for continue using the default behaviour
   void Function(AnythingPickerState state, BuildContext context)? funcOfTitleOnTapped;
@@ -56,6 +59,8 @@ class AnythingPicker extends StatefulWidget {
   AnythingPicker({
     Key? key,
     this.title,
+    this.onStateInit,
+    this.onStateDispose,
     this.funcOfTitleOnTapped,
     this.funcOfContentOnTapped,
     this.funcOfContent,
@@ -111,15 +116,17 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
 
   @override
   void initState() {
-    animationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     super.initState();
+    animationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    widget.onStateInit?.call(this);
   }
 
   @override
   void dispose() {
+    super.dispose();
     animationController?.dispose();
     animationController = null;
-    super.dispose();
+    widget.onStateDispose?.call(this);
   }
 
   @override
@@ -253,8 +260,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
           );
         } else {
           contentEndWidget = RotationTransition(
-            turns: Tween(begin: 0.0, end: 0.5).animate(animationController!),
             child: options.contentArrowIcon,
+            turns: options.contentArrowTween.animate(animationController!),
           );
         }
       }
@@ -787,6 +794,7 @@ class AnythingPickerOptions {
     quarterTurns: 2,
     child: Icon(Icons.arrow_back_ios_sharp, size: 13, color: Color(0xFFBFBFD2)),
   ); // Transform with Alignment.center & Matrix4.rotationZ(-90 / 180 * math.pi)
+  Tween<double> contentArrowTween = Tween(begin: 0.0, end: 0.5);
   Widget? contentClearIcon = Container(
     color: Colors.transparent,
     alignment: Alignment.centerRight,
@@ -872,6 +880,7 @@ class AnythingPickerOptions {
     newInstance.contentStartWidget = contentStartWidget;
     newInstance.contentEndWidget = contentEndWidget;
     newInstance.contentArrowIcon = contentArrowIcon;
+    newInstance.contentArrowTween = contentArrowTween;
     newInstance.contentClearIcon = contentClearIcon;
     newInstance.contentLoadingIcon = contentLoadingIcon;
 

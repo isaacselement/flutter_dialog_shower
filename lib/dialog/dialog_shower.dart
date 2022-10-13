@@ -654,7 +654,7 @@ class DialogShower {
 
   void setState([VoidCallback? fn]) async {
     assert(() {
-      __shower_log__('[DialogShower] setState was called, rebuilding...');
+      __shower_log__('Rebuilding... setState was called.');
       return true;
     }());
     if (!isBuilt) {
