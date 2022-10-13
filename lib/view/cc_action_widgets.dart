@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
+import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 /// Button Widgets
 
@@ -157,17 +157,20 @@ class CcAppleButtonOptions {
 
 /// Tapped Widgets
 
-abstract class CcTapViewBase extends StatefulWidget {
+class CcTapWidget extends StatefulWidget {
   Widget? child;
   bool isDisable = false;
   double? pressedOpacity;
   void Function(State state) onTap;
   Widget Function(State state)? builder;
 
-  CcTapViewBase({Key? key, this.child, this.isDisable = false, this.pressedOpacity, this.builder, required this.onTap}) : super(key: key);
+  CcTapWidget({Key? key, this.child, this.isDisable = false, this.pressedOpacity, this.builder, required this.onTap}) : super(key: key);
+
+  @override
+  State createState() => CcTapWidgetState();
 }
 
-abstract class CcTapStateBase extends State {
+class CcTapWidgetState extends State {
   bool _isTapingDown = false;
 
   get isTapingDown => _isTapingDown;
@@ -177,7 +180,7 @@ abstract class CcTapStateBase extends State {
     setState(() => _isTapingDown = v);
   }
 
-  CcTapViewBase get myWidget => widget as CcTapViewBase;
+  CcTapWidget get myWidget => widget as CcTapWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -200,32 +203,8 @@ abstract class CcTapStateBase extends State {
   }
 }
 
-/// with tap effect
-class CcTapWidget extends CcTapViewBase {
-  CcTapWidget({
-    Key? key,
-    Widget? child,
-    bool? isDisable,
-    double? pressedOpacity = 0.5,
-    Widget Function(State state)? builder,
-    required void Function(State state) onTap,
-  }) : super(
-          key: key,
-          child: child,
-          isDisable: isDisable ?? false,
-          pressedOpacity: pressedOpacity,
-          builder: builder,
-          onTap: onTap,
-        );
-
-  @override
-  State createState() => CcTapState();
-}
-
-class CcTapState extends CcTapStateBase {}
-
 /// with tap effect and tap once only
-class CcTapOnceWidget extends CcTapViewBase {
+class CcTapOnceWidget extends CcTapWidget {
   CcTapOnceWidget({
     Key? key,
     Widget? child,
@@ -246,7 +225,7 @@ class CcTapOnceWidget extends CcTapViewBase {
   State createState() => CcTapOnceState();
 }
 
-class CcTapOnceState extends CcTapStateBase {
+class CcTapOnceState extends CcTapWidgetState {
   bool _isTappedOnce = false;
 
   @override
@@ -271,7 +250,7 @@ class CcTapThrottledWidget extends CcTapWidget {
   }) : super(
           key: key,
           child: child,
-          isDisable: isDisable,
+          isDisable: isDisable ?? false,
           pressedOpacity: pressedOpacity,
           builder: builder,
           onTap: onTap,
@@ -281,7 +260,7 @@ class CcTapThrottledWidget extends CcTapWidget {
   State createState() => CcTapThrottledState();
 }
 
-class CcTapThrottledState extends CcTapState {
+class CcTapThrottledState extends CcTapWidgetState {
   @override
   void onEventTap() => AnyThrottle.instance.call(() => super.onEventTap());
 }
@@ -298,7 +277,7 @@ class CcTapDebouncerWidget extends CcTapWidget {
   }) : super(
           key: key,
           child: child,
-          isDisable: isDisable,
+          isDisable: isDisable ?? false,
           pressedOpacity: pressedOpacity,
           builder: builder,
           onTap: onTap,
@@ -308,7 +287,7 @@ class CcTapDebouncerWidget extends CcTapWidget {
   State createState() => CcTapDebouncerState();
 }
 
-class CcTapDebouncerState extends CcTapState {
+class CcTapDebouncerState extends CcTapWidgetState {
   @override
   void onEventTap() => AnyDebouncer.instance.call(() => super.onEventTap());
 }
