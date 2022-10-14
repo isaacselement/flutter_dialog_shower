@@ -167,10 +167,10 @@ class CcTapWidget extends StatefulWidget {
   CcTapWidget({Key? key, this.child, this.isDisable = false, this.pressedOpacity, this.builder, required this.onTap}) : super(key: key);
 
   @override
-  State createState() => CcTapWidgetState();
+  State createState() => CcTapState();
 }
 
-class CcTapWidgetState extends State {
+class CcTapState extends State {
   bool _isTapingDown = false;
 
   get isTapingDown => _isTapingDown;
@@ -225,7 +225,7 @@ class CcTapOnceWidget extends CcTapWidget {
   State createState() => CcTapOnceState();
 }
 
-class CcTapOnceState extends CcTapWidgetState {
+class CcTapOnceState extends CcTapState {
   bool _isTappedOnce = false;
 
   @override
@@ -242,6 +242,7 @@ class CcTapOnceState extends CcTapWidgetState {
 class CcTapThrottledWidget extends CcTapWidget {
   CcTapThrottledWidget({
     Key? key,
+    this.throttle,
     Widget? child,
     bool? isDisable,
     double? pressedOpacity = 0.5,
@@ -256,19 +257,22 @@ class CcTapThrottledWidget extends CcTapWidget {
           onTap: onTap,
         );
 
+  AnyThrottle? throttle;
+
   @override
   State createState() => CcTapThrottledState();
 }
 
-class CcTapThrottledState extends CcTapWidgetState {
+class CcTapThrottledState extends CcTapState {
   @override
-  void onEventTap() => AnyThrottle.instance.call(() => super.onEventTap());
+  void onEventTap() => ((widget as CcTapThrottledWidget).throttle ?? AnyThrottle.instance).call(() => super.onEventTap());
 }
 
 /// Tapped Widget with debounce
 class CcTapDebouncerWidget extends CcTapWidget {
   CcTapDebouncerWidget({
     Key? key,
+    this.debouncer,
     Widget? child,
     bool? isDisable,
     double? pressedOpacity = 0.5,
@@ -283,11 +287,13 @@ class CcTapDebouncerWidget extends CcTapWidget {
           onTap: onTap,
         );
 
+  AnyDebouncer? debouncer;
+
   @override
   State createState() => CcTapDebouncerState();
 }
 
-class CcTapDebouncerState extends CcTapWidgetState {
+class CcTapDebouncerState extends CcTapState {
   @override
-  void onEventTap() => AnyDebouncer.instance.call(() => super.onEventTap());
+  void onEventTap() => ((widget as CcTapDebouncerWidget).debouncer ?? AnyDebouncer.instance).call(() => super.onEventTap());
 }

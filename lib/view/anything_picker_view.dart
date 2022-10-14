@@ -672,7 +672,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
             },
             builder: (state) {
               tappingIndexes.remove(i);
-              if ((state as CcTapWidgetState).isTapingDown) {
+              if ((state as CcTapState).isTapingDown) {
                 tappingIndexes.add(i);
               }
               return _itemBuilderWrap();
