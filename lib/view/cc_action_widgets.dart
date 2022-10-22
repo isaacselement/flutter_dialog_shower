@@ -44,6 +44,7 @@ class CcButtonState extends State<CcButtonWidget> {
           child: Container(
             width: options.width,
             height: options.height,
+            margin: options.margin,
             padding: options.padding,
             alignment: options.alignment,
             decoration: options.isDisable ? options.decorationDisable : options.decoration,
@@ -70,7 +71,7 @@ class CcButtonWidgetOptions {
 
   double? width;
   double? height;
-
+  EdgeInsets? margin;
   EdgeInsets? padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
   AlignmentGeometry? alignment = Alignment.center;
 
@@ -97,6 +98,7 @@ class CcButtonWidgetOptions {
 
     newInstance.width = width;
     newInstance.height = height;
+    newInstance.margin = margin;
     newInstance.padding = padding;
     newInstance.alignment = alignment;
     newInstance.decoration = decoration;
@@ -132,6 +134,7 @@ class CcAppleButton extends StatelessWidget {
       child: Container(
         width: _options.width,
         height: _options.height,
+        margin: _options.margin,
         padding: _options.padding,
         alignment: _options.alignment,
         decoration: _isDisable ? _options.decorationDisable : _options.decoration,
@@ -142,17 +145,34 @@ class CcAppleButton extends StatelessWidget {
 }
 
 class CcAppleButtonOptions {
-  CcAppleButtonOptions();
-
   double? width;
   double? height;
-  Alignment? alignment = Alignment.center;
+  EdgeInsets? margin;
   EdgeInsets? padding = const EdgeInsets.symmetric(vertical: 10);
+  Alignment? alignment = Alignment.center;
   BoxDecoration? decoration = const BoxDecoration(color: Color(0xFF006BE1), borderRadius: BorderRadius.all(Radius.circular(5)));
   BoxDecoration? decorationDisable = const BoxDecoration(color: Color(0xFFF5F5FA), borderRadius: BorderRadius.all(Radius.circular(5)));
 
   TextStyle? textStyle = const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16);
   TextStyle? textStyleDisable = const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 16);
+
+  CcAppleButtonOptions();
+
+  CcAppleButtonOptions clone() {
+    CcAppleButtonOptions newInstance = CcAppleButtonOptions();
+
+    newInstance.width = width;
+    newInstance.height = height;
+    newInstance.margin = margin;
+    newInstance.padding = padding;
+    newInstance.alignment = alignment;
+    newInstance.decoration = decoration;
+    newInstance.decorationDisable = decorationDisable;
+
+    newInstance.textStyle = textStyle;
+    newInstance.textStyleDisable = textStyleDisable;
+    return newInstance;
+  }
 }
 
 /// Tapped Widgets
