@@ -317,3 +317,82 @@ class CcTapDebouncerState extends CcTapState {
   @override
   void onEventTap() => ((widget as CcTapDebouncerWidget).debouncer ?? AnyDebouncer.instance).call(() => super.onEventTap());
 }
+
+/// Action Sheet Button
+class ActionSheetButtons extends StatelessWidget {
+  List<Object?> items;
+
+  double? itemWidth;
+  double? itemHeight;
+  double? itemSpacing;
+  TextStyle? itemTextStyle;
+  CcButtonWidgetOptions? itemOptions;
+
+  Widget Function(int index, Object? item)? itemOuterBuilder;
+  Widget Function(int index, Object? item)? itemInnerBuilder;
+
+  String Function(int index, Object? item)? funcOfItemName;
+  bool Function(int index, Object? item)? funcOfItemOnTapped;
+
+  ActionSheetButtons({
+    Key? key,
+    required this.items,
+    this.itemWidth,
+    this.itemHeight,
+    this.itemSpacing,
+    this.itemOuterBuilder,
+    this.itemInnerBuilder,
+    this.funcOfItemName,
+    this.funcOfItemOnTapped,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    CcButtonWidgetOptions options = itemOptions ?? CcButtonWidgetOptions()
+      ..height = itemHeight ?? 45
+      ..decoration = BoxDecoration(
+        color: const Color(0xFFF5F5FA),
+        border: Border.all(color: const Color(0xFFDADAE8)),
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+      );
+    TextStyle textStyle = itemTextStyle ?? const TextStyle(color: Color(0xFF1C1D21), fontSize: 16);
+
+    /// children
+    List<Widget> children = <Widget>[];
+    for (int i = 0; i < items.length; i++) {
+      Object? e = items[i];
+      Widget child = itemOuterBuilder?.call(i, e) ??
+          CcButtonWidget(
+            options: options,
+            builder: (state) {
+              return itemInnerBuilder?.call(i, e) ??
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        funcOfItemName?.call(i, e) ?? e?.toString() ?? '',
+                        style: textStyle,
+                      )
+                    ],
+                  );
+            },
+            onTap: (state) {
+              if (funcOfItemOnTapped?.call(i, e) ?? false) {
+                /// caller handle the event totally
+              } else {
+                DialogWrapper.dismissTopDialog();
+              }
+            },
+          );
+      if (itemSpacing != null) children.add(SizedBox(height: itemSpacing));
+      children.add(child);
+    }
+
+    /// column
+    Widget widget = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: children,
+    );
+    return itemWidth != null ? SizedBox(width: itemWidth, child: widget) : widget;
+  }
+}

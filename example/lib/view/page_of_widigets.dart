@@ -260,13 +260,26 @@ class PageOfWidgets extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('show actions', onPressed: (state) {
-              DialogWrapper.showBottom(const ActionIconButtons(
-                width: 380,
-                buttonList: [
-                  {'icon': Icons.copy, 'text': 'Copy That'},
-                  {'icon': Icons.email, 'text': 'Send Email'},
-                  {'icon': Icons.phone, 'text': 'Phone Call'},
-                ],
+              List<Map> itemList = [
+                {'icon': Icons.copy, 'text': 'Copy That'},
+                {'icon': Icons.email, 'text': 'Send Email'},
+                {'icon': Icons.phone, 'text': 'Phone Call'},
+              ];
+              DialogWrapper.showBottom(ActionSheetButtons(
+                items: itemList,
+                itemWidth: 380,
+                itemSpacing: 10,
+                itemInnerBuilder: (i, e) {
+                  TextStyle style = const TextStyle(color: Color(0xFF1C1D21), fontSize: 16);
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(itemList[i]['icon'] as IconData), const SizedBox(width: 5), Text(itemList[i]['text'], style: style)],
+                  );
+                },
+                funcOfItemOnTapped: (e, i) {
+                  Logger.d('You tapped index: $i, $e');
+                  return false;
+                },
               ))
                 ..containerBorderRadius = 1.0
                 ..containerBackgroundColor = Colors.transparent
@@ -277,57 +290,5 @@ class PageOfWidgets extends StatelessWidget {
         const SizedBox(height: 12),
       ],
     );
-  }
-}
-
-class ActionIconButtons extends StatelessWidget {
-  const ActionIconButtons({Key? key, required this.buttonList, this.spacing = 20, this.width}) : super(key: key);
-
-  final double? width;
-  final double spacing;
-  final List<Map<String, dynamic>> buttonList;
-
-  @override
-  Widget build(BuildContext context) {
-    BoxDecoration decoration = BoxDecoration(
-      color: const Color(0xFFF5F5FA),
-      border: Border.all(color: const Color(0xFFDADAE8)),
-      borderRadius: const BorderRadius.all(Radius.circular(5)),
-    );
-
-    Widget _fnRow(IconData icon, String text) {
-      TextStyle style = const TextStyle(color: Color(0xFF1C1D21), fontSize: 16);
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [Icon(icon), const SizedBox(width: 5), Text(text, style: style)],
-      );
-    }
-
-    Widget _fnButton({required IconData icon, required String text, double height = 40, void Function()? event}) {
-      return CcButtonWidget(
-        options: CcButtonWidgetOptions()
-          ..height = height
-          ..decoration = decoration,
-        builder: (state) => _fnRow(icon, text),
-        onTap: (state) {
-          DialogWrapper.dismissTopDialog();
-          event?.call();
-        },
-      );
-    }
-
-    List<Widget> children = <Widget>[];
-    for (int i = 0; i < buttonList.length; i++) {
-      Map<String, dynamic> e = buttonList[i];
-      if (i != 0) {
-        children.add(SizedBox(height: spacing));
-      }
-      children.add(_fnButton(icon: e['icon'], text: e['text'], event: e['event']));
-    }
-    Widget child = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: children,
-    );
-    return width != null ? SizedBox(width: width, child: child) : child;
   }
 }

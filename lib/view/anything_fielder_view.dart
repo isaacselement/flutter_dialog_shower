@@ -181,11 +181,11 @@ class AnythingFielderState extends State<AnythingFielder> {
       Widget displayedValueWidget;
       if (widget.isEditable ?? true) {
         displayedValueWidget = CupertinoTextField(
-          decoration: null,
           focusNode: focusNode,
           controller: valueController,
           padding: options.textPadding,
           textAlign: options.textAlign,
+          maxLines: options.maxLines,
           maxLength: options.maxLength,
           style: options.contentTextStyle,
           keyboardType: options.keyboardType,
@@ -193,6 +193,7 @@ class AnythingFielderState extends State<AnythingFielder> {
           placeholderStyle: options.contentHintStyle,
           inputFormatters: options.inputFormatters,
           toolbarOptions: const ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
+          decoration: isFocused.value ? options.inputDecorationFocused : options.inputDecorationNormal,
           onChanged: (String text) {
             // valueController.text already is text now ...
 
@@ -298,7 +299,7 @@ class AnythingFielderOptions {
   BoxDecoration? contentDecorationFocused = const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFF4275FF))));
 
   // content text widget
-  String contentHintText = 'Enter';
+  String? contentHintText = 'Enter';
   TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2));
   TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21));
 
@@ -323,6 +324,7 @@ class AnythingFielderOptions {
   Widget? contentLoadingIcon = const AnythingLoadingWidget(side: 18, stroke: 1.3);
 
   // value field on CupertinoTextField properties
+  int? maxLines;
   int maxLength = 0x0800000000000000;
   bool Function(AnythingFielderState state, String text)? onEventTextChangedRaw;
   String? Function(AnythingFielderState state, String text)? onEventTextChangedFilter;
@@ -330,6 +332,8 @@ class AnythingFielderOptions {
   TextAlign textAlign = TextAlign.start;
   EdgeInsets textPadding = EdgeInsets.zero;
   List<TextInputFormatter>? inputFormatters;
+  BoxDecoration? inputDecorationNormal;
+  BoxDecoration? inputDecorationFocused;
 
   /// Methods
   AnythingFielderOptions();
@@ -360,6 +364,7 @@ class AnythingFielderOptions {
     newInstance.contentClearIcon = contentClearIcon;
     newInstance.contentLoadingIcon = contentLoadingIcon;
 
+    newInstance.maxLines = maxLines;
     newInstance.maxLength = maxLength;
     newInstance.onEventTextChangedRaw = onEventTextChangedRaw;
     newInstance.onEventTextChangedFilter = onEventTextChangedFilter;
@@ -367,6 +372,8 @@ class AnythingFielderOptions {
     newInstance.textAlign = textAlign;
     newInstance.textPadding = textPadding;
     newInstance.inputFormatters = inputFormatters;
+    newInstance.inputDecorationNormal = inputDecorationNormal;
+    newInstance.inputDecorationFocused = inputDecorationFocused;
 
     return newInstance;
   }
