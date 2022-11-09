@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class WidgetsUtil {
-  static get _editorBoxWidth => 400 >= SizesUtil.screenWidth ? SizesUtil.screenWidth - 100 : 400.toDouble();
+  static get _editorBoxWidth => 400 >= SizesUtils.screenWidth ? SizesUtils.screenWidth - 100 : 400.toDouble();
 
-  static get _editorBoxHeight => 300 >= SizesUtil.screenWidth ? SizesUtil.screenWidth - 100 : 300.toDouble();
+  static get _editorBoxHeight => 300 >= SizesUtils.screenWidth ? SizesUtils.screenWidth - 100 : 300.toDouble();
 
   static TextStyle getTextStyleWithPassionOne({required double fontSize, Color fontColor = Colors.black}) {
     return TextStyle(fontSize: fontSize, color: fontColor, fontFamily: 'PassionOne-Regular');

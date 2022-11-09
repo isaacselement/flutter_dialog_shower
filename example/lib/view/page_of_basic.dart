@@ -97,7 +97,7 @@ class PageOfBasic extends StatelessWidget {
               DialogShower shower = doBasicShow();
               shower.animationBeginOffset = const Offset(0.0, -1.0);
               shower.alignment = Alignment.topCenter;
-              shower.padding = EdgeInsets.only(top: SizesUtil.statusBarHeight);
+              shower.padding = EdgeInsets.only(top: SizesUtils.statusBarHeight);
               // background color
               shower.scaffoldBackgroundColor = const Color(0x4D1C1D21);
             }),
@@ -220,7 +220,7 @@ class PageOfBasic extends StatelessWidget {
                       DialogWrapper.show(_container(text: 'Click any where out of this box'))
                         ..animationBeginOffset = const Offset(0.0, -1.0)
                         ..alignment = Alignment.topCenter
-                        ..padding = EdgeInsets.only(top: SizesUtil.statusBarHeight);
+                        ..padding = EdgeInsets.only(top: SizesUtils.statusBarHeight);
                     });
                   });
                 });
@@ -234,7 +234,7 @@ class PageOfBasic extends StatelessWidget {
                       DialogWrapper.show(_container(text: 'Click any where out of this box'))
                         ..animationBeginOffset = const Offset(0.0, -1.0)
                         ..alignment = Alignment.topCenter
-                        ..padding = EdgeInsets.only(top: SizesUtil.statusBarHeight)
+                        ..padding = EdgeInsets.only(top: SizesUtils.statusBarHeight)
                         ..future.then((value) => DialogWrapper.dismissAppearingDialogs());
                     });
                   });
@@ -509,7 +509,7 @@ class PageOfBasic extends StatelessWidget {
     );
   }
 
-  get _showerWidth => 400 >= SizesUtil.screenWidth ? SizesUtil.screenWidth - 100 : 400.toDouble();
+  get _showerWidth => 400 >= SizesUtils.screenWidth ? SizesUtils.screenWidth - 100 : 400.toDouble();
 
-  get _showerHeight => 400 >= SizesUtil.screenWidth ? SizesUtil.screenWidth - 100 : 400.toDouble();
+  get _showerHeight => 400 >= SizesUtils.screenWidth ? SizesUtils.screenWidth - 100 : 400.toDouble();
 }

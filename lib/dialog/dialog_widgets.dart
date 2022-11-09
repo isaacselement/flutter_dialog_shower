@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/core/boxes.dart';
 import 'package:flutter_dialog_shower/core/broker.dart';
-import 'package:flutter_dialog_shower/util/elements_util.dart';
+import 'package:flutter_dialog_shower/util/elements_utils.dart';
 import 'package:flutter_dialog_shower/view/cc_animate_widgets.dart';
 
 import 'dialog_shower.dart';
@@ -100,10 +100,10 @@ class DialogWidgets {
   static void setLoadingText(String text, {DialogShower? shower}) {
     shower ??= DialogWrapper.getTopDialog();
     BuildContext? context = shower?.containerKey.currentContext;
-    AnyIconTextWidget? widget = ElementsUtil.getWidgetOfType<AnyIconTextWidget>(context);
+    AnyIconTextWidget? widget = ElementsUtils.getWidgetOfType<AnyIconTextWidget>(context);
     if (widget != null) {
       widget.text = text;
-      ElementsUtil.rebuildWidgetOfType<AnyIconTextWidget>(context);
+      ElementsUtils.rebuildWidgetOfType<AnyIconTextWidget>(context);
     }
   }
 

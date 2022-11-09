@@ -22,7 +22,7 @@ class ElementsIterator {
   }
 }
 
-class ElementsUtil {
+class ElementsUtils {
   /// Get Size & Offset methods
   static Size? getSize(BuildContext context) {
     RenderObject? box = context.findRenderObject();
@@ -152,11 +152,11 @@ class ElementsUtil {
   // Cause visitChildElements() called during build. Maybe need call in WidgetsBinding.addPostFrameCallback
   static void rebuild<T extends StatefulWidget>(BuildContext? context, void Function(T widget) fn) {
     assert(T != StatefulWidget, 'Type should be a subclass a StatefulWidget, but not a StatefulWidget type ${T == StatefulWidget}');
-    T? widget = ElementsUtil.getWidgetOfType<T>(context);
+    T? widget = ElementsUtils.getWidgetOfType<T>(context);
     if (widget == null) {
       return;
     }
     fn(widget);
-    ElementsUtil.rebuildWidget(context, widget);
+    ElementsUtils.rebuildWidget(context, widget);
   }
 }

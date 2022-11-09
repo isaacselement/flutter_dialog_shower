@@ -15,9 +15,10 @@ export 'overlay/overlay_shower.dart';
 export 'overlay/overlay_widgets.dart';
 export 'overlay/overlay_wrapper.dart';
 // util
-export 'util/elements_util.dart';
-export 'util/offsets_util.dart';
-export 'util/sizes_util.dart';
+export 'util/elements_utils.dart';
+export 'util/offsets_utils.dart';
+export 'util/sizes_utils.dart';
+export 'util/strings_utils.dart';
 // anything widgets
 export 'view/anything_header_view.dart';
 export 'view/anything_picker_view.dart';

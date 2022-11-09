@@ -42,12 +42,12 @@ class XpSliderWidget extends StatelessWidget {
         onDuring: (v) {
           // show the toast during expand animation
           String msg = 'Progress: ${v.toStringAsFixed(5)}';
-          AnyToastWidget? widget = ElementsUtil.getWidgetOfType<AnyToastWidget>(OverlayShower.gContext);
+          AnyToastWidget? widget = ElementsUtils.getWidgetOfType<AnyToastWidget>(OverlayShower.gContext);
           if (widget == null) {
             ToastUtil.show(msg);
           } else {
             Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
-              ElementsUtil.rebuild<AnyToastWidget>(shower.statefulKey.currentContext, (widget) {
+              ElementsUtils.rebuild<AnyToastWidget>(shower.statefulKey.currentContext, (widget) {
                 widget.text = msg;
               });
             });
@@ -64,7 +64,7 @@ class XpSliderWidget extends StatelessWidget {
         rightTitlesList: [isExpanded.value ? 'Full Screen' : '', isExpanded.value ? 'Shrink' : 'Expand', 'Done'],
         rightEventsList: [
           () {
-            transform(shower?.width ?? 600, SizesUtil.screenWidth, null);
+            transform(shower?.width ?? 600, SizesUtils.screenWidth, null);
           },
           () {
             double w = shower?.width ?? 600;
@@ -162,7 +162,7 @@ class XpSliderWidget extends StatelessWidget {
                     return false;
                   },
                   funcOfTitleOnTapped: (state, context) {
-                    Offset offset = OffsetsUtil.getOffsetB(context) ?? Offset.zero;
+                    Offset offset = OffsetsUtils.getOffsetB(context) ?? Offset.zero;
                     String msg =
                         'But Flexible with FlexFit.\nloose acts like Expanded so the \nSuffixIcon gets pushed to the end \neven though TextGoesHere is a short text.';
                     ToastUtil.showDialogToast(msg, x: offset.dx + 200, y: offset.dy - 36);
@@ -264,8 +264,8 @@ class XpSliderWidget extends StatelessWidget {
         CcTapWidget(
           child: Row(children: const [Text('Click me '), Icon(Icons.info_outline, color: Colors.blueAccent)]),
           onTap: (state) {
-            Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
-            Size size = SizesUtil.getSizeS(state) ?? Size.zero;
+            Offset position = OffsetsUtils.getOffsetS(state) ?? Offset.zero;
+            Size size = SizesUtils.getSizeS(state) ?? Size.zero;
             ToastUtil.showWithArrow(
               '1. You know that ~~~~~~~~~~~~\n2. HuaHuHuaHaHua~~~~~~~ \n3. I don\'t know that!!!',
               x: position.dx + size.width,

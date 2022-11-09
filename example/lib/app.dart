@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     DialogShower.init(context);
     OverlayShower.init(context);
 
-    SizesUtil.init(context);
+    SizesUtils.init(context);
 
     return Scaffold(
       body: Container(

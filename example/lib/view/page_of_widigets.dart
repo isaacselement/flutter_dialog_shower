@@ -125,7 +125,7 @@ class PageOfWidgets extends StatelessWidget {
                   duration: const Duration(milliseconds: 2000),
                   painter: (progress) {
                     Boxes.getWidgetsBinding().addPostFrameCallback((timeStamp) {
-                      ElementsUtil.rebuild<AnyToastWidget>(shower.statefulKey.currentContext, (widget) {
+                      ElementsUtils.rebuild<AnyToastWidget>(shower.statefulKey.currentContext, (widget) {
                         widget.text = 'progress: ${progress.toStringAsFixed(4)}';
                       });
                     });
@@ -238,12 +238,12 @@ class PageOfWidgets extends StatelessWidget {
                 buttonRightText: 'Next One',
                 buttonRightEvent: (d) {
                   BuildContext? context = d.containerKey.currentContext;
-                  AnyAlertTextWidget? widget = ElementsUtil.getWidgetOfType<AnyAlertTextWidget>(context);
+                  AnyAlertTextWidget? widget = ElementsUtils.getWidgetOfType<AnyAlertTextWidget>(context);
                   widget?.title = ['OnePlus', 'Vivo', 'Oppo', 'XiaoMi'].elementAt(Random().nextInt(4));
                   widget?.text = ['Not a joke ~~~', 'Apple iPhone 14', 'An Undefined Phone'].elementAt(Random().nextInt(3));
                   Color color = [Colors.red, Colors.green, Colors.orange].elementAt(Random().nextInt(3));
                   widget?.icon = Icon(Icons.info, size: 80, color: color);
-                  ElementsUtil.rebuildWidget(context, widget);
+                  ElementsUtils.rebuildWidget(context, widget);
                   Logger.d('joking...');
                 },
                 onOptions: (options) {

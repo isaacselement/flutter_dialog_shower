@@ -39,8 +39,8 @@ class PageOfBubble extends StatelessWidget {
 
   Widget buildButtonsAboutBubble() {
     void showBubble(State state, {required Widget child}) {
-      Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
-      Size size = SizesUtil.getSizeS(state) ?? Size.zero;
+      Offset offset = OffsetsUtils.getOffsetS(state) ?? Offset.zero;
+      Size size = SizesUtils.getSizeS(state) ?? Size.zero;
       double x = offset.dx;
       double y = offset.dy + size.height;
       DialogShower shower = DialogWrapper.show(child, x: x, y: y);
@@ -179,8 +179,8 @@ class PageOfBubble extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show on My Bottom', onPressed: (state) {
-              Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
-              Size size = SizesUtil.getSizeS(state) ?? Size.zero;
+              Offset offset = OffsetsUtils.getOffsetS(state) ?? Offset.zero;
+              Size size = SizesUtils.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.top,
@@ -191,8 +191,8 @@ class PageOfBubble extends StatelessWidget {
               shower.containerDecoration = null;
             }),
             WidgetsUtil.newXpelTextButton('Show on My Top', onPressed: (state) {
-              Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
-              Size size = SizesUtil.getSizeS(state) ?? Size.zero;
+              Offset offset = OffsetsUtils.getOffsetS(state) ?? Offset.zero;
+              Size size = SizesUtils.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.bottom,
@@ -204,7 +204,7 @@ class PageOfBubble extends StatelessWidget {
               shower.containerDecoration = null;
             }),
             WidgetsUtil.newXpelTextButton('Show on My Left', onPressed: (state) {
-              Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
+              Offset offset = OffsetsUtils.getOffsetS(state) ?? Offset.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.right,
@@ -216,8 +216,8 @@ class PageOfBubble extends StatelessWidget {
               shower.containerDecoration = null;
             }),
             WidgetsUtil.newXpelTextButton('Show on My Right', onPressed: (state) {
-              Offset offset = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
-              Size size = SizesUtil.getSizeS(state) ?? Size.zero;
+              Offset offset = OffsetsUtils.getOffsetS(state) ?? Offset.zero;
+              Size size = SizesUtils.getSizeS(state) ?? Size.zero;
               DialogShower shower = DialogWrapper.show(
                   WidgetsUtil.getBubblePicker(
                     direction: CcBubbleArrowDirection.left,
@@ -236,8 +236,8 @@ class PageOfBubble extends StatelessWidget {
             CcTapWidget(
               child: Container(color: Colors.white, width: 30, height: 60, child: const Icon(Icons.info, color: Colors.grey)),
               onTap: (state) {
-                Offset position = OffsetsUtil.getOffsetS(state) ?? Offset.zero;
-                Size size = SizesUtil.getSizeS(state) ?? Size.zero;
+                Offset position = OffsetsUtils.getOffsetS(state) ?? Offset.zero;
+                Size size = SizesUtils.getSizeS(state) ?? Size.zero;
                 ToastUtil.showWithArrow(
                   'You know that ~~~~~~~~~~~~~~~~~~!!!!!',
                   x: position.dx + size.width,
