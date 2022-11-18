@@ -6,12 +6,12 @@ import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 /// Button Widgets
 
 class CcButtonWidget extends StatefulWidget {
-  String? text;
+  String? title;
   CcButtonWidgetOptions? options;
   void Function(CcButtonState state) onTap;
   Widget? Function(CcButtonState state)? builder;
 
-  CcButtonWidget({Key? key, this.text, this.builder, this.options, required this.onTap}) : super(key: key);
+  CcButtonWidget({Key? key, this.title, this.builder, this.options, required this.onTap}) : super(key: key);
 
   @override
   State<CcButtonWidget> createState() => CcButtonState();
@@ -50,9 +50,9 @@ class CcButtonState extends State<CcButtonWidget> {
             decoration: options.isDisable ? options.decorationDisable : options.decoration,
             child: widget.builder?.call(this) ??
                 Text(
-                  widget.text ?? 'Cancel',
+                  widget.title ?? 'Cancel',
                   maxLines: 1,
-                  style: options.isDisable ? options.textStyle : options.textStyleDisable,
+                  style: options.isDisable ? options.titleStyle : options.titleStyleDisable,
                 ),
           ),
         ),
@@ -86,8 +86,8 @@ class CcButtonWidgetOptions {
     borderRadius: const BorderRadius.all(Radius.circular(5)),
   );
 
-  TextStyle? textStyle = const TextStyle(color: Color(0xFFFFFFFF));
-  TextStyle? textStyleDisable = const TextStyle(color: Color(0xFFBFBFD2));
+  TextStyle? titleStyle = const TextStyle(color: Color(0xFFFFFFFF));
+  TextStyle? titleStyleDisable = const TextStyle(color: Color(0xFFBFBFD2));
 
   CcButtonWidgetOptions();
 
@@ -104,8 +104,8 @@ class CcButtonWidgetOptions {
     newInstance.decoration = decoration;
     newInstance.decorationDisable = decorationDisable;
 
-    newInstance.textStyle = textStyle;
-    newInstance.textStyleDisable = textStyleDisable;
+    newInstance.titleStyle = titleStyle;
+    newInstance.titleStyleDisable = titleStyleDisable;
     return newInstance;
   }
 }
@@ -138,7 +138,7 @@ class CcAppleButton extends StatelessWidget {
         padding: _options.padding,
         alignment: _options.alignment,
         decoration: _isDisable ? _options.decorationDisable : _options.decoration,
-        child: child ?? Text(title ?? '', style: _isDisable ? _options.textStyleDisable : _options.textStyle),
+        child: child ?? Text(title ?? '', style: _isDisable ? _options.titleStyleDisable : _options.titleStyle),
       ),
     );
   }
@@ -153,8 +153,8 @@ class CcAppleButtonOptions {
   BoxDecoration? decoration = const BoxDecoration(color: Color(0xFF006BE1), borderRadius: BorderRadius.all(Radius.circular(5)));
   BoxDecoration? decorationDisable = const BoxDecoration(color: Color(0xFFF5F5FA), borderRadius: BorderRadius.all(Radius.circular(5)));
 
-  TextStyle? textStyle = const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16);
-  TextStyle? textStyleDisable = const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 16);
+  TextStyle? titleStyle = const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16);
+  TextStyle? titleStyleDisable = const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 16);
 
   CcAppleButtonOptions();
 
@@ -169,8 +169,8 @@ class CcAppleButtonOptions {
     newInstance.decoration = decoration;
     newInstance.decorationDisable = decorationDisable;
 
-    newInstance.textStyle = textStyle;
-    newInstance.textStyleDisable = textStyleDisable;
+    newInstance.titleStyle = titleStyle;
+    newInstance.titleStyleDisable = titleStyleDisable;
     return newInstance;
   }
 }
