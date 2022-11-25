@@ -115,7 +115,7 @@ class OverlayShower {
 
   Widget _getRebuildWidget(Widget? child) {
     // 1. locating with Positioned
-    bool isPositioned = top != null || left != null || right != null || bottom != null || width != null || height != null;
+    bool isPositioned = top != null || left != null || right != null || bottom != null;
     if (isPositioned) {
       return Positioned(
         top: top,
@@ -132,6 +132,8 @@ class OverlayShower {
       padding = EdgeInsets.only(left: dx ?? padding?.left ?? 0, top: dy ?? padding?.top ?? 0);
     }
     return Container(
+      width: width,
+      height: height,
       margin: margin,
       padding: padding,
       alignment: alignment,

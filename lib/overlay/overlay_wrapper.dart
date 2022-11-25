@@ -17,6 +17,20 @@ class OverlayWrapper {
     return shower;
   }
 
+  static OverlayShower showLeft(Widget child, {String? key}) {
+    OverlayShower shower = show(child, key: key);
+    shower.alignment = Alignment.centerLeft;
+    shower.padding = const EdgeInsets.only(left: 16);
+    return shower;
+  }
+
+  static OverlayShower showRight(Widget child, {String? key}) {
+    OverlayShower shower = show(child, key: key);
+    shower.alignment = Alignment.centerRight;
+    shower.padding = const EdgeInsets.only(right: 16);
+    return shower;
+  }
+
   static OverlayShower show(Widget child, {double? dx, double? dy, String? key}) {
     return showWith(OverlayShower(), child, dx: dx, dy: dy, key: key);
   }
