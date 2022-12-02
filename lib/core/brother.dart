@@ -181,6 +181,9 @@ abstract class BtNotifier<T> {
   bool isSubscriptionsEmpty() {
     return _stream.isEmpty();
   }
+
+  /// holder object for various uses on you need ...
+  Object? obj;
 }
 
 /// Brother Observer
