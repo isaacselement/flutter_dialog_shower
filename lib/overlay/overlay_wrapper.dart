@@ -93,16 +93,12 @@ class OverlayWrapper {
   static Future<void> dismissAppearingLayers() async {
     List<OverlayShower> tmp = [..._list()];
     _list().clear();
+    _map().clear();
+
     for (int i = tmp.length - 1; i >= 0; i--) {
       var shower = tmp[i];
       await _dismiss(shower);
     }
-
-    // Map<String, OverlayShower> map = {}..addAll(_map());
-    _map().clear(); // just clear, cause _addLayer entry method: _map element already in _list
-    // map.forEach((key, shower) async {
-    //   await _dismiss(shower);
-    // });
   }
 
   static Future<void> dismissTopLayer({int? count}) async {
@@ -118,26 +114,12 @@ class OverlayWrapper {
   static Future<void> dismissLayer(OverlayShower? shower, {String? key}) async {
     // remove & dismiss from top to bottom
     if (shower != null) {
-      List<OverlayShower> tmp = [..._list()];
-      for (int i = tmp.length - 1; i >= 0; i--) {
-        OverlayShower d = tmp.elementAt(i);
-        remove(d);
-        await _dismiss(d);
-        if (d == shower) {
-          break;
-        }
-      }
+      remove(shower);
+      await _dismiss(shower);
     }
     if (key != null && (shower = _map()[key]) != null) {
-      List<OverlayShower> tmp = [..._list()];
-      for (int i = tmp.length - 1; i >= 0; i--) {
-        OverlayShower d = tmp.elementAt(i);
-        remove(d);
-        await _dismiss(d);
-        if (d == shower) {
-          break;
-        }
-      }
+      remove(shower);
+      await _dismiss(shower);
     }
   }
 
