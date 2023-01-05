@@ -19,6 +19,7 @@ class DialogShower {
 
   /// Navigator properties
   BuildContext? context;
+  NavigatorState? navigator;
   bool isUseRootNavigator = true;
   Color barrierColor = Colors.transparent;
   bool? barrierDismissible = false;
@@ -34,7 +35,7 @@ class DialogShower {
 
   late Route route;
 
-  NavigatorState get parentNavigator => Navigator.of(context!, rootNavigator: isUseRootNavigator);
+  NavigatorState get parentNavigator => navigator ?? Navigator.of(context!, rootNavigator: isUseRootNavigator);
 
   /// Scaffold properties
   Color? scaffoldBackgroundColor = Colors.transparent;
