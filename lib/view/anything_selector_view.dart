@@ -8,6 +8,7 @@ import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 class AnythingSelector extends StatelessWidget {
   String? header;
   AnythingHeaderOptions? headerOptions;
+  Widget? Function(AnythingSelector view)? builderOfHeader;
 
   List<dynamic>? values;
   FutureOr<List<dynamic>?> Function()? funcOfValues;
@@ -68,11 +69,15 @@ class AnythingSelector extends StatelessWidget {
     List<Widget> children = [];
 
     // header view
-    if (header != null) {
-      children.add(AnythingHeader(
+    Widget? headerWidget = builderOfHeader?.call(this);
+    if (headerWidget == null && header != null) {
+      headerWidget = AnythingHeader(
         title: header,
         options: headerOptions,
-      ));
+      );
+    }
+    if (headerWidget != null) {
+      children.add(headerWidget);
     }
 
     // search view
