@@ -44,6 +44,7 @@ class AnythingSelector extends StatelessWidget {
     Key? key,
     this.header,
     this.headerOptions,
+    this.builderOfHeader,
     this.values,
     this.funcOfValues,
     this.selectedValue,
