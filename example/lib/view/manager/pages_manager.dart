@@ -59,7 +59,7 @@ class PagesManager {
       'Navigator',
       const Icon(Icons.navigation, size: 32, color: Colors.black26),
       const Icon(Icons.navigation_sharp, size: 32, color: Colors.orange),
-      const PageOfNavigator(),
+      PageOfNavigator(),
     );
     addTabPage(
       false,

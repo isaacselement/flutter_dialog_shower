@@ -55,19 +55,19 @@ class PageOfBasic extends StatelessWidget {
               doBasicShow();
             }),
             WidgetsUtil.newXpelTextButton('Show from left', onPressed: (state) {
-              doBasicShow().animationBeginOffset = const Offset(-1.0, 0.0);
+              doBasicShow().transitionBuilder = ShowerTransitionBuilder.slideFromLeft;
             }),
             WidgetsUtil.newXpelTextButton('Show from right', onPressed: (state) {
-              doBasicShow().animationBeginOffset = const Offset(1.0, 0.0);
+              doBasicShow().transitionBuilder = ShowerTransitionBuilder.slideFromRight;
             }),
             WidgetsUtil.newXpelTextButton('Show from top', onPressed: (state) {
-              doBasicShow().animationBeginOffset = const Offset(0.0, -1.0);
+              doBasicShow().transitionBuilder = ShowerTransitionBuilder.slideFromTop;
             }),
             WidgetsUtil.newXpelTextButton('Show from top left', onPressed: (state) {
-              doBasicShow().animationBeginOffset = const Offset(-1.0, -1.0);
+              doBasicShow().transitionBuilder = ShowerTransitionBuilder.slideTransitionBuilder(const Offset(-1.0, -1.0));
             }),
             WidgetsUtil.newXpelTextButton('Show from top right', onPressed: (state) {
-              doBasicShow().animationBeginOffset = const Offset(1.0, -1.0);
+              doBasicShow().transitionBuilder = ShowerTransitionBuilder.slideTransitionBuilder(const Offset(1.0, -1.0));
             }),
           ],
         ),
@@ -75,19 +75,19 @@ class PageOfBasic extends StatelessWidget {
           children: [
             WidgetsUtil.newXpelTextButton('Show in left', onPressed: (state) {
               DialogShower shower = doBasicShow();
-              shower.animationBeginOffset = const Offset(-1.0, 0.0);
+              shower.transitionBuilder = ShowerTransitionBuilder.slideFromLeft;
               shower.alignment = Alignment.centerLeft;
               shower.padding = const EdgeInsets.only(left: 5);
             }),
             WidgetsUtil.newXpelTextButton('Show in right', onPressed: (state) {
               DialogShower shower = doBasicShow();
-              shower.animationBeginOffset = const Offset(1.0, 0.0);
+              shower.transitionBuilder = ShowerTransitionBuilder.slideFromRight;
               shower.alignment = Alignment.centerRight;
               shower.padding = const EdgeInsets.only(right: 5);
             }),
             WidgetsUtil.newXpelTextButton('Show in bottom', onPressed: (state) {
               DialogShower shower = doBasicShow();
-              shower.animationBeginOffset = const Offset(0.0, 1.0);
+              shower.transitionBuilder = ShowerTransitionBuilder.slideFromBottom;
               shower.alignment = Alignment.bottomCenter;
               shower.padding = const EdgeInsets.only(bottom: 5);
               // barrier color
@@ -95,7 +95,7 @@ class PageOfBasic extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('Show in top', onPressed: (state) {
               DialogShower shower = doBasicShow();
-              shower.animationBeginOffset = const Offset(0.0, -1.0);
+              shower.transitionBuilder = ShowerTransitionBuilder.slideFromTop;
               shower.alignment = Alignment.topCenter;
               shower.padding = EdgeInsets.only(top: SizesUtils.statusBarHeight);
               // background color
@@ -195,6 +195,13 @@ class PageOfBasic extends StatelessWidget {
       children: [
         Wrap(
           children: [
+            WidgetsUtil.newXpelTextButton('Just Show', onPressed: (state) {
+              DialogWrapper.showCenter(_container(text: '1'), width: 200, height: 200);
+            }),
+            WidgetsUtil.newXpelTextButton('Just Show', onPressed: (state) {
+              DialogWrapper.showCenter(_container(text: '1'), isFixed: true, width: 200, height: 200).transitionBuilder =
+                  ShowerTransitionBuilder.scaleIn;
+            }),
             WidgetsUtil.newXpelTextButton('DialogWrapper Show Cupertino Indicator', onPressed: (state) {
               DialogShower dialog = DialogWrapper.show(const CupertinoActivityIndicator());
               // rewrite properties
@@ -218,7 +225,7 @@ class PageOfBasic extends StatelessWidget {
                   DialogWrapper.showRight(_container(text: '3')).poppedCompleter.future.then((value) {
                     DialogWrapper.showBottom(_container(text: '4')).poppedCompleter.future.then((value) {
                       DialogWrapper.show(_container(text: 'Click any where out of this box'))
-                        ..animationBeginOffset = const Offset(0.0, -1.0)
+                        ..transitionBuilder = ShowerTransitionBuilder.slideFromTop
                         ..alignment = Alignment.topCenter
                         ..padding = EdgeInsets.only(top: SizesUtils.statusBarHeight);
                     });
@@ -232,7 +239,7 @@ class PageOfBasic extends StatelessWidget {
                   DialogWrapper.showRight(_container(text: '3')).poppedCompleter.future.then((value) {
                     DialogWrapper.showBottom(_container(text: '4')).poppedCompleter.future.then((value) {
                       DialogWrapper.show(_container(text: 'Click any where out of this box'))
-                        ..animationBeginOffset = const Offset(0.0, -1.0)
+                        ..transitionBuilder = ShowerTransitionBuilder.slideFromTop
                         ..alignment = Alignment.topCenter
                         ..padding = EdgeInsets.only(top: SizesUtils.statusBarHeight)
                         ..future.then((value) => DialogWrapper.dismissAppearingDialogs());
@@ -246,7 +253,7 @@ class PageOfBasic extends StatelessWidget {
                 DialogWrapper.showLeft(_container(text: '2')).poppedCompleter.future.then((value) {
                   DialogWrapper.showRight(_container(text: 'Will auto dismiss after 2 seconds'))
                     ..barrierDismissible = false
-                    ..poppedCompleter.future.then((value) {
+                    ..pushedCompleter.future.then((value) {
                       Future.delayed(const Duration(seconds: 2), () {
                         // DialogWrapper.dismissTopDialog();
                         DialogWrapper.getTopDialog()?.dismiss();
@@ -263,7 +270,7 @@ class PageOfBasic extends StatelessWidget {
                 DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
                     ..barrierDismissible = false
-                    ..poppedCompleter.future.then((value) {
+                    ..pushedCompleter.future.then((value) {
                       Future.delayed(const Duration(seconds: 2), () {
                         DialogWrapper.dismissDialog(null, key: '__key3__');
                         DialogWrapper.dismissDialog(null, key: '__key2__'); // will dismiss all dialog on top of me
@@ -280,7 +287,7 @@ class PageOfBasic extends StatelessWidget {
                 DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
                     ..barrierDismissible = false
-                    ..poppedCompleter.future.then((value) {
+                    ..pushedCompleter.future.then((value) {
                       Future.delayed(const Duration(seconds: 2), () {
                         DialogWrapper.dismissDialog(null, key: '__key1__'); // will dismiss all dialog on top of me
                       });
@@ -345,7 +352,7 @@ class PageOfBasic extends StatelessWidget {
                 },
               ), width: 200, height: 250);
               shower.isWithTicker = true;
-              shower.animationBeginOffset = const Offset(0.0, -1.0);
+              shower.transitionBuilder = ShowerTransitionBuilder.slideFromTop;
 
               ShowerHelper.stopwatchTimer(
                 count: counter.value,

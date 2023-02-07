@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:example/view/page_of_home.dart';

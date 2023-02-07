@@ -1,78 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/core/boxes.dart';
-
 import 'dialog_shower.dart';
 
 class DialogWrapper {
-  /// Shower basic useage wrapper
-  // Note, direction example:
-  // Offset(1.0, 0.0) -> From Right, Offset(-1.0, 0.0) -> From Left
-  // Offset(0.0, 1.0) -> From Bottom, Offset(0.0, -1.0) -> From Top
-  // Offset(-1.0, -1.0) LeftTop to Destination ...
+  /// Shower basic usage in wrapper
 
-  // same ui effect as function [show] ...
-  static DialogShower showCenter(Widget child, {required double width, required double height, String? key}) {
-    MediaQueryData query = MediaQueryData.fromWindow(Boxes.getWindow());
-    return show(child, x: (query.size.width - width) / 2, y: (query.size.height - height) / 2, width: width, height: height, key: key);
+  static DialogShower showCenter(Widget child, {bool? isFixed, double? width, double? height, String? key}) {
+    DialogShower shower = show(child, isFixed: isFixed, width: width, height: height, key: key);
+    shower.transitionBuilder = ShowerTransitionBuilder.fadeIn;
+    return shower;
   }
 
-  static DialogShower showRight(Widget child, {bool isFixed = false, double? width, double? height, String? key}) {
-    DialogShower shower = show(child, width: width, height: height, direction: const Offset(1.0, 0.0), key: key);
-    if (isFixed) {
+  static DialogShower showRight(Widget child, {bool? isFixed, double? width, double? height, String? key}) {
+    DialogShower shower = show(child, width: width, height: height, key: key);
+    if (isFixed == true) {
       shower.alignment = Alignment.topRight;
       shower.padding = const EdgeInsets.only(top: -1, right: 16);
     } else {
       shower.alignment = Alignment.centerRight;
       shower.padding = const EdgeInsets.only(right: 16);
     }
+    shower.transitionBuilder = ShowerTransitionBuilder.slideFromRight;
     return shower;
   }
 
-  static DialogShower showLeft(Widget child, {bool isFixed = false, double? width, double? height, String? key}) {
-    DialogShower shower = show(child, width: width, height: height, direction: const Offset(-1.0, 0.0), key: key);
-    if (isFixed) {
+  static DialogShower showLeft(Widget child, {bool? isFixed, double? width, double? height, String? key}) {
+    DialogShower shower = show(child, width: width, height: height, key: key);
+    if (isFixed == true) {
       shower.alignment = Alignment.topLeft;
       shower.padding = const EdgeInsets.only(top: -1, left: 16);
     } else {
       shower.alignment = Alignment.centerLeft;
       shower.padding = const EdgeInsets.only(left: 16);
     }
+    shower.transitionBuilder = ShowerTransitionBuilder.slideFromLeft;
     return shower;
   }
 
   static DialogShower showBottom(Widget child, {double? width, double? height, String? key}) {
-    DialogShower shower = show(child, width: width, height: height, direction: const Offset(0.0, 1.0), key: key);
+    DialogShower shower = show(child, width: width, height: height, key: key);
     shower.alignment = Alignment.bottomCenter;
     shower.padding = const EdgeInsets.only(bottom: 16);
+    shower.transitionBuilder = ShowerTransitionBuilder.slideFromBottom;
     return shower;
   }
 
-  static DialogShower show(Widget child,
-      {bool isFixed = false, double? x, double? y, double? width, double? height, Offset? direction, String? key}) {
-    return showWith(DialogShower(), child, isFixed: isFixed, x: x, y: y, width: width, height: height, direction: direction, key: key);
+  static DialogShower show(Widget child, {bool? isFixed, double? x, double? y, double? width, double? height, String? key}) {
+    return showWith(DialogShower(), child, isFixed: isFixed, x: x, y: y, width: width, height: height, key: key);
   }
 
   static DialogShower showWith(DialogShower shower, Widget child,
-      {bool isFixed = false, double? x, double? y, double? width, double? height, Offset? direction, String? key}) {
+      {bool? isFixed, double? x, double? y, double? width, double? height, String? key}) {
     shower
       ..build()
-      ..barrierDismissible = null // null indicate that: dimiss keyboard first while keyboard is showing, else dismiss dialog immediately
+      ..barrierDismissible = null // null indicate that: dismiss keyboard first while keyboard is showing, else dismiss dialog immediately
       ..containerShadowColor = Colors.grey
       ..containerShadowBlurRadius = 20.0
       ..containerBorderRadius = 10.0;
 
-    if (direction != null) {
-      shower.animationBeginOffset = direction;
-    }
-
-    if (isFixed) {
+    if (isFixed == true) {
       shower
         ..alignment = null
         ..padding = const EdgeInsets.only(left: -1, top: -1);
     }
     if (x != null && y != null) {
       shower
-        ..alignment = isFixed ? null : Alignment.topLeft
+        ..alignment = isFixed == true ? null : Alignment.topLeft
         ..padding = EdgeInsets.only(left: x, top: y);
     }
 
@@ -103,15 +95,14 @@ class DialogWrapper {
   static DialogShower pushRoot(
     Widget widget, {
     RouteSettings? settings,
-    bool isFixed = false,
+    bool? isFixed,
     double? x,
     double? y,
     double? width,
     double? height,
-    Offset? direction,
     String? key,
   }) {
-    return DialogWrapper.show(widget, isFixed: isFixed, x: x, y: y, width: width, height: height, direction: direction, key: key)
+    return DialogWrapper.show(widget, isFixed: isFixed, x: x, y: y, width: width, height: height, key: key)
       ..isWrappedByNavigator = true
       ..wrappedNavigatorInitialName = settings?.name;
   }
@@ -135,21 +126,12 @@ class DialogWrapper {
     bool? fullscreenDialog,
   }) {
     DialogShower? shower = getTopNavigatorDialog();
-    assert(shower != null, 'You should ensure already have a naviagtor-shower popuped, using pushRoot or isWrappedByNavigator = true.');
+    assert(shower != null, 'You should ensure already have a navigator-shower popup, using pushRoot or isWrappedByNavigator = true.');
     return shower!.push(
       widget,
       duration: duration ?? const Duration(milliseconds: 200),
       reverseDuration: reverseDuration ?? const Duration(milliseconds: 200),
-      transition: transition ??
-          (BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(1.0, 0.0),
-                end: const Offset(0.0, 0.0),
-              ).animate(animOne),
-              child: child,
-            );
-          },
+      transition: transition ?? ShowerTransitionBuilder.slideFromRight,
       routeBuilder: routeBuilder,
       pageBuilder: pageBuilder,
       settings: settings,
@@ -275,5 +257,4 @@ class DialogWrapper {
       await dialog.dismiss<T>(result);
     }
   }
-
 }

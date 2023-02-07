@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
-import 'package:example/view/page_of_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 

@@ -12,7 +12,7 @@ class DialogShower {
   static const Decoration _notInitializedDecoration = BoxDecoration();
 
   bool isSyncShow = false; // should assign value before show method
-  bool isWithTicker = false; // should assign value before show method
+  bool isWithTicker = false;
   bool isSyncDismiss = false;
   bool isSyncInvokeShowCallback = false;
   bool isSyncInvokeDismissCallback = false;
@@ -26,14 +26,12 @@ class DialogShower {
   String barrierLabel = "";
   bool isDismissKeyboardOnTapped = true;
 
-  // Navigator animation direction, default is SlideTransition from Bottom with 250 milliseconds duration
-  RouteTransitionsBuilder? transitionBuilder;
-  Offset? animationBeginOffset = const Offset(0.0, 1.0);
+  /// Navigator animation, default is SlideTransition from Bottom with 250 milliseconds duration
   Duration transitionDuration = const Duration(milliseconds: 250);
-
-  String routeName = '';
+  RouteTransitionsBuilder? transitionBuilder = ShowerTransitionBuilder.slideFromBottom;
 
   late Route route;
+  String routeName = ''; // should assign value before show method
 
   NavigatorState get parentNavigator => navigator ?? Navigator.of(context!, rootNavigator: isUseRootNavigator);
 
@@ -210,9 +208,9 @@ class DialogShower {
     return gObserver!;
   }
 
-  DialogShower() {
-    transitionBuilder = _defTransition;
-  }
+  DialogShower({bool? isSync, String? name})
+      : isSyncShow = isSync ?? false,
+        routeName = name ?? '';
 
   DialogShower build([BuildContext? ctx]) {
     if (ctx == null && context != null) {
@@ -480,9 +478,10 @@ class DialogShower {
     }
 
     assert(() {
-      __shower_log__('_padding: $_padding, alignment: $alignment, animationBeginOffset: $animationBeginOffset');
+      __shower_log__('_padding: $_padding, alignment: $alignment');
       return true;
     }());
+
     /// ---------------------------- calculate _padding, _width, _height ----------------------------
 
     Widget smallestContainer = _getSmallestContainer(_child, _width, _height);
@@ -628,7 +627,7 @@ class DialogShower {
     bool? maintainState = true,
     bool? fullscreenDialog = false,
   }) {
-    transition = transition ?? _defTransition;
+    transition = transition ?? transitionBuilder ?? ShowerTransitionBuilder.slideFromBottom;
     pageBuilder = pageBuilder ?? (ctx, animOne, animTwo) => widget;
     routeBuilder = routeBuilder ??
         PageRouteBuilder<T>(
@@ -696,20 +695,6 @@ class DialogShower {
               blurRadius: containerShadowBlurRadius,
             ),
           ],
-    );
-  }
-
-  Widget _defTransition(BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
-    return _defTransitionRaw(ctx, animOne, animTwo, child, animationBeginOffset);
-  }
-
-  Widget _defTransitionRaw(BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child, Offset? beginOffset) {
-    return SlideTransition(
-      position: Tween<Offset>(
-        begin: beginOffset,
-        end: const Offset(0.0, 0.0),
-      ).animate(animOne),
-      child: child,
     );
   }
 
@@ -794,6 +779,34 @@ class NavigatorObserverEx extends NavigatorObserver {
       __shower_log__('[Observer] didReplace: ${oldRoute?.settings.name} -> ${newRoute?.settings.name}');
       return true;
     }());
+  }
+}
+
+/// Transition builder
+class ShowerTransitionBuilder {
+  static RouteTransitionsBuilder slideFromTop = slideTransitionBuilder(const Offset(0.0, -1.0));
+  static RouteTransitionsBuilder slideFromBottom = slideTransitionBuilder(const Offset(0.0, 1.0));
+  static RouteTransitionsBuilder slideFromLeft = slideTransitionBuilder(const Offset(-1.0, 0.0));
+  static RouteTransitionsBuilder slideFromRight = slideTransitionBuilder(const Offset(1.0, 0.0));
+
+  static RouteTransitionsBuilder slideTransitionBuilder(Offset? beginOffset) {
+    return (BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
+      return SlideTransition(child: child, position: Tween<Offset>(begin: beginOffset, end: const Offset(0.0, 0.0)).animate(animOne));
+    };
+  }
+
+  static RouteTransitionsBuilder fadeIn = commonTransitionBuilder(builder: (child, animation) {
+    return FadeTransition(child: child, opacity: Tween(begin: 0.0, end: 1.0).animate(animation));
+  });
+
+  static RouteTransitionsBuilder scaleIn = commonTransitionBuilder(builder: (child, animation) {
+    return ScaleTransition(child: child, scale: Tween(begin: 0.0, end: 1.0).animate(animation));
+  });
+
+  static RouteTransitionsBuilder commonTransitionBuilder({required Widget Function(Widget child, Animation<double> animation) builder}) {
+    return (BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
+      return builder(child, animOne);
+    };
   }
 }
 

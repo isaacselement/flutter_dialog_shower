@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 class PageOfNavigator extends StatelessWidget {
-  const PageOfNavigator({Key? key}) : super(key: key);
+  PageOfNavigator({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,29 +21,49 @@ class PageOfNavigator extends StatelessWidget {
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(
           pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
-            return SingleChildScrollView(child: buildContainer());
+            return buildBody();
           },
         );
       },
     );
   }
 
-  Widget buildContainer() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        children: [
-          WidgetsUtil.newHeaderWithGradient('Navigator inner shower'),
-          const SizedBox(height: 16),
-          buildButtonsAboutNavigator(),
-        ],
-      ),
+  Widget buildBody() {
+    return Column(
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              Flexible(
+                flex: 2,
+                child: Column(
+                  children: [
+                    buildGlobalContextMenus(),
+                    const SizedBox(height: 8),
+                    buildInnerContextMenus(),
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 5,
+                child: Row(
+                  children: [
+                    Container(width: 1, color: Colors.black),
+                    Expanded(child: buildInnerNavigator()),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  Widget buildButtonsAboutNavigator() {
+  Widget buildGlobalContextMenus() {
     return Column(
       children: [
+        WidgetsUtil.newHeaderWithGradient('Navigator global context shower'),
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show with navigator with Width & Height', onPressed: (state) {
@@ -80,11 +100,6 @@ class PageOfNavigator extends StatelessWidget {
                     child: w,
                   );
             }),
-          ],
-        ),
-        const SizedBox(height: 50),
-        Wrap(
-          children: [
             WidgetsUtil.newXpelTextButton('Bubbles & pickers demonstrations in Dialog', onPressed: (state) {
               double screenWidth = SizesUtils.screenWidth;
               double width = screenWidth > 600 ? screenWidth / 4 * 2 : screenWidth;
@@ -100,6 +115,51 @@ class PageOfNavigator extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  Widget buildInnerContextMenus() {
+    return Column(
+      children: [
+        WidgetsUtil.newHeaderWithGradient('Navigator inner shower'),
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Show Center in inner navigator', onPressed: (state) {
+              DialogShower shower = DialogWrapper.showCenter(const ColoredBox(
+                  color: Colors.white,
+                  child: SizedBox(
+                    width: 200,
+                    height: 200,
+                  )));
+              shower.context = innerNavigatorKey.currentContext;
+              shower.isUseRootNavigator = false;
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  final GlobalKey innerNavigatorKey = GlobalKey<NavigatorState>();
+
+  Widget buildInnerNavigator() {
+    return Navigator(
+      key: innerNavigatorKey,
+      initialRoute: 'content_navigator',
+      onGenerateRoute: (RouteSettings settings) {
+        return PageRouteBuilder(
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                color: Colors.grey.withAlpha(64),
+                alignment: Alignment.center,
+                child: const SizedBox(),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
