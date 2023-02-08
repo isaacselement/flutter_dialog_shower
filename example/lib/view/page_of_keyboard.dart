@@ -44,16 +44,16 @@ class PageOfKeyboard extends StatelessWidget {
         Wrap(
           children: [
             WidgetsUtil.newXpelTextButton('Show center', onPressed: (state) {
-              DialogWrapper.show(WidgetsUtil.newEditBox(width: 500, height: 600), isFixed: true);
+              DialogWrapper.show(WidgetsUtil.newEditBox(width: 500, height: 600), fixed: true);
             }),
             WidgetsUtil.newXpelTextButton('Show left', onPressed: (state) {
-              DialogWrapper.showLeft(WidgetsUtil.newEditBox(), isFixed: true);
+              DialogWrapper.showLeft(WidgetsUtil.newEditBox(), fixed: true);
             }),
             WidgetsUtil.newXpelTextButton('Show right', onPressed: (state) {
-              DialogWrapper.showRight(WidgetsUtil.newEditBox(), isFixed: true);
+              DialogWrapper.showRight(WidgetsUtil.newEditBox(), fixed: true);
             }),
             WidgetsUtil.newXpelTextButton('Show x/y', onPressed: (state) {
-              DialogWrapper.show(WidgetsUtil.newEditBox(), isFixed: true, x: 20, y: 40);
+              DialogWrapper.show(WidgetsUtil.newEditBox(), fixed: true, x: 20, y: 40);
             }),
           ],
         ),

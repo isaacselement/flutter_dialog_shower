@@ -24,16 +24,16 @@ class ElementsIterator {
 
 class ElementsUtils {
   /// Get Size & Offset methods
-  static Size? getSize(BuildContext context) {
-    RenderObject? box = context.findRenderObject();
+  static Size? getSize(BuildContext? context) {
+    RenderObject? box = context?.findRenderObject();
     if (box is RenderBox) {
       return box.size;
     }
     return null;
   }
 
-  static Offset? getOffset(BuildContext context) {
-    RenderObject? box = context.findRenderObject();
+  static Offset? getOffset(BuildContext? context) {
+    RenderObject? box = context?.findRenderObject();
     if (box is RenderBox) {
       return box.localToGlobal(Offset.zero);
     }

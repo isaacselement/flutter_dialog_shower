@@ -37,6 +37,7 @@ class DialogShower {
 
   /// Scaffold properties
   Color? scaffoldBackgroundColor = Colors.transparent;
+  Widget? Function(DialogShower shower)? scaffoldBodyBuilder;
 
   /// Container size & position
   AlignmentGeometry? alignment = Alignment.center;
@@ -208,9 +209,7 @@ class DialogShower {
     return gObserver!;
   }
 
-  DialogShower({bool? isSync, String? name})
-      : isSyncShow = isSync ?? false,
-        routeName = name ?? '';
+  DialogShower();
 
   DialogShower build([BuildContext? ctx]) {
     if (ctx == null && context != null) {
@@ -332,7 +331,11 @@ class DialogShower {
             }());
 
             if (_tapUpDetails != null) {
-              RenderBox containerBox = _containerKey.currentContext?.findRenderObject() as RenderBox;
+              RenderBox? box = _containerKey.currentContext?.findRenderObject() as RenderBox?;
+              if (box == null) {
+                return;
+              }
+              RenderBox containerBox = box;
               double w = containerBox.size.width;
               double h = containerBox.size.height;
               Offset p = containerBox.localToGlobal(Offset.zero);
@@ -364,7 +367,7 @@ class DialogShower {
                 // https://github.com/flutter/flutter/issues/48464
                 FocusManager.instance.primaryFocus?.unfocus();
                 assert(() {
-                  __shower_log__('I dismiss the keyboard, if you dislike this default behaviour, set isDismissKeyboardOnTapped = false');
+                  __shower_log__('Dismiss keyboard, if u dislike this default behaviour, set isDismissKeyboardOnTapped = false');
                   return true;
                 }());
               }
@@ -381,7 +384,7 @@ class DialogShower {
                   if (DialogShower.isKeyboardShowing()) {
                     FocusManager.instance.primaryFocus?.unfocus();
                     assert(() {
-                      __shower_log__('I dismiss the keyboard, if u dislike this default behaviour, do not set barrierDismissible = null');
+                      __shower_log__('Dismiss keyboard, if u dislike this default behaviour, do not set barrierDismissible = null');
                       return true;
                     }());
                   } else {
@@ -396,30 +399,27 @@ class DialogShower {
           child: Scaffold(
             appBar: null,
             backgroundColor: scaffoldBackgroundColor,
-            body: _getScaffoldBody(_child),
+            body: scaffoldBodyBuilder?.call(this) ?? getScaffoldBody(_child),
           ),
         );
       },
     );
   }
 
-  Widget _getScaffoldBody(Widget _child) {
+  Widget getScaffoldBody(Widget _child) {
     /// we will rebuild using the statefulKey
     GlobalKey mKey = _statefulKey;
     if (isWithTicker) {
       return BuilderWithTicker(key: mKey, builder: (state) => _getScaffoldContainer(_child));
+    } else {
+      return StatefulBuilder(key: mKey, builder: (context, setState) => _getScaffoldContainer(_child));
     }
-    return StatefulBuilder(key: mKey, builder: (context, setState) => _getScaffoldContainer(_child));
   }
 
   Widget _getScaffoldContainer(Widget _child) {
     /// ---------------------------- calculate _padding, _width, _height ----------------------------
     double? _width = width ?? renderedWidth;
     double? _height = height ?? renderedHeight;
-
-    MediaQueryData contextQuery = MediaQuery.of(context!);
-    double contextWidth = contextQuery.size.width;
-    double contextHeight = contextQuery.size.height;
 
     ui.SingletonFlutterWindow _window = Boxes.getWindow();
 
@@ -428,16 +428,20 @@ class DialogShower {
     double windowHeight = windowQuery.size.height;
 
     assert(() {
+      MediaQueryData contextQuery = MediaQuery.of(context!);
+      double contextWidth = contextQuery.size.width;
+      double contextHeight = contextQuery.size.height;
+
       double physicalWidth = _window.physicalSize.width;
       double physicalHeight = _window.physicalSize.height;
       double physicalTop = _window.padding.top;
       EdgeInsets contextPadding = contextQuery.padding;
       EdgeInsets windowPadding = windowQuery.padding;
       __shower_log__('Self: $routeName, _width: $_width, _height: $_height');
-      __shower_log__('Size: width: $width, height: $height, renderedWidth: $renderedWidth, renderedHeight: $renderedHeight');
       __shower_log__('Window: physicalWidth: $physicalWidth, physicalHeight: $physicalHeight, physicalTop: $physicalTop');
-      __shower_log__('QueryContext: width: $contextWidth, height: $contextHeight, top: ${contextPadding.top}, padding: $contextPadding');
+      __shower_log__('Self Size: width: $width, height: $height, renderedWidth: $renderedWidth, renderedHeight: $renderedHeight');
       __shower_log__('QueryWindow: width: $windowWidth, height: $windowHeight, top: ${windowPadding.top}, padding: $windowPadding');
+      __shower_log__('QueryContext: width: $contextWidth, height: $contextHeight, top: ${contextPadding.top}, padding: $contextPadding');
       return true;
     }());
 
@@ -488,13 +492,7 @@ class DialogShower {
     if (alignment == null) {
       return _padding != null ? Padding(padding: _padding, child: smallestContainer) : smallestContainer;
     } else {
-      return Container(
-        // color: Colors.red,
-        margin: margin,
-        padding: _padding,
-        alignment: alignment,
-        child: smallestContainer,
-      );
+      return Container(margin: margin, padding: _padding, alignment: alignment, child: smallestContainer);
     }
   }
 

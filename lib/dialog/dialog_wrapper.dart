@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dialog_shower.dart';
 
+typedef _ReInit = DialogShower? Function(DialogShower shower);
+
 class DialogWrapper {
   /// Shower basic usage in wrapper
 
-  static DialogShower showCenter(Widget child, {bool? isFixed, double? width, double? height, String? key}) {
-    DialogShower shower = show(child, isFixed: isFixed, width: width, height: height, key: key);
+  static DialogShower showCenter(Widget child, {bool? fixed, double? width, double? height, String? key}) {
+    DialogShower shower = show(child, fixed: fixed, width: width, height: height, key: key);
     shower.transitionBuilder = ShowerTransitionBuilder.fadeIn;
     return shower;
   }
 
-  static DialogShower showRight(Widget child, {bool? isFixed, double? width, double? height, String? key}) {
+  static DialogShower showRight(Widget child, {bool? fixed, double? width, double? height, String? key}) {
     DialogShower shower = show(child, width: width, height: height, key: key);
-    if (isFixed == true) {
+    if (fixed == true) {
       shower.alignment = Alignment.topRight;
       shower.padding = const EdgeInsets.only(top: -1, right: 16);
     } else {
@@ -23,9 +25,9 @@ class DialogWrapper {
     return shower;
   }
 
-  static DialogShower showLeft(Widget child, {bool? isFixed, double? width, double? height, String? key}) {
+  static DialogShower showLeft(Widget child, {bool? fixed, double? width, double? height, String? key}) {
     DialogShower shower = show(child, width: width, height: height, key: key);
-    if (isFixed == true) {
+    if (fixed == true) {
       shower.alignment = Alignment.topLeft;
       shower.padding = const EdgeInsets.only(top: -1, left: 16);
     } else {
@@ -33,6 +35,14 @@ class DialogWrapper {
       shower.padding = const EdgeInsets.only(left: 16);
     }
     shower.transitionBuilder = ShowerTransitionBuilder.slideFromLeft;
+    return shower;
+  }
+
+  static DialogShower showTop(Widget child, {double? width, double? height, String? key}) {
+    DialogShower shower = show(child, width: width, height: height, key: key);
+    shower.alignment = Alignment.topCenter;
+    shower.padding = const EdgeInsets.only(top: 16);
+    shower.transitionBuilder = ShowerTransitionBuilder.slideFromTop;
     return shower;
   }
 
@@ -44,12 +54,8 @@ class DialogWrapper {
     return shower;
   }
 
-  static DialogShower show(Widget child, {bool? isFixed, double? x, double? y, double? width, double? height, String? key}) {
-    return showWith(DialogShower(), child, isFixed: isFixed, x: x, y: y, width: width, height: height, key: key);
-  }
-
-  static DialogShower showWith(DialogShower shower, Widget child,
-      {bool? isFixed, double? x, double? y, double? width, double? height, String? key}) {
+  static DialogShower show(Widget child, {bool? fixed, double? x, double? y, double? width, double? height, String? key, _ReInit? init}) {
+    DialogShower shower = DialogShower();
     shower
       ..build()
       ..barrierDismissible = null // null indicate that: dismiss keyboard first while keyboard is showing, else dismiss dialog immediately
@@ -57,19 +63,22 @@ class DialogWrapper {
       ..containerShadowBlurRadius = 20.0
       ..containerBorderRadius = 10.0;
 
-    if (isFixed == true) {
+    if (fixed == true) {
       shower
         ..alignment = null
         ..padding = const EdgeInsets.only(left: -1, top: -1);
     }
     if (x != null && y != null) {
       shower
-        ..alignment = isFixed == true ? null : Alignment.topLeft
+        ..alignment = fixed == true ? null : Alignment.topLeft
         ..padding = EdgeInsets.only(left: x, top: y);
     }
+    shower = init?.call(shower) ?? shower;
+    return showWith(shower, child, width: width, height: height, key: key);
+  }
 
+  static DialogShower showWith(DialogShower shower, Widget child, {double? width, double? height, String? key}) {
     Widget? widget = centralOfShower?.call(shower, child: child) ?? child;
-
     shower.show(widget, width: width, height: height);
     addToRepo(shower, key: key);
     shower.addDismissCallBack((d) {
@@ -95,14 +104,14 @@ class DialogWrapper {
   static DialogShower pushRoot(
     Widget widget, {
     RouteSettings? settings,
-    bool? isFixed,
+    bool? fixed,
     double? x,
     double? y,
     double? width,
     double? height,
     String? key,
   }) {
-    return DialogWrapper.show(widget, isFixed: isFixed, x: x, y: y, width: width, height: height, key: key)
+    return DialogWrapper.show(widget, fixed: fixed, x: x, y: y, width: width, height: height, key: key)
       ..isWrappedByNavigator = true
       ..wrappedNavigatorInitialName = settings?.name;
   }

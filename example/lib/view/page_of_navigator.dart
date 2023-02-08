@@ -29,30 +29,27 @@ class PageOfNavigator extends StatelessWidget {
   }
 
   Widget buildBody() {
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
+        Flexible(
+          flex: 2,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                buildGlobalContextMenus(),
+                const SizedBox(height: 8),
+                buildInnerContextMenus(),
+              ],
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 5,
           child: Row(
             children: [
-              Flexible(
-                flex: 2,
-                child: Column(
-                  children: [
-                    buildGlobalContextMenus(),
-                    const SizedBox(height: 8),
-                    buildInnerContextMenus(),
-                  ],
-                ),
-              ),
-              Flexible(
-                flex: 5,
-                child: Row(
-                  children: [
-                    Container(width: 1, color: Colors.black),
-                    Expanded(child: buildInnerNavigator()),
-                  ],
-                ),
-              ),
+              Container(width: 1, color: Colors.black),
+              Expanded(child: buildInnerNavigator()),
             ],
           ),
         ),
@@ -126,13 +123,67 @@ class PageOfNavigator extends StatelessWidget {
           children: [
             WidgetsUtil.newXpelTextButton('Show Center in inner navigator', onPressed: (state) {
               DialogShower shower = DialogWrapper.showCenter(const ColoredBox(
-                  color: Colors.white,
-                  child: SizedBox(
-                    width: 200,
-                    height: 200,
-                  )));
+                color: Colors.white,
+                child: SizedBox(
+                  width: 200,
+                  height: 200,
+                ),
+              ));
               shower.context = innerNavigatorKey.currentContext;
               shower.isUseRootNavigator = false;
+            }),
+            WidgetsUtil.newXpelTextButton('Show Center in inner navigator', onPressed: (state) {
+              DialogShower shower = DialogWrapper.showCenter(const ColoredBox(
+                color: Colors.white,
+                child: SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: TextField(),
+                ),
+              ));
+              BuildContext? context = innerNavigatorKey.currentContext;
+              shower.scaffoldBodyBuilder = (DialogShower shower) {
+                Size? size = ElementsUtils.getSize(context);
+                return Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    width: size?.width,
+                    height: size?.height,
+                    // color: Colors.amberAccent,
+                    alignment: Alignment.center,
+                    child: shower.getScaffoldBody(
+                      const ColoredBox(
+                        color: Colors.white,
+                        child: SizedBox(
+                          width: 200,
+                          height: 200,
+                          child: TextField(),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              };
+            }),
+            WidgetsUtil.newXpelTextButton('Show Center in inner navigator', onPressed: (state) {
+              double kItemSide = 200;
+              BuildContext? context = innerNavigatorKey.currentContext;
+              Size size = ElementsUtils.getSize(context) as Size;
+              Offset offset = ElementsUtils.getOffset(context) as Offset;
+              double x = offset.dx + (size.width - kItemSide) / 2;
+              double y = offset.dy + (size.height - kItemSide) / 2;
+              DialogShower shower = DialogWrapper.show(
+                ColoredBox(
+                  color: Colors.white,
+                  child: SizedBox(
+                    width: kItemSide,
+                    height: kItemSide,
+                    child: const TextField(),
+                  ),
+                ),
+                x: x,
+                y: y,
+              );
             }),
           ],
         ),
@@ -149,13 +200,10 @@ class PageOfNavigator extends StatelessWidget {
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder(
           pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                color: Colors.grey.withAlpha(64),
-                alignment: Alignment.center,
-                child: const SizedBox(),
-              ),
+            return Container(
+              color: Colors.grey.withAlpha(64),
+              alignment: Alignment.center,
+              child: const SizedBox(),
             );
           },
         );

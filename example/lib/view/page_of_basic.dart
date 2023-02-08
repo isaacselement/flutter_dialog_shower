@@ -199,7 +199,7 @@ class PageOfBasic extends StatelessWidget {
               DialogWrapper.showCenter(_container(text: '1'), width: 200, height: 200);
             }),
             WidgetsUtil.newXpelTextButton('Just Show', onPressed: (state) {
-              DialogWrapper.showCenter(_container(text: '1'), isFixed: true, width: 200, height: 200).transitionBuilder =
+              DialogWrapper.showCenter(_container(text: '1'), fixed: true, width: 200, height: 200).transitionBuilder =
                   ShowerTransitionBuilder.scaleIn;
             }),
             WidgetsUtil.newXpelTextButton('DialogWrapper Show Cupertino Indicator', onPressed: (state) {
