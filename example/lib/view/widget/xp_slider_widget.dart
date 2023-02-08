@@ -20,13 +20,15 @@ class XpSliderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        _header(),
-        const SizedBox(height: 10),
-        Expanded(child: _body()),
-      ],
+    return SafeArea(
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          _header(),
+          const SizedBox(height: 10),
+          Expanded(child: _body()),
+        ],
+      ),
     );
   }
 

@@ -59,6 +59,10 @@ class HeaderUtil {
     AnythingHeaderOptions options = AnythingHeaderOptions()
       ..headerHeight = 56
       ..titleStyle = const TextStyle(color: Color(0xFF1C1D21), fontSize: 17, fontWeight: FontWeight.bold)
+      ..leftTitle = 'Cancel'
+      ..leftEvent = () {
+        DialogWrapper.dismissTopDialog();
+      }
       ..rightPadding = const EdgeInsets.symmetric(
         horizontal: 24,
         vertical: 12,
