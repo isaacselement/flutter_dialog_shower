@@ -116,7 +116,6 @@ class PageOfBasic extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Shower dismiss manually', onPressed: (state) {
               DialogShower shower = DialogShower();
               shower
-                ..build()
                 ..barrierDismissible = false
                 ..dismissCallBack = (shower) {
                   Logger.d('shower dismissCallBack');
@@ -138,7 +137,6 @@ class PageOfBasic extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using wholeOnTapCallback', onPressed: (state) {
               DialogShower shower = DialogShower();
               shower
-                ..build()
                 ..containerShadowColor = Colors.grey
                 ..containerShadowBlurRadius = 20.0
                 ..containerBorderRadius = 10.0
@@ -157,7 +155,6 @@ class PageOfBasic extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first using barrierOnTapCallback', onPressed: (state) {
               DialogShower shower = DialogShower();
               shower
-                ..build()
                 ..containerShadowColor = Colors.grey
                 ..containerShadowBlurRadius = 20.0
                 ..containerBorderRadius = 10.0
@@ -175,7 +172,6 @@ class PageOfBasic extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Shower dismiss keyboard first with setting barrierDismissible to null', onPressed: (state) {
               DialogShower shower = DialogShower();
               shower
-                ..build()
                 ..containerShadowColor = Colors.grey
                 ..containerShadowBlurRadius = 20.0
                 ..containerBorderRadius = 10.0
@@ -473,7 +469,6 @@ class PageOfBasic extends StatelessWidget {
   DialogShower doBasicShow({Widget? child}) {
     DialogShower shower = DialogShower();
     shower
-      ..build()
       ..barrierDismissible = true
       ..containerShadowColor = Colors.grey
       ..containerShadowBlurRadius = 50.0

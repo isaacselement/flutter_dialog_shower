@@ -22,7 +22,6 @@ DialogShower.init(context);  # init with a root context in your app
 
 ```
     DialogShower shower = DialogShower()
-    ..build()
     ..barrierDismissible = true
     ..containerShadowColor = Colors.grey
     ..containerShadowBlurRadius = 50.0

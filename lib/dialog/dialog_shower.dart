@@ -209,15 +209,7 @@ class DialogShower {
     return gObserver!;
   }
 
-  DialogShower();
-
-  DialogShower build([BuildContext? ctx]) {
-    if (ctx == null && context != null) {
-      return this;
-    }
-    context = ctx ?? gContext;
-    return this;
-  }
+  DialogShower() : context = gContext;
 
   DialogShower show(Widget _child, {double? width, double? height}) {
     if (routeName.isEmpty) {
