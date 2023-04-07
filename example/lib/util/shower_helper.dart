@@ -11,12 +11,19 @@ class ShowerHelper {
     }
   }
 
-  static AnimationController createAnimationController(DialogShower shower, {Duration? duration}) {
+  static AnimationController? createAnimationController(DialogShower shower, {Duration? duration}) {
     assert(shower.isWithTicker, 'Your shower should assign isWithTicker property to true');
-    AnimationController controller = AnimationController(
-      vsync: shower.statefulKey.currentState! as BuilderWithTickerState,
-      duration: duration ?? const Duration(milliseconds: 500),
-    );
+    if (!shower.isWithTicker) {
+      return null;
+    }
+    if (shower.isPopped) {
+      return null;
+    }
+    dynamic state = shower.statefulKey.currentState;
+    if (state is! BuilderWithTickerState) {
+      return null;
+    }
+    AnimationController controller = AnimationController(vsync: state, duration: duration ?? const Duration(milliseconds: 500));
     shower.isAutoSizeForNavigator = false;
     shower.isSyncInvokeDismissCallback = true;
     shower.addDismissCallBack(
@@ -35,10 +42,10 @@ class ShowerHelper {
     void Function()? onFinish,
     void Function(double value)? onDuring,
   }) {
-    if (!shower.isWithTicker) {
+    AnimationController? controller = createAnimationController(shower);
+    if (controller == null) {
       return null;
     }
-    AnimationController controller = createAnimationController(shower);
     Animation<double> animation = Tween<double>(begin: begin, end: end).chain(CurveTween(curve: Curves.ease)).animate(controller);
     animation.addListener(() {
       shower.width = animation.value;

@@ -268,24 +268,7 @@ class PageOfBasic extends StatelessWidget {
                     ..barrierDismissible = false
                     ..pushedCompleter.future.then((value) {
                       Future.delayed(const Duration(seconds: 2), () {
-                        DialogWrapper.dismissDialog(null, key: '__key3__');
-                        DialogWrapper.dismissDialog(null, key: '__key2__'); // will dismiss all dialog on top of me
-                      });
-                    });
-                });
-              });
-            }),
-            WidgetsUtil.newXpelTextButton('DialogWrapper dismiss the dialog With key', onPressed: (state) {
-              DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 200, height: 200)
-                  .poppedCompleter
-                  .future
-                  .then((value) {
-                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
-                  DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__')
-                    ..barrierDismissible = false
-                    ..pushedCompleter.future.then((value) {
-                      Future.delayed(const Duration(seconds: 2), () {
-                        DialogWrapper.dismissDialog(null, key: '__key1__'); // will dismiss all dialog on top of me
+                        DialogWrapper.dismissDialog(null, key: '__key3__'); // will dismiss all dialog on top of me
                       });
                     });
                 });
@@ -293,13 +276,13 @@ class PageOfBasic extends StatelessWidget {
             }),
             WidgetsUtil.newXpelTextButton('Remove specified shower', onPressed: (state) {
               DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 700, height: 250)
-                  .poppedCompleter
+                  .pushedCompleter
                   .future
                   .then((value) {
-                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').poppedCompleter.future.then((value) {
-                  DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__').poppedCompleter.future.then((value) {
+                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').pushedCompleter.future.then((value) {
+                  DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__').pushedCompleter.future.then((value) {
                     Future.delayed(const Duration(seconds: 2), () {
-                      DialogWrapper.getDialogByKey('__key1__')!.remove();
+                      DialogWrapper.getDialogByKey('__key1__')?.remove();
                     });
                   });
                 });
@@ -378,7 +361,7 @@ class PageOfBasic extends StatelessWidget {
 
               shower.barrierOnTapCallback = (shower, offset) {
                 AnimationController controller =
-                    ShowerHelper.createAnimationController(shower, duration: const Duration(milliseconds: 200));
+                    ShowerHelper.createAnimationController(shower, duration: const Duration(milliseconds: 200))!;
                 Animation<double> animate = Tween<double>(begin: 700, end: 0).chain(CurveTween(curve: Curves.ease)).animate(controller);
                 animate.addListener(() {
                   shower.width = animate.value;

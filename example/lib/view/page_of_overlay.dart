@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:example/app.dart';
 import 'package:example/util/logger.dart';
 import 'package:example/util/widgets_util.dart';
 import 'package:example/view/widget/xp_banner_widget.dart';
@@ -53,6 +54,9 @@ class PageOfOverlay extends StatelessWidget {
         const SizedBox(height: 32),
         WidgetsUtil.newHeaderWithLine('Banner'),
         demoUsageOfBanner(),
+        const SizedBox(height: 32),
+        WidgetsUtil.newHeaderWithLine('Re-arrange Layer'),
+        demoUsageOfRearrangeLayer(),
         const SizedBox(height: 32),
         WidgetsUtil.newHeaderWithLine('LayerLink Pure'),
         const SizedBox(height: 2),
@@ -415,6 +419,45 @@ class PageOfOverlay extends StatelessWidget {
               OverlayWidgets.show(child: const XpBannerWidget(), slideBegin: const Offset(0, -100))
                 ..padding = const EdgeInsets.only(top: 6)
                 ..alignment = Alignment.topCenter;
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Column demoUsageOfRearrangeLayer() {
+    void onEventShowerFocusOnTop(OverlayShower shower) {
+      OverlayState overlayState = Overlay.of(OverlayShower.gContext!, rootOverlay: true)!;
+      overlayState.rearrange([...HomeState.initialEntries, shower.entry], below: shower.entry);
+      OverlayWrapper.appearingShowers!.remove(shower);
+      OverlayWrapper.appearingShowers!.add(shower);
+    }
+
+    return Column(
+      children: [
+        Wrap(
+          children: [
+            WidgetsUtil.newXpelTextButton('Show three view, tap on the one you want to bring it to front/top.', onPressed: (state) {
+              Size? size = SizesUtils.getSizeB(OverlayShower.gContext!);
+              double w = size?.width ?? 300;
+              double h = size?.height ?? 300;
+              OverlayShower showerPurple = OverlayWrapper.showRight(
+                SizedBox(width: w / 3 * 2, height: h / 3 * 2, child: Container(color: Colors.purple)),
+              );
+              OverlayShower showerRed = OverlayWrapper.showLeft(
+                SizedBox(width: w / 3 * 2, height: h / 3 * 2, child: Container(color: Colors.redAccent)),
+              );
+              OverlayShower showerGreen = OverlayWrapper.showBottom(
+                SizedBox(width: w / 3 * 2, height: h / 3 * 2, child: Container(color: Colors.greenAccent)),
+              );
+
+              showerPurple.onTapCallback = onEventShowerFocusOnTop;
+              showerRed.onTapCallback = onEventShowerFocusOnTop;
+              showerGreen.onTapCallback = onEventShowerFocusOnTop;
+            }),
+            WidgetsUtil.newXpelTextButton('Dismiss all layers', onPressed: (state) {
+              OverlayWrapper.dismissAppearingLayers();
             }),
           ],
         ),
