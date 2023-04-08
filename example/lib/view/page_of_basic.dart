@@ -278,11 +278,23 @@ class PageOfBasic extends StatelessWidget {
               DialogWrapper.show(_container(text: 'I\'m key1'), key: '__key1__', width: 700, height: 250)
                   .pushedCompleter
                   .future
-                  .then((value) {
-                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').pushedCompleter.future.then((value) {
+                  .then((value) async {
+                await Future.delayed(const Duration(seconds: 1));
+                DialogWrapper.showLeft(_container(text: 'I\'m key2'), key: '__key2__').pushedCompleter.future.then((value) async {
+                  await Future.delayed(const Duration(seconds: 1));
                   DialogWrapper.showRight(_container(text: 'I\'m key3'), key: '__key3__').pushedCompleter.future.then((value) {
-                    Future.delayed(const Duration(seconds: 2), () {
-                      DialogWrapper.getDialogByKey('__key1__')?.remove();
+                    Future.delayed(const Duration(seconds: 1), () {
+                      DialogWrapper.getDialogByKey('__key1__')?.future.then((value) {
+                        Logger.d('__key1__ is popped or removed');
+                      });
+                      DialogWrapper.getDialogByKey('__key1__')?.remove(result: '').then((value) async {
+                        Logger.d('__key1__ is popped animation done!!!!');
+                        await Future.delayed(const Duration(seconds: 1));
+                        DialogWrapper.getDialogByKey('__key2__')?.remove(isAnimated: true).then((value) {
+                          Logger.d('__key2__ is popped animation done!!!!');
+                          DialogWrapper.getDialogByKey('__key3__')?.dismiss();
+                        });
+                      });
                     });
                   });
                 });

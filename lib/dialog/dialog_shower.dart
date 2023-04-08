@@ -30,7 +30,7 @@ class DialogShower {
   Duration transitionDuration = const Duration(milliseconds: 250);
   RouteTransitionsBuilder? transitionBuilder = ShowerTransitionBuilder.slideFromBottom;
 
-  late Route route;
+  late RawDialogRoute route;
   String routeName = ''; // should assign value before show method
 
   NavigatorState get parentNavigator => navigator ?? Navigator.of(context!, rootNavigator: isUseRootNavigator);
@@ -577,7 +577,7 @@ class DialogShower {
         __shower_log__('>>>>>>>>>>>>>> dismiss popping: $routeName');
         return true;
       }());
-      isSyncDismiss ? _dismiss<T>(result) : Future.microtask(() => _dismiss<T>(result));
+      isSyncDismiss ? _rawDismiss<T>(result) : Future.microtask(() => _rawDismiss<T>(result));
       if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
         isPopped = true;
       }
@@ -591,9 +591,27 @@ class DialogShower {
 
   /// pop/push/remove will caused NavigatorObserver.didPop/didPus/didRemove method call immediately in the same eventloop
   /// so we should set isPopped/isPushed immediately but call completer later using Future.microtask
-  void _dismiss<T extends Object?>([T? result]) => parentNavigator.pop<T>(result);
+  void _rawDismiss<T extends Object?>([T? result]) => parentNavigator.pop<T>(result);
 
-  void remove() => parentNavigator.removeRoute(route);
+  Future<void> remove<T extends Object?>({bool? isAnimated, T? result}) {
+    /// if a result provided, will have pop animation
+    if (isAnimated == true || result != null) {
+      Completer completer = Completer();
+      route.didPop(result);
+      route.animation?.addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.dismissed) {
+          parentNavigator.removeRoute(route);
+          completer.complete();
+          // remove this statusListener or not ? now i leave it alone ...
+        }
+      });
+      return completer.future;
+    }
+
+    /// just remove it without animation, the [didRemove] method will be invoked in observer
+    parentNavigator.removeRoute(route);
+    return poppedCompleter.future;
+  }
 
   /// For navigator
   NavigatorState? getNavigator() {
