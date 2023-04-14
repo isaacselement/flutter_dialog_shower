@@ -10,11 +10,12 @@ import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 class AnythingPicker extends StatefulWidget {
   String? title;
 
-  // phase
+  /// init-dispose phase
   void Function(AnythingPickerState state)? onStateInit;
   void Function(AnythingPickerState state)? onStateDispose;
 
-  // false/null/none-implement for continue using the default behaviour
+  /// false/null/none-implement for continue using the default behaviour
+  Widget? Function(AnythingPickerState state)? builderOfTitle;
   void Function(AnythingPickerState state, BuildContext context)? funcOfTitleOnTapped;
   bool? Function(AnythingPickerState state, BuildContext context)? funcOfContentOnTapped;
 
@@ -30,11 +31,12 @@ class AnythingPicker extends StatefulWidget {
   List<dynamic>? values;
   FutureOr<List<dynamic>?> Function()? funcOfValues;
 
+  /// multi-selection mode just set [selectedValues] to not-null, else will be the single-selection mode
   dynamic selectedValue;
-  List<dynamic>? selectedValues; // indicate that is multi-selection mode when it's not null
+  List<dynamic>? selectedValues;
   List<dynamic>? disabledValues;
 
-  // false/null/none-implement for continue using the default behaviour
+  /// false/null/none-implement for continue using the default behaviour
   String? Function(AnythingPickerState state, int? index, dynamic object)? funcOfItemName;
   bool? Function(AnythingPickerState state, int index, dynamic object)? funcOfItemOnTapped;
   bool? Function(AnythingPickerState state, int index, dynamic object)? funcOfItemIfSelected;
@@ -51,9 +53,16 @@ class AnythingPicker extends StatefulWidget {
   void Function(AnythingPickerState state, DialogShower shower)? showerDismissedCallback;
   DialogShower? Function(AnythingPickerState state, BuildContext context)? builderOfShower;
 
+  /// disable the tap event for showing up the picker
   bool? isDisable;
+
+  /// show the loading icon at the end when the content end widget is null
   bool? isLoading;
-  bool? isRequired; // null will at leading, true will display, false just for occupied the place.
+
+  /// null will not occupy the space and do not display, true will display and occupy, false just occupying the space.
+  bool? isRequired;
+
+  /// all the element widget settings
   AnythingPickerOptions? options;
 
   AnythingPicker({
@@ -61,6 +70,7 @@ class AnythingPicker extends StatefulWidget {
     this.title,
     this.onStateInit,
     this.onStateDispose,
+    this.builderOfTitle,
     this.funcOfTitleOnTapped,
     this.funcOfContentOnTapped,
     this.funcOfContent,
@@ -99,18 +109,26 @@ class AnythingPicker extends StatefulWidget {
 }
 
 class AnythingPickerState extends State<AnythingPicker> with SingleTickerProviderStateMixin {
-  AnimationController? animationController;
-
+  /// All the element widget settings
   AnythingPickerOptions? _options;
 
   AnythingPickerOptions get getOptions => widget.options ?? (_options ??= AnythingPickerOptions());
 
+  /// Animation control the arrow icon up and down then [isFocused] status changed
+  AnimationController? animationController;
+
+  /// Will be true when the pick-up shower is showing
   Btv<bool> isFocused = false.btv;
 
+  /// Cache the tapping index for ui effect
   List<int> tappingIndexes = [];
 
+  bool itemIsTapping(int i) => tappingIndexes.contains(i);
+
+  /// Provide the [DialogShower] instance to the caller, will not-null when the shower show-up
   DialogShower? mShower;
 
+  /// Provide the ability to change/setState the ui-content to the caller
   // GlobalKey mPickerKey = GlobalKey();
   StateSetter? setStateOfPicker;
 
@@ -123,9 +141,10 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
 
   @override
   void dispose() {
-    super.dispose();
+    /// call animation controller first before super.dispose()
     animationController?.dispose();
     animationController = null;
+    super.dispose();
     widget.onStateDispose?.call(this);
   }
 
@@ -147,18 +166,41 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     }
 
     // wrapped with a builder, automatically getting width for the picker
-    Widget builder = Builder(
-      builder: (context) {
-        return _build(context);
-      },
-    );
+    Widget builder = Builder(builder: (context) => _build(context));
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        spaceHolder,
-        Expanded(child: builder),
-      ],
+      children: [spaceHolder, Expanded(child: builder)],
     );
+  }
+
+  /// build title
+  Widget? defaultTitleBuilder() {
+    AnythingPickerOptions options = getOptions;
+
+    List<Widget> titleRowChildren = [];
+    String? mTitle = widget.title;
+    if (mTitle != null) {
+      Widget getTextWidget() {
+        Widget textView = Text(mTitle, style: options.titleStyle, maxLines: options.titleMaxLines, overflow: options.titleOverflow);
+        var onTap = widget.funcOfTitleOnTapped;
+        if (onTap != null) {
+          /// Important!!! do not use result = Builder... for reusing the return statement, cause dart do a reference copy ...
+          return Builder(builder: (context) => GestureDetector(onTap: () => onTap(this, context), child: textView));
+        }
+        return textView;
+      }
+
+      /// https://stackoverflow.com/a/69116599  // Wrap with [Flexible].
+      Widget titleWidget = options.titleWrapFlexible ? Flexible(child: getTextWidget()) : getTextWidget();
+      titleRowChildren.add(titleWidget);
+    }
+
+    /// title tails
+    List<Widget>? titleTailWidgets = options.titleTailWidgets;
+    if (titleTailWidgets != null) {
+      titleRowChildren.addAll(titleTailWidgets);
+    }
+    return titleRowChildren.isNotEmpty ? Row(children: titleRowChildren) : null;
   }
 
   Widget _build(BuildContext context) {
@@ -166,39 +208,9 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     List<Widget> allWholeColumnChildren = [];
 
     /// 1. title
-    List<Widget> titleRowChildren = [];
-
-    if (widget.title != null) {
-      // https://stackoverflow.com/a/69116599
-      titleRowChildren.add(Flexible(
-        child: Text(
-          widget.title!,
-          style: options.titleStyle,
-          maxLines: options.titleMaxLines,
-          overflow: options.titleOverflow,
-        ),
-      ));
-    }
-    if (options.titleEndIcon != null) {
-      titleRowChildren.add(options.titleEndIcon!);
-    }
-
-    Row? titleRow = titleRowChildren.isNotEmpty ? Row(children: titleRowChildren) : null;
-
-    Widget? titleWidget;
-    if (widget.funcOfTitleOnTapped != null) {
-      titleWidget = Builder(builder: (context) {
-        return InkWell(
-            child: titleRow,
-            onTap: () {
-              widget.funcOfTitleOnTapped?.call(this, context);
-            });
-      });
-    } else {
-      titleWidget = titleRow;
-    }
-    if (titleWidget != null) {
-      allWholeColumnChildren.add(titleWidget);
+    Widget? titleWidgetRow = widget.builderOfTitle?.call(this) ?? defaultTitleBuilder();
+    if (titleWidgetRow != null) {
+      allWholeColumnChildren.add(titleWidgetRow);
     }
 
     /// 2. content
@@ -308,7 +320,6 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     }
 
     Widget contentOnTapWidget = InkWell(onTap: widget.isDisable ?? false ? null : onTap, child: contentWidget);
-
     allWholeColumnChildren.add(contentOnTapWidget);
 
     return Column(children: allWholeColumnChildren);
@@ -712,8 +723,6 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     return widget.funcOfItemIfDisabled?.call(this, i, e) ?? isContains(widget.disabledValues, e) ?? false;
   }
 
-  bool itemIsTapping(int i) => tappingIndexes.contains(i);
-
   void refresh() {
     if (mounted) {
       setState(() {});
@@ -751,6 +760,7 @@ class AnythingLoadingWidget extends StatelessWidget {
 
 /// Anything Picker Options/Configs Class
 class AnythingPickerOptions {
+  /// bubble options
   CcBubbleArrowDirection? bubbleTriangleDirection;
   bool isTriangleOccupiedSpace = true;
   Color? bubbleColor = Colors.white;
@@ -761,18 +771,20 @@ class AnythingPickerOptions {
   Offset? bubbleTrianglePointOffset;
   double? bubbleTriangleTranslation;
 
+  /// required icon
   Widget? requiredIcon = const Padding(
     padding: EdgeInsets.only(right: 4),
     child: Text('*', style: TextStyle(fontSize: 14, color: Color(0xFFFF616F))),
   );
 
-  // title widget
-  Widget? titleEndIcon;
-  int? titleMaxLines = 1;
-  TextOverflow? titleOverflow = TextOverflow.ellipsis;
+  /// title widget
   TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21)); //, overflow: TextOverflow.ellipsis);
+  int? titleMaxLines = 1;
+  bool titleWrapFlexible = true;
+  TextOverflow? titleOverflow = TextOverflow.ellipsis;
+  List<Widget>? titleTailWidgets;
 
-  // content widget
+  /// content widget
   double? contentWidth;
   double? contentHeight;
   EdgeInsets? contentMargin;
@@ -780,14 +792,14 @@ class AnythingPickerOptions {
   BoxDecoration? contentDecorationNormal = const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFFECECF2))));
   BoxDecoration? contentDecorationFocused = const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFF4275FF))));
 
-  // content text widget
+  /// content text widget
   String contentHintText = 'Select';
   int? contentMaxLines = 1;
   TextOverflow? contentOverflow = TextOverflow.ellipsis;
   TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2)); //, overflow: TextOverflow.ellipsis);
   TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21)); //, overflow: TextOverflow.ellipsis);
 
-  // content end widget
+  /// content end widget
   Widget? contentStartWidget;
   Widget? contentEndWidget;
   Widget? contentArrowIcon = const RotatedBox(
@@ -808,7 +820,7 @@ class AnythingPickerOptions {
   );
   Widget? contentLoadingIcon = const AnythingLoadingWidget(side: 18, stroke: 1.3);
 
-  // picker options
+  /// picker options
   AnythingPickerStickTo stickToSide = AnythingPickerStickTo.auto;
   double? pickerMarginScreenTop = 25;
   double? pickerMarginScreenBottom = 25;
@@ -822,7 +834,7 @@ class AnythingPickerOptions {
   double? pickerShowOffsetX;
   double? pickerShowOffsetY = 5;
 
-  // item options
+  /// cell item options
   double? itemWidth;
   double? itemHeight;
   EdgeInsets? itemMargin;
@@ -859,10 +871,11 @@ class AnythingPickerOptions {
 
     newInstance.requiredIcon = requiredIcon;
 
-    newInstance.titleEndIcon = titleEndIcon;
+    newInstance.titleStyle = titleStyle;
     newInstance.titleMaxLines = titleMaxLines;
     newInstance.titleOverflow = titleOverflow;
-    newInstance.titleStyle = titleStyle;
+    newInstance.titleWrapFlexible = titleWrapFlexible;
+    newInstance.titleTailWidgets = titleTailWidgets;
 
     newInstance.contentWidth = contentWidth;
     newInstance.contentHeight = contentHeight;

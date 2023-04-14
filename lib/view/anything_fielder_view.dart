@@ -11,7 +11,8 @@ class AnythingFielder extends StatefulWidget {
 
   String? value;
 
-  // false/null/none-implement for continue using the default behaviour
+  /// false/null/none-implement for continue using the default behaviour
+  Widget? Function(AnythingFielderState state)? builderOfTitle;
   void Function(AnythingFielderState state, BuildContext context)? funcOfTitleOnTapped;
 
   String? Function(AnythingFielderState state)? funcOfValue;
@@ -25,16 +26,23 @@ class AnythingFielder extends StatefulWidget {
   void Function(AnythingFielderState state)? onEventTextFocused;
   void Function(AnythingFielderState state, String text)? onEventTextChanged;
 
-  bool? isLoading;
+  /// disable edit and indicate the content using Text but not the EditableText widget
   bool? isEditable;
-  bool? isRequired; // null will at leading, true will display, false just for occupied the place.
 
+  /// show the loading icon at the end when the content end widget is null
+  bool? isLoading;
+
+  /// null will not occupy the space and do not display, true will display and occupy, false just occupying the space.
+  bool? isRequired;
+
+  /// all the element widget settings
   AnythingFielderOptions? options;
 
   AnythingFielder({
     Key? key,
     this.title,
     this.value,
+    this.builderOfTitle,
     this.funcOfTitleOnTapped,
     this.funcOfValue,
     this.builderOfContentInner,
@@ -44,8 +52,8 @@ class AnythingFielder extends StatefulWidget {
     this.builderOfStartWidget,
     this.onEventTextFocused,
     this.onEventTextChanged,
-    this.isLoading = false,
     this.isEditable = true,
+    this.isLoading = false,
     this.isRequired,
     this.options,
   }) : super(key: key);
@@ -55,13 +63,16 @@ class AnythingFielder extends StatefulWidget {
 }
 
 class AnythingFielderState extends State<AnythingFielder> {
+  /// All the element widget settings
   AnythingFielderOptions? _options;
 
   AnythingFielderOptions get options => widget.options ?? (_options ??= AnythingFielderOptions());
 
+  /// Handle the ui effect when is on focus
   Btv<bool> isFocused = false.btv;
   FocusNode focusNode = FocusNode();
 
+  /// For keeping the previous text and its selection when setState call
   String? previousText;
   TextSelection? previousTextSelection;
   TextEditingController valueController = TextEditingController();
@@ -92,41 +103,43 @@ class AnythingFielderState extends State<AnythingFielder> {
     }
 
     // wrapped with a builder, automatically getting width for the picker
-    Widget builder = Builder(
-      builder: (context) {
-        return _build(context);
-      },
-    );
+    Widget builder = Builder(builder: (context) => _build(context));
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        spaceHolder,
-        Expanded(child: builder),
-      ],
+      children: [spaceHolder, Expanded(child: builder)],
     );
+  }
+
+  /// build title
+  Widget? defaultTitleBuilder() {
+    List<Widget> titleRowChildren = [];
+    String? mTitle = widget.title;
+    if (mTitle != null) {
+      Widget getTextWidget() {
+        Widget textView = Text(mTitle, style: options.titleStyle);
+        var onTap = widget.funcOfTitleOnTapped;
+        if (onTap != null) {
+          /// Important!!! do not use result = Builder... for reusing the return statement, cause dart do a reference copy ...
+          return Builder(builder: (context) => GestureDetector(onTap: () => onTap(this, context), child: textView));
+        }
+        return textView;
+      }
+
+      Widget titleWidget = getTextWidget();
+      titleRowChildren.add(titleWidget);
+    }
+
+    /// title tails
+    List<Widget>? titleTailWidgets = options.titleTailWidgets;
+    if (titleTailWidgets != null) {
+      titleRowChildren.addAll(titleTailWidgets);
+    }
+    return titleRowChildren.isNotEmpty ? Row(children: titleRowChildren) : null;
   }
 
   Widget _build(BuildContext context) {
     /// 1. title
-    List<Widget> titleRowChildren = [];
-
-    if (widget.title != null) {
-      titleRowChildren.add(Text(widget.title!, style: options.titleStyle));
-    }
-    if (options.titleEndIcon != null) {
-      titleRowChildren.add(options.titleEndIcon!);
-    }
-
-    Row? titleRow = titleRowChildren.isNotEmpty ? Row(children: titleRowChildren) : null;
-
-    Widget? titleWidget;
-    if (widget.funcOfTitleOnTapped != null) {
-      titleWidget = Builder(builder: (context) {
-        return InkWell(child: titleRow, onTap: () => widget.funcOfTitleOnTapped?.call(this, context));
-      });
-    } else {
-      titleWidget = titleRow;
-    }
+    Widget? titleWidgetRow = widget.builderOfTitle?.call(this) ?? defaultTitleBuilder();
 
     /// 2. content
     List<Widget> contentRowInnerChildren = [];
@@ -263,14 +276,14 @@ class AnythingFielderState extends State<AnythingFielder> {
     if (options.isHorizontal == true) {
       return Row(
         children: [
-          titleWidget ?? const Offstage(offstage: true),
+          titleWidgetRow ?? const Offstage(offstage: true),
           Expanded(child: contentWidget),
         ],
       );
     }
     return Column(
       children: [
-        titleWidget ?? const Offstage(offstage: true),
+        titleWidgetRow ?? const Offstage(offstage: true),
         contentWidget,
       ],
     );
@@ -281,16 +294,17 @@ class AnythingFielderState extends State<AnythingFielder> {
 class AnythingFielderOptions {
   bool? isHorizontal;
 
+  /// required icon
   Widget? requiredIcon = const Padding(
     padding: EdgeInsets.only(right: 4),
     child: Text('*', style: TextStyle(fontSize: 14, color: Color(0xFFFF616F))),
   );
 
-  // title widget
+  /// title widget
   TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21));
-  Widget? titleEndIcon;
+  List<Widget>? titleTailWidgets;
 
-  // content widget
+  /// content widget
   double? contentWidth;
   double? contentHeight;
   EdgeInsets? contentMargin;
@@ -298,12 +312,12 @@ class AnythingFielderOptions {
   BoxDecoration? contentDecorationNormal = const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFFECECF2))));
   BoxDecoration? contentDecorationFocused = const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFF4275FF))));
 
-  // content text widget
+  /// content text widget
   String? contentHintText = 'Enter';
   TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2));
   TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21));
 
-  // content end widget
+  /// content end widget
   Widget? contentStartWidget;
   Widget? contentEndWidget;
   Widget? contentArrowIcon = Transform(
@@ -323,7 +337,7 @@ class AnythingFielderOptions {
   );
   Widget? contentLoadingIcon = const AnythingLoadingWidget(side: 18, stroke: 1.3);
 
-  // value field on CupertinoTextField properties
+  /// value field on [CupertinoTextField] properties
   int? maxLines;
   int maxLength = 0x0800000000000000;
   bool Function(AnythingFielderState state, String text)? onEventTextChangedRaw;
@@ -335,7 +349,6 @@ class AnythingFielderOptions {
   BoxDecoration? inputDecorationNormal;
   BoxDecoration? inputDecorationFocused;
 
-  /// Methods
   AnythingFielderOptions();
 
   AnythingFielderOptions clone() {
@@ -345,7 +358,7 @@ class AnythingFielderOptions {
     newInstance.requiredIcon = requiredIcon;
 
     newInstance.titleStyle = titleStyle;
-    newInstance.titleEndIcon = titleEndIcon;
+    newInstance.titleTailWidgets = titleTailWidgets;
 
     newInstance.contentWidth = contentWidth;
     newInstance.contentHeight = contentHeight;

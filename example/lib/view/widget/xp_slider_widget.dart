@@ -157,6 +157,7 @@ class XpSliderWidget extends StatelessWidget {
                 const SizedBox(height: 32),
                 AnythingPicker(
                   title: 'AnythingPicker with arrow ',
+                  isRequired: true,
                   funcOfValues: () {
                     return _getStudentsListValues();
                   },
@@ -169,12 +170,12 @@ class XpSliderWidget extends StatelessWidget {
                   funcOfTitleOnTapped: (state, context) {
                     Offset offset = OffsetsUtils.getOffsetB(context) ?? Offset.zero;
                     String msg =
-                        'But Flexible with FlexFit.\nloose acts like Expanded so the \nSuffixIcon gets pushed to the end \neven though TextGoesHere is a short text.';
+                        'But Flexible with FlexFit.\nloose acts like Expanded so the \nSuffixIcon gets pushed to the end \neven though Text Goes Here is a short text.';
                     ToastUtil.showDialogToast(msg, x: offset.dx + 200, y: offset.dy - 36);
                   },
                   options: AnythingPickerOptions()
                     ..contentHintText = ''
-                    ..titleEndIcon = const Icon(Icons.info_outlined, size: 16, color: Colors.black54)
+                    ..titleTailWidgets = [const Icon(Icons.info_outlined, size: 16, color: Colors.black54)]
                     ..bubbleShadowColor = Colors.purpleAccent
                     ..bubbleTriangleDirection = CcBubbleArrowDirection.top,
                 ),
@@ -220,6 +221,8 @@ class XpSliderWidget extends StatelessWidget {
                   onShowerWidth: (view) => math.max((DialogWrapper.getTopDialog()?.width ?? 600) / 3 * 2, 450),
                   onPickerOptions: (view, options) {
                     options.titleStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
+                    options.titleTailWidgets = const [Spacer(), Text('👠')];
+                    options.titleWrapFlexible = false;
                     return null;
                   },
                 ),
@@ -230,9 +233,15 @@ class XpSliderWidget extends StatelessWidget {
                   funcOfItemOnTapped: (state, index, value) {
                     return false;
                   },
+                  funcOfTitleOnTapped: (state, context) {
+                    Offset offset = OffsetsUtils.getOffsetB(context) ?? Offset.zero;
+                    Size size = SizesUtils.getSizeB(context) ?? Size.zero;
+                    String msg = 'Got it ~~~~';
+                    ToastUtil.showDialogToast(msg, x: offset.dx + size.width, y: offset.dy - size.height / 2);
+                  },
                   options: AnythingPickerOptions()
                     ..contentHintText = ''
-                    // ..titleEndIcon = const Icon(Icons.info_outlined, color: Colors.black) // test text overflow ...
+                    ..titleTailWidgets = [const Icon(Icons.info_outlined, color: Colors.black)] // test text overflow ...
                     ..bubbleShadowColor = Colors.purpleAccent
                     // bubbleTriangleDirection: if you don't wanna an arrow set it to null. set it to none, we will auto change it .
                     ..bubbleTriangleDirection = CcBubbleArrowDirection.none,

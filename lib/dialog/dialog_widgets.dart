@@ -140,11 +140,7 @@ class DialogWidgets {
       ..transitionDuration = const Duration(milliseconds: 200)
       ..transitionBuilder = (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
         return ScaleTransition(child: child, scale: Tween(begin: 0.0, end: 1.0).animate(animation));
-      }
-      // radius & shadow
-      ..containerShadowColor = Colors.grey
-      ..containerShadowBlurRadius = 10.0
-      ..containerBorderRadius = 8.0;
+      };
     return shower;
   }
 }

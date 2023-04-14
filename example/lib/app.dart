@@ -37,6 +37,17 @@ class HomeState extends State<HomePage> {
     /// init the dialog shower & overly shower
     DialogShower.init(context);
     OverlayShower.init(context);
+    DialogWrapper.centralOfShower ??= (DialogShower shower, {Widget? child}) {
+      shower
+        // null indicate that: dismiss keyboard first while keyboard is showing, else dismiss dialog immediately
+        ..barrierDismissible = null
+        ..containerShadowColor = Colors.grey
+        ..containerShadowBlurRadius = 20.0
+        ..containerBorderRadius = 10.0;
+    };
+    OverlayWrapper.centralOfShower ??= (OverlayShower shower) {
+      Logger.d("a new overlay show: $shower");
+    };
 
     /// init the size utilities with context
     SizesUtils.init(context);

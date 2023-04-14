@@ -56,12 +56,6 @@ class DialogWrapper {
 
   static DialogShower show(Widget child, {bool? fixed, double? x, double? y, double? width, double? height, String? key, _ReInit? init}) {
     DialogShower shower = DialogShower();
-    shower
-      ..barrierDismissible = null // null indicate that: dismiss keyboard first while keyboard is showing, else dismiss dialog immediately
-      ..containerShadowColor = Colors.grey
-      ..containerShadowBlurRadius = 20.0
-      ..containerBorderRadius = 10.0;
-
     if (fixed == true) {
       shower
         ..alignment = null
