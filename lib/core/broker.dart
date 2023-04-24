@@ -165,7 +165,7 @@ class StackerInstance {
     int count = 0;
     List<T> l = list.whereType<T>().toList();
     for (T t in l) {
-      list.remove(t) ? count++ : count;
+      if (list.remove(t)) count++;
     }
     return count;
   }

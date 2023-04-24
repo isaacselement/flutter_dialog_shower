@@ -24,6 +24,8 @@ class OverlayShower {
 
   bool get isShowing => _isShowing;
 
+  OverlayState get parentOverlayState => Overlay.of(context!, rootOverlay: isUseRootOverlay)!;
+
   /// for Container
   double? dx;
   double? dy;
@@ -94,7 +96,7 @@ class OverlayShower {
   OverlayShower showImmediately(Widget? child, {OverlayEntry? below, OverlayEntry? above}) {
     _isShowing = true;
     _entry = OverlayEntry(builder: (context) => body(child));
-    Overlay.of(context!, rootOverlay: isUseRootOverlay)!.insert(_entry, below: below, above: above);
+    parentOverlayState.insert(_entry, below: below, above: above);
     return this;
   }
 
