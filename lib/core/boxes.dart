@@ -10,11 +10,13 @@ class Boxes<T> {
   T? object;
 
   static SingletonFlutterWindow getWindow() {
-    return window; // getWidgetsBinding().window;
+    // return getWidgetsBinding().window;
+    return window;
   }
 
   static WidgetsBinding getWidgetsBinding() {
-    return WidgetsBinding.instance!; // remove the ! not-null sign, if you want to support Flutter v3.x.x
+    // add the ! not-null sign, if you want to support below Flutter v3.x.x SDK
+    return WidgetsBinding.instance;
   }
 }
 

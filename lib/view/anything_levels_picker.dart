@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 /// TODO: support multi selection ~~~
+//ignore: must_be_immutable
 class AnythingLevelsPicker extends StatelessWidget {
   AnythingLevelsPicker({
     Key? key,
@@ -43,7 +44,8 @@ class AnythingLevelsPicker extends StatelessWidget {
   List<dynamic> relativeElements = [];
   late AnythingPickerState pickerState;
 
-  static const Widget kArrowIcon = TransformZaxisWidget(ratio: 1, child: Icon(Icons.arrow_back_ios_rounded, size: 13, color: Color(0xFFBFBFD2)));
+  static const Widget kArrowIcon =
+      TransformZaxisWidget(ratio: 1, child: Icon(Icons.arrow_back_ios_rounded, size: 13, color: Color(0xFFBFBFD2)));
 
   @override
   Widget build(BuildContext context) {

@@ -333,7 +333,6 @@ class AnythingSelector extends StatelessWidget {
   }
 
   bool itemIsTapping(int i) => tappingIndexes.contains(i);
-
 }
 
 class AnythingSelectorOptions {

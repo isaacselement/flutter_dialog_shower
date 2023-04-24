@@ -1,6 +1,6 @@
 import 'dart:async';
 
-// Truck is a Enchance of Bus :P
+// Truck is a Enhance of Bus :P
 class EventTruck {
   final StreamController _streamController;
 
@@ -75,7 +75,6 @@ class EventTruck {
 }
 
 class EventSyncTruck {
-
   static EventTruck? _instance;
 
   static EventTruck get _mInstance => _instance ??= EventTruck(sync: true);
@@ -115,5 +114,4 @@ class EventSyncTruck {
   static void dispose() {
     _mInstance.close();
   }
-
 }

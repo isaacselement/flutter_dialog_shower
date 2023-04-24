@@ -1,7 +1,6 @@
 import 'dart:math';
 
 class StringsUtils {
-
   /// Random Methods
 
   static String random(int length) {
@@ -53,5 +52,4 @@ class StringsUtils {
     if (end < 0) end = content.length;
     return [begin, end];
   }
-
 }

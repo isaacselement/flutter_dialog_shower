@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ThemesManager {
-
   static BoxDecoration builderXpButtonDecoration(String text, bool isTapingDown) {
     return BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(4)),

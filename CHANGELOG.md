@@ -16,3 +16,7 @@
 # 1.2.1
 
 * Refactor the codes
+
+# 1.2.2
+
+* Support dismiss specified dialog using `remove` method

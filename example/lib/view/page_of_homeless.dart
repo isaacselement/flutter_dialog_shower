@@ -232,7 +232,6 @@ class PageOfHomeless extends StatelessWidget {
                 ..contentDecorationNormal = null
                 ..contentDecorationFocused = null,
             ),
-
           ],
         ),
       ],

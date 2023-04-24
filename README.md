@@ -12,6 +12,8 @@
 
 # DialogShower
 
+[![pub package](https://img.shields.io/pub/v/flutter_dialog_shower.svg)](https://pub.dev/packages/flutter_dialog_shower)
+
 ##### Simple to use
 
 ```
