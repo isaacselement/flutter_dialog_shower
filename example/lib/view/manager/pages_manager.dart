@@ -65,7 +65,7 @@ class PagesManager {
       false,
       'Overlay',
       const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.black26),
-      const Icon(Icons.auto_awesome_motion_sharp, size: 32, color: Colors.orange),
+      const Icon(Icons.auto_awesome_motion, size: 32, color: Colors.orange),
       const PageOfOverlay(),
     );
     addTabPage(
@@ -78,8 +78,8 @@ class PagesManager {
     addTabPage(
       false,
       'Homeless',
-      const Icon(Icons.auto_awesome, size: 32, color: Colors.black26),
-      const Icon(Icons.auto_awesome_sharp, size: 32, color: Colors.orange),
+      const Icon(Icons.attachment, size: 32, color: Colors.black26),
+      const Icon(Icons.attachment_sharp, size: 32, color: Colors.orange),
       const PageOfHomeless(),
     );
     addTabPage(
@@ -135,7 +135,7 @@ class PagesManager {
           children: [
             isSelected ? tabIconSelected : tabIcon,
             const SizedBox(height: 2.0),
-            Text(name, style: TextStyle(color: textColor, fontSize: 11)),
+            Text(name, style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.w300)),
           ],
         ),
         onPressed: () {

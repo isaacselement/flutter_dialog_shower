@@ -15,6 +15,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorObservers: [DialogShower.getObserver()],
+      theme: ThemeData(fontFamily: 'Menlo',),
       home: const HomePage(),
     );
   }

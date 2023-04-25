@@ -39,7 +39,7 @@ class PageOfWidgets extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Show Material Indicator', onPressed: (state) {
               DialogWidgets.showLoading(
                 text: null,
-                widget: const CircularProgressIndicator(strokeWidth: 3, color: Colors.white),
+                widget: const CircularProgressIndicator(strokeWidth: 3, backgroundColor: Colors.white),
                 onOptions: (options) {
                   options.width = 80;
                   options.height = 80;

@@ -1,22 +1,22 @@
-# 1.0.0
+# 1.2.2
 
-* DialogShower - Supply basic function
-* DialogWrapper - A Convenient Manager for DialogShower
-* DialogWidgets - Some frequently-used dialog ui: Loading, Tips, Confirm/Cancel alert …
+* Support dismiss specified dialog using `remove` method
+
+# 1.2.1
+
+* Refactor codes
+
+# 1.2.0
+
+* Refactor codes
 
 # 1.1.0
 
 * Support Flutter SDK 3.x.x
 * OverlayShower - New features :)
 
-# 1.2.0
+# 1.0.0
 
-* Refactor the codes
-
-# 1.2.1
-
-* Refactor the codes
-
-# 1.2.2
-
-* Support dismiss specified dialog using `remove` method
+* DialogShower - Supply basic function
+* DialogWrapper - A Convenient Manager for DialogShower
+* DialogWidgets - Some frequently-used dialog ui: Loading, Tips, Confirm/Cancel alert …
