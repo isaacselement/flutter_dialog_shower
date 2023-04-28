@@ -1,19 +1,26 @@
 import 'package:flutter/widgets.dart';
 
 class SizesUtils {
-  static late MediaQueryData mediaQueryDate;
+  static MediaQueryData? _mediaQueryDate;
 
-  static late double screenWidth;
+  static MediaQueryData get mediaQueryDate => _mediaQueryDate ??= MediaQuery.of(_context);
 
-  static late double screenHeight;
+  static double? _screenWidth;
 
-  static late double statusBarHeight;
+  static double get screenWidth => _screenWidth ??= mediaQueryDate.size.width;
+
+  static double? _screenHeight;
+
+  static double get screenHeight => _screenHeight ??= mediaQueryDate.size.height;
+
+  static double? _statusBarHeight;
+
+  static double get statusBarHeight => _statusBarHeight ??= mediaQueryDate.padding.top;
+
+  static late BuildContext _context;
 
   static init(BuildContext context) {
-    mediaQueryDate = MediaQuery.of(context);
-    screenWidth = mediaQueryDate.size.width;
-    screenHeight = mediaQueryDate.size.height;
-    statusBarHeight = mediaQueryDate.padding.top;
+    _context = context;
   }
 
   static Size? getSizeS(State state) {
@@ -28,15 +35,15 @@ class SizesUtils {
     return getSize(getRenderBox(context));
   }
 
-  static Size? getSize(RenderBox? box) {
-    return box?.size;
-  }
-
   static RenderBox? getRenderBox(BuildContext context) {
     RenderObject? renderObject = context.findRenderObject();
     if (renderObject is RenderBox) {
       return renderObject;
     }
     return null;
+  }
+
+  static Size? getSize(RenderBox? box) {
+    return box?.size;
   }
 }
