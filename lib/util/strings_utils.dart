@@ -14,6 +14,12 @@ class StringsUtils {
     return List.generate(length, (index) => hex[random.nextInt(hex.length)]).join();
   }
 
+  static String fakeUUID() {
+    // 00000000-0000-0000-0000-000000000000
+    // c3d4e15d-2191-4310-9837-20c96b0429c5
+    return randomHex(8) + "-" + randomHex(4) + "-" + randomHex(4) + "-" + randomHex(4) + "-" + randomHex(12);
+  }
+
   /// Comma Values
 
   static String changeCommaValue(String content, String key, String value, {String? separator, String? equalSymbol}) {

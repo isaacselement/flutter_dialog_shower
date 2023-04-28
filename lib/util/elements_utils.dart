@@ -141,12 +141,12 @@ class ElementsUtils {
 
   static void rebuildWidget(BuildContext? context, StatefulWidget? widget) {
     if (widget == null) return;
-    getElementOfWidgetType(context, widget.runtimeType)?.markNeedsBuild();
+    getElementOfWidget(context, widget)?.markNeedsBuild();
   }
 
   static void rebuildState(BuildContext? context, State? state) {
     if (state == null) return;
-    getElementOfStateType(context, state.runtimeType)?.markNeedsBuild();
+    getElementOfState(context, state)?.markNeedsBuild();
   }
 
   // Cause visitChildElements() called during build. Maybe need call in WidgetsBinding.addPostFrameCallback

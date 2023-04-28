@@ -57,3 +57,4 @@ build/
 .pub/
 .pub-cache/
 build/
+pubspec.lock
