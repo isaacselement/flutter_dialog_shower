@@ -69,7 +69,7 @@ class XpSliderWidget extends StatelessWidget {
         rightTitlesList: [isExpanded.value ? 'Full Screen' : '', isExpanded.value ? 'Shrink' : 'Expand', 'Done'],
         rightEventsList: [
           () {
-            transform(shower?.width ?? 600, SizesUtils.screenWidth, null);
+            transform(shower?.width ?? 600, ScreensUtils.screenWidth, null);
           },
           () {
             double w = shower?.width ?? 600;

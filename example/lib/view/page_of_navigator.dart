@@ -66,8 +66,8 @@ class PageOfNavigator extends StatelessWidget {
             WidgetsUtil.newXpelTextButton('Show with navigator with Width & Height', onPressed: (state) {
               DialogWrapper.pushRoot(
                 getScrollView(),
-                width: SizesUtils.screenWidth / 3 * 2,
-                height: SizesUtils.screenHeight / 3 * 2,
+                width: ScreensUtils.screenWidth / 3 * 2,
+                height: ScreensUtils.screenHeight / 3 * 2,
               );
             }),
             WidgetsUtil.newXpelTextButton('Show with navigator Auto size (Depends on child\'s width & height)', onPressed: (state) {
@@ -98,7 +98,7 @@ class PageOfNavigator extends StatelessWidget {
                   );
             }),
             WidgetsUtil.newXpelTextButton('Bubbles & pickers demonstrations in Dialog', onPressed: (state) {
-              double screenWidth = SizesUtils.screenWidth;
+              double screenWidth = ScreensUtils.screenWidth;
               double width = screenWidth > 600 ? screenWidth / 4 * 2 : screenWidth;
               DialogShower shower = DialogWrapper.showRight(XpSliderWidget(), width: width);
               shower.isWithTicker = true;

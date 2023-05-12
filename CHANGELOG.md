@@ -1,14 +1,10 @@
+# 1.2.4
+
+* Add utilities `screens_utils.dart`
+
 # 1.2.2
 
 * Support dismiss specified dialog using `remove` method
-
-# 1.2.1
-
-* Refactor codes
-
-# 1.2.0
-
-* Refactor codes
 
 # 1.1.0
 

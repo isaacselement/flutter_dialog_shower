@@ -17,6 +17,7 @@ export 'overlay/overlay_wrapper.dart';
 // util
 export 'util/elements_utils.dart';
 export 'util/offsets_utils.dart';
+export 'util/screens_utils.dart';
 export 'util/sizes_utils.dart';
 export 'util/strings_utils.dart';
 // anything widgets

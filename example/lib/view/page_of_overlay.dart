@@ -470,7 +470,7 @@ class PageOfOverlay extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        width: SizesUtils.screenWidth / 3 * 2,
+        width: ScreensUtils.screenWidth / 3 * 2,
         height: 520,
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -494,7 +494,7 @@ class PageOfOverlay extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        width: SizesUtils.screenWidth / 3 * 2,
+        width: ScreensUtils.screenWidth / 3 * 2,
         height: 520,
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
