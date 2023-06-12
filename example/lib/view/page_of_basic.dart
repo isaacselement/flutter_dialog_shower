@@ -117,7 +117,7 @@ class PageOfBasic extends StatelessWidget {
               DialogShower shower = DialogShower();
               shower
                 ..barrierDismissible = false
-                ..dismissCallBack = (shower) {
+                ..disposeCallBack = (shower) {
                   Logger.d('shower dismissCallBack');
                 };
               shower.show(Container(
@@ -471,7 +471,7 @@ class PageOfBasic extends StatelessWidget {
       ..showCallBack = (shower) {
         Logger.d('shower showCallBack');
       }
-      ..dismissCallBack = (shower) {
+      ..disposeCallBack = (shower) {
         Logger.d('shower dismissCallBack');
       }
       ..wholeOnTapCallback = (shower, point, isTappedInside) {

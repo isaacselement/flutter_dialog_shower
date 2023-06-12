@@ -2,7 +2,6 @@ import 'package:example/util/logger.dart';
 import 'package:example/view/manager/pages_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
-import 'package:flutter_dialog_shower/util/screens_utils.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -46,6 +45,7 @@ class HomeState extends State<HomePage> {
         ..containerShadowColor = Colors.grey
         ..containerShadowBlurRadius = 20.0
         ..containerBorderRadius = 10.0;
+      return null;
     };
     OverlayWrapper.centralOfShower ??= (OverlayShower shower) {
       Logger.d("a new overlay show: $shower");

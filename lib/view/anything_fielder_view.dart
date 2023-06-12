@@ -205,7 +205,6 @@ class AnythingFielderState extends State<AnythingFielder> {
           placeholder: options.contentHintText,
           placeholderStyle: options.contentHintStyle,
           inputFormatters: options.inputFormatters,
-          toolbarOptions: const ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
           decoration: isFocused.value ? options.inputDecorationFocused : options.inputDecorationNormal,
           onChanged: (String text) {
             // valueController.text already is text now ...
@@ -280,13 +279,14 @@ class AnythingFielderState extends State<AnythingFielder> {
           Expanded(child: contentWidget),
         ],
       );
+    } else {
+      return Column(
+        children: [
+          titleWidgetRow ?? const Offstage(offstage: true),
+          contentWidget,
+        ],
+      );
     }
-    return Column(
-      children: [
-        titleWidgetRow ?? const Offstage(offstage: true),
-        contentWidget,
-      ],
-    );
   }
 }
 
@@ -309,8 +309,10 @@ class AnythingFielderOptions {
   double? contentHeight;
   EdgeInsets? contentMargin;
   EdgeInsets? contentPadding = const EdgeInsets.only(top: 10, bottom: 10);
-  BoxDecoration? contentDecorationNormal = const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFFECECF2))));
-  BoxDecoration? contentDecorationFocused = const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFF4275FF))));
+  BoxDecoration? contentDecorationNormal =
+      const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFFECECF2))));
+  BoxDecoration? contentDecorationFocused =
+      const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFF4275FF))));
 
   /// content text widget
   String? contentHintText = 'Enter';

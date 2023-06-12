@@ -16,7 +16,7 @@ class Boxes<T> {
 
   static WidgetsBinding getWidgetsBinding() {
     // remove the ! not-null sign, if you want to support Flutter v3.x.x SDK
-    return WidgetsBinding.instance!;
+    return WidgetsBinding.instance;
   }
 }
 

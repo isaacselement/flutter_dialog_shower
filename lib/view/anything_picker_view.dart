@@ -50,7 +50,7 @@ class AnythingPicker extends StatefulWidget {
   Widget? Function(AnythingPickerState state, DialogShower shower, List<dynamic>? values)? builderOfPicker;
   void Function(AnythingPickerState state, DialogShower shower)? showerCallback;
   void Function(AnythingPickerState state, DialogShower shower)? showerShowedCallback;
-  void Function(AnythingPickerState state, DialogShower shower)? showerDismissedCallback;
+  void Function(AnythingPickerState state, DialogShower shower)? showerDisposedCallback;
   DialogShower? Function(AnythingPickerState state, BuildContext context)? builderOfShower;
 
   /// disable the tap event for showing up the picker
@@ -96,7 +96,7 @@ class AnythingPicker extends StatefulWidget {
     this.builderOfItemChildren,
     this.showerCallback,
     this.showerShowedCallback,
-    this.showerDismissedCallback,
+    this.showerDisposedCallback,
     this.builderOfShower,
     this.isDisable = false,
     this.isLoading = false,
@@ -135,7 +135,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    animationController = AnimationController(duration: const Duration(milliseconds: 100), vsync: this);
     widget.onStateInit?.call(this);
   }
 
@@ -165,7 +165,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
       spaceHolder = Opacity(opacity: 0, child: requiredWidget);
     }
 
-    // wrapped with a builder, automatically getting width for the picker
+    /// wrapped with a builder, automatically getting width for the picker
     Widget builder = Builder(builder: (context) => _build(context));
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,40 +177,58 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
   Widget? defaultTitleBuilder() {
     AnythingPickerOptions options = getOptions;
 
-    List<Widget> titleRowChildren = [];
-    String? mTitle = widget.title;
-    if (mTitle != null) {
-      Widget getTextWidget() {
-        Widget textView = Text(mTitle, style: options.titleStyle, maxLines: options.titleMaxLines, overflow: options.titleOverflow);
-        var onTap = widget.funcOfTitleOnTapped;
-        if (onTap != null) {
-          /// Important!!! do not use result = Builder... for reusing the return statement, cause dart do a reference copy ...
-          return Builder(builder: (context) => GestureDetector(onTap: () => onTap(this, context), child: textView));
-        }
-        return textView;
+    Widget? getTextWidget() {
+      String? mTitle = widget.title;
+      if (mTitle == null) {
+        return null;
       }
-
-      /// https://stackoverflow.com/a/69116599  // Wrap with [Flexible].
-      Widget titleWidget = options.titleWrapFlexible ? Flexible(child: getTextWidget()) : getTextWidget();
-      titleRowChildren.add(titleWidget);
+      Widget textView = Text(
+        mTitle,
+        style: options.titleStyle,
+        maxLines: options.titleMaxLines,
+        overflow: options.titleOverflow,
+      );
+      var onTap = widget.funcOfTitleOnTapped;
+      if (onTap != null) {
+        /// Important!!! do not use result = Builder... for reusing the return statement, cause dart do a reference copy ...
+        return Builder(builder: (context) => GestureDetector(onTap: () => onTap(this, context), child: textView));
+      }
+      return textView;
     }
+
+    /// title widget
+    Widget? _widget = getTextWidget();
 
     /// title tails
     List<Widget>? titleTailWidgets = options.titleTailWidgets;
-    if (titleTailWidgets != null) {
-      titleRowChildren.addAll(titleTailWidgets);
+
+    /// https://stackoverflow.com/a/69116599  /// Wrap with [Flexible].
+    bool _isWrapFlexible = titleTailWidgets != null && options.titleWrapFlexible;
+    Widget? titleWidget = _isWrapFlexible && _widget != null ? Flexible(child: _widget) : _widget;
+
+    if (titleWidget == null && titleTailWidgets == null) {
+      return null;
     }
-    return titleRowChildren.isNotEmpty ? Row(children: titleRowChildren) : null;
+
+    if (titleTailWidgets != null) {
+      List<Widget> children = [...titleTailWidgets];
+      if (titleWidget != null) {
+        children.insert(0, titleWidget);
+      }
+      return Row(children: children);
+    }
+
+    return titleWidget;
   }
 
   Widget _build(BuildContext context) {
     AnythingPickerOptions options = getOptions;
-    List<Widget> allWholeColumnChildren = [];
+    List<Widget> allColumnOrRowChildren = [];
 
     /// 1. title
     Widget? titleWidgetRow = widget.builderOfTitle?.call(this) ?? defaultTitleBuilder();
     if (titleWidgetRow != null) {
-      allWholeColumnChildren.add(titleWidgetRow);
+      allColumnOrRowChildren.add(titleWidgetRow);
     }
 
     /// 2. content
@@ -302,6 +320,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
           },
         );
 
+    /// 2.4 tap event
     onTap() {
       if (widget.funcOfContentOnTapped?.call(this, context) ?? false) {
         // return true do nothing ...
@@ -313,16 +332,38 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
         shower.addShowCallBack((shower) {
           widget.showerShowedCallback?.call(this, shower);
         });
-        shower.addDismissCallBack((shower) {
-          widget.showerDismissedCallback?.call(this, shower);
+        shower.addDisposeCallBack((shower) {
+          widget.showerDisposedCallback?.call(this, shower);
         });
       }
     }
 
     Widget contentOnTapWidget = InkWell(onTap: widget.isDisable ?? false ? null : onTap, child: contentWidget);
-    allWholeColumnChildren.add(contentOnTapWidget);
 
-    return Column(children: allWholeColumnChildren);
+    /// 2.4 default is column for vertical
+    if (options.isHorizontal == true) {
+      allColumnOrRowChildren.add(Expanded(child: contentOnTapWidget));
+      return Row(
+        mainAxisAlignment: options.mainAxisAlignment,
+        mainAxisSize: options.mainAxisSize,
+        crossAxisAlignment: options.crossAxisAlignment,
+        textDirection: options.textDirection,
+        verticalDirection: options.verticalDirection,
+        textBaseline: options.textBaseline,
+        children: allColumnOrRowChildren,
+      );
+    } else {
+      allColumnOrRowChildren.add(contentOnTapWidget);
+      return Column(
+        mainAxisAlignment: options.mainAxisAlignment,
+        mainAxisSize: options.mainAxisSize,
+        crossAxisAlignment: options.crossAxisAlignment,
+        textDirection: options.textDirection,
+        verticalDirection: options.verticalDirection,
+        textBaseline: options.textBaseline,
+        children: allColumnOrRowChildren,
+      );
+    }
   }
 
   /// Interaction: show the shower !!!
@@ -395,7 +436,7 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
         animationController?.forward();
         isFocused.value = true;
       })
-      ..addDismissCallBack((shower) {
+      ..addDisposeCallBack((shower) {
         animationController?.reverse();
         isFocused.value = false;
       });
@@ -428,12 +469,18 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
         return Offstage(offstage: true, child: _autoSetShowerHY(shower, picker, rect, cartonOption));
       };
 
+      /// setState when shower's height is resolved
       shower.setState();
     }();
     return shower;
   }
 
-  GetSizeWidget _autoSetShowerHY(DialogShower shower, Widget picker, Rect rect, Boxes<AnythingPickerOptions?> cartonOption) {
+  GetSizeWidget _autoSetShowerHY(
+    DialogShower shower,
+    Widget picker,
+    Rect rect,
+    Boxes<AnythingPickerOptions?> cartonOption,
+  ) {
     AnythingPickerOptions options = getOptions;
     // Label A: auto deciding height
     Size screenSize = MediaQuery.of(DialogShower.gContext!).size;
@@ -441,7 +488,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
     return GetSizeWidget(
       child: picker,
       onLayoutChanged: (RenderBox box, Size? legacy, Size size) {
-        Journal.console(() => '[AnythingPicker] onLayoutChanged width: ${size.width}, height: ${size.height}, y: ${shower.y}');
+        Journal.console(
+            () => '[AnythingPicker] onLayoutChanged width: ${size.width}, height: ${size.height}, y: ${shower.y}');
 
         // Label B: height determined
         shower.height = math.min(options.pickerMaxHeight ?? size.height, size.height);
@@ -500,7 +548,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
             shower.height = notOverflowHeightB;
             _op.stickToSide = AnythingPickerStickTo.bottom;
           }
-          Journal.console(() => '[AnythingPicker] determined shower height: ${shower.height}, y: ${shower.y}, stick: ${_op.stickToSide}');
+          Journal.console(() =>
+              '[AnythingPicker] determined shower height: ${shower.height}, y: ${shower.y}, stick: ${_op.stickToSide}');
 
           // -------------------- calculate again for support min height --------------------
           if (_op.pickerMinHeight != null) {
@@ -512,8 +561,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
               overflowT = overflowTop();
               if (overflowB > 0 && overflowT > 0) {
                 assert(() {
-                  Journal.console(
-                      () => '[AnythingPicker] ❗️❗️❗️the picker mini height is too large, all directions have not enough space!!!');
+                  Journal.console(() =>
+                      '[AnythingPicker] ❗️❗️❗️the picker mini height is too large, all directions have not enough space!!!');
                   return true;
                 }());
                 shower.height = _heightBackup;
@@ -525,8 +574,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
                 _op.stickToSide = AnythingPickerStickTo.bottom;
               }
             }
-            Journal.console(
-                () => '[AnythingPicker] Mini shower height ${shower.height}, y: ${shower.y}, stickToSide: ${_op.stickToSide}');
+            Journal.console(() =>
+                '[AnythingPicker] Mini shower height ${shower.height}, y: ${shower.y}, stickToSide: ${_op.stickToSide}');
           }
 
           if (_op.bubbleTriangleDirection == CcBubbleArrowDirection.none) {
@@ -552,8 +601,8 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
         }
         _refreshShowerY(_op, shower, rect);
 
-        Journal.console(
-            () => '[AnythingPicker] finally shower height: ${shower.height}, y: ${shower.y}, stickToSide: ${_op.stickToSide}');
+        Journal.console(() =>
+            '[AnythingPicker] finally shower height: ${shower.height}, y: ${shower.y}, stickToSide: ${_op.stickToSide}');
 
         shower.setState();
       },
@@ -716,7 +765,9 @@ class AnythingPickerState extends State<AnythingPicker> with SingleTickerProvide
   }
 
   bool itemIsSelected(int i, dynamic e) {
-    return widget.funcOfItemIfSelected?.call(this, i, e) ?? isContains(widget.selectedValues, e) ?? widget.selectedValue == e;
+    return widget.funcOfItemIfSelected?.call(this, i, e) ??
+        isContains(widget.selectedValues, e) ??
+        widget.selectedValue == e;
   }
 
   bool itemIsDisabled(int i, dynamic e) {
@@ -760,6 +811,17 @@ class AnythingLoadingWidget extends StatelessWidget {
 
 /// Anything Picker Options/Configs Class
 class AnythingPickerOptions {
+  /// Using Row or Column for structure
+  bool? isHorizontal;
+
+  /// Row or Column 's properties
+  MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start;
+  MainAxisSize mainAxisSize = MainAxisSize.max;
+  CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.start;
+  TextDirection? textDirection;
+  VerticalDirection verticalDirection = VerticalDirection.down;
+  TextBaseline? textBaseline;
+
   /// bubble options
   CcBubbleArrowDirection? bubbleTriangleDirection;
   bool isTriangleOccupiedSpace = true;
@@ -780,33 +842,42 @@ class AnythingPickerOptions {
   /// title widget
   TextStyle? titleStyle = const TextStyle(fontSize: 14, color: Color(0xFF1C1D21)); //, overflow: TextOverflow.ellipsis);
   int? titleMaxLines = 1;
-  bool titleWrapFlexible = true;
   TextOverflow? titleOverflow = TextOverflow.ellipsis;
   List<Widget>? titleTailWidgets;
+
+  bool titleWrapFlexible = true; // if there is title tail widgets, set true to wrap with flexible
 
   /// content widget
   double? contentWidth;
   double? contentHeight;
   EdgeInsets? contentMargin;
-  EdgeInsets? contentPadding = const EdgeInsets.only(top: 10, bottom: 10);
-  BoxDecoration? contentDecorationNormal = const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFFECECF2))));
-  BoxDecoration? contentDecorationFocused = const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFF4275FF))));
+  EdgeInsets? contentPadding = const EdgeInsets.symmetric(vertical: 10);
+  BoxDecoration? contentDecorationNormal =
+      const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFFECECF2))));
+  BoxDecoration? contentDecorationFocused =
+      const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Color(0xFF4275FF))));
 
   /// content text widget
   String contentHintText = 'Select';
   int? contentMaxLines = 1;
   TextOverflow? contentOverflow = TextOverflow.ellipsis;
-  TextStyle? contentHintStyle = const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2)); //, overflow: TextOverflow.ellipsis);
-  TextStyle? contentTextStyle = const TextStyle(fontSize: 16, color: Color(0xFF1C1D21)); //, overflow: TextOverflow.ellipsis);
+  TextStyle? contentHintStyle =
+      const TextStyle(fontSize: 16, color: Color(0xFFBFBFD2)); //, overflow: TextOverflow.ellipsis);
+  TextStyle? contentTextStyle =
+      const TextStyle(fontSize: 16, color: Color(0xFF1C1D21)); //, overflow: TextOverflow.ellipsis);
 
   /// content end widget
   Widget? contentStartWidget;
   Widget? contentEndWidget;
+
+  // arrow icon
   Widget? contentArrowIcon = const RotatedBox(
     quarterTurns: 2,
     child: Icon(Icons.arrow_back_ios_sharp, size: 13, color: Color(0xFFBFBFD2)),
   ); // Transform with Alignment.center & Matrix4.rotationZ(-90 / 180 * math.pi)
-  Tween<double> contentArrowTween = Tween(begin: 0.0, end: 0.5);
+  Tween<double> contentArrowTween = Tween(begin: 0.0, end: 0.25);
+
+  // clear icon
   Widget? contentClearIcon = Container(
     color: Colors.transparent,
     alignment: Alignment.centerRight,
@@ -818,6 +889,8 @@ class AnythingPickerOptions {
       decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6.5)), color: Color(0xFFC2C7D4)),
     ),
   );
+
+  // loading icon
   Widget? contentLoadingIcon = const AnythingLoadingWidget(side: 18, stroke: 1.3);
 
   /// picker options
@@ -852,12 +925,21 @@ class AnythingPickerOptions {
   Widget? itemPrefixWidget;
   Widget? itemSuffixWidget;
   Widget? itemCheckedWidget = const Icon(Icons.check, size: 18, color: Color(0xFF4275FF));
-  Widget? itemNoDataWidget = const SizedBox(height: 100, child: Center(child: Text('No data', style: TextStyle(color: Colors.grey))));
+  Widget? itemNoDataWidget =
+      const SizedBox(height: 100, child: Center(child: Text('No data', style: TextStyle(color: Colors.grey))));
 
   AnythingPickerOptions();
 
   AnythingPickerOptions clone() {
     AnythingPickerOptions newInstance = AnythingPickerOptions();
+
+    newInstance.isHorizontal = isHorizontal;
+    newInstance.mainAxisAlignment = mainAxisAlignment;
+    newInstance.mainAxisSize = mainAxisSize;
+    newInstance.crossAxisAlignment = crossAxisAlignment;
+    newInstance.textDirection = textDirection;
+    newInstance.verticalDirection = verticalDirection;
+    newInstance.textBaseline = textBaseline;
 
     newInstance.bubbleTriangleDirection = bubbleTriangleDirection;
     newInstance.isTriangleOccupiedSpace = isTriangleOccupiedSpace;

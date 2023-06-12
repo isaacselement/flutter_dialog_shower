@@ -24,7 +24,7 @@ class OverlayShower {
 
   bool get isShowing => _isShowing;
 
-  OverlayState get parentOverlayState => Overlay.of(context!, rootOverlay: isUseRootOverlay)!;
+  OverlayState get parentOverlayState => Overlay.of(context!, rootOverlay: isUseRootOverlay);
 
   /// for Container
   double? dx;
@@ -186,7 +186,8 @@ class OverlayShower {
   }
 
   void setState(VoidCallback fn) {
-    _statefulKey.currentState?.setState(fn);
+    // _statefulKey.currentState?.setState(fn);
+    (_statefulKey.currentState?.context as StatefulElement?)?.markNeedsBuild();
   }
 
   // others ----------------------------------------

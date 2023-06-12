@@ -347,7 +347,7 @@ class BrotherManagementView extends StatelessWidget {
                 Logger.d("[BrotherManagementView] ###### notifierExtra.isSubscriptionsEmpty s: ${notifierExtra.isSubscriptionsEmpty()}");
                 Logger.d("[BrotherManagementView] ###### update keys s: ${BtWidgetState.map}");
               }
-              ..dismissCallBack = (shower) {
+              ..disposeCallBack = (shower) {
                 Logger.d("[BrotherManagementView] ###### notifierOne.isSubscriptionsEmpty d: ${notifierOne.isSubscriptionsEmpty()}");
                 Logger.d("[BrotherManagementView] ###### notifierTwo.isSubscriptionsEmpty d: ${notifierTwo.isSubscriptionsEmpty()}");
                 Logger.d("[BrotherManagementView] ###### notifierExtra.isSubscriptionsEmpty d: ${notifierExtra.isSubscriptionsEmpty()}");

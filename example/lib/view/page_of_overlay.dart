@@ -428,7 +428,7 @@ class PageOfOverlay extends StatelessWidget {
 
   Column demoUsageOfRearrangeLayer() {
     void onEventShowerFocusOnTop(OverlayShower shower) {
-      OverlayState overlayState = Overlay.of(OverlayShower.gContext!, rootOverlay: true)!;
+      OverlayState overlayState = Overlay.of(OverlayShower.gContext!, rootOverlay: true);
       overlayState.rearrange([...HomeState.initialEntries, shower.entry], below: shower.entry);
       OverlayWrapper.appearingShowers!.remove(shower);
       OverlayWrapper.appearingShowers!.add(shower);
@@ -649,7 +649,7 @@ class _LayerLinkEntryState extends State<LayerLinkEntryWidget> {
               ),
             );
           });
-          Overlay.of(context)!.insert(overlayEntry!);
+          Overlay.of(context).insert(overlayEntry!);
         },
       ),
     );

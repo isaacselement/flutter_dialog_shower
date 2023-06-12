@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, non_constant_identifier_names
+
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
@@ -11,16 +13,20 @@ class DialogShower {
   static NavigatorObserverEx? gObserver;
   static const Decoration _notInitializedDecoration = BoxDecoration();
 
+  /// Show & Dismiss properties for sync/async control
   bool isSyncShow = false; // should assign value before show method
-  bool isWithTicker = false;
   bool isSyncDismiss = false;
-  bool isSyncInvokeShowCallback = false;
-  bool isSyncInvokeDismissCallback = false;
+
+  /// Wrap with a TickerProviderStateMixin for animation
+  bool isWithTicker = false;
 
   /// Navigator properties
   BuildContext? context;
   NavigatorState? navigator;
   bool isUseRootNavigator = true;
+
+  NavigatorState get parentNavigator => navigator ?? Navigator.of(context!, rootNavigator: isUseRootNavigator);
+
   Color barrierColor = Colors.transparent;
   bool? barrierDismissible = false;
   String barrierLabel = "";
@@ -32,8 +38,6 @@ class DialogShower {
 
   late RawDialogRoute route;
   String routeName = ''; // should assign value before show method
-
-  NavigatorState get parentNavigator => navigator ?? Navigator.of(context!, rootNavigator: isUseRootNavigator);
 
   /// Scaffold properties
   Color? scaffoldBackgroundColor = Colors.transparent;
@@ -75,21 +79,46 @@ class DialogShower {
   bool Function(DialogShower shower, Offset point)? barrierOnTapCallback;
   bool Function(DialogShower shower, Offset point, bool isTapInside)? wholeOnTapCallback;
 
+  /// Event of show & dispose & dismiss
   ShowerVisibilityCallBack? showCallBack;
-  ShowerVisibilityCallBack? dismissCallBack;
-
   List<ShowerVisibilityCallBack>? showCallbacks;
+
+  void addShowCallBack(ShowerVisibilityCallBack call) => (showCallbacks ??= []).add(call);
+
+  void removeShowCallBack(ShowerVisibilityCallBack call) => (showCallbacks ??= []).remove(call);
+
+  void _invokeShowCallbacks() {
+    showCallBack?.call(this);
+    showCallbacks?.forEach((e) => e.call(this));
+  }
+
+  ShowerVisibilityCallBack? disposeCallBack;
+  List<ShowerVisibilityCallBack>? disposeCallbacks;
+
+  void addDisposeCallBack(ShowerVisibilityCallBack call) => (disposeCallbacks ??= []).add(call);
+
+  void removeDisposeCallBack(ShowerVisibilityCallBack call) => (disposeCallbacks ??= []).remove(call);
+
+  void _invokeDisposeCallbacks() {
+    disposeCallBack?.call(this);
+    disposeCallbacks?.forEach((e) => e.call(this));
+  }
+
+  ShowerVisibilityCallBack? dismissCallBack;
   List<ShowerVisibilityCallBack>? dismissCallbacks;
 
-  void addShowCallBack(ShowerVisibilityCallBack callBack) => (showCallbacks = showCallbacks ?? []).add(callBack);
+  void addDismissCallBack(ShowerVisibilityCallBack call) => (dismissCallbacks ??= []).add(call);
 
-  void removeShowCallBack(ShowerVisibilityCallBack callBack) => (showCallbacks = showCallbacks ?? []).remove(callBack);
+  void removeDismissCallBack(ShowerVisibilityCallBack call) => (dismissCallbacks ??= []).remove(call);
 
-  void addDismissCallBack(ShowerVisibilityCallBack callBack) => (dismissCallbacks = dismissCallbacks ?? []).add(callBack);
+  void _invokeDismissCallbacks() {
+    dismissCallBack?.call(this);
+    dismissCallbacks?.forEach((e) => e.call(this));
+  }
 
-  void removeDismissCallBack(ShowerVisibilityCallBack callBack) => (dismissCallbacks = dismissCallbacks ?? []).remove(callBack);
-
+  /// Event of Keyboard
   KeyboardVisibilityCallBack? keyboardEventCallBack;
+
   StreamSubscription? _keyboardStreamSubscription;
 
   /// Shower has been built or not
@@ -99,7 +128,7 @@ class DialogShower {
 
   bool get isBuilt => _isBuilt;
 
-  set isBuilt(v) => (_isBuilt = v) ? builtCompleter.complete(v) : null;
+  set _setIsBuilt(v) => (_isBuilt = v) ? builtCompleter.complete(v) : null;
 
   /// Shower is between the state's [init] phase and [dispose] phase or not
   bool _isShowing = false;
@@ -115,21 +144,22 @@ class DialogShower {
 
   bool get isPopped => _isPopped;
 
-  set isPushed(v) => (_isPushed = v) ? Future.microtask(() => pushedCompleter.complete(v)) : null;
+  set isPushed(v) => (_isPushed = v) ? pushedCompleter.complete(v) : null;
 
-  set isPopped(v) => (_isPopped = v) ? Future.microtask(() => poppedCompleter.complete(v)) : null;
+  set isPopped(v) => (_isPopped = v) ? poppedCompleter.complete(v) : null;
 
   /// Future indicate that shower has been dismissed
   Future<dynamic>? _future;
 
   Future<dynamic> get future async {
     if (_future == null) {
-      await pushedCompleter.future; // future pushed indeed, wait pushed the return the actually _future
+      await pushedCompleter.future; // just await future pushed indeed, then return the actually not null _future
     }
     return _future;
   }
 
-  Future<R>? then<R>(FutureOr<R> Function(dynamic value) onValue, {Function? onError}) => future.then(onValue, onError: onError);
+  Future<R>? then<R>(FutureOr<R> Function(dynamic value) onValue, {Function? onError}) =>
+      future.then(onValue, onError: onError);
 
   /// GlobalKey for shower rebuild/setState
   // GlobalKey<BuilderExState> get builderExKey => _builderExKey;
@@ -224,7 +254,9 @@ class DialogShower {
       }
     }
     NavigatorObserverEx.statesChangingShowers?[routeName] = this;
-    isSyncShow ? _show(_child, width: width, height: height) : Future.microtask(() => _show(_child, width: width, height: height));
+    isSyncShow
+        ? _show(_child, width: width, height: height)
+        : Future.microtask(() => _show(_child, width: width, height: height));
     return this;
   }
 
@@ -252,7 +284,7 @@ class DialogShower {
       barrierDismissible: barrierDismissible ?? false,
       pageBuilder: (BuildContext ctx, Animation<double> first, Animation<double> second) => _getInternalWidget(_child),
     );
-    _future = parentNavigator.push(route);
+    _future = _rawPush(route);
 
     if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
       isPushed = true;
@@ -271,8 +303,8 @@ class DialogShower {
       name: routeName,
       init: (state) {
         _isShowing = true;
-        // invoke callbacks
-        isSyncInvokeShowCallback ? _invokeShowCallbacks() : Future.microtask(() => _invokeShowCallbacks());
+        // invoke show callbacks
+        _invokeShowCallbacks();
 
         // keyboard visibility
         if (keyboardEventCallBack != null) {
@@ -292,15 +324,15 @@ class DialogShower {
           return true;
         }());
 
-        // invoke callbacks
-        isSyncInvokeDismissCallback ? _invokeDismissCallbacks() : Future.microtask(() => _invokeDismissCallbacks());
+        // invoke dispose callbacks
+        _invokeDisposeCallbacks();
 
         // keyboard visibility
         _keyboardStreamSubscription?.cancel();
         _keyboardStreamSubscription = null;
       },
       builder: (state) {
-        isBuilt ? null : isBuilt = true;
+        isBuilt ? null : _setIsBuilt = true;
         return GestureDetector(
           onTapDown: (TapDownDetails details) {
             assert(() {
@@ -318,7 +350,8 @@ class DialogShower {
           },
           onTap: () {
             assert(() {
-              __shower_log__('Checking onTap details, keyboard is ${DialogShower.isKeyboardShowing() ? '' : 'not'} showing');
+              __shower_log__(
+                  'Checking onTap details, keyboard is ${DialogShower.isKeyboardShowing() ? '' : 'not'} showing');
               return true;
             }());
 
@@ -359,7 +392,8 @@ class DialogShower {
                 // https://github.com/flutter/flutter/issues/48464
                 FocusManager.instance.primaryFocus?.unfocus();
                 assert(() {
-                  __shower_log__('Dismiss keyboard, if u dislike this default behaviour, set isDismissKeyboardOnTapped = false');
+                  __shower_log__(
+                      'Dismiss keyboard, if u dislike this default behaviour, set isDismissKeyboardOnTapped = false');
                   return true;
                 }());
               }
@@ -376,7 +410,8 @@ class DialogShower {
                   if (DialogShower.isKeyboardShowing()) {
                     FocusManager.instance.primaryFocus?.unfocus();
                     assert(() {
-                      __shower_log__('Dismiss keyboard, if u dislike this default behaviour, do not set barrierDismissible = null');
+                      __shower_log__(
+                          'Dismiss keyboard, if u dislike this default behaviour, do not set barrierDismissible = null');
                       return true;
                     }());
                   } else {
@@ -430,10 +465,14 @@ class DialogShower {
       EdgeInsets contextPadding = contextQuery.padding;
       EdgeInsets windowPadding = windowQuery.padding;
       __shower_log__('Self: $routeName, _width: $_width, _height: $_height');
-      __shower_log__('Window: physicalWidth: $physicalWidth, physicalHeight: $physicalHeight, physicalTop: $physicalTop');
-      __shower_log__('Self Size: width: $width, height: $height, renderedWidth: $renderedWidth, renderedHeight: $renderedHeight');
-      __shower_log__('QueryWindow: width: $windowWidth, height: $windowHeight, top: ${windowPadding.top}, padding: $windowPadding');
-      __shower_log__('QueryContext: width: $contextWidth, height: $contextHeight, top: ${contextPadding.top}, padding: $contextPadding');
+      __shower_log__(
+          'Window: physicalWidth: $physicalWidth, physicalHeight: $physicalHeight, physicalTop: $physicalTop');
+      __shower_log__(
+          'Self Size: width: $width, height: $height, renderedWidth: $renderedWidth, renderedHeight: $renderedHeight');
+      __shower_log__(
+          'QueryWindow: width: $windowWidth, height: $windowHeight, top: ${windowPadding.top}, padding: $windowPadding');
+      __shower_log__(
+          'QueryContext: width: $contextWidth, height: $contextHeight, top: ${contextPadding.top}, padding: $contextPadding');
       return true;
     }());
 
@@ -467,7 +506,8 @@ class DialogShower {
           double screenHeight = windowHeight; // contextHeight < _height ? windowHeight : contextHeight;
           centerTop = math.max(0, (screenHeight - _height)) / 2;
         }
-        _padding = EdgeInsets.fromLTRB(m.left < 0 ? centerLeft : m.left, m.top < 0 ? centerTop : m.top, m.right, m.bottom);
+        _padding =
+            EdgeInsets.fromLTRB(m.left < 0 ? centerLeft : m.left, m.top < 0 ? centerTop : m.top, m.right, m.bottom);
       } else {
         _padding = m;
       }
@@ -493,7 +533,8 @@ class DialogShower {
   Widget _getSmallestContainer(Widget child, double? width, double? height) {
     Widget widget = child;
     if (isWrappedByNavigator && isAutoSizeForNavigator && (width == null || height == null)) {
-      __shower_log__('[GetSizeWidget] try to get size, casue navigator will lead to max stretch of container child ...');
+      __shower_log__(
+          '[GetSizeWidget] try to get size, casue navigator will lead to max stretch of container child ...');
       _isTryToGetSmallestSize = true;
     }
 
@@ -523,7 +564,8 @@ class DialogShower {
     }
 
     /// Cause add Clip.antiAlias, the radius will not cover by child, u need to set Clip.none if u paint shadow by your self
-    Decoration? decoration = containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration;
+    Decoration? decoration =
+        containerDecoration == _notInitializedDecoration ? _defContainerDecoration() : containerDecoration;
     Clip clipBehavior = decoration == null ? Clip.none : containerClipBehavior;
 
     // the container as mini as possible for calculate the point if tapped inside
@@ -581,6 +623,7 @@ class DialogShower {
       if (NavigatorObserverEx.statesChangingShowers?[routeName] == null) {
         isPopped = true;
       }
+      _invokeDismissCallbacks();
       await poppedCompleter.future;
       assert(() {
         __shower_log__('>>>>>>>>>>>>>> dismiss popped done: $routeName');
@@ -589,18 +632,14 @@ class DialogShower {
     }
   }
 
-  /// pop/push/remove will caused NavigatorObserver.didPop/didPus/didRemove method call immediately in the same eventloop
-  /// so we should set isPopped/isPushed immediately but call completer later using Future.microtask
-  void _rawDismiss<T extends Object?>([T? result]) => parentNavigator.pop<T>(result);
-
   Future<void> remove<T extends Object?>({bool? isAnimated, T? result}) {
-    /// if a result provided, will have pop animation
+    /// 1. if a result provided, will have pop animation
     if (isAnimated == true || result != null) {
       Completer completer = Completer();
       route.didPop(result);
       route.animation?.addStatusListener((AnimationStatus status) {
         if (status == AnimationStatus.dismissed) {
-          parentNavigator.removeRoute(route);
+          _rawRemove(route);
           completer.complete();
           // remove this statusListener or not ? now i leave it alone ...
         }
@@ -608,12 +647,19 @@ class DialogShower {
       return completer.future;
     }
 
-    /// just remove it without animation, the [didRemove] method will be invoked in observer
-    parentNavigator.removeRoute(route);
+    /// 2. just remove it without animation
+    _rawRemove(route);
     return poppedCompleter.future;
   }
 
-  /// For navigator
+  /// pop/push/remove will caused NavigatorObserver.didPop/didPus/didRemove method call immediately sync in the same event loop
+  Future<dynamic> _rawPush(Route route) => parentNavigator.push(route);
+
+  void _rawDismiss<T extends Object?>([T? result]) => parentNavigator.pop<T>(result);
+
+  void _rawRemove(Route<dynamic> route) => parentNavigator.removeRoute(route);
+
+  /// For nested navigator
   NavigatorState? getNavigator() {
     return _navigatorKey?.currentState;
   }
@@ -670,27 +716,19 @@ class DialogShower {
     }
     fn?.call();
     StatefulElement? element = _statefulKey.currentContext as StatefulElement?;
-    assert(element != null, '[DialogShower] ❌ Do not call setState called during build or disposed!');
-    element?.markNeedsBuild();
+    if (element == null) {
+      assert(() {
+        __shower_log__('[DialogShower] ❌ Do not call setState called during build or disposed!');
+        return true;
+      }());
+      return;
+    }
+    element.markNeedsBuild();
     // _builderExKey.currentState?.setState(fn);
     // _statefulKey.currentState?.setState(fn);
   }
 
   /// Private methods
-
-  void _invokeShowCallbacks() {
-    showCallBack?.call(this);
-    for (int i = 0; i < (showCallbacks?.length ?? 0); i++) {
-      showCallbacks?.elementAt(i).call(this);
-    }
-  }
-
-  void _invokeDismissCallbacks() {
-    dismissCallBack?.call(this);
-    for (int i = 0; i < (dismissCallbacks?.length ?? 0); i++) {
-      dismissCallbacks?.elementAt(i).call(this);
-    }
-  }
 
   Decoration _defContainerDecoration() {
     return BoxDecoration(
@@ -743,11 +781,9 @@ class NavigatorObserverEx extends NavigatorObserver {
   @override
   void didPush(Route route, Route? previousRoute) {
     super.didPush(route, previousRoute);
-
     ensureInit();
-
     assert(() {
-      __shower_log__('[Observer] didPush: ${route.settings.name} ,     [pre: ${previousRoute?.settings.name}]');
+      __shower_log__('[Observer] didPush: ${route.settings.name} ,    [pre: ${previousRoute?.settings.name}]');
       return true;
     }());
     if (route.settings.name != null) {
@@ -758,7 +794,6 @@ class NavigatorObserverEx extends NavigatorObserver {
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
-
     assert(() {
       __shower_log__('[Observer] didPop: ${route.settings.name} ,    [pre: ${previousRoute?.settings.name}]');
       return true;
@@ -772,7 +807,7 @@ class NavigatorObserverEx extends NavigatorObserver {
   void didRemove(Route route, Route? previousRoute) {
     super.didRemove(route, previousRoute);
     assert(() {
-      __shower_log__('[Observer] didRemove: ${route.settings.name}');
+      __shower_log__('[Observer] didRemove: ${route.settings.name} ,    [pre: ${previousRoute?.settings.name}]');
       return true;
     }());
     if (route.settings.name != null) {
@@ -799,7 +834,8 @@ class ShowerTransitionBuilder {
 
   static RouteTransitionsBuilder slideTransitionBuilder(Offset? beginOffset) {
     return (BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
-      return SlideTransition(child: child, position: Tween<Offset>(begin: beginOffset, end: const Offset(0.0, 0.0)).animate(animOne));
+      return SlideTransition(
+          child: child, position: Tween<Offset>(begin: beginOffset, end: const Offset(0.0, 0.0)).animate(animOne));
     };
   }
 
@@ -811,7 +847,8 @@ class ShowerTransitionBuilder {
     return ScaleTransition(child: child, scale: Tween(begin: 0.0, end: 1.0).animate(animation));
   });
 
-  static RouteTransitionsBuilder commonTransitionBuilder({required Widget Function(Widget child, Animation<double> animation) builder}) {
+  static RouteTransitionsBuilder commonTransitionBuilder(
+      {required Widget Function(Widget child, Animation<double> animation) builder}) {
     return (BuildContext ctx, Animation<double> animOne, Animation<double> animTwo, Widget child) {
       return builder(child, animOne);
     };

@@ -74,7 +74,12 @@ class DialogWrapper {
     Widget? widget = centralOfShower?.call(shower, child: child) ?? child;
     shower.show(widget, width: width, height: height);
     addToRepo(shower, key: key);
+    /// sync delete
     shower.addDismissCallBack((d) {
+      deleteInRepo(d);
+    });
+    /// make sure deleted in dispose
+    shower.addDisposeCallBack((d) {
       deleteInRepo(d);
     });
     return shower;
@@ -94,6 +99,8 @@ class DialogWrapper {
     return shower;
   }
 
+  // if you want to a new navigator then use [pushRoot], if you want to use current navigator then use [push]
+  // Use DialogShower.future.then((result) => ...) to get result
   static DialogShower pushRoot(
     Widget widget, {
     RouteSettings? settings,

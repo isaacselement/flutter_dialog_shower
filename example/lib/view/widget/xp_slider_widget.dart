@@ -98,7 +98,7 @@ class XpSliderWidget extends StatelessWidget {
                 const SizedBox(height: 20),
                 AnythingPicker(
                   title: 'AnythingPicker demonstration',
-                  values: _getStringsListValues(),
+                  values: _stringsListValues,
                   funcOfItemOnTapped: (state, index, value) {
                     title.value = value as String;
                     return false;
@@ -107,9 +107,46 @@ class XpSliderWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 AnythingPicker(
+                  title: 'AnythingPicker Horizontal: ',
+                  values: _stringsListValues,
+                  funcOfItemOnTapped: (state, index, value) {
+                    title.value = value as String;
+                    return false;
+                  },
+                  options: AnythingPickerOptions()
+                    ..isHorizontal = true
+                    ..contentPadding = EdgeInsets.zero,
+                ),
+                const SizedBox(height: 32),
+                AnythingPicker(
+                  title: 'AnythingPicker Align: ',
+                  values: _stringsListValues,
+                  funcOfItemOnTapped: (state, index, value) {
+                    title.value = value as String;
+                    return false;
+                  },
+                  options: AnythingPickerOptions()
+                    ..isHorizontal = true
+                    ..contentPadding = EdgeInsets.zero,
+                )
+                  ..builderOfShower = (state, context) {
+                    /// You can use [builderOfShower] to accomplish some special effects:
+                    /// Re-Size the Picker & Re-Position the picker
+                    Element? element = ElementsUtils.getElementOfWidgetType(context, InkWell);
+                    double? w = element != null ? SizesUtils.getSizeE(element)?.width : null;
+                    state.widget.options?.pickerWidth = w;
+                    double? t = SizesUtils.getSizeB(context)?.width;
+                    state.widget.options?.pickerShowOffsetX = (t != null && w != null) ? t - w : null;
+                    return null;
+                  }
+                  ..builderOfTitle = (state) {
+                    return SizedBox(width: 225, child: state.defaultTitleBuilder());
+                  },
+                const SizedBox(height: 32),
+                AnythingPicker(
                   funcOfValues: () async {
                     await Future.delayed(const Duration(milliseconds: 1000));
-                    return _getStringsListValues();
+                    return _stringsListValues;
                   },
                   funcOfItemOnTapped: (state, index, value) {
                     title.value = value as String;
@@ -122,7 +159,7 @@ class XpSliderWidget extends StatelessWidget {
                   selectedValues: selectedValues,
                   // as a repository, important for support multi-selections !!!
                   funcOfValues: () {
-                    return _getEmployeesListValues();
+                    return _employeesListValues;
                   },
                   funcOfItemName: (state, i, e) {
                     return (e as Employee).name;
@@ -135,11 +172,13 @@ class XpSliderWidget extends StatelessWidget {
                     Employee employee = e as Employee;
                     bool isTapping = state.itemIsTapping(i);
                     bool isSelected = state.itemIsSelected(i, e);
-                    Color color = isTapping ? Colors.orange : (isSelected ? Colors.grey.withOpacity(0.4) : Colors.white);
+                    Color color =
+                        isTapping ? Colors.orange : (isSelected ? Colors.grey.withOpacity(0.4) : Colors.white);
                     return Container(
                       height: 45,
-                      decoration:
-                          BoxDecoration(color: color, border: Border(bottom: BorderSide(width: 1, color: Colors.grey.withOpacity(0.2)))),
+                      decoration: BoxDecoration(
+                          color: color,
+                          border: Border(bottom: BorderSide(width: 1, color: Colors.grey.withOpacity(0.2)))),
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Row(
                         children: [
@@ -159,7 +198,7 @@ class XpSliderWidget extends StatelessWidget {
                   title: 'AnythingPicker with arrow ',
                   isRequired: true,
                   funcOfValues: () {
-                    return _getStudentsListValues();
+                    return _studentsListValues;
                   },
                   funcOfItemName: (state, i, e) {
                     return (e as Student).name;
@@ -229,7 +268,7 @@ class XpSliderWidget extends StatelessWidget {
                 const SizedBox(height: 64),
                 AnythingPicker(
                   title: 'AnythingPicker with auto position. (Arrowed. Scroll me up and down ~~~)  ',
-                  values: _getStringsListValues(),
+                  values: _stringsListValues,
                   funcOfItemOnTapped: (state, index, value) {
                     return false;
                   },
@@ -241,7 +280,9 @@ class XpSliderWidget extends StatelessWidget {
                   },
                   options: AnythingPickerOptions()
                     ..contentHintText = ''
-                    ..titleTailWidgets = [const Icon(Icons.info_outlined, color: Colors.black)] // test text overflow ...
+                    ..titleTailWidgets = [
+                      const Icon(Icons.info_outlined, color: Colors.black)
+                    ] // test text overflow ...
                     ..bubbleShadowColor = Colors.purpleAccent
                     // bubbleTriangleDirection: if you don't wanna an arrow set it to null. set it to none, we will auto change it .
                     ..bubbleTriangleDirection = CcBubbleArrowDirection.none,
@@ -249,7 +290,7 @@ class XpSliderWidget extends StatelessWidget {
                 const SizedBox(height: 32),
                 AnythingPicker(
                   title: 'AnythingPicker with auto position. (Scroll me up and down ~~~)',
-                  values: _getStringsListValues(),
+                  values: _stringsListValues,
                   funcOfItemOnTapped: (state, index, value) {
                     return false;
                   },
@@ -359,59 +400,53 @@ class XpSliderWidget extends StatelessWidget {
     );
   }
 
-  /// Static Methods
+  /// Static Properties & Methods
 
-  static List<String> _getStringsListValues() {
-    return const [
-      'India',
-      'UK',
-      'USA',
-      'Russia',
-      'Korea',
-      'Mexico',
-      'Italy',
-      'Japan',
-      'Ukraine',
-      'Germany',
-    ];
-  }
+  static const List<String> _stringsListValues = [
+    'India',
+    'UK',
+    'USA',
+    'Russia',
+    'Korea',
+    'Mexico',
+    'Italy',
+    'Japan',
+    'Ukraine',
+    'Germany',
+  ];
 
-  static List<Employee> _getEmployeesListValues() {
-    return [
-      Employee('UI Manager', 'Koko.Lee'),
-      Employee('Soft Manager', 'Oreoea.ss'),
-      Employee('Device Manager', 'Cell.SU'),
-      Employee('DB Manager', 'India.USA'),
-      Employee('Computer Manager', 'Austria.Iv'),
-      Employee('CPU Manager', 'Oppo.Chen'),
-      Employee('CPU President', 'John.Trump'),
-      Employee('CEO', 'John.Ceo'),
-    ];
-  }
+  static const List<Employee> _employeesListValues = [
+    Employee('UI Manager', 'Koko.Lee'),
+    Employee('Soft Manager', 'Oreoea.ss'),
+    Employee('Device Manager', 'Cell.SU'),
+    Employee('DB Manager', 'India.USA'),
+    Employee('Computer Manager', 'Austria.Iv'),
+    Employee('CPU Manager', 'Oppo.Chen'),
+    Employee('CPU President', 'John.Trump'),
+    Employee('CEO', 'John.Ceo'),
+  ];
 
-  static List<Student> _getStudentsListValues() {
-    return [
-      Student(18, 'TheBoy'),
-      Student(22, 'Lcuy'),
-      Student(31, 'Cicie'),
-      Student(22, 'Lukas'),
-      Student(21, 'Isasie'),
-      Student(31, 'QiCue'),
-      Student(19, 'BaBee'),
-    ];
-  }
+  static const List<Student> _studentsListValues = [
+    Student(18, 'TheBoy'),
+    Student(22, 'Lcuy'),
+    Student(31, 'Cicie'),
+    Student(22, 'Lukas'),
+    Student(21, 'Isasie'),
+    Student(31, 'QiCue'),
+    Student(19, 'BaBee'),
+  ];
 }
 
 class Employee {
-  String title;
-  String name;
+  final String title;
+  final String name;
 
-  Employee(this.title, this.name);
+  const Employee(this.title, this.name);
 }
 
 class Student {
-  int age;
-  String name;
+  final int age;
+  final String name;
 
-  Student(this.age, this.name);
+  const Student(this.age, this.name);
 }

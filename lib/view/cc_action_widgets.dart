@@ -1,6 +1,7 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialog_shower/core/boxes.dart';
 import 'package:flutter_dialog_shower/flutter_dialog_shower.dart';
 
 /// Button Widgets
@@ -181,10 +182,10 @@ class CcTapWidget extends StatefulWidget {
   Widget? child;
   bool isDisable = false;
   double? pressedOpacity;
-  void Function(State state) onTap;
+  void Function(State state)? onTap;
   Widget Function(State state)? builder;
 
-  CcTapWidget({Key? key, this.child, this.isDisable = false, this.pressedOpacity, this.builder, required this.onTap}) : super(key: key);
+  CcTapWidget({Key? key, this.child, this.isDisable = false, this.pressedOpacity, this.builder, this.onTap}) : super(key: key);
 
   @override
   State createState() => CcTapState();
@@ -204,22 +205,17 @@ class CcTapState extends State {
 
   @override
   Widget build(BuildContext context) {
+    Widget mChild() => myWidget.builder?.call(this) ?? Opacity(child: myWidget.child, opacity: isTapingDown ? myWidget.pressedOpacity ?? 0.5 : 1);
     return Listener(
       onPointerUp: (e) => isTapingDown = false,
       onPointerDown: (e) => isTapingDown = true,
       onPointerCancel: (e) => isTapingDown = false,
-      child: GestureDetector(
-        onTap: () {
-          if (myWidget.isDisable) return;
-          onEventTap();
-        },
-        child: myWidget.builder?.call(this) ?? Opacity(child: myWidget.child, opacity: isTapingDown ? myWidget.pressedOpacity ?? 0.5 : 1),
-      ),
+      child: myWidget.isDisable ? mChild() : GestureDetector(onTap: () => onEventTap(), child: mChild()),
     );
   }
 
   void onEventTap() {
-    myWidget.onTap(this);
+    myWidget.onTap?.call(this);
   }
 }
 
@@ -231,7 +227,7 @@ class CcTapOnceWidget extends CcTapWidget {
     bool? isDisable,
     double? pressedOpacity = 0.5,
     Widget Function(State state)? builder,
-    required void Function(State state) onTap,
+    void Function(State state)? onTap,
   }) : super(
           key: key,
           child: child,
@@ -267,7 +263,7 @@ class CcTapThrottledWidget extends CcTapWidget {
     bool? isDisable,
     double? pressedOpacity = 0.5,
     Widget Function(State state)? builder,
-    required void Function(State state) onTap,
+    void Function(State state)? onTap,
   }) : super(
           key: key,
           child: child,
@@ -297,7 +293,7 @@ class CcTapDebouncerWidget extends CcTapWidget {
     bool? isDisable,
     double? pressedOpacity = 0.5,
     Widget Function(State state)? builder,
-    required void Function(State state) onTap,
+    void Function(State state)? onTap,
   }) : super(
           key: key,
           child: child,

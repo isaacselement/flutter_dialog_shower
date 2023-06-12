@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, must_be_immutable
+
 import 'dart:math';
 
 import 'package:example/util/logger.dart';

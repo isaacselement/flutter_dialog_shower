@@ -70,7 +70,8 @@ class PageOfNavigator extends StatelessWidget {
                 height: ScreensUtils.screenHeight / 3 * 2,
               );
             }),
-            WidgetsUtil.newXpelTextButton('Show with navigator Auto size (Depends on child\'s width & height)', onPressed: (state) {
+            WidgetsUtil.newXpelTextButton('Show with navigator Auto size (Depends on child\'s width & height)',
+                onPressed: (state) {
               DialogWrapper.pushRoot(
                 SizedBox(
                   child: getScrollView(),
@@ -107,7 +108,7 @@ class PageOfNavigator extends StatelessWidget {
                 ..containerBoxShadow = []
                 ..containerBorderRadius = 8.0
                 ..barrierColor = const Color(0x4D1C1D21)
-                ..dismissCallBack = (shower) {};
+                ..disposeCallBack = (shower) {};
             }),
           ],
         ),
@@ -172,7 +173,8 @@ class PageOfNavigator extends StatelessWidget {
               Offset offset = ElementsUtils.getOffset(context) as Offset;
               double x = offset.dx + (size.width - kItemSide) / 2;
               double y = offset.dy + (size.height - kItemSide) / 2;
-              DialogShower shower = DialogWrapper.show(
+              /* DialogShower shower = */
+              DialogWrapper.show(
                 ColoredBox(
                   color: Colors.white,
                   child: SizedBox(

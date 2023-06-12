@@ -25,8 +25,7 @@ class ShowerHelper {
     }
     AnimationController controller = AnimationController(vsync: state, duration: duration ?? const Duration(milliseconds: 500));
     shower.isAutoSizeForNavigator = false;
-    shower.isSyncInvokeDismissCallback = true;
-    shower.addDismissCallBack(
+    shower.addDisposeCallBack(
       (shower) {
         controller.dispose();
       },
