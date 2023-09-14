@@ -1,3 +1,7 @@
+# 1.2.6
+
+* Compatible with Flutter 3.22.x
+
 # 1.2.5
 
 * DialogShower - Supply basic function

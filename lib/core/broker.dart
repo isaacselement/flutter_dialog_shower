@@ -51,12 +51,12 @@ class Stacker {
     return instance.getTop<T>();
   }
 
-  static int remove<T>({T? value}) {
-    return instance.remove<T>(value: value);
-  }
-
   static bool contains<T>({T? value}) {
     return instance.contains<T>(value: value);
+  }
+
+  static int remove<T>({T? value}) {
+    return instance.remove<T>(value: value);
   }
 
   static void clear() {
@@ -72,7 +72,7 @@ class BrokerInstance {
 
   T setIfAbsent<T>(T controller, {String? key}) {
     String k = key ?? T.toString();
-    return contains<T>(key: k) ? get(key: k) : set<T>(controller, key: key);
+    return contains<T>(key: k) ? get(key: k) : set<T>(controller, key: k);
   }
 
   T set<T>(T controller, {String? key}) {

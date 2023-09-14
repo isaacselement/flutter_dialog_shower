@@ -179,9 +179,13 @@ class AnythingFielderState extends State<AnythingFielder> {
 
     /// 2.2 content center display view
     _setText(String text) {
+      bool isSelectionWithinTextBounds(TextEditingController controller, TextSelection selection) {
+        String text = controller.text;
+        return selection.start <= text.length && selection.end <= text.length;
+      }
       valueController.text = text;
       TextSelection selection = previousTextSelection ?? TextSelection.collapsed(offset: (valueController.text).length);
-      if (valueController.isSelectionWithinTextBounds(selection)) {
+      if (isSelectionWithinTextBounds(valueController, selection)) {
         valueController.selection = selection;
       }
     }
