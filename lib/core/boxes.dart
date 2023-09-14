@@ -65,23 +65,26 @@ extension StringX on String {
 /// Widget for setSate & init & dispose callback
 class BuilderEx extends StatefulWidget {
   final String? name;
-  final Function(State state) builder;
-  final Function(State state)? init, dispose;
+  final Function(BuilderExState state) builder;
+  final Function(BuilderExState state)? init, dispose;
 
   const BuilderEx({Key? key, required this.builder, this.name, this.init, this.dispose}) : super(key: key);
 
   @override
-  State createState() => BuilderExState();
+  BuilderExState createState() => BuilderExState();
 }
 
-class BuilderExState extends State<BuilderEx> {
+class BuilderExState<W extends BuilderEx> extends State<BuilderEx> {
+
+  dynamic data;   /// you can use it to hold your data if needed
+
   @override
   void initState() {
     BuilderExState.callWidgetInit(widget, this);
     super.initState();
   }
 
-  static void callWidgetInit(BuilderEx widget, State state) {
+  static void callWidgetInit<T extends BuilderExState>(BuilderEx widget, T state) {
     try {
       widget.init?.call(state);
     } catch (e, s) {
@@ -100,7 +103,7 @@ class BuilderExState extends State<BuilderEx> {
     return BuilderExState.callWidgetBuilder(widget, this);
   }
 
-  static Widget callWidgetBuilder(BuilderEx widget, State state) {
+  static Widget callWidgetBuilder<T extends BuilderExState>(BuilderEx widget, T state) {
     assert(() {
       Journal.d('[$state] ${widget.name} >>>>> build');
       return true;
@@ -114,7 +117,7 @@ class BuilderExState extends State<BuilderEx> {
     super.dispose();
   }
 
-  static void callWidgetDispose(BuilderEx widget, State state) {
+  static void callWidgetDispose<T extends BuilderExState>(BuilderEx widget, T state) {
     try {
       widget.dispose?.call(state);
     } catch (e, s) {
@@ -140,12 +143,12 @@ class BuilderWithTicker extends BuilderEx {
   }) : super(key: key, builder: builder, name: name, init: init, dispose: dispose);
 
   @override
-  State createState() => BuilderWithTickerState();
+  BuilderWithTickerState createState() => BuilderWithTickerState();
 }
 
 // Do not extends BuilderExState with a mixin ❗️ Cause it parent class will be TickerProviderStateMixin$BuilderExState -> BuilderExState
 // We need to call widget dispose first, otherwise will call TickerProviderStateMixin dipose method first ❗️❗️
-class BuilderWithTickerState extends State<BuilderWithTicker> with TickerProviderStateMixin {
+class BuilderWithTickerState extends BuilderExState<BuilderWithTicker> with TickerProviderStateMixin {
   @override
   void initState() {
     BuilderExState.callWidgetInit(widget, this);
